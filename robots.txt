@@ -1,0 +1,2 @@
+User-agent: *
+Sitemap: http://p1n93r.github.io/sitemap.xml

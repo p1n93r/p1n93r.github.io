@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Java on P1n93r - 博学而精一</title>
+    <link>http://p1n93r.github.io/categories/java/</link>
+    <description>Recent content in Java on P1n93r - 博学而精一</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>zh-cn</language>
+    <lastBuildDate>Sun, 15 Sep 2019 23:31:36 +0800</lastBuildDate>
+    
+	<atom:link href="http://p1n93r.github.io/categories/java/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>流程控制与数组</title>
+      <link>http://p1n93r.github.io/post/java/%E6%B5%81%E7%A8%8B%E6%8E%A7%E5%88%B6%E4%B8%8E%E6%95%B0%E7%BB%84/</link>
+      <pubDate>Sun, 15 Sep 2019 23:31:36 +0800</pubDate>
+      
+      <guid>http://p1n93r.github.io/post/java/%E6%B5%81%E7%A8%8B%E6%8E%A7%E5%88%B6%E4%B8%8E%E6%95%B0%E7%BB%84/</guid>
+      <description>分支结构 if条件语句 if,else if,else后的代码块只有一条语句时（可以是空语句），可以省略花括号。 使用if,else时一定要先考虑小的范围。 sw</description>
+    </item>
+    
+    <item>
+      <title>数据类型和运算符</title>
+      <link>http://p1n93r.github.io/post/java/%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B%E5%92%8C%E8%BF%90%E7%AE%97%E7%AC%A6/</link>
+      <pubDate>Wed, 04 Sep 2019 22:48:36 +0800</pubDate>
+      
+      <guid>http://p1n93r.github.io/post/java/%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B%E5%92%8C%E8%BF%90%E7%AE%97%E7%AC%A6/</guid>
+      <description>注释 单行注释：使用//即可 多行注释：使用/*注释内容*/即可 文档注释：以/**开始，以*/结束 标识符和关键字 允许一行书写多个语句，每个语句之</description>
+    </item>
+    
+  </channel>
+</rss>
