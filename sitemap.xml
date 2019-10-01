@@ -16,7 +16,7 @@
   </url>
   
   <url>
-    <loc>http://p1n93r.github.io/post/android/android%E8%AF%BB%E5%8F%96xml%E6%96%87%E4%BB%B6/</loc>
+    <loc>http://p1n93r.github.io/post/android/android%E8%A7%A3%E6%9E%90xml%E7%9A%84%E5%9B%9B%E7%A7%8D%E6%96%B9%E5%BC%8F/</loc>
     <lastmod>2019-09-28T21:28:36+08:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.5</priority>
@@ -179,6 +179,12 @@
   <url>
     <loc>http://p1n93r.github.io/post/mybatis/mybatis%E6%95%B4%E5%90%88spring/</loc>
     <lastmod>2019-07-10T17:48:36+08:00</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.5</priority>
+  </url>
+  
+  <url>
+    <loc>http://p1n93r.github.io/post/java/%E9%9D%A2%E5%90%91%E5%AF%B9%E8%B1%A1%E4%BA%8C/</loc>
     <changefreq>weekly</changefreq>
     <priority>0.5</priority>
   </url>

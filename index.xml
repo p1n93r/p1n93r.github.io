@@ -22,10 +22,10 @@
     
     <item>
       <title>Android解析XML的四种方式</title>
-      <link>http://p1n93r.github.io/post/android/android%E8%AF%BB%E5%8F%96xml%E6%96%87%E4%BB%B6/</link>
+      <link>http://p1n93r.github.io/post/android/android%E8%A7%A3%E6%9E%90xml%E7%9A%84%E5%9B%9B%E7%A7%8D%E6%96%B9%E5%BC%8F/</link>
       <pubDate>Thu, 26 Sep 2019 20:14:36 +0800</pubDate>
       
-      <guid>http://p1n93r.github.io/post/android/android%E8%AF%BB%E5%8F%96xml%E6%96%87%E4%BB%B6/</guid>
+      <guid>http://p1n93r.github.io/post/android/android%E8%A7%A3%E6%9E%90xml%E7%9A%84%E5%9B%9B%E7%A7%8D%E6%96%B9%E5%BC%8F/</guid>
       <description>DOM方式解析XML DOM方式解析XML是将XML先全部加载到内存当中，所以 适用于较小的XML文件，可随机访问，可读可写 。DOM方式解析逻辑</description>
     </item>
     
@@ -135,6 +135,15 @@
       
       <guid>http://p1n93r.github.io/post/mybatis/mybatis%E6%95%B4%E5%90%88spring/</guid>
       <description>介绍 &amp;emsp;&amp;emsp;Mybatis是一款持久层的框架，使用Mybatis我们无需自己编写繁琐的JDBC代码，也无需为sql注入等安全</description>
+    </item>
+    
+    <item>
+      <title>面向对象(二)</title>
+      <link>http://p1n93r.github.io/post/java/%E9%9D%A2%E5%90%91%E5%AF%B9%E8%B1%A1%E4%BA%8C/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>http://p1n93r.github.io/post/java/%E9%9D%A2%E5%90%91%E5%AF%B9%E8%B1%A1%E4%BA%8C/</guid>
+      <description>包装类 基本数据类型不具备“对象”的特性，它没有属性，没有方法。为了解决这个问题。Java提供了包装类为8种基本数据类型的分别定义了相应的引用</description>
     </item>
     
   </channel>
