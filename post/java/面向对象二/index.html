@@ -43,14 +43,14 @@
 <meta property="og:type" content="article" />
 <meta property="og:url" content="http://p1n93r.github.io/post/java/%E9%9D%A2%E5%90%91%E5%AF%B9%E8%B1%A1%E4%BA%8C/" />
 <meta property="article:published_time" content="2019-10-01T21:31:36+08:00" />
-<meta property="article:modified_time" content="2019-10-01T22:31:36+08:00" />
+<meta property="article:modified_time" content="2019-10-09T22:10:36+08:00" />
 <meta itemprop="name" content="面向对象(二)">
 <meta itemprop="description" content="包装类 基本数据类型不具备“对象”的特性，它没有属性，没有方法。为了解决这个问题。Java提供了包装类为8种基本数据类型的分别定义了相应的引用">
 
 
 <meta itemprop="datePublished" content="2019-10-01T21:31:36&#43;08:00" />
-<meta itemprop="dateModified" content="2019-10-01T22:31:36&#43;08:00" />
-<meta itemprop="wordCount" content="1227">
+<meta itemprop="dateModified" content="2019-10-09T22:10:36&#43;08:00" />
+<meta itemprop="wordCount" content="6115">
 
 
 
@@ -131,8 +131,8 @@
         <div class="post-category">
             <a href="/categories/java/"> Java </a>
             </div>
-          <span class="more-meta"> 约 1227 字 </span>
-          <span class="more-meta"> 预计阅读 3 分钟 </span>
+          <span class="more-meta"> 约 6115 字 </span>
+          <span class="more-meta"> 预计阅读 13 分钟 </span>
         
       </div>
     </header>
@@ -156,6 +156,34 @@
 <li><a href="#比较对象">比较对象</a></li>
 </ul></li>
 <li><a href="#单例类">单例类</a></li>
+<li><a href="#final修饰符">final修饰符</a>
+<ul>
+<li><a href="#final修饰成员变量">final修饰成员变量</a></li>
+<li><a href="#final修饰局部变量">final修饰局部变量</a></li>
+<li><a href="#宏变量">&ldquo;宏变量&rdquo;</a></li>
+<li><a href="#final方法">final方法</a></li>
+<li><a href="#final类">final类</a></li>
+<li><a href="#不可变类">不可变类</a></li>
+</ul></li>
+<li><a href="#abstract修饰符">abstract修饰符</a>
+<ul>
+<li><a href="#抽象类">抽象类</a></li>
+<li><a href="#抽象方法">抽象方法</a></li>
+</ul></li>
+<li><a href="#接口">接口</a>
+<ul>
+<li><a href="#接口的实现">接口的实现</a></li>
+</ul></li>
+<li><a href="#接口与抽象类的比较">接口与抽象类的比较</a></li>
+<li><a href="#内部类">内部类</a>
+<ul>
+<li><a href="#非静态内部类">非静态内部类</a></li>
+<li><a href="#静态内部类">静态内部类</a></li>
+<li><a href="#布局内部类">布局内部类</a></li>
+<li><a href="#匿名内部类">匿名内部类</a></li>
+<li><a href="#使用内部类">使用内部类</a></li>
+</ul></li>
+<li><a href="#枚举类">枚举类</a></li>
 </ul></li>
 </ul>
 </nav>
@@ -424,6 +452,527 @@
 <span class="p">}</span></pre></td></tr></table>
 </div>
 </div>
+<h2 id="final修饰符">final修饰符</h2>
+
+<p>从语义上来讲，被final修饰的东西表示不能再被变化，不能再被修改。具体而言，被final修饰的类不能再被继承，被final修饰的变量的初始值不能再变化，被final修饰的形参不能再变化。</p>
+
+<p>final有一个常见的误区：被final修饰的引用类型变量，其引用变量的值其实是指向对象的地址，这个就是这个变量的初始值，不可改变，但是 <strong>引用的对象却是可以改变的</strong> 。</p>
+
+<h3 id="final修饰成员变量">final修饰成员变量</h3>
+
+<p>一般思维，如果类的成员变量没有初始值，那么系统会自动给其赋值，但是如果我们不给成员变量赋初始值，又给其final修饰符，那么这个成员变量如果被系统赋初始值，又不能被修改，那么这个成员变量还有什么意义呢？所以，系统不会对final修饰的成员变量进行隐式初始化， <strong>final修饰的成员变量必须程序员显示赋值</strong> ，赋值规则如下：</p>
+
+<ol>
+<li>类变量：在静态初始化块或这声明此变量时指定初始值。</li>
+<li>实例变量：在非静态初始化块、声明此此变量时或者构造器中为此变量指定初始值（可以构造器里利用形参给此变量指定初始值）。</li>
+</ol>
+
+<h3 id="final修饰局部变量">final修饰局部变量</h3>
+
+<p>一般思维，系统不会对局部变量进行隐式初始化，所以当我们定义final修饰的局部变量时， <strong>可以在定义该变量时给定初始值，也可以不指定默认值</strong> ，如果定义final修饰的局部变量没有给定初始值，那么可以在后面的代码中给该变量赋初始值，但是只能有一次。</p>
+
+<h3 id="宏变量">&ldquo;宏变量&rdquo;</h3>
+
+<p><strong>当final修饰变量（无论类变量，实例变量还是局部变量）在定义时就给定了初始值，并且编译期间就可以确定此初始值，那么此变量相当于一个直接量</strong> ，一个例子如下：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span><span class="lnt">8
+</span></pre></td>
+<td class="lntd">
+<pre class="chroma">//下面两个fianl修饰的变量都是相当于直接量，所以两个直接量相加还是直接量
+//相加后的直接量指向字符串池中缓存的&#34;哀吾生之须臾，羡长江之无穷。&#34;;
+//c也是指向那个字符串，所以两者相等。
+final String a=&#34;哀吾生之须臾，&#34;;
+final String b=&#34;羡长江之无穷。&#34;;
+String c=&#34;哀吾生之须臾，羡长江之无穷。&#34;;
+//输出true
+System.out.println(a+b==c);</pre></td></tr></table>
+</div>
+</div>
+<h3 id="final方法">final方法</h3>
+
+<p>当希望子类不要重写父类的某些方法时，可以把这些方法用final修饰。此外一个易错的点： <strong>父类用private final修饰的方法，子类虽然&rdquo;重写&rdquo;了此方法，但是不报错？原因是子类其实那不算重写，那算自己扩展的方法。</strong></p>
+
+<h3 id="final类">final类</h3>
+
+<p>为了让某些类不能被继承，可以用final修饰这个类。</p>
+
+<h3 id="不可变类">不可变类</h3>
+
+<p>不可变类就是此类的实例的属性不可改变，常见的java.lang.String类就是不可变类。一般思维，创建不可变类有如下几个步骤：</p>
+
+<ol>
+<li>用private final修饰类的属性。</li>
+<li>利用构造器给类的属性进行初始化。</li>
+<li>仅仅为类提供属性的getter方法，不提供setter方法。</li>
+<li>必要时重写类的equals和hashCode方法，使得equals返回true的两个对象的hashCode也相等。</li>
+</ol>
+
+<p>但是这样有一个致命的缺陷，如果类的属性是一个引用类型的变类，那么此引用变类的对象还是可以变化，就不算一个成功的不可变类，一个例子如下：</p>
+
+<p>类定义如下：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span><span class="lnt">29
+</span><span class="lnt">30
+</span><span class="lnt">31
+</span><span class="lnt">32
+</span><span class="lnt">33
+</span><span class="lnt">34
+</span><span class="lnt">35
+</span></pre></td>
+<td class="lntd">
+<pre class="chroma">public class ImmutableClass {
+    private final Address addr;
+    public ImmutableClass(Address addr){
+        this.addr=addr;
+    }
+    public Address getAddr(){
+        return this.addr;
+    }
+}
+
+class Address{
+    private String province;
+    private String city;
+
+    public Address(String province, String city) {
+        this.province = province;
+        this.city = city;
+    }
+
+    public String getProvince() {
+        return province;
+    }
+
+    public void setProvince(String province) {
+        this.province = province;
+    }
+
+    public String getCity() {
+        return city;
+    }
+
+    public void setCity(String city) {
+        this.city = city;
+    }
+}</pre></td></tr></table>
+</div>
+</div>
+<p>对以上的ImmutableClass类进行测试：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span></pre></td>
+<td class="lntd">
+<pre class="chroma">//讲address对象作为实参传给Address类构造器的形参addr
+//这个传递过程是一个严格的值传递，address传给addr的是对象的地址，所以两个都会指向同一个对象
+//所以address引用变量和addr引用变类都可以改变对象的值
+Address address=new Address(&#34;湖南&#34;,&#34;衡阳&#34;);
+ImmutableClass immutableClass=new ImmutableClass(address);
+//此时打印的是湖南
+System.out.println(immutableClass.getAddr().getProvince());
+//此时改变immutableClass对象的属性addr的province
+address.setProvince(&#34;贵州&#34;);
+//此时打印贵州，显然，此不可变类是失败的
+System.out.println(immutableClass.getAddr().getProvince());</pre></td></tr></table>
+</div>
+</div>
+<p>改进后的不可变类如下：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span><span class="lnt">8
+</span><span class="lnt">9
+</span></pre></td>
+<td class="lntd">
+<pre class="chroma">public class ImmutableClass {
+    private final Address addr;
+    public ImmutableClass(Address addr){
+        this.addr=new Address(addr.getProvince(),addr.getCity());
+    }
+    public Address getAddr(){
+        return new Address(this.addr.getProvince(),this.addr.getCity());
+    }
+}</pre></td></tr></table>
+</div>
+</div>
+<p>这样进行实例化时，传进去的引用对象的属性是啥样，传出来也是啥样，外界引用对象改变不影响类内的引用对象的属性。</p>
+
+<h2 id="abstract修饰符">abstract修饰符</h2>
+
+<h3 id="抽象类">抽象类</h3>
+
+<p>用abstract修饰的类为抽象类， <strong>抽象类不能被实例化，抽象类的构造器不是用来创建实例的，而是用于给子类调用的</strong> 。由于fianl修饰的类不能被继承，但是abstract修饰的类只能被用来继承，两者矛盾，所以fianl和abstract不能同时出现（修饰方法时也一样）。此外， <strong>一个类，如果有抽象方法，此类只能被定义成抽象类；如果一个类继承一个抽象类，但是没有完全实现其抽象方法，或者一个类实现了一个接口，但是没有完全实现其抽象方法，此类也只能被定义成抽象类</strong></p>
+
+<h3 id="抽象方法">抽象方法</h3>
+
+<p>用abstract修饰的方法为抽象方法，抽象方法有如下知识点：</p>
+
+<ol>
+<li>抽象类只有方法签名，没有方法实现，即没有方法体。</li>
+<li>static和abstract不能同时修饰一个方法（如果可以，那么将可以通过抽象类名调用一个没有方法体的方法）。</li>
+<li>abstract修饰的方法不能时private访问权限（抽象方法只能被继承，但是private无法被子类访问到）。</li>
+</ol>
+
+<h2 id="接口">接口</h2>
+
+<p>定义接口的基本语法如下：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span></pre></td>
+<td class="lntd">
+<pre class="chroma">[修饰符] interface 接口名 extends 接口0,接口1,...{
+            零到多个常量...
+            零到多个抽象方法...
+}</pre></td></tr></table>
+</div>
+</div>
+<p>可以看到，一个接口可以有多个直接的父接口，但 <strong>接口只能继承接口，不能继承类</strong> ，此所谓Java的变相多继承 。此外，接口有三自动：</p>
+
+<ol>
+<li>自动为成员变类加上public static final,即接口内只能定义常量。</li>
+<li>自动为方法加上public abstract,即接口只能定义抽象方法。此外接口不能有构造器。</li>
+<li>自动为内部类，内部接口，内部枚举类加上public static。</li>
+</ol>
+
+<h3 id="接口的实现">接口的实现</h3>
+
+<p>实现接口用implements关键词。一个类可以同时继承一个父类，实现多个接口，但是implements放在extends后面，此时如果这个类没有实现接口的全部抽象方法或者抽象类的所有方法，此类只能被定义成一个抽象类。 <strong>实现接口时，必须使用public访问控制修饰符，因为接口的方法都是public权限的，而重写方法的访问权限只能更大</strong></p>
+
+<h2 id="接口与抽象类的比较">接口与抽象类的比较</h2>
+
+<ol>
+<li>接口中只能包含抽象方法，但是抽象类中可以包含普通方法。</li>
+<li>接口中不能定义静态方法，但是抽象类中可以定义静态方法（不是抽象静态方法）。</li>
+<li>接口中只能定义静态常量，不能定义普通变量，但是抽象类里没有限制。</li>
+<li>接口 <strong>不能有构造器</strong> ，但是抽象类有。</li>
+<li>接口不能定义初始化块，但抽象类可以包含初始化块。</li>
+</ol>
+
+<p>其实只要记住接口是一个纯粹的用于被实现的标准，就可以很好理解接口的一些特性：不能包含有实现了方法体的方法，只能有静态常量等等。</p>
+
+<h2 id="内部类">内部类</h2>
+
+<p>一般思维，把一个类的定义放在另一个类内，这个在内部的类就是 <strong>内部类</strong>，包含内部类的类称为 <strong>外部类</strong>。</p>
+
+<h3 id="非静态内部类">非静态内部类</h3>
+
+<p>首先理解成员内部类，成员内部类的和成员变量一样，定义在类内，方法之外。所以局部内部类和匿名内部类不是成员内部类。成员内部类分为两种：静态内部类和非静态内部类。使用static修饰的成员内部类为静态内部类，是类相关的；不适用static修饰的成员内部类是非静态内部类，是实例相关的， <strong>其存在依赖于外部类对象</strong> 。此外，非静态成员内部类可以直接调用外部类的实例变量。一个子例如下：</p>
+
+<p>代码如下：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span></pre></td>
+<td class="lntd">
+<pre class="chroma">public class Class_0 {
+    //外部类实例变量
+    private String name=&#34;pinger&#34;;
+    //定义一个非静态成员内部类
+    public class Inner_0{
+        public String name=&#34;P1n93r&#34;;
+        public void say(){
+            System.out.println(&#34;I&#39;m &#34;+this.name);
+            //Class_0.this指代当前外部类对象
+            System.out.println(&#34;I&#39;m also &#34;+Class_0.this.name);
+        }
+    }
+    //测试非静态成员内部类
+    public static void main(String[] args){
+        Class_0.Inner_0 inner=new Class_0().new Inner_0();
+        inner.say();
+    }
+}</pre></td></tr></table>
+</div>
+</div>
+<p>执行结果如下图：</p>
+
+<p><img src="./../media/20191009-1.png" alt="结果1" /></p>
+
+<p>还有以下两个注意点：</p>
+
+<ol>
+<li>外部类不能直接访问内部类的成员。</li>
+<li>非静态内部类不能定义静态成员。</li>
+</ol>
+
+<h3 id="静态内部类">静态内部类</h3>
+
+<p>一般思维，静态内部类属于外部类本身，不属于某个实例，所以静态内部类也称为 <strong>类内部类</strong>。使用static修饰的成员内部类为静态内部类。 <strong>静态内部类只能访问外部类的类成员，不能访问其实例成员。</strong></p>
+
+<h3 id="布局内部类">布局内部类</h3>
+
+<p>局部内部类就是写在方法里的内部类，和局部变量一样，仅仅在方法里有效。 由于 <strong>所有的局部成员都不能有访问控制修饰符</strong> ，所以局部内部类也就不能用static和pulic等修饰。</p>
+
+<h3 id="匿名内部类">匿名内部类</h3>
+
+<p>一般思维，没有名称的内部类为匿名内部类。匿名内部类的一般使用场景是需要一次性使用的类时，可以创建匿名内部类。 <strong>创建匿名内部类的时候会立即创建一个该类的实例，这个类定义立即消失，匿名内部类不同重复使用。</strong> 匿名内部类的定义格式如下：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span></pre></td>
+<td class="lntd">
+<pre class="chroma">new 抽象父类(实参列表)|实现接口(){
+    //匿名内部类的实体部分
+}</pre></td></tr></table>
+</div>
+</div>
+<p>可以看到，匿名内部类必须继承一个抽象父类或者实现一个接口，此外，不同同时继承抽象父类又实现接口。匿名内部类的其他常见知识点如下：</p>
+
+<ol>
+<li>匿名内部类不能有构造器，因为其没有类名称。</li>
+<li>匿名内部类必须实现抽象父类或者接口的所有抽象方法。</li>
+<li>匿名内部类可以重写抽象父类中的普通方法。</li>
+<li><strong>如果匿名内部类需要访问外部的局部变量，必须此变量必须使用final修饰</strong></li>
+</ol>
+
+<h3 id="使用内部类">使用内部类</h3>
+
+<p>通过上面非静态内部类的例子，可以看到，创建非静态内部类对象的时候，需要一个外部类对象，所以在外部类意外的地方创建内部类对象的语法格式为： <code>new OutterClass().InnerClass()</code> ，在外部类内的话，由于内部类可知，所以直接 <code>new InnerClass()</code> 就好。此外还有一个关于成员内部类的继承问题，一个继承的例子如下：</p>
+
+<p>包含一个内部类的外部类代码如下：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span></pre></td>
+<td class="lntd">
+<pre class="chroma"><span class="kn">package</span> <span class="nx">com</span><span class="p">.</span><span class="nx">test</span><span class="p">.</span><span class="nx">InnerClass</span><span class="p">;</span>
+<span class="nx">public</span> <span class="nx">class</span> <span class="nx">Class_1</span> <span class="p">{</span>
+    <span class="nx">public</span> <span class="nx">class</span> <span class="nx">Inner_1</span><span class="p">{</span>
+        <span class="p">{</span>
+            <span class="nx">System</span><span class="p">.</span><span class="nx">out</span><span class="p">.</span><span class="nb">println</span><span class="p">(</span><span class="s">&#34;我是非静态内部类父类~&#34;</span><span class="p">);</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+    <span class="c1">//此内部类的子类写在外部类内
+</span><span class="c1"></span>    <span class="nx">public</span> <span class="nx">class</span> <span class="nx">InnerSon_1</span> <span class="nx">extends</span> <span class="nx">Inner_1</span><span class="p">{</span>
+        <span class="p">{</span>
+            <span class="nx">System</span><span class="p">.</span><span class="nx">out</span><span class="p">.</span><span class="nb">println</span><span class="p">(</span><span class="s">&#34;我是非静态内部类子类1&#34;</span><span class="p">);</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+<span class="p">}</span></pre></td></tr></table>
+</div>
+</div>
+<p>写在外部类外的一个内部类子类代码如下：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span></pre></td>
+<td class="lntd">
+<pre class="chroma"><span class="kn">package</span> <span class="nx">com</span><span class="p">.</span><span class="nx">test</span><span class="p">.</span><span class="nx">InnerClass</span><span class="p">;</span>
+<span class="nx">class</span> <span class="nx">InnerSon</span> <span class="nx">extends</span> <span class="nx">Class_1</span><span class="p">.</span><span class="nx">Inner_1</span><span class="p">{</span>
+    <span class="c1">//这个out对象就是外部类对象，通过外部类对象在构造器内调用super()方法，就是通过外部类对象调用父类构造器
+</span><span class="c1"></span>    <span class="nx">public</span> <span class="nf">InnerSon</span><span class="p">(</span><span class="nx">Class_1</span> <span class="nx">out</span><span class="p">){</span>
+        <span class="nx">out</span><span class="p">.</span><span class="nf">super</span><span class="p">();</span>
+    <span class="p">}</span>
+<span class="p">}</span></pre></td></tr></table>
+</div>
+</div>
+<p>可以看到，成员非静态内部类的子类写在外部类的外面和里面是不一样的。写在外面，系统不会自动帮我们在构造器内调用父类构造器，所以需要我们手动用外部类对象调用父类构造器。</p>
+
+<h2 id="枚举类">枚举类</h2>
+
+<p>枚举类使用enum关键字声明，一个Java源文件最多只能定义一个public访问权限的枚举类，且该Java源文件的的文件名也必须和枚举类的类名相同。枚举类有如下特点：</p>
+
+<ol>
+<li>枚举类默认继承的不是java.lang.Object，而是java.lang.Enum，此类实现了java.lang.Serializable和java.lang.Comparable两个接口。</li>
+<li><strong>非抽象的枚举类会使用final修饰，所以不能派生子类。</strong></li>
+<li>枚举类的构造器只能是private访问权限，省略的话默认为private。</li>
+<li><strong>枚举类的所有实例必须在第一行显式列出</strong> ，否则这个枚举类永远不能产生实例。</li>
+</ol>
+
+<p>一个综合例子如下：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span><span class="lnt">29
+</span><span class="lnt">30
+</span><span class="lnt">31
+</span><span class="lnt">32
+</span><span class="lnt">33
+</span><span class="lnt">34
+</span><span class="lnt">35
+</span><span class="lnt">36
+</span><span class="lnt">37
+</span><span class="lnt">38
+</span><span class="lnt">39
+</span><span class="lnt">40
+</span><span class="lnt">41
+</span><span class="lnt">42
+</span><span class="lnt">43
+</span></pre></td>
+<td class="lntd">
+<pre class="chroma"><span class="kn">package</span> <span class="nx">com</span><span class="p">.</span><span class="nx">test</span><span class="p">.</span><span class="nx">enumerate</span><span class="p">;</span>
+<span class="c1">//定义一个接口
+</span><span class="c1"></span><span class="kd">interface</span> <span class="nx">Interface1</span><span class="p">{</span>
+    <span class="nx">String</span> <span class="nf">say</span><span class="p">();</span>
+<span class="p">}</span>
+<span class="c1">//定义一个抽象枚举类
+</span><span class="c1"></span><span class="nx">public</span> <span class="nx">enum</span> <span class="nx">EnumOne</span> <span class="nx">implements</span> <span class="nx">Interface1</span> <span class="p">{</span>
+    <span class="nf">p1n93r</span><span class="p">(</span><span class="s">&#34;阿淦&#34;</span><span class="p">){</span>
+        <span class="nx">public</span> <span class="nx">String</span> <span class="nf">getName</span><span class="p">(){</span>
+            <span class="k">return</span> <span class="nx">this</span><span class="p">.</span><span class="nf">name</span><span class="p">()</span><span class="o">+</span><span class="s">&#34;实现抽象方法_1&#34;</span><span class="p">;</span>
+        <span class="p">}</span>
+        <span class="nx">public</span> <span class="nx">String</span> <span class="nf">say</span><span class="p">(){</span>
+            <span class="k">return</span> <span class="s">&#34;I&#39;m &#34;</span><span class="o">+</span><span class="nx">this</span><span class="p">.</span><span class="nf">name</span><span class="p">();</span>
+        <span class="p">}</span>
+    <span class="p">},</span><span class="nf">pinger</span><span class="p">(</span><span class="s">&#34;皮皮GIAO&#34;</span><span class="p">){</span>
+        <span class="nx">public</span> <span class="nx">String</span> <span class="nf">getName</span><span class="p">(){</span>
+            <span class="k">return</span> <span class="nx">this</span><span class="p">.</span><span class="nf">name</span><span class="p">()</span><span class="o">+</span><span class="s">&#34;实现抽象方法_2&#34;</span><span class="p">;</span>
+        <span class="p">}</span>
+        <span class="nx">public</span> <span class="nx">String</span> <span class="nf">say</span><span class="p">(){</span>
+            <span class="k">return</span> <span class="s">&#34;I&#39;m &#34;</span><span class="o">+</span><span class="nx">this</span><span class="p">.</span><span class="nf">name</span><span class="p">();</span>
+        <span class="p">}</span>
+    <span class="p">},</span><span class="nf">pin83r</span><span class="p">(</span><span class="s">&#34;淦皮&#34;</span><span class="p">){</span>
+        <span class="nx">public</span> <span class="nx">String</span> <span class="nf">getName</span><span class="p">(){</span>
+            <span class="k">return</span> <span class="nx">this</span><span class="p">.</span><span class="nf">name</span><span class="p">()</span><span class="o">+</span><span class="s">&#34;实现抽象方法_3&#34;</span><span class="p">;</span>
+        <span class="p">}</span>
+        <span class="nx">public</span> <span class="nx">String</span> <span class="nf">say</span><span class="p">(){</span>
+            <span class="k">return</span> <span class="s">&#34;I&#39;m &#34;</span><span class="o">+</span><span class="nx">this</span><span class="p">.</span><span class="nf">name</span><span class="p">();</span>
+        <span class="p">}</span>
+    <span class="p">};</span>
+    <span class="nx">private</span> <span class="nx">String</span> <span class="nx">name</span><span class="p">;</span>
+    <span class="nx">private</span> <span class="nf">EnumOne</span><span class="p">(</span><span class="nx">String</span> <span class="nx">name</span><span class="p">){</span>
+        <span class="nx">this</span><span class="p">.</span><span class="nx">name</span><span class="p">=</span><span class="nx">name</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="c1">//一个抽象方法
+</span><span class="c1"></span>    <span class="nx">public</span> <span class="nx">abstract</span> <span class="nx">String</span> <span class="nf">getName</span><span class="p">();</span>
+    <span class="nx">public</span> <span class="nx">static</span> <span class="nx">void</span> <span class="nf">main</span><span class="p">(</span><span class="nx">String</span><span class="p">[]</span> <span class="nx">args</span><span class="p">){</span>
+        <span class="nx">EnumOne</span> <span class="nx">p1n93r</span><span class="p">=</span><span class="nx">EnumOne</span><span class="p">.</span><span class="nf">valueOf</span><span class="p">(</span><span class="nx">EnumOne</span><span class="p">.</span><span class="nx">class</span><span class="p">,</span><span class="s">&#34;p1n93r&#34;</span><span class="p">);</span>
+        <span class="nx">EnumOne</span> <span class="nx">pinger</span><span class="p">=</span><span class="nx">EnumOne</span><span class="p">.</span><span class="nf">valueOf</span><span class="p">(</span><span class="nx">EnumOne</span><span class="p">.</span><span class="nx">class</span><span class="p">,</span><span class="s">&#34;pinger&#34;</span><span class="p">);</span>
+        <span class="nx">EnumOne</span> <span class="nx">pin83r</span><span class="p">=</span><span class="nx">EnumOne</span><span class="p">.</span><span class="nf">valueOf</span><span class="p">(</span><span class="nx">EnumOne</span><span class="p">.</span><span class="nx">class</span><span class="p">,</span><span class="s">&#34;pin83r&#34;</span><span class="p">);</span>
+        <span class="nx">System</span><span class="p">.</span><span class="nx">out</span><span class="p">.</span><span class="nb">println</span><span class="p">(</span><span class="nx">p1n93r</span><span class="p">.</span><span class="nf">say</span><span class="p">()</span><span class="o">+</span><span class="s">&#34;\n&#34;</span><span class="o">+</span><span class="nx">pinger</span><span class="p">.</span><span class="nf">say</span><span class="p">()</span><span class="o">+</span><span class="s">&#34;\n&#34;</span><span class="o">+</span><span class="nx">pin83r</span><span class="p">.</span><span class="nf">say</span><span class="p">());</span>
+        <span class="nx">System</span><span class="p">.</span><span class="nx">out</span><span class="p">.</span><span class="nb">println</span><span class="p">(</span><span class="nx">p1n93r</span><span class="p">.</span><span class="nf">getName</span><span class="p">()</span><span class="o">+</span><span class="s">&#34;\n&#34;</span><span class="o">+</span><span class="nx">pinger</span><span class="p">.</span><span class="nf">getName</span><span class="p">()</span><span class="o">+</span><span class="s">&#34;\n&#34;</span><span class="o">+</span><span class="nx">pin83r</span><span class="p">.</span><span class="nf">getName</span><span class="p">());</span>
+    <span class="p">}</span>
+<span class="p">}</span></pre></td></tr></table>
+</div>
+</div>
+<p>main方法运行结果如下图：</p>
+
+<p><img src="./../media/20191009-2.png" alt="结果2" /></p>
+
+<p>其实上面的枚举类是一个抽象类（定义了抽象方法），而类内首行的各个枚举值其实是创建各个本枚举类的匿名子类实例（定义匿名内部类的同时就会创建匿名对象）。所以需要实现本枚举类的抽象方法，也要实现枚举类实现的接口的方法。</p>
+
     </div>
 
     <div class="post-copyright">
@@ -434,7 +983,7 @@
   <p class="copyright-item">
     <span class="item-title">上次更新</span>
     <span class="item-content">
-        2019-10-01
+        2019-10-09
         
     </span>
   </p>
