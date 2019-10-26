@@ -6,10 +6,19 @@
     <description>Recent content in Mybatis on P1n93r - 博学而精一</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-cn</language>
-    <lastBuildDate>Sat, 26 Oct 2019 16:24:36 +0800</lastBuildDate>
+    <lastBuildDate>Sat, 26 Oct 2019 20:40:36 +0800</lastBuildDate>
     
 	<atom:link href="http://p1n93r.github.io/categories/mybatis/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>Mybatis传参</title>
+      <link>http://p1n93r.github.io/post/mybatis/mybatis%E4%BC%A0%E5%8F%82/</link>
+      <pubDate>Sat, 26 Oct 2019 20:40:36 +0800</pubDate>
+      
+      <guid>http://p1n93r.github.io/post/mybatis/mybatis%E4%BC%A0%E5%8F%82/</guid>
+      <description>前言 有一次用到mybatis的动态sql中的foreach，发现foreach的属性collection填写的值有点问题。然后突然想到之前都</description>
+    </item>
     
     <item>
       <title>Mybatis缓存</title>
