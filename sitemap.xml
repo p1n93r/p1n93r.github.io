@@ -10,7 +10,35 @@
   
   <url>
     <loc>http://p1n93r.github.io/categories/</loc>
-    <lastmod>2019-10-26T20:40:36+08:00</lastmod>
+    <lastmod>2019-11-01T19:33:36+08:00</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.5</priority>
+  </url>
+  
+  <url>
+    <loc>http://p1n93r.github.io/categories/java/</loc>
+    <lastmod>2019-11-01T19:33:36+08:00</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.5</priority>
+  </url>
+  
+  <url>
+    <loc>http://p1n93r.github.io/</loc>
+    <lastmod>2019-11-01T19:33:36+08:00</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.5</priority>
+  </url>
+  
+  <url>
+    <loc>http://p1n93r.github.io/post/</loc>
+    <lastmod>2019-11-01T19:33:36+08:00</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.5</priority>
+  </url>
+  
+  <url>
+    <loc>http://p1n93r.github.io/post/java/%E6%B3%9B%E5%9E%8B/</loc>
+    <lastmod>2019-11-01T19:33:36+08:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.5</priority>
   </url>
@@ -30,20 +58,6 @@
   </url>
   
   <url>
-    <loc>http://p1n93r.github.io/</loc>
-    <lastmod>2019-10-26T20:40:36+08:00</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.5</priority>
-  </url>
-  
-  <url>
-    <loc>http://p1n93r.github.io/post/</loc>
-    <lastmod>2019-10-26T20:40:36+08:00</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.5</priority>
-  </url>
-  
-  <url>
     <loc>http://p1n93r.github.io/post/mybatis/mybatis%E7%BC%93%E5%AD%98/</loc>
     <lastmod>2019-10-26T16:24:36+08:00</lastmod>
     <changefreq>weekly</changefreq>
@@ -53,13 +67,6 @@
   <url>
     <loc>http://p1n93r.github.io/post/mybatis/mybatis%E6%87%92%E5%8A%A0%E8%BD%BD/</loc>
     <lastmod>2019-10-26T13:09:36+08:00</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.5</priority>
-  </url>
-  
-  <url>
-    <loc>http://p1n93r.github.io/categories/java/</loc>
-    <lastmod>2019-10-18T19:50:36+08:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.5</priority>
   </url>
@@ -135,7 +142,7 @@
   </url>
   
   <url>
-    <loc>http://p1n93r.github.io/post/mybatis/%E5%8A%A8%E6%80%81sql/</loc>
+    <loc>http://p1n93r.github.io/post/mybatis/mybatis%E5%8A%A8%E6%80%81sql/</loc>
     <lastmod>2019-09-24T08:22:36+08:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.5</priority>
@@ -237,6 +244,11 @@
     <lastmod>2019-07-10T17:48:36+08:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.5</priority>
+  </url>
+  
+  <url>
+    <loc>http://p1n93r.github.io/post/spring/%E6%96%B0%E5%BB%BA%E6%96%87%E6%9C%AC%E6%96%87%E6%A1%A3/</loc>
+    <priority>0</priority>
   </url>
   
 </urlset>

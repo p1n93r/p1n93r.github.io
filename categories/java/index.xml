@@ -6,10 +6,19 @@
     <description>Recent content in Java on P1n93r - 博学而精一</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-cn</language>
-    <lastBuildDate>Fri, 18 Oct 2019 19:50:36 +0800</lastBuildDate>
+    <lastBuildDate>Fri, 01 Nov 2019 19:33:36 +0800</lastBuildDate>
     
 	<atom:link href="http://p1n93r.github.io/categories/java/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>泛型</title>
+      <link>http://p1n93r.github.io/post/java/%E6%B3%9B%E5%9E%8B/</link>
+      <pubDate>Fri, 01 Nov 2019 19:33:36 +0800</pubDate>
+      
+      <guid>http://p1n93r.github.io/post/java/%E6%B3%9B%E5%9E%8B/</guid>
+      <description>前言 Java中的泛型支持是从JDK1.5开始的，目的是 让集合能够记住其元素的数据类型 。在没有泛型之前，将元素放在集合中，此元素会被当成Obj</description>
+    </item>
     
     <item>
       <title>集合</title>
