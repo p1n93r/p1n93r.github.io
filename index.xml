@@ -6,7 +6,7 @@
     <description>Recent content on P1n93r - 博学而精一</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-cn</language>
-    <lastBuildDate>Fri, 01 Nov 2019 19:33:36 +0800</lastBuildDate>
+    <lastBuildDate>Tue, 05 Nov 2019 08:28:36 +0800</lastBuildDate>
     
 	<atom:link href="http://p1n93r.github.io/index.xml" rel="self" type="application/rss+xml" />
     
@@ -18,6 +18,15 @@
       
       <guid>http://p1n93r.github.io/about/</guid>
       <description>人生信条 学海无涯 博学精一 人生观 天无绝人之处 宏观上所有事情都无意义 很多时候你做不到只做自己喜欢的事 少喝鸡汤，这个世界不需要这么温和的人 Who Am I e</description>
+    </item>
+    
+    <item>
+      <title>Spring入门</title>
+      <link>http://p1n93r.github.io/post/spring/spring%E5%85%A5%E9%97%A8/</link>
+      <pubDate>Tue, 05 Nov 2019 08:28:36 +0800</pubDate>
+      
+      <guid>http://p1n93r.github.io/post/spring/spring%E5%85%A5%E9%97%A8/</guid>
+      <description>Spring简介 Spring是一个轻量级的Java开发框架， 目的是为了解决企业级应用开发的业务逻辑层和其他各层的耦合问题。 Spring体系结</description>
     </item>
     
     <item>
@@ -198,15 +207,6 @@
       
       <guid>http://p1n93r.github.io/post/mybatis/mybatis%E6%95%B4%E5%90%88spring/</guid>
       <description>介绍 &amp;emsp;&amp;emsp;Mybatis是一款持久层的框架，使用Mybatis我们无需自己编写繁琐的JDBC代码，也无需为sql注入等安全</description>
-    </item>
-    
-    <item>
-      <title></title>
-      <link>http://p1n93r.github.io/post/spring/%E6%96%B0%E5%BB%BA%E6%96%87%E6%9C%AC%E6%96%87%E6%A1%A3/</link>
-      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
-      
-      <guid>http://p1n93r.github.io/post/spring/%E6%96%B0%E5%BB%BA%E6%96%87%E6%9C%AC%E6%96%87%E6%A1%A3/</guid>
-      <description></description>
     </item>
     
   </channel>
