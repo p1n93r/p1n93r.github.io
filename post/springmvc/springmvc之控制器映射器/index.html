@@ -50,7 +50,7 @@
 
 <meta itemprop="datePublished" content="2019-07-25T17:48:36&#43;08:00" />
 <meta itemprop="dateModified" content="2019-07-25T17:48:36&#43;08:00" />
-<meta itemprop="wordCount" content="1795">
+<meta itemprop="wordCount" content="1818">
 
 
 
@@ -131,7 +131,7 @@
         <div class="post-category">
             <a href="/categories/springmvc/"> SpringMVC </a>
             </div>
-          <span class="more-meta"> 约 1795 字 </span>
+          <span class="more-meta"> 约 1818 字 </span>
           <span class="more-meta"> 预计阅读 4 分钟 </span>
         
       </div>
@@ -271,7 +271,7 @@
 
 <p><img src="./../media/结果2.png" alt="结果2" /></p>
 
-<p><strong><em>Notice</em></strong>：可以看到，@RequestMapping是放在方法前的（当然也可以放在类前作为所有类内的方法的上级路由），其实也就是说，现在用注解控制器的另外的好处就是： <strong>一个控制器类内可以有多个访问路由</strong> ，以往我们开发控制器，一个控制器对应一个访问路由，现在可以把多个访问路由集成到一个控制器类内。只需要新写一个方法，然后在方法前填上@RequestMapping注释即可（当然，得在注释内写上访问url，推荐最前面加上一个/符合，使得url以项目地址为参考路径）。最最最后的一个： <strong>我们可以用注解驱动 <code>&lt;mvc:annotation-driven&gt;</code> 自动加载RequestMappingHandlerMapping和RequestMappingHandlerAdapter</strong> 也就是如果SpringMVC的配置文件里写上 <code>&lt;mvc:annotation-driven&gt;</code> ，前面的注解映射器和注解适配器都可以不配置了，会自动加载。</p>
+<p><strong><em>Notice:</em></strong> 可以看到，@RequestMapping是放在方法前的（当然也可以放在类前作为所有类内的方法的上级路由），其实也就是说，现在用注解控制器的另外的好处就是： <strong>一个控制器类内可以有多个访问路由</strong> ，以往我们开发控制器，一个控制器对应一个访问路由，现在可以把多个访问路由集成到一个控制器类内。只需要新写一个方法，然后在方法前填上@RequestMapping注释即可（当然，得在注释内写上访问url，推荐最前面加上一个/符合，使得url以项目地址为参考路径）。最最最后的一个： <strong>我们可以用注解驱动<code>&lt;mvc:annotation-driven&gt;</code>自动加载RequestMappingHandlerMapping和RequestMappingHandlerAdapter</strong> ，也就是如果SpringMVC的配置文件里写上 <code>&lt;mvc:annotation-driven&gt;</code> ，前面的注解映射器和注解适配器都可以不配置了，会自动加载。</p>
 
 <h2 id="结语">结语</h2>
 

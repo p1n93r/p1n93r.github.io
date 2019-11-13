@@ -10,28 +10,35 @@
   
   <url>
     <loc>http://p1n93r.github.io/categories/</loc>
-    <lastmod>2019-11-05T08:28:36+08:00</lastmod>
+    <lastmod>2019-11-12T09:00:36+08:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.5</priority>
   </url>
   
   <url>
     <loc>http://p1n93r.github.io/</loc>
-    <lastmod>2019-11-05T08:28:36+08:00</lastmod>
+    <lastmod>2019-11-12T09:00:36+08:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.5</priority>
   </url>
   
   <url>
     <loc>http://p1n93r.github.io/post/</loc>
-    <lastmod>2019-11-05T08:28:36+08:00</lastmod>
+    <lastmod>2019-11-12T09:00:36+08:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.5</priority>
   </url>
   
   <url>
     <loc>http://p1n93r.github.io/categories/spring/</loc>
-    <lastmod>2019-11-05T08:28:36+08:00</lastmod>
+    <lastmod>2019-11-12T09:00:36+08:00</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.5</priority>
+  </url>
+  
+  <url>
+    <loc>http://p1n93r.github.io/post/spring/spring-ioc/</loc>
+    <lastmod>2019-11-12T09:00:36+08:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.5</priority>
   </url>
