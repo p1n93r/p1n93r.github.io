@@ -9,22 +9,50 @@
   </url>
   
   <url>
+    <loc>http://p1n93r.github.io/post/linux/1-%E9%9C%80%E8%A6%81%E4%BA%86%E8%A7%A3%E7%9A%84%E5%91%BD%E4%BB%A4%E8%A1%8C%E7%9B%B8%E5%85%B3%E4%BA%8B%E9%A1%B9/</loc>
+    <lastmod>2019-11-13T21:36:36+08:00</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.5</priority>
+  </url>
+  
+  <url>
     <loc>http://p1n93r.github.io/categories/</loc>
-    <lastmod>2019-11-12T09:00:36+08:00</lastmod>
+    <lastmod>2019-11-13T21:36:36+08:00</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.5</priority>
+  </url>
+  
+  <url>
+    <loc>http://p1n93r.github.io/categories/linux/</loc>
+    <lastmod>2019-11-13T21:36:36+08:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.5</priority>
   </url>
   
   <url>
     <loc>http://p1n93r.github.io/</loc>
-    <lastmod>2019-11-12T09:00:36+08:00</lastmod>
+    <lastmod>2019-11-13T21:36:36+08:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.5</priority>
   </url>
   
   <url>
     <loc>http://p1n93r.github.io/post/</loc>
-    <lastmod>2019-11-12T09:00:36+08:00</lastmod>
+    <lastmod>2019-11-13T21:36:36+08:00</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.5</priority>
+  </url>
+  
+  <url>
+    <loc>http://p1n93r.github.io/post/java/io/</loc>
+    <lastmod>2019-11-13T19:22:36+08:00</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.5</priority>
+  </url>
+  
+  <url>
+    <loc>http://p1n93r.github.io/categories/java/</loc>
+    <lastmod>2019-11-13T19:22:36+08:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.5</priority>
   </url>
@@ -60,13 +88,6 @@
   <url>
     <loc>http://p1n93r.github.io/tags/</loc>
     <lastmod>2019-11-05T08:28:36+08:00</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.5</priority>
-  </url>
-  
-  <url>
-    <loc>http://p1n93r.github.io/categories/java/</loc>
-    <lastmod>2019-11-01T19:33:36+08:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.5</priority>
   </url>
