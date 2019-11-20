@@ -2,255 +2,255 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Posts on P1n93r - 博学而精一</title>
-    <link>http://p1n93r.github.io/post/</link>
+    <link>https://p1n93r.github.io/post/</link>
     <description>Recent content in Posts on P1n93r - 博学而精一</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-cn</language>
     <lastBuildDate>Wed, 20 Nov 2019 12:09:36 +0800</lastBuildDate>
     
-	<atom:link href="http://p1n93r.github.io/post/index.xml" rel="self" type="application/rss+xml" />
+	<atom:link href="https://p1n93r.github.io/post/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
       <title>4-学习命令</title>
-      <link>http://p1n93r.github.io/post/linux/4-%E5%AD%A6%E4%B9%A0%E5%91%BD%E4%BB%A4/</link>
+      <link>https://p1n93r.github.io/post/linux/4-%E5%AD%A6%E4%B9%A0%E5%91%BD%E4%BB%A4/</link>
       <pubDate>Wed, 20 Nov 2019 12:09:36 +0800</pubDate>
       
-      <guid>http://p1n93r.github.io/post/linux/4-%E5%AD%A6%E4%B9%A0%E5%91%BD%E4%BB%A4/</guid>
+      <guid>https://p1n93r.github.io/post/linux/4-%E5%AD%A6%E4%B9%A0%E5%91%BD%E4%BB%A4/</guid>
       <description>使用man查找命令相关信息 想要查看某个命令的详细用法，可以使用 man 命令，格式为： man 待查询命令 ,就会打开此命令的手册页面，是基于 less 打开的，所以可</description>
     </item>
     
     <item>
       <title>3-创建和销毁</title>
-      <link>http://p1n93r.github.io/post/linux/3-%E5%88%9B%E5%BB%BA%E5%92%8C%E9%94%80%E6%AF%81/</link>
+      <link>https://p1n93r.github.io/post/linux/3-%E5%88%9B%E5%BB%BA%E5%92%8C%E9%94%80%E6%AF%81/</link>
       <pubDate>Sat, 16 Nov 2019 18:02:36 +0800</pubDate>
       
-      <guid>http://p1n93r.github.io/post/linux/3-%E5%88%9B%E5%BB%BA%E5%92%8C%E9%94%80%E6%AF%81/</guid>
+      <guid>https://p1n93r.github.io/post/linux/3-%E5%88%9B%E5%BB%BA%E5%92%8C%E9%94%80%E6%AF%81/</guid>
       <description>将文件改为当前时间 touch 命令的主要作用是更新文件的 访问和修改时间 （需要拥有文件的写入权限），如果指向修改文件的访问时间，可以使用 -a 选项；如果只想</description>
     </item>
     
     <item>
       <title>2-文件导航系统</title>
-      <link>http://p1n93r.github.io/post/linux/2-%E6%96%87%E4%BB%B6%E5%AF%BC%E8%88%AA%E7%B3%BB%E7%BB%9F/</link>
+      <link>https://p1n93r.github.io/post/linux/2-%E6%96%87%E4%BB%B6%E5%AF%BC%E8%88%AA%E7%B3%BB%E7%BB%9F/</link>
       <pubDate>Fri, 15 Nov 2019 19:05:36 +0800</pubDate>
       
-      <guid>http://p1n93r.github.io/post/linux/2-%E6%96%87%E4%BB%B6%E5%AF%BC%E8%88%AA%E7%B3%BB%E7%BB%9F/</guid>
+      <guid>https://p1n93r.github.io/post/linux/2-%E6%96%87%E4%BB%B6%E5%AF%BC%E8%88%AA%E7%B3%BB%E7%BB%9F/</guid>
       <description>列出文件和文件夹 在操作和使用目录中的文件之前，首先得直到该目录中有哪些文件，所以我们需要列出目录中得文件和子目录，此命令便是 ls 。输入 ls 会列出</description>
     </item>
     
     <item>
       <title>1-需要了解的命令行相关事项</title>
-      <link>http://p1n93r.github.io/post/linux/1-%E9%9C%80%E8%A6%81%E4%BA%86%E8%A7%A3%E7%9A%84%E5%91%BD%E4%BB%A4%E8%A1%8C%E7%9B%B8%E5%85%B3%E4%BA%8B%E9%A1%B9/</link>
+      <link>https://p1n93r.github.io/post/linux/1-%E9%9C%80%E8%A6%81%E4%BA%86%E8%A7%A3%E7%9A%84%E5%91%BD%E4%BB%A4%E8%A1%8C%E7%9B%B8%E5%85%B3%E4%BA%8B%E9%A1%B9/</link>
       <pubDate>Wed, 13 Nov 2019 21:36:36 +0800</pubDate>
       
-      <guid>http://p1n93r.github.io/post/linux/1-%E9%9C%80%E8%A6%81%E4%BA%86%E8%A7%A3%E7%9A%84%E5%91%BD%E4%BB%A4%E8%A1%8C%E7%9B%B8%E5%85%B3%E4%BA%8B%E9%A1%B9/</guid>
+      <guid>https://p1n93r.github.io/post/linux/1-%E9%9C%80%E8%A6%81%E4%BA%86%E8%A7%A3%E7%9A%84%E5%91%BD%E4%BB%A4%E8%A1%8C%E7%9B%B8%E5%85%B3%E4%BA%8B%E9%A1%B9/</guid>
       <description>一切皆文件 在Linux系统中，一切皆文件 。除了我们常识中认识的文件外， 目录也是文件，不过是特殊类型的文件，包含有关其他文件的信息。磁盘驱动器</description>
     </item>
     
     <item>
       <title>IO</title>
-      <link>http://p1n93r.github.io/post/java/io/</link>
+      <link>https://p1n93r.github.io/post/java/io/</link>
       <pubDate>Wed, 13 Nov 2019 19:22:36 +0800</pubDate>
       
-      <guid>http://p1n93r.github.io/post/java/io/</guid>
+      <guid>https://p1n93r.github.io/post/java/io/</guid>
       <description>概述 java的IO通过java.io包下的类和接口来支持，在java.io包下主要包括输入、输出两种IO流，每种输出输出流又可以分为 字节流和</description>
     </item>
     
     <item>
       <title>Spring IoC</title>
-      <link>http://p1n93r.github.io/post/spring/spring-ioc/</link>
+      <link>https://p1n93r.github.io/post/spring/spring-ioc/</link>
       <pubDate>Tue, 12 Nov 2019 09:00:36 +0800</pubDate>
       
-      <guid>http://p1n93r.github.io/post/spring/spring-ioc/</guid>
+      <guid>https://p1n93r.github.io/post/spring/spring-ioc/</guid>
       <description>Spring IoC基本概念 控制反转（IoC，Inversion of Control） 是Spring框架的基础，也是Spring的核心理念，用于消减计算机程</description>
     </item>
     
     <item>
       <title>Spring入门</title>
-      <link>http://p1n93r.github.io/post/spring/spring%E5%85%A5%E9%97%A8/</link>
+      <link>https://p1n93r.github.io/post/spring/spring%E5%85%A5%E9%97%A8/</link>
       <pubDate>Tue, 05 Nov 2019 08:28:36 +0800</pubDate>
       
-      <guid>http://p1n93r.github.io/post/spring/spring%E5%85%A5%E9%97%A8/</guid>
+      <guid>https://p1n93r.github.io/post/spring/spring%E5%85%A5%E9%97%A8/</guid>
       <description>Spring简介 Spring是一个轻量级的Java开发框架， 目的是为了解决企业级应用开发的业务逻辑层和其他各层的耦合问题。 Spring体系结</description>
     </item>
     
     <item>
       <title>泛型</title>
-      <link>http://p1n93r.github.io/post/java/%E6%B3%9B%E5%9E%8B/</link>
+      <link>https://p1n93r.github.io/post/java/%E6%B3%9B%E5%9E%8B/</link>
       <pubDate>Fri, 01 Nov 2019 19:33:36 +0800</pubDate>
       
-      <guid>http://p1n93r.github.io/post/java/%E6%B3%9B%E5%9E%8B/</guid>
+      <guid>https://p1n93r.github.io/post/java/%E6%B3%9B%E5%9E%8B/</guid>
       <description>前言 Java中的泛型支持是从JDK1.5开始的，目的是 让集合能够记住其元素的数据类型 。在没有泛型之前，将元素放在集合中，此元素会被当成Obj</description>
     </item>
     
     <item>
       <title>Mybatis传参</title>
-      <link>http://p1n93r.github.io/post/mybatis/mybatis%E4%BC%A0%E5%8F%82/</link>
+      <link>https://p1n93r.github.io/post/mybatis/mybatis%E4%BC%A0%E5%8F%82/</link>
       <pubDate>Sat, 26 Oct 2019 20:40:36 +0800</pubDate>
       
-      <guid>http://p1n93r.github.io/post/mybatis/mybatis%E4%BC%A0%E5%8F%82/</guid>
+      <guid>https://p1n93r.github.io/post/mybatis/mybatis%E4%BC%A0%E5%8F%82/</guid>
       <description>前言 有一次用到mybatis的动态sql中的foreach，发现foreach的属性collection填写的值有点问题。然后突然想到之前都</description>
     </item>
     
     <item>
       <title>Mybatis缓存</title>
-      <link>http://p1n93r.github.io/post/mybatis/mybatis%E7%BC%93%E5%AD%98/</link>
+      <link>https://p1n93r.github.io/post/mybatis/mybatis%E7%BC%93%E5%AD%98/</link>
       <pubDate>Sat, 26 Oct 2019 16:24:36 +0800</pubDate>
       
-      <guid>http://p1n93r.github.io/post/mybatis/mybatis%E7%BC%93%E5%AD%98/</guid>
+      <guid>https://p1n93r.github.io/post/mybatis/mybatis%E7%BC%93%E5%AD%98/</guid>
       <description>概述 Mybatis主要有一级缓存和二级缓存，mybatis默认开启一级缓存，需要手动开启二级缓存。两者特性如下： 一级缓存：是相对于同一个Sq</description>
     </item>
     
     <item>
       <title>Mybatis懒加载</title>
-      <link>http://p1n93r.github.io/post/mybatis/mybatis%E6%87%92%E5%8A%A0%E8%BD%BD/</link>
+      <link>https://p1n93r.github.io/post/mybatis/mybatis%E6%87%92%E5%8A%A0%E8%BD%BD/</link>
       <pubDate>Sat, 26 Oct 2019 13:09:36 +0800</pubDate>
       
-      <guid>http://p1n93r.github.io/post/mybatis/mybatis%E6%87%92%E5%8A%A0%E8%BD%BD/</guid>
+      <guid>https://p1n93r.github.io/post/mybatis/mybatis%E6%87%92%E5%8A%A0%E8%BD%BD/</guid>
       <description>前言 Mybatis的懒加载就是所谓的延迟加载，很多博客上也称之为按需加载，但是我觉得只有当配置了Mybatis的非侵略性懒加载才能称之为按需</description>
     </item>
     
     <item>
       <title>集合</title>
-      <link>http://p1n93r.github.io/post/java/%E9%9B%86%E5%90%88/</link>
+      <link>https://p1n93r.github.io/post/java/%E9%9B%86%E5%90%88/</link>
       <pubDate>Fri, 18 Oct 2019 19:50:36 +0800</pubDate>
       
-      <guid>http://p1n93r.github.io/post/java/%E9%9B%86%E5%90%88/</guid>
+      <guid>https://p1n93r.github.io/post/java/%E9%9B%86%E5%90%88/</guid>
       <description>概述 集合类也被称为 容器 ，所有的集合都位于java.util包下。 集合类家族主要由Collection和Map接口派生出。 集合相比数组的优势是</description>
     </item>
     
     <item>
       <title>高效创建ip代理池</title>
-      <link>http://p1n93r.github.io/post/other/%E9%AB%98%E6%95%88%E5%88%9B%E5%BB%BAip%E4%BB%A3%E7%90%86%E6%B1%A0/</link>
+      <link>https://p1n93r.github.io/post/other/%E9%AB%98%E6%95%88%E5%88%9B%E5%BB%BAip%E4%BB%A3%E7%90%86%E6%B1%A0/</link>
       <pubDate>Fri, 04 Oct 2019 14:09:36 +0800</pubDate>
       
-      <guid>http://p1n93r.github.io/post/other/%E9%AB%98%E6%95%88%E5%88%9B%E5%BB%BAip%E4%BB%A3%E7%90%86%E6%B1%A0/</guid>
+      <guid>https://p1n93r.github.io/post/other/%E9%AB%98%E6%95%88%E5%88%9B%E5%BB%BAip%E4%BB%A3%E7%90%86%E6%B1%A0/</guid>
       <description>前言 这次自动化软件测试课设过程中，弄着弄着ip就被ban了，于是想到挂代理，然后就想自己创建一个ip代理池，最后在github上发现了一个开</description>
     </item>
     
     <item>
       <title>面向对象(二)</title>
-      <link>http://p1n93r.github.io/post/java/%E9%9D%A2%E5%90%91%E5%AF%B9%E8%B1%A1%E4%BA%8C/</link>
+      <link>https://p1n93r.github.io/post/java/%E9%9D%A2%E5%90%91%E5%AF%B9%E8%B1%A1%E4%BA%8C/</link>
       <pubDate>Tue, 01 Oct 2019 21:31:36 +0800</pubDate>
       
-      <guid>http://p1n93r.github.io/post/java/%E9%9D%A2%E5%90%91%E5%AF%B9%E8%B1%A1%E4%BA%8C/</guid>
+      <guid>https://p1n93r.github.io/post/java/%E9%9D%A2%E5%90%91%E5%AF%B9%E8%B1%A1%E4%BA%8C/</guid>
       <description>包装类 基本数据类型不具备“对象”的特性，它没有属性，没有方法。为了解决这个问题。Java提供了包装类为8种基本数据类型的分别定义了相应的引用</description>
     </item>
     
     <item>
       <title>Android解析XML的四种方式</title>
-      <link>http://p1n93r.github.io/post/android/android%E8%A7%A3%E6%9E%90xml%E7%9A%84%E5%9B%9B%E7%A7%8D%E6%96%B9%E5%BC%8F/</link>
+      <link>https://p1n93r.github.io/post/android/android%E8%A7%A3%E6%9E%90xml%E7%9A%84%E5%9B%9B%E7%A7%8D%E6%96%B9%E5%BC%8F/</link>
       <pubDate>Thu, 26 Sep 2019 20:14:36 +0800</pubDate>
       
-      <guid>http://p1n93r.github.io/post/android/android%E8%A7%A3%E6%9E%90xml%E7%9A%84%E5%9B%9B%E7%A7%8D%E6%96%B9%E5%BC%8F/</guid>
+      <guid>https://p1n93r.github.io/post/android/android%E8%A7%A3%E6%9E%90xml%E7%9A%84%E5%9B%9B%E7%A7%8D%E6%96%B9%E5%BC%8F/</guid>
       <description>DOM方式解析XML DOM方式解析XML是将XML先全部加载到内存当中，所以 适用于较小的XML文件，可随机访问，可读可写 。DOM方式解析逻辑</description>
     </item>
     
     <item>
       <title>面向对象(一)</title>
-      <link>http://p1n93r.github.io/post/java/%E9%9D%A2%E5%90%91%E5%AF%B9%E8%B1%A1%E4%B8%80/</link>
+      <link>https://p1n93r.github.io/post/java/%E9%9D%A2%E5%90%91%E5%AF%B9%E8%B1%A1%E4%B8%80/</link>
       <pubDate>Wed, 25 Sep 2019 10:31:36 +0800</pubDate>
       
-      <guid>http://p1n93r.github.io/post/java/%E9%9D%A2%E5%90%91%E5%AF%B9%E8%B1%A1%E4%B8%80/</guid>
+      <guid>https://p1n93r.github.io/post/java/%E9%9D%A2%E5%90%91%E5%AF%B9%E8%B1%A1%E4%B8%80/</guid>
       <description>概述 面向对象三大特征： 封装，继承，多态 类可以被认为是一种自定义的数据类型，可以使用类来定义变量，所有使用类定义的变量都是 引用变量 ，他们将会引</description>
     </item>
     
     <item>
       <title>Mybatis动态SQL</title>
-      <link>http://p1n93r.github.io/post/mybatis/mybatis%E5%8A%A8%E6%80%81sql/</link>
+      <link>https://p1n93r.github.io/post/mybatis/mybatis%E5%8A%A8%E6%80%81sql/</link>
       <pubDate>Tue, 24 Sep 2019 08:22:36 +0800</pubDate>
       
-      <guid>http://p1n93r.github.io/post/mybatis/mybatis%E5%8A%A8%E6%80%81sql/</guid>
+      <guid>https://p1n93r.github.io/post/mybatis/mybatis%E5%8A%A8%E6%80%81sql/</guid>
       <description>前言 Mybatis可以提供动态组装SQL语句的功能，称为动态SQL。 一个综合例子 这个例子缺少&amp;lt;set&amp;gt;元素，&amp;lt;foreac</description>
     </item>
     
     <item>
       <title>Mybatis级联查询</title>
-      <link>http://p1n93r.github.io/post/mybatis/mybatis%E7%BA%A7%E8%81%94%E6%9F%A5%E8%AF%A2/</link>
+      <link>https://p1n93r.github.io/post/mybatis/mybatis%E7%BA%A7%E8%81%94%E6%9F%A5%E8%AF%A2/</link>
       <pubDate>Tue, 17 Sep 2019 11:19:36 +0800</pubDate>
       
-      <guid>http://p1n93r.github.io/post/mybatis/mybatis%E7%BA%A7%E8%81%94%E6%9F%A5%E8%AF%A2/</guid>
+      <guid>https://p1n93r.github.io/post/mybatis/mybatis%E7%BA%A7%E8%81%94%E6%9F%A5%E8%AF%A2/</guid>
       <description>模拟需求 一对一关系：一个学生（Student）有一个地址（Address），一个地址只能被一个学生拥有。 一对多关系：一个学生可以有多个订单（</description>
     </item>
     
     <item>
       <title>流程控制与数组</title>
-      <link>http://p1n93r.github.io/post/java/%E6%B5%81%E7%A8%8B%E6%8E%A7%E5%88%B6%E4%B8%8E%E6%95%B0%E7%BB%84/</link>
+      <link>https://p1n93r.github.io/post/java/%E6%B5%81%E7%A8%8B%E6%8E%A7%E5%88%B6%E4%B8%8E%E6%95%B0%E7%BB%84/</link>
       <pubDate>Sun, 15 Sep 2019 23:31:36 +0800</pubDate>
       
-      <guid>http://p1n93r.github.io/post/java/%E6%B5%81%E7%A8%8B%E6%8E%A7%E5%88%B6%E4%B8%8E%E6%95%B0%E7%BB%84/</guid>
+      <guid>https://p1n93r.github.io/post/java/%E6%B5%81%E7%A8%8B%E6%8E%A7%E5%88%B6%E4%B8%8E%E6%95%B0%E7%BB%84/</guid>
       <description>分支结构 if条件语句 if,else if,else后的代码块只有一条语句时（可以是空语句），可以省略花括号。 使用if,else时一定要先考虑小的范围。 sw</description>
     </item>
     
     <item>
       <title>数据类型和运算符</title>
-      <link>http://p1n93r.github.io/post/java/%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B%E5%92%8C%E8%BF%90%E7%AE%97%E7%AC%A6/</link>
+      <link>https://p1n93r.github.io/post/java/%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B%E5%92%8C%E8%BF%90%E7%AE%97%E7%AC%A6/</link>
       <pubDate>Wed, 04 Sep 2019 22:48:36 +0800</pubDate>
       
-      <guid>http://p1n93r.github.io/post/java/%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B%E5%92%8C%E8%BF%90%E7%AE%97%E7%AC%A6/</guid>
+      <guid>https://p1n93r.github.io/post/java/%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B%E5%92%8C%E8%BF%90%E7%AE%97%E7%AC%A6/</guid>
       <description>注释 单行注释：使用//即可 多行注释：使用/*注释内容*/即可 文档注释：以/**开始，以*/结束 标识符和关键字 允许一行书写多个语句，每个语句之</description>
     </item>
     
     <item>
       <title>Android知识点x0</title>
-      <link>http://p1n93r.github.io/post/android/android%E7%9F%A5%E8%AF%86%E7%82%B9x0/</link>
+      <link>https://p1n93r.github.io/post/android/android%E7%9F%A5%E8%AF%86%E7%82%B9x0/</link>
       <pubDate>Wed, 04 Sep 2019 17:48:36 +0800</pubDate>
       
-      <guid>http://p1n93r.github.io/post/android/android%E7%9F%A5%E8%AF%86%E7%82%B9x0/</guid>
+      <guid>https://p1n93r.github.io/post/android/android%E7%9F%A5%E8%AF%86%E7%82%B9x0/</guid>
       <description>简述Android的技术架构？ 安卓平台采用了软件堆栈（软件叠层）的架构 。主要分为以下4部分： 底层：以Linux内核为基础，并包含各种驱动，只</description>
     </item>
     
     <item>
       <title>SpringMVC之注解开发</title>
-      <link>http://p1n93r.github.io/post/springmvc/springmvc%E4%B9%8B%E6%B3%A8%E8%A7%A3%E5%BC%80%E5%8F%91/</link>
+      <link>https://p1n93r.github.io/post/springmvc/springmvc%E4%B9%8B%E6%B3%A8%E8%A7%A3%E5%BC%80%E5%8F%91/</link>
       <pubDate>Sat, 27 Jul 2019 17:48:36 +0800</pubDate>
       
-      <guid>http://p1n93r.github.io/post/springmvc/springmvc%E4%B9%8B%E6%B3%A8%E8%A7%A3%E5%BC%80%E5%8F%91/</guid>
+      <guid>https://p1n93r.github.io/post/springmvc/springmvc%E4%B9%8B%E6%B3%A8%E8%A7%A3%E5%BC%80%E5%8F%91/</guid>
       <description>前言 &amp;emsp;&amp;emsp;之前的一篇博文：SpringMVC之处理器映射器中最后的注解式处理器映射器讲了如何使用最基础的注解开发，现在下面</description>
     </item>
     
     <item>
       <title>SpringMVC之Hello World</title>
-      <link>http://p1n93r.github.io/post/springmvc/springmvc%E4%B9%8Bhello_world/</link>
+      <link>https://p1n93r.github.io/post/springmvc/springmvc%E4%B9%8Bhello_world/</link>
       <pubDate>Thu, 25 Jul 2019 17:48:36 +0800</pubDate>
       
-      <guid>http://p1n93r.github.io/post/springmvc/springmvc%E4%B9%8Bhello_world/</guid>
+      <guid>https://p1n93r.github.io/post/springmvc/springmvc%E4%B9%8Bhello_world/</guid>
       <description>开发环境 IDEA下的Maven项目 JDK 1.8_0211 Tomcat 8.5.38 项目依赖 &amp;emsp;&amp;emsp;为了方便以后的学习，我直接加入了SSM项目的所有依赖，从而包括Sp</description>
     </item>
     
     <item>
       <title>SpringMVC之处理器映射器</title>
-      <link>http://p1n93r.github.io/post/springmvc/springmvc%E4%B9%8B%E6%8E%A7%E5%88%B6%E5%99%A8%E6%98%A0%E5%B0%84%E5%99%A8/</link>
+      <link>https://p1n93r.github.io/post/springmvc/springmvc%E4%B9%8B%E6%8E%A7%E5%88%B6%E5%99%A8%E6%98%A0%E5%B0%84%E5%99%A8/</link>
       <pubDate>Thu, 25 Jul 2019 17:48:36 +0800</pubDate>
       
-      <guid>http://p1n93r.github.io/post/springmvc/springmvc%E4%B9%8B%E6%8E%A7%E5%88%B6%E5%99%A8%E6%98%A0%E5%B0%84%E5%99%A8/</guid>
+      <guid>https://p1n93r.github.io/post/springmvc/springmvc%E4%B9%8B%E6%8E%A7%E5%88%B6%E5%99%A8%E6%98%A0%E5%B0%84%E5%99%A8/</guid>
       <description>前言 &amp;emsp;&amp;emsp;此处只是对SpringMVC常见的三个控制器映射器做探讨，没有深入研究其源码实现，只是探讨其使用方法。以下探究的</description>
     </item>
     
     <item>
       <title>SpringMVC架构</title>
-      <link>http://p1n93r.github.io/post/springmvc/springmvc%E5%85%A5%E9%97%A8/</link>
+      <link>https://p1n93r.github.io/post/springmvc/springmvc%E5%85%A5%E9%97%A8/</link>
       <pubDate>Tue, 23 Jul 2019 17:48:36 +0800</pubDate>
       
-      <guid>http://p1n93r.github.io/post/springmvc/springmvc%E5%85%A5%E9%97%A8/</guid>
+      <guid>https://p1n93r.github.io/post/springmvc/springmvc%E5%85%A5%E9%97%A8/</guid>
       <description>介绍 SpringMVC是Spring Framework的一个模块。 Spring和SpringMVC无需中间整合层。 SpringMVC是一个基</description>
     </item>
     
     <item>
       <title>Android页面布局</title>
-      <link>http://p1n93r.github.io/post/android/android%E7%95%8C%E9%9D%A2%E5%B8%83%E5%B1%80/</link>
+      <link>https://p1n93r.github.io/post/android/android%E7%95%8C%E9%9D%A2%E5%B8%83%E5%B1%80/</link>
       <pubDate>Thu, 11 Jul 2019 17:48:36 +0800</pubDate>
       
-      <guid>http://p1n93r.github.io/post/android/android%E7%95%8C%E9%9D%A2%E5%B8%83%E5%B1%80/</guid>
+      <guid>https://p1n93r.github.io/post/android/android%E7%95%8C%E9%9D%A2%E5%B8%83%E5%B1%80/</guid>
       <description>介绍 &amp;emsp;&amp;emsp;安卓提供6中基本布局类：帧布局（FrameLayout），线性布局（LinearLayout），相对布局（Rel</description>
     </item>
     
     <item>
       <title>Mybatis整合Spring</title>
-      <link>http://p1n93r.github.io/post/mybatis/mybatis%E6%95%B4%E5%90%88spring/</link>
+      <link>https://p1n93r.github.io/post/mybatis/mybatis%E6%95%B4%E5%90%88spring/</link>
       <pubDate>Wed, 10 Jul 2019 17:48:36 +0800</pubDate>
       
-      <guid>http://p1n93r.github.io/post/mybatis/mybatis%E6%95%B4%E5%90%88spring/</guid>
+      <guid>https://p1n93r.github.io/post/mybatis/mybatis%E6%95%B4%E5%90%88spring/</guid>
       <description>介绍 &amp;emsp;&amp;emsp;Mybatis是一款持久层的框架，使用Mybatis我们无需自己编写繁琐的JDBC代码，也无需为sql注入等安全</description>
     </item>
     
