@@ -6,10 +6,19 @@
     <description>Recent content in Categories on P1n93r - 博学而精一</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-cn</language>
-    <lastBuildDate>Wed, 20 Nov 2019 12:09:36 +0800</lastBuildDate>
+    <lastBuildDate>Wed, 20 Nov 2019 17:16:36 +0800</lastBuildDate>
     
 	<atom:link href="https://p1n93r.github.io/categories/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>Spring</title>
+      <link>https://p1n93r.github.io/categories/spring/</link>
+      <pubDate>Wed, 20 Nov 2019 17:16:36 +0800</pubDate>
+      
+      <guid>https://p1n93r.github.io/categories/spring/</guid>
+      <description></description>
+    </item>
     
     <item>
       <title>Linux</title>
@@ -26,15 +35,6 @@
       <pubDate>Wed, 13 Nov 2019 19:22:36 +0800</pubDate>
       
       <guid>https://p1n93r.github.io/categories/java/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>Spring</title>
-      <link>https://p1n93r.github.io/categories/spring/</link>
-      <pubDate>Tue, 12 Nov 2019 09:00:36 +0800</pubDate>
-      
-      <guid>https://p1n93r.github.io/categories/spring/</guid>
       <description></description>
     </item>
     

@@ -6,10 +6,19 @@
     <description>Recent content in Spring on P1n93r - 博学而精一</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-cn</language>
-    <lastBuildDate>Tue, 12 Nov 2019 09:00:36 +0800</lastBuildDate>
+    <lastBuildDate>Wed, 20 Nov 2019 17:16:36 +0800</lastBuildDate>
     
 	<atom:link href="https://p1n93r.github.io/categories/spring/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>Spring Bean</title>
+      <link>https://p1n93r.github.io/post/spring/spring-bean/</link>
+      <pubDate>Wed, 20 Nov 2019 17:16:36 +0800</pubDate>
+      
+      <guid>https://p1n93r.github.io/post/spring/spring-bean/</guid>
+      <description>Bean的配置 Spring是一个生产和管理其容器内的Bean的工厂，如果要使用这个工厂来生产和管理Bean，需要在Spring的配置文件中配</description>
+    </item>
     
     <item>
       <title>Spring IoC</title>
