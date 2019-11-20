@@ -30,6 +30,15 @@
     </item>
     
     <item>
+      <title>3-创建和销毁</title>
+      <link>http://p1n93r.github.io/post/linux/4-%E5%AD%A6%E4%B9%A0%E5%91%BD%E4%BB%A4/</link>
+      <pubDate>Sat, 16 Nov 2019 18:02:36 +0800</pubDate>
+      
+      <guid>http://p1n93r.github.io/post/linux/4-%E5%AD%A6%E4%B9%A0%E5%91%BD%E4%BB%A4/</guid>
+      <description>使用man查找命令相关信息 想要查看某个命令的详细用法，可以使用 man 命令，格式为： man 待查询命令 ,就会打开此命令的手册页面，是基于 less 打开的，所以可</description>
+    </item>
+    
+    <item>
       <title>2-文件导航系统</title>
       <link>http://p1n93r.github.io/post/linux/2-%E6%96%87%E4%BB%B6%E5%AF%BC%E8%88%AA%E7%B3%BB%E7%BB%9F/</link>
       <pubDate>Fri, 15 Nov 2019 19:05:36 +0800</pubDate>
