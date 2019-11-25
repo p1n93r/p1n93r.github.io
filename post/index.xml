@@ -6,10 +6,19 @@
     <description>Recent content in Posts on P1n93r - 博学而精一</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-cn</language>
-    <lastBuildDate>Wed, 20 Nov 2019 17:16:36 +0800</lastBuildDate>
+    <lastBuildDate>Mon, 25 Nov 2019 20:40:36 +0800</lastBuildDate>
     
 	<atom:link href="https://p1n93r.github.io/post/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>5-组合命令</title>
+      <link>https://p1n93r.github.io/post/linux/5-%E7%BB%84%E5%90%88%E5%91%BD%E4%BB%A4/</link>
+      <pubDate>Mon, 25 Nov 2019 20:40:36 +0800</pubDate>
+      
+      <guid>https://p1n93r.github.io/post/linux/5-%E7%BB%84%E5%90%88%E5%91%BD%E4%BB%A4/</guid>
+      <description>连续运行多个命令 可以使用符号 ; 分隔多个连续运行的命令。例如下面： Notice ：使用此种方式连续运行多个命令的时候，需要特别小心—— 即使前面的命令运行失</description>
+    </item>
     
     <item>
       <title>Spring Bean</title>
