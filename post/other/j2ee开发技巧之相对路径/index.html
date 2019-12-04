@@ -50,7 +50,7 @@
 
 <meta itemprop="datePublished" content="2019-12-03T11:27:36&#43;08:00" />
 <meta itemprop="dateModified" content="2019-12-03T11:27:36&#43;08:00" />
-<meta itemprop="wordCount" content="212">
+<meta itemprop="wordCount" content="1158">
 
 
 
@@ -131,8 +131,8 @@
         <div class="post-category">
             <a href="/categories/other/"> Other </a>
             </div>
-          <span class="more-meta"> 约 212 字 </span>
-          <span class="more-meta"> 预计阅读 1 分钟 </span>
+          <span class="more-meta"> 约 1158 字 </span>
+          <span class="more-meta"> 预计阅读 3 分钟 </span>
         <span id="busuanzi_container_page_pv" class="more-meta"> <span id="busuanzi_value_page_pv"><img src="/img/spinner.svg" alt="spinner.svg"/></span> 次阅读 </span>
       </div>
     </header>
@@ -145,7 +145,14 @@
 <li>
 <ul>
 <li><a href="#前言">前言</a></li>
-<li><a href="#开发思路">开发思路</a></li>
+<li><a href="#开发思路">开发思路</a>
+<ul>
+<li><a href="#创建自定义标签类">创建自定义标签类</a></li>
+<li><a href="#创建tld文件">创建tld文件</a></li>
+<li><a href="#手动配置tld的位置">手动配置tld的位置</a></li>
+<li><a href="#在jsp中调用自定义标签">在jsp中调用自定义标签</a></li>
+<li><a href="#测试">测试</a></li>
+</ul></li>
 </ul></li>
 </ul>
 </nav>
@@ -161,8 +168,149 @@
 <h2 id="开发思路">开发思路</h2>
 
 <ol>
-<li></li>
+<li>写一个自定义标签类，作用就是在html的 <code>&lt;head/&gt;</code> 标签内输出网站的basePath（例如 <code>&lt;base href='http://localhost:8080/TheSecondLab_war_exploded/'/&gt;</code> ）。</li>
+<li>在jsp页面中调用这个自定义标签（需要一个HttpServletRequst对象作为参数传进去），就可以做到输出basePath了，这样页面内的所有链接都是相对于这个basePath。</li>
 </ol>
+
+<h3 id="创建自定义标签类">创建自定义标签类</h3>
+
+<p>我写的一个自定义标签类代码如下：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span></pre></td>
+<td class="lntd">
+<pre class="chroma">public class BaseUrlTag extends SimpleTagSupport {
+    //为了得到basePath，需要一个HttpServletRequest对象
+    HttpServletRequest request;
+    //打印网站的basePath
+    @Override
+    public void doTag() throws JspException, IOException{
+        String path = request.getContextPath();
+        String basePath = &#34;&lt;base href=&#39;&#34;+request.getScheme()+&#34;://&#34;+request.getServerName()+&#34;:&#34;+request.getServerPort()+path+&#34;/&#39;/&gt;&#34;;
+        getJspContext().getOut().write(basePath);
+    }
+    public void setRequest(HttpServletRequest request) {
+        this.request = request;
+    }
+}</pre></td></tr></table>
+</div>
+</div>
+<h3 id="创建tld文件">创建tld文件</h3>
+
+<p>在项目的WEB-INF下创建与上面自定义标签类相关的tld文件，我写得tld文件如下：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span></pre></td>
+<td class="lntd">
+<pre class="chroma">&lt;!DOCTYPE taglib
+        PUBLIC &#34;-//Sun Microsystems, Inc.//DTD JSP Tag Library 1.2//EN&#34;
+        &#34;http://java.sun.com/dtd/web-jsptaglibrary_1_2.dtd&#34;&gt;
+&lt;!-- 标签库描述符 --&gt;
+&lt;taglib xmlns=&#34;http://java.sun.com/JSP/TagLibraryDescriptor&#34;&gt;
+    &lt;tlib-version&gt;1.0&lt;/tlib-version&gt;
+    &lt;jsp-version&gt;1.2&lt;/jsp-version&gt;
+    &lt;short-name&gt;bp&lt;/short-name&gt;
+    &lt;uri&gt;/setBasePath&lt;/uri&gt;
+    &lt;tag&gt;
+        &lt;!-- 标签名 --&gt;
+        &lt;name&gt;basePath&lt;/name&gt;
+        &lt;!-- 标签助手类(自定义的标签类) 放入类的全限定名 --&gt;
+        &lt;tag-class&gt;com.mybatis.web.tag.BaseUrlTag&lt;/tag-class&gt;
+        &lt;!-- 标签的内容类型：empty表示空标签(使用空标签会报错)，jsp表示可以为任何合法的JSP元素 --&gt;
+        &lt;!--SimpleTagSupport不支持设置为JSP--&gt;
+        &lt;body-content&gt;empty&lt;/body-content&gt;
+        &lt;attribute&gt;
+            &lt;!-- 属性名 --&gt;
+            &lt;name&gt;request&lt;/name&gt;
+            &lt;!-- 是否为必填项 --&gt;
+            &lt;required&gt;true&lt;/required&gt;
+            &lt;!--是否可以填jsp表达式  el表达式 --&gt;
+            &lt;rtexprvalue&gt;true&lt;/rtexprvalue&gt;
+            &lt;type&gt;javax.servlet.http.HttpServletRequest&lt;/type&gt;
+        &lt;/attribute&gt;
+    &lt;/tag&gt;
+&lt;/taglib&gt;</pre></td></tr></table>
+</div>
+</div>
+<h3 id="手动配置tld的位置">手动配置tld的位置</h3>
+
+<p>在项目的web.xml中配置上一步创建的tld的位置，防止系统提示找不到tld，配置的主要代码如下（上一步我创建的tld文件名为BasePathTag.tld）：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span></pre></td>
+<td class="lntd">
+<pre class="chroma">&lt;!--手动配置tld的位置（用于basePath的tld），不然提示找不到--&gt;
+&lt;jsp-config&gt;
+    &lt;taglib&gt;
+        &lt;taglib-uri&gt;/setBasePath&lt;/taglib-uri&gt;
+        &lt;taglib-location&gt;/WEB-INF/tags/BasePathTag.tld&lt;/taglib-location&gt;
+    &lt;/taglib&gt;
+&lt;/jsp-config&gt;</pre></td></tr></table>
+</div>
+</div>
+<h3 id="在jsp中调用自定义标签">在jsp中调用自定义标签</h3>
+
+<ol>
+<li>首先jsp引入刚才自定义的标签，引入方式为： <code>&lt;%@taglib prefix=&quot;bp&quot; uri=&quot;/setBasePath&quot; %&gt;</code> 。</li>
+<li>其次在jsp页面的 <code>&lt;head/&gt;</code> （这是html的标记）标签内通过 <code>&lt;bp:basePath request=&quot;&lt;%=request%&gt;&quot;/&gt;</code> 调用刚才引入的自定义标签。</li>
+<li>明白本jsp页面内的所有超链接都是基于basePath来设计，比如 <code>&lt;a href=&quot;test.do&quot;&gt;</code> （test.do前没有 <code>/</code> ，因为我设计输出的basePath以 <code>/</code> 结尾）的物理路径为 <code>basePath/test.do</code> 。</li>
+<li>重启项目，访问jsp，查看渲染后的html代码，观察是否输出了basePath。</li>
+</ol>
+
+<h3 id="测试">测试</h3>
+
+<p>访问调用了自定义标签的jsp页面，通过浏览器，按ctr+u可以查看渲染后的html源码，观察结果如下（输出了basePath）：</p>
+
+<p><img src="./../media/20191204-1.png" alt="测试结果" /></p>
 
     </div>
 
