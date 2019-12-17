@@ -6,10 +6,19 @@
     <description>Recent content in Other on P1n93r - 博学而精一</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-cn</language>
-    <lastBuildDate>Tue, 03 Dec 2019 11:27:36 +0800</lastBuildDate>
+    <lastBuildDate>Tue, 10 Dec 2019 11:04:36 +0800</lastBuildDate>
     
 	<atom:link href="https://p1n93r.github.io/categories/other/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>J2EE开发技巧之字符编码过滤器</title>
+      <link>https://p1n93r.github.io/post/other/j2ee%E5%BC%80%E5%8F%91%E6%8A%80%E5%B7%A7%E5%8F%AA%E5%AD%97%E7%AC%A6%E7%BC%96%E7%A0%81%E8%BF%87%E6%BB%A4%E5%99%A8/</link>
+      <pubDate>Tue, 10 Dec 2019 11:04:36 +0800</pubDate>
+      
+      <guid>https://p1n93r.github.io/post/other/j2ee%E5%BC%80%E5%8F%91%E6%8A%80%E5%B7%A7%E5%8F%AA%E5%AD%97%E7%AC%A6%E7%BC%96%E7%A0%81%E8%BF%87%E6%BB%A4%E5%99%A8/</guid>
+      <description>前言 j2ee开发过程中，经常会遇到编码问题，比如从前台传到后台的数据如果是中文的话，后台接收到的却是乱码；后台返回给前台的数据是中文，前台显</description>
+    </item>
     
     <item>
       <title>J2EE开发技巧之相对路径</title>
