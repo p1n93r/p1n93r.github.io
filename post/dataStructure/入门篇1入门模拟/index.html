@@ -1,0 +1,795 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title> 入门篇(1)：入门模拟 - P1n93r - 博学而精一</title>
+  <meta name="renderer" content="webkit" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+<meta name="author" content="P1n93r" /><meta name="description" content="概述 对于一些简单的模拟题，没有涉及到很多算法，主要考察coding能力。一般这种类型的题目分为以下几种： 简单模拟 查找元素 图形输出 日期处理 进制" /><meta name="keywords" content="SSM, Java, Web, Android" />
+
+
+
+
+
+
+<meta name="generator" content="Hugo 0.57.2 with theme even" />
+
+
+<link rel="canonical" href="https://p1n93r.github.io/post/datastructure/%E5%85%A5%E9%97%A8%E7%AF%871%E5%85%A5%E9%97%A8%E6%A8%A1%E6%8B%9F/" />
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/manifest.json">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+<link href="/dist/even.c2a46f00.min.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.css" integrity="sha256-7TyXnr2YU040zfSP+rEcz29ggW4j56/ujTPwjMzyqFY=" crossorigin="anonymous">
+
+
+<meta property="og:title" content=" 入门篇(1)：入门模拟" />
+<meta property="og:description" content="概述 对于一些简单的模拟题，没有涉及到很多算法，主要考察coding能力。一般这种类型的题目分为以下几种： 简单模拟 查找元素 图形输出 日期处理 进制" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://p1n93r.github.io/post/datastructure/%E5%85%A5%E9%97%A8%E7%AF%871%E5%85%A5%E9%97%A8%E6%A8%A1%E6%8B%9F/" />
+<meta property="article:published_time" content="2020-01-15T09:40:36+08:00" />
+<meta property="article:modified_time" content="2020-01-15T09:40:36+08:00" />
+<meta itemprop="name" content=" 入门篇(1)：入门模拟">
+<meta itemprop="description" content="概述 对于一些简单的模拟题，没有涉及到很多算法，主要考察coding能力。一般这种类型的题目分为以下几种： 简单模拟 查找元素 图形输出 日期处理 进制">
+
+
+<meta itemprop="datePublished" content="2020-01-15T09:40:36&#43;08:00" />
+<meta itemprop="dateModified" content="2020-01-15T09:40:36&#43;08:00" />
+<meta itemprop="wordCount" content="1410">
+
+
+
+<meta itemprop="keywords" content="数据结构与算法,PAT," />
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content=" 入门篇(1)：入门模拟"/>
+<meta name="twitter:description" content="概述 对于一些简单的模拟题，没有涉及到很多算法，主要考察coding能力。一般这种类型的题目分为以下几种： 简单模拟 查找元素 图形输出 日期处理 进制"/>
+
+<!--[if lte IE 9]>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
+<![endif]-->
+
+<!--[if lt IE 9]>
+  <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+<![endif]-->
+
+</head>
+<body>
+  <div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/" class="logo">P1n93r</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    <a href="/">
+        <li class="mobile-menu-item">Home</li>
+      </a><a href="/post/">
+        <li class="mobile-menu-item">Archives</li>
+      </a><a href="/tags/">
+        <li class="mobile-menu-item">Tags</li>
+      </a><a href="/categories/">
+        <li class="mobile-menu-item">Categories</li>
+      </a><a href="/about/">
+        <li class="mobile-menu-item">About</li>
+      </a>
+  </ul>
+</nav>
+  <div class="container" id="mobile-panel">
+    <header id="header" class="header">
+        <div class="logo-wrapper">
+  <a href="/" class="logo">P1n93r</a>
+</div>
+
+<nav class="site-navbar">
+  <ul id="menu" class="menu">
+    <li class="menu-item">
+        <a class="menu-item-link" href="/">Home</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/">Archives</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/tags/">Tags</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/categories/">Categories</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/about/">About</a>
+      </li>
+  </ul>
+</nav>
+    </header>
+
+    <main id="main" class="main">
+      <div class="content-wrapper">
+        <div id="content" class="content">
+          <article class="post">
+    
+    <header class="post-header">
+      <h1 class="post-title"> 入门篇(1)：入门模拟</h1>
+
+      <div class="post-meta">
+        <span class="post-time"> 2020-01-15 </span>
+        <div class="post-category">
+            <a href="/categories/datastructure/"> dataStructure </a>
+            </div>
+          <span class="more-meta"> 约 1410 字 </span>
+          <span class="more-meta"> 预计阅读 3 分钟 </span>
+        <span id="busuanzi_container_page_pv" class="more-meta"> <span id="busuanzi_value_page_pv"><img src="/img/spinner.svg" alt="spinner.svg"/></span> 次阅读 </span>
+      </div>
+    </header>
+
+    <div class="post-toc" id="post-toc">
+  <h2 class="post-toc-title">文章目录</h2>
+  <div class="post-toc-content always-active">
+    <nav id="TableOfContents">
+<ul>
+<li>
+<ul>
+<li><a href="#概述">概述</a></li>
+<li><a href="#简单模拟">简单模拟</a></li>
+<li><a href="#查找元素">查找元素</a></li>
+<li><a href="#图形输出">图形输出</a></li>
+<li><a href="#日期处理">日期处理</a></li>
+<li><a href="#进制转换">进制转换</a></li>
+<li><a href="#字符串处理">字符串处理</a></li>
+</ul></li>
+</ul>
+</nav>
+  </div>
+</div>
+    <div class="post-content">
+      
+
+<h2 id="概述">概述</h2>
+
+<p>对于一些简单的模拟题，没有涉及到很多算法，主要考察coding能力。一般这种类型的题目分为以下几种：</p>
+
+<ul>
+<li>简单模拟</li>
+<li>查找元素</li>
+<li>图形输出</li>
+<li>日期处理</li>
+<li>进制转换</li>
+<li>字符串处理</li>
+</ul>
+
+<h2 id="简单模拟">简单模拟</h2>
+
+<p>这类题目不涉及算法，就是“题目怎么说，你就怎么做”，此所谓简单模拟。几个例子如下：</p>
+
+<p>例子一：</p>
+
+<p><img src="./../media/20200115-1.png" alt="简单模拟例子1" /></p>
+
+<p>我的解法如下：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span></pre></td>
+<td class="lntd">
+<pre class="chroma">#include &lt;cstdio&gt;
+int main(){
+    int a;
+    scanf(&#34;%d&#34;,&amp;a); 
+    int step=0;
+    for(a;a!=1;){
+        step++;
+        a=(a%2==0? a/2:(3*a+1)/2);
+    }
+    printf(&#34;%s%d&#34;,&#34;步数为：&#34;,step); 
+    return 0;
+} </pre></td></tr></table>
+</div>
+</div>
+<p>例子二：</p>
+
+<p><img src="./../media/20200115-2.png" alt="简单模拟例子2" /></p>
+
+<p>我的解法如下：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span></pre></td>
+<td class="lntd">
+<pre class="chroma">#include &lt;cstdio&gt;
+//定义大数据的数组在函数外定义，申请系统栈区空间，空间够
+const int MAX=100000;
+int total[MAX]={0}; 
+int main(){
+    int count,id,score;
+    scanf(&#34;%d&#34;,&amp;count);
+    for(int i=count;i&gt;0;i--){
+        scanf(&#34;%d%d&#34;,&amp;id,&amp;score);
+        total[id]+=score;
+    }
+    //筛选最大
+    int temp_id,temp_score;
+    for(int i=0;i&lt;count;i++){
+        if(i==0){
+            temp_id=i;
+            temp_score=total[i];
+        }else{
+            if(total[i]&gt;temp_score){
+                temp_id=i;
+                temp_score=total[i];
+            }
+        }
+    } 
+    printf(&#34;%d %d&#34;,temp_id,temp_score);
+    return 0;
+}</pre></td></tr></table>
+</div>
+</div>
+<h2 id="查找元素">查找元素</h2>
+
+<p>这类题目就是在给定的元素中查找满足条件的元素，常用方法有遍历和二分查找法。一个例子如下：</p>
+
+<p><img src="./../media/20200115-3.png" alt="查找元素例子1" /></p>
+
+<p>我的解法如下：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span></pre></td>
+<td class="lntd">
+<pre class="chroma">#include &lt;cstdio&gt;
+int main(){
+    int count,val;
+    scanf(&#34;%d&#34;,&amp;count);
+    int all[count];
+    for(int i=0;i&lt;count;i++){
+        scanf(&#34;%d&#34;,all+i);
+    }
+    scanf(&#34;%d&#34;,&amp;val);
+    //查找
+    int i=0; 
+    for(i;i&lt;count;i++){
+        if(all[i]==val){
+            printf(&#34;%d&#34;,i); 
+            break;
+        }
+    } 
+    if(i==count){
+        printf(&#34;%d&#34;,-1);
+    }
+    return 0;
+}</pre></td></tr></table>
+</div>
+</div>
+<h2 id="图形输出">图形输出</h2>
+
+<p>这类题目就是根据题目的要求，找到规律输出图像，一般图像由字符做成。一个例子如下：</p>
+
+<p><img src="./../media/20200115-4.png" alt="图像输出例子1" /></p>
+
+<p>我的解法如下：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span></pre></td>
+<td class="lntd">
+<pre class="chroma">#include &lt;cstdio&gt;
+#include &lt;cmath&gt;
+int main(){
+    int columns;
+    char c;
+    scanf(&#34;%d %c&#34;,&amp;columns,&amp;c);
+    //求行数 
+     int rows=int((float)columns/2+0.5);
+     //输出图形
+     for(int i=0;i&lt;rows;i++){
+        for(int j=0;j&lt;columns;j++){
+            if(j==0||j==columns-1||i==0||i==rows-1) printf(&#34;%c&#34;,c);
+            else printf(&#34; &#34;);
+        }
+        if(i!=rows-1) printf(&#34;\n&#34;);
+     } 
+    return 0;
+}</pre></td></tr></table>
+</div>
+</div>
+<h2 id="日期处理">日期处理</h2>
+
+<p>这类问题比较复杂，涉及到平年、闰年，大月和小月的问题。需要明白以下规则：</p>
+
+<ul>
+<li>年份是4的倍数且不是100的倍数、年份是400的倍数的都是闰年。</li>
+<li>平年的2月份有28天，闰年的2月份有29天。</li>
+<li>1，3，5，7，8，10，12月有31天，其余都是30天。</li>
+</ul>
+
+<p>一般解决这类问题的一个思路就是：<strong>由于处理月份的天数很麻烦，所以干脆直接用一个二维数组枚举出每个月的天数（第一维是月份；第二维的第一个元素是平年的月份天数，第二个元素是闰年的），此外还需要一个判断是否是平年的函数。</strong></p>
+
+<p>一个例子如下：</p>
+
+<p><img src="./../media/20200115-5.png" alt="日期处理例子1" /></p>
+
+<p>我的解法如下：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span><span class="lnt">29
+</span><span class="lnt">30
+</span><span class="lnt">31
+</span><span class="lnt">32
+</span><span class="lnt">33
+</span><span class="lnt">34
+</span><span class="lnt">35
+</span><span class="lnt">36
+</span><span class="lnt">37
+</span><span class="lnt">38
+</span><span class="lnt">39
+</span><span class="lnt">40
+</span><span class="lnt">41
+</span><span class="lnt">42
+</span><span class="lnt">43
+</span><span class="lnt">44
+</span><span class="lnt">45
+</span><span class="lnt">46
+</span><span class="lnt">47
+</span><span class="lnt">48
+</span><span class="lnt">49
+</span><span class="lnt">50
+</span><span class="lnt">51
+</span><span class="lnt">52
+</span><span class="lnt">53
+</span><span class="lnt">54
+</span></pre></td>
+<td class="lntd">
+<pre class="chroma">#include &lt;cstdio&gt;
+//定义一个判断是否是平年的函数
+int isLeapYear(int y){
+    return (y%4==0&amp;&amp;y%100!=0)||(y%400==0);
+} 
+
+int main(){
+    //定义一个表示每月天数的二维数组
+    int days[13][2]={
+        {0,0},
+        {31,31},
+        {28,29},
+        {31,31},
+        {30,30},
+        {31,31},
+        {30,30},
+        {31,31},
+        {31,31},
+        {30,30},
+        {31,31},
+        {30,30},
+        {31,31},
+    }; 
+    int timeOne,timeTwo,y0,m0,d0,y1,m1,d1;
+    //输入多组数据，属于多点测试 
+    while(scanf(&#34;%d%d&#34;,&amp;timeOne,&amp;timeTwo)!=EOF){
+        //保证timeOne早于timeTwo
+        if(timeOne&gt;timeTwo){
+            int temp=timeOne;
+            timeOne=timeTwo;
+            timeTwo=temp;
+        } 
+        //分类数据
+        y0=timeOne/10000,m0=timeOne%10000/100,d0=timeOne%100;
+        y1=timeTwo/10000,m1=timeTwo%10000/100,d1=timeTwo%100; 
+        int step=1;
+        //早的日期追赶后的日期 
+        for(step;!(y0==y1&amp;&amp;m0==m1&amp;&amp;d0==d1);step++){
+            //首先day加一
+             d0++;
+             if(d0-1==days[m0][isLeapYear(y0)]){
+                d0=0;
+                m0++;
+             }
+             if(m0==13){
+                y0++;
+                m0=1;
+             }
+             //计数加一 
+        }
+        printf(&#34;%d\n&#34;,step);
+    }
+    return 0;
+} </pre></td></tr></table>
+</div>
+</div>
+<h2 id="进制转换">进制转换</h2>
+
+<p>此类问题的一般解决思路就是： <strong>想将P进制的数据转换成10进制数，然后将此10进制数转换成Q进制数</strong> 。具体的方法如下：</p>
+
+<p><img src="./../media/20200115-7.png" alt="进制转换方法" /></p>
+
+<p>一个例子如下：</p>
+
+<p><img src="./../media/20200115-8.png" alt="进制转换例子" /></p>
+
+<p>我的解法如下：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span></pre></td>
+<td class="lntd">
+<pre class="chroma">#include &lt;cstdio&gt;
+int main(){
+    int a,b,c;
+    scanf(&#34;%d%d%d&#34;,&amp;a,&amp;b,&amp;c);
+    //先把10进制数相加
+    a+=b;
+    //采用除基取余法
+    int res[30]={0};
+    int step=0;
+    for(step;a!=0;step++){
+        res[step]=a%c;
+        //printf(&#34;%s%d\n&#34;,&#34;现在是：&#34;,a%c);
+        a/=c;
+    } 
+    //打印
+    for(int i=step;i&gt;0;i--){
+        printf(&#34;%d&#34;,res[i-1]);
+    } 
+    //如果是0，则打印0
+    if(step==0){
+        printf(&#34;%d&#34;,0);
+    } 
+    return 0;
+}</pre></td></tr></table>
+</div>
+</div>
+<h2 id="字符串处理">字符串处理</h2>
+
+<p>就是对字符串进行处理咯，但是需要注意字串的边界和题目要求的细节，C/C++处理字串还是很方便的，用gets方法可以输出一行字串。 <strong>判断字串的长度的方法就是遍历字串的字符，直到到达<code>'\0'</code></strong> 。几个例子如下：</p>
+
+<p>例子一：</p>
+
+<p><img src="./../media/20200115-8.png" alt="字符串例子1" /></p>
+
+<p>我的解法如下：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span></pre></td>
+<td class="lntd">
+<pre class="chroma">#include &lt;cstdio&gt;
+int main(){
+    char judge[255];
+    gets(judge);
+    //遍历字串
+    int count=0;
+    for(count;judge[count]!=&#39;\0&#39;;count++){}
+    bool isYes=true;
+    for(int i=0;i&lt;(count%2==0? count/2:(count-1)/2);i++){
+        if(judge[i]!=judge[count-1-i]){
+            isYes=false;
+            break;
+        }
+    } 
+    if(isYes){
+        printf(&#34;%s&#34;,&#34;YES&#34;);
+    }else{
+        printf(&#34;%s&#34;,&#34;NO&#34;);
+    }
+    return 0;
+}</pre></td></tr></table>
+</div>
+</div>
+<p>例子二：</p>
+
+<p><img src="./../media/20200115-9.png" alt="字符串例子2" /></p>
+
+<p>我的解法如下：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span></pre></td>
+<td class="lntd">
+<pre class="chroma">#include &lt;cstdio&gt;
+int main(){
+    char val[80];
+    gets(val);
+    int count=0;
+    //计算字串长度 
+    for(count;val[count]!=&#39;\0&#39;;count++){}
+    for(int i=count;count&gt;0;count--){
+        printf(&#34;%c&#34;,val[count-1]);
+    }
+    return 0;
+} </pre></td></tr></table>
+</div>
+</div>
+    </div>
+
+    <div class="post-copyright">
+  <p class="copyright-item">
+    <span class="item-title">文章作者</span>
+    <span class="item-content">P1n93r</span>
+  </p>
+  <p class="copyright-item">
+    <span class="item-title">上次更新</span>
+    <span class="item-content">
+        2020-01-15
+        
+    </span>
+  </p>
+  
+  
+</div>
+<div class="post-reward">
+  <input type="checkbox" name="reward" id="reward" hidden />
+  <label class="reward-button" for="reward">赞赏支持</label>
+  <div class="qr-code">
+    
+    <label class="qr-code-image" for="reward">
+        <img class="image" src="/pay/wechat.jpg">
+        <span>微信打赏</span>
+      </label>
+    <label class="qr-code-image" for="reward">
+        <img class="image" src="/pay/alipay.jpg">
+        <span>支付宝打赏</span>
+      </label>
+  </div>
+</div><footer class="post-footer">
+      <div class="post-tags">
+          <a href="/tags/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/">数据结构与算法</a>
+          <a href="/tags/pat/">PAT</a>
+          </div>
+      <nav class="post-nav">
+        
+        <a class="next" href="/post/other/j2ee%E5%BC%80%E5%8F%91%E6%8A%80%E5%B7%A7%E5%8F%AA%E5%AD%97%E7%AC%A6%E7%BC%96%E7%A0%81%E8%BF%87%E6%BB%A4%E5%99%A8/">
+            <span class="next-text nav-default">J2EE开发技巧之字符编码过滤器</span>
+            <span class="next-text nav-mobile">下一篇</span>
+            <i class="iconfont icon-right"></i>
+          </a>
+      </nav>
+    </footer>
+  </article>
+        </div>
+        <div id="disqus_thread"></div>
+    <script type="text/javascript">
+    (function() {
+      
+      
+      if (window.location.hostname === 'localhost') return;
+
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      var disqus_shortname = 'p1n93r';
+      dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+    </script>
+    <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+
+  
+
+  
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="social-links">
+      <a href="mailto:pin83r@gmail.com" class="iconfont icon-email" title="email"></a>
+      <a href="https://github.com/p1n93r" class="iconfont icon-github" title="github"></a>
+  <a href="https://p1n93r.github.io/index.xml" type="application/rss+xml" class="iconfont icon-rss" title="rss"></a>
+</div>
+
+<div class="copyright">
+  <span class="power-by">
+    由 <a class="hexo-link" href="https://gohugo.io">Hugo</a> 强力驱动
+  </span>
+  <span class="division">|</span>
+  <span class="theme-info">
+    主题 - 
+    <a class="theme-link" href="https://github.com/olOwOlo/hugo-theme-even">Even</a>
+  </span>
+
+  <div class="busuanzi-footer">
+    <span id="busuanzi_container_site_pv"> 本站总访问量 <span id="busuanzi_value_site_pv"><img src="/img/spinner.svg" alt="spinner.svg"/></span> 次 </span>
+      <span class="division">|</span>
+    <span id="busuanzi_container_site_uv"> 本站总访客数 <span id="busuanzi_value_site_uv"><img src="/img/spinner.svg" alt="spinner.svg"/></span> 人 </span>
+  </div>
+
+  <span class="copyright-year">
+    &copy; 
+    2019 - 
+    2020
+    <span class="heart">
+      <i class="iconfont icon-heart"></i>
+    </span>
+    <span class="author">P1n93r</span>
+  </span>
+</div>
+    </footer>
+
+    <div class="back-to-top" id="back-to-top">
+      <i class="iconfont icon-up"></i>
+    </div>
+  </div>
+  
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/slideout@1.0.1/dist/slideout.min.js" integrity="sha256-t+zJ/g8/KXIJMjSVQdnibt4dlaDxc9zXr/9oNPeWqdg=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.js" integrity="sha256-XVLffZaxoWfGUEbdzuLi7pwaUJv1cecsQJQqGLe7axY=" crossorigin="anonymous"></script>
+<script type="text/javascript" src="/dist/even.26188efa.min.js"></script>
+
+
+
+
+
+
+
+
+</body>
+</html>
