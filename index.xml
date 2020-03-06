@@ -6,7 +6,7 @@
     <description>Recent content on P1n93r - 博学而精一</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-cn</language>
-    <lastBuildDate>Fri, 07 Feb 2020 14:38:36 +0800</lastBuildDate>
+    <lastBuildDate>Mon, 02 Mar 2020 22:29:36 +0800</lastBuildDate>
     
 	<atom:link href="https://p1n93r.github.io/index.xml" rel="self" type="application/rss+xml" />
     
@@ -18,6 +18,15 @@
       
       <guid>https://p1n93r.github.io/about/</guid>
       <description>人生信条 学海无涯 博学精一 人生观 天无绝人之处 宏观上所有事情都无意义 很多时候你做不到只做自己喜欢的事 少喝鸡汤，这个世界不需要这么温和的人 Who Am I e</description>
+    </item>
+    
+    <item>
+      <title>链表</title>
+      <link>https://p1n93r.github.io/post/data_tructure/%E9%93%BE%E8%A1%A8/</link>
+      <pubDate>Mon, 02 Mar 2020 22:29:36 +0800</pubDate>
+      
+      <guid>https://p1n93r.github.io/post/data_tructure/%E9%93%BE%E8%A1%A8/</guid>
+      <description>什么是链表 链表是一种用于存储数据集合的数据结构。链表有以下属性： 相邻元素之间通过指针连接。 最后一个元素的后继指针值为null。 在程序执行过程</description>
     </item>
     
     <item>
