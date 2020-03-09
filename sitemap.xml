@@ -10,34 +10,55 @@
   
   <url>
     <loc>https://p1n93r.github.io/categories/</loc>
-    <lastmod>2020-03-02T22:29:36+08:00</lastmod>
+    <lastmod>2020-03-09T19:29:36+08:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.5</priority>
   </url>
   
   <url>
-    <loc>https://p1n93r.github.io/categories/data_structure/</loc>
-    <lastmod>2020-03-02T22:29:36+08:00</lastmod>
+    <loc>https://p1n93r.github.io/post/other/idea%E4%B9%8Bmaven%E7%96%91%E9%9A%BE%E6%9D%82%E7%97%87/</loc>
+    <lastmod>2020-03-09T19:29:36+08:00</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.5</priority>
+  </url>
+  
+  <url>
+    <loc>https://p1n93r.github.io/tags/maven/</loc>
+    <lastmod>2020-03-09T19:29:36+08:00</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.5</priority>
+  </url>
+  
+  <url>
+    <loc>https://p1n93r.github.io/categories/other/</loc>
+    <lastmod>2020-03-09T19:29:36+08:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.5</priority>
   </url>
   
   <url>
     <loc>https://p1n93r.github.io/</loc>
-    <lastmod>2020-03-02T22:29:36+08:00</lastmod>
+    <lastmod>2020-03-09T19:29:36+08:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.5</priority>
   </url>
   
   <url>
     <loc>https://p1n93r.github.io/post/</loc>
-    <lastmod>2020-03-02T22:29:36+08:00</lastmod>
+    <lastmod>2020-03-09T19:29:36+08:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.5</priority>
   </url>
   
   <url>
     <loc>https://p1n93r.github.io/tags/</loc>
+    <lastmod>2020-03-09T19:29:36+08:00</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.5</priority>
+  </url>
+  
+  <url>
+    <loc>https://p1n93r.github.io/categories/data_structure/</loc>
     <lastmod>2020-03-02T22:29:36+08:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.5</priority>
@@ -94,13 +115,6 @@
   
   <url>
     <loc>https://p1n93r.github.io/post/other/j2ee%E5%BC%80%E5%8F%91%E6%8A%80%E5%B7%A7%E5%8F%AA%E5%AD%97%E7%AC%A6%E7%BC%96%E7%A0%81%E8%BF%87%E6%BB%A4%E5%99%A8/</loc>
-    <lastmod>2019-12-10T11:04:36+08:00</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.5</priority>
-  </url>
-  
-  <url>
-    <loc>https://p1n93r.github.io/categories/other/</loc>
     <lastmod>2019-12-10T11:04:36+08:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.5</priority>
