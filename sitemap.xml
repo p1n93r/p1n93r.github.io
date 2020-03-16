@@ -10,7 +10,49 @@
   
   <url>
     <loc>https://p1n93r.github.io/categories/</loc>
-    <lastmod>2020-03-09T19:29:36+08:00</lastmod>
+    <lastmod>2020-03-15T20:07:36+08:00</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.5</priority>
+  </url>
+  
+  <url>
+    <loc>https://p1n93r.github.io/tags/git/</loc>
+    <lastmod>2020-03-15T20:07:36+08:00</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.5</priority>
+  </url>
+  
+  <url>
+    <loc>https://p1n93r.github.io/post/other/git%E7%9A%84%E4%BD%BF%E7%94%A8/</loc>
+    <lastmod>2020-03-15T20:07:36+08:00</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.5</priority>
+  </url>
+  
+  <url>
+    <loc>https://p1n93r.github.io/categories/other/</loc>
+    <lastmod>2020-03-15T20:07:36+08:00</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.5</priority>
+  </url>
+  
+  <url>
+    <loc>https://p1n93r.github.io/</loc>
+    <lastmod>2020-03-15T20:07:36+08:00</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.5</priority>
+  </url>
+  
+  <url>
+    <loc>https://p1n93r.github.io/post/</loc>
+    <lastmod>2020-03-15T20:07:36+08:00</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.5</priority>
+  </url>
+  
+  <url>
+    <loc>https://p1n93r.github.io/tags/</loc>
+    <lastmod>2020-03-15T20:07:36+08:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.5</priority>
   </url>
@@ -24,34 +66,6 @@
   
   <url>
     <loc>https://p1n93r.github.io/tags/maven/</loc>
-    <lastmod>2020-03-09T19:29:36+08:00</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.5</priority>
-  </url>
-  
-  <url>
-    <loc>https://p1n93r.github.io/categories/other/</loc>
-    <lastmod>2020-03-09T19:29:36+08:00</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.5</priority>
-  </url>
-  
-  <url>
-    <loc>https://p1n93r.github.io/</loc>
-    <lastmod>2020-03-09T19:29:36+08:00</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.5</priority>
-  </url>
-  
-  <url>
-    <loc>https://p1n93r.github.io/post/</loc>
-    <lastmod>2020-03-09T19:29:36+08:00</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.5</priority>
-  </url>
-  
-  <url>
-    <loc>https://p1n93r.github.io/tags/</loc>
     <lastmod>2020-03-09T19:29:36+08:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.5</priority>
