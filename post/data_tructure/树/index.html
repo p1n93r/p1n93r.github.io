@@ -1,0 +1,709 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>树 - P1n93r - 博学而精一</title>
+  <meta name="renderer" content="webkit" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+<meta name="author" content="P1n93r" /><meta name="description" content="什么是树 树是一种类似于链表的数据结构，不过链表的节点是以线性方式简单的指向其后继节点，而树的一个节点可以指向许多个节点。树是一种典型的 非线性" /><meta name="keywords" content="SSM, Java, Web, Android" />
+
+
+
+
+
+
+<meta name="generator" content="Hugo 0.57.2 with theme even" />
+
+
+<link rel="canonical" href="https://p1n93r.github.io/post/data_tructure/%E6%A0%91/" />
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/manifest.json">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+<link href="/dist/even.c2a46f00.min.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.css" integrity="sha256-7TyXnr2YU040zfSP+rEcz29ggW4j56/ujTPwjMzyqFY=" crossorigin="anonymous">
+
+
+<meta property="og:title" content="树" />
+<meta property="og:description" content="什么是树 树是一种类似于链表的数据结构，不过链表的节点是以线性方式简单的指向其后继节点，而树的一个节点可以指向许多个节点。树是一种典型的 非线性" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://p1n93r.github.io/post/data_tructure/%E6%A0%91/" />
+<meta property="article:published_time" content="2020-03-21T10:57:36+08:00" />
+<meta property="article:modified_time" content="2020-03-21T10:57:36+08:00" />
+<meta itemprop="name" content="树">
+<meta itemprop="description" content="什么是树 树是一种类似于链表的数据结构，不过链表的节点是以线性方式简单的指向其后继节点，而树的一个节点可以指向许多个节点。树是一种典型的 非线性">
+
+
+<meta itemprop="datePublished" content="2020-03-21T10:57:36&#43;08:00" />
+<meta itemprop="dateModified" content="2020-03-21T10:57:36&#43;08:00" />
+<meta itemprop="wordCount" content="2151">
+
+
+
+<meta itemprop="keywords" content="数据结构与算法," />
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="树"/>
+<meta name="twitter:description" content="什么是树 树是一种类似于链表的数据结构，不过链表的节点是以线性方式简单的指向其后继节点，而树的一个节点可以指向许多个节点。树是一种典型的 非线性"/>
+
+<!--[if lte IE 9]>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
+<![endif]-->
+
+<!--[if lt IE 9]>
+  <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+<![endif]-->
+
+</head>
+<body>
+  <div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/" class="logo">P1n93r</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    <a href="/">
+        <li class="mobile-menu-item">Home</li>
+      </a><a href="/post/">
+        <li class="mobile-menu-item">Archives</li>
+      </a><a href="/tags/">
+        <li class="mobile-menu-item">Tags</li>
+      </a><a href="/categories/">
+        <li class="mobile-menu-item">Categories</li>
+      </a><a href="/about/">
+        <li class="mobile-menu-item">About</li>
+      </a>
+  </ul>
+</nav>
+  <div class="container" id="mobile-panel">
+    <header id="header" class="header">
+        <div class="logo-wrapper">
+  <a href="/" class="logo">P1n93r</a>
+</div>
+
+<nav class="site-navbar">
+  <ul id="menu" class="menu">
+    <li class="menu-item">
+        <a class="menu-item-link" href="/">Home</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/">Archives</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/tags/">Tags</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/categories/">Categories</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/about/">About</a>
+      </li>
+  </ul>
+</nav>
+    </header>
+
+    <main id="main" class="main">
+      <div class="content-wrapper">
+        <div id="content" class="content">
+          <article class="post">
+    
+    <header class="post-header">
+      <h1 class="post-title">树</h1>
+
+      <div class="post-meta">
+        <span class="post-time"> 2020-03-21 </span>
+        <div class="post-category">
+            <a href="/categories/data_structure/"> data_structure </a>
+            </div>
+          <span class="more-meta"> 约 2151 字 </span>
+          <span class="more-meta"> 预计阅读 5 分钟 </span>
+        <span id="busuanzi_container_page_pv" class="more-meta"> <span id="busuanzi_value_page_pv"><img src="/img/spinner.svg" alt="spinner.svg"/></span> 次阅读 </span>
+      </div>
+    </header>
+
+    <div class="post-toc" id="post-toc">
+  <h2 class="post-toc-title">文章目录</h2>
+  <div class="post-toc-content always-active">
+    <nav id="TableOfContents">
+<ul>
+<li>
+<ul>
+<li><a href="#什么是树">什么是树</a></li>
+<li><a href="#术语">术语</a></li>
+<li><a href="#二叉树">二叉树</a>
+<ul>
+<li><a href="#二叉树的类型">二叉树的类型</a></li>
+<li><a href="#二叉树的性质">二叉树的性质</a></li>
+<li><a href="#二叉树的结构">二叉树的结构</a></li>
+<li><a href="#二叉树的操作">二叉树的操作</a></li>
+<li><a href="#二叉树的应用">二叉树的应用</a></li>
+</ul></li>
+<li><a href="#二叉树的遍历">二叉树的遍历</a>
+<ul>
+<li><a href="#遍历的分类">遍历的分类</a></li>
+<li><a href="#前序遍历">前序遍历</a></li>
+<li><a href="#中序遍历">中序遍历</a></li>
+<li><a href="#后序遍历">后序遍历</a></li>
+<li><a href="#层次遍历">层次遍历</a></li>
+</ul></li>
+</ul></li>
+</ul>
+</nav>
+  </div>
+</div>
+    <div class="post-content">
+      
+
+<h2 id="什么是树">什么是树</h2>
+
+<p>树是一种类似于链表的数据结构，不过链表的节点是以线性方式简单的指向其后继节点，而树的一个节点可以指向许多个节点。树是一种典型的 <strong>非线性</strong> 结构。</p>
+
+<p>对于树ADT（抽象数据类型），元素的顺序不是考虑的重点。 <strong>如果需要用到元素的顺序信息，那么可以使用链表、队列、栈等线性数据结构</strong> 。</p>
+
+<h2 id="术语">术语</h2>
+
+<p><img src="./../media/20200321-1.png" alt="图示" /></p>
+
+<ul>
+<li>根节点：根节点是一个没有双亲节点的节点。 <strong>一棵树中最多有一个根节点</strong> 。（上图的A节点就是根节点）。</li>
+<li>边：边表示从双亲节点到孩子节点的链接（如上图中所有的链接）。</li>
+<li>叶子节点：没有孩子节点的节点叫做叶子节点（如E、J、K、H和I）。</li>
+<li>兄弟节点：拥有相同双亲节点的所有孩子节点叫做兄弟节点（B、C、D彼此之间是兄弟节点）。</li>
+<li>祖先节点：如果存在一条从根节点到节点q的路径，且节点p出现在这条路径上，那么就可以把节点p叫做节点q的祖先节点，节点q也叫做p的子孙节点（A、C、G是K的祖先节点）。</li>
+<li>节点的大小：节点的大小是指子孙的个数， <strong>包括其自身</strong> （节点C的大小为3）。</li>
+<li>树的层：位于相同深度的所有节点的集合叫做树的层（B、C、D具有相同的层）。 <strong>根节点位于0层</strong> 。</li>
+</ul>
+
+<p><center><img src="./../media/20200321-2.png" alt="树的层" /></center></p>
+
+<ul>
+<li>节点的深度：从根节点到该节点的路径长度（G点的深度为2，A-C-G）。</li>
+<li>节点的高度：是指从该节点到最深节点的路径长度。 <strong>树的高度是指从根节点到树中最深节点的路径长度，只含有根节点的树的高度为0</strong> （节点B的高度为2，B-F-J）。</li>
+<li>树的高度：是树中所有节点高度的最大值，树的深度是树中所有节点深度的最大值。对于同一棵树，其深度和高度是相同的。但是对于每一个节点，其深度和高度不一定相同。</li>
+<li>斜树：如果树中除了叶子节点外， <strong>其余每个节点只有一个孩子节点</strong> ，则这种节点称为斜树。对于每个节点只有一个左孩子节点的树称为左斜树。类似的，对于每个节点只有一个右孩子节点的树叫做右斜树。</li>
+</ul>
+
+<p><center><img src="./../media/20200321-3.png" alt="斜树" /></center></p>
+
+<h2 id="二叉树">二叉树</h2>
+
+<p>如果一棵树中每个节点仅有0、1或者2个孩子节点，那么这棵树就称为 <strong>二叉树</strong> 。 <strong>空数也是一颗有效的二叉树</strong> 。一颗二叉树可以看做由根节点和两颗不相交的子树（分别称为左子树和右子树）组成，如下图所示：</p>
+
+<p><center><img src="./../media/20200321-4.png" alt="二叉树" /></center></p>
+
+<h3 id="二叉树的类型">二叉树的类型</h3>
+
+<ul>
+<li>严格二叉树：二叉树中的每个节点要么有 <strong>两个</strong> 孩子节点，要么 <strong>没有</strong> 孩子节点。</li>
+</ul>
+
+<p><center><img src="./../media/20200321-5.png" alt="严格二叉树" /></center></p>
+
+<ul>
+<li>满二叉树：二叉树中的每个节点恰好有 <strong>两个</strong> 孩子节点且 <strong>所有的叶子节点都在同一层</strong> 。</li>
+</ul>
+
+<p><center><img src="./../media/20200321-6.png" alt="满二叉树" /></center></p>
+
+<ul>
+<li>完全二叉树：在定义完全二叉树之前，假设二叉树的高度为h。对于完全二叉树，如果将所有节点从根节点开始从上至下、从左到右，依次编号（假定根节点的编号为1），那么将得到从1~n（n为节点总数）的完整序列。在遍历过程中对于空指针也应该赋予编号。如果所有的叶子节点的深度为h或者h-1，且在节点编号序列中没有漏掉任何数字，那么这样的二叉树称为完全二叉树。</li>
+</ul>
+
+<p><center><img src="./../media/20200321-7.png" alt="完全二叉树" /></center></p>
+
+<h3 id="二叉树的性质">二叉树的性质</h3>
+
+<p>假设二叉树的高度的高度为h，且根节点的深度为0。那么二叉树的性质如下：</p>
+
+<p><img src="./../media/20200321-8.png" alt="二叉树的性质" /></p>
+
+<h3 id="二叉树的结构">二叉树的结构</h3>
+
+<p>结构图示如下：</p>
+
+<p><center><img src="./../media/20200321-9.png" alt="二叉树图示" /></center></p>
+
+<p>代码例子如下：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span></pre></td>
+<td class="lntd">
+<pre class="chroma">public class BinaryTreeNode{
+    private int data;
+    private BinaryTreeNode left;
+    private BinaryTreeNode right;
+    //getter and setter
+}</pre></td></tr></table>
+</div>
+</div>
+<p><strong><em>Notice：</em></strong> 在树中，默认的流向是从双亲节点指向孩子节点，但并不强制表示为有向边。例如，如下两种表示方式是相同的：</p>
+
+<p><center><img src="./../media/20200321-10.png" alt="树的节点的两种表示方式" /></center></p>
+
+<h3 id="二叉树的操作">二叉树的操作</h3>
+
+<p>① 基本操作：</p>
+
+<ul>
+<li>向树中插入一个元素。</li>
+<li>从树中删除一个元素。</li>
+<li>查找一个元素。</li>
+<li>遍历树。</li>
+</ul>
+
+<p>② 辅助操作：</p>
+
+<ul>
+<li>获取树的大小。</li>
+<li>获取树的高度。</li>
+<li>获取其最大的层。</li>
+<li>对于给定的两个或多个节点，找出他们的最近公共祖先（Least Common Ancestor，LCG）。</li>
+</ul>
+
+<h3 id="二叉树的应用">二叉树的应用</h3>
+
+<ul>
+<li>编译器中表达式树。</li>
+<li>用于数据压缩算法中的和夫曼编码树。</li>
+<li>支持在集合中查找、插入和删除，其平均时间复杂度为O(logn)的二叉搜索（或称为查找）树（BST）。</li>
+<li>优先队列（PQ），它支持以对数时间（最坏情况下）对集合中的最小（或最大）数据单元进行搜索和删除。</li>
+</ul>
+
+<h2 id="二叉树的遍历">二叉树的遍历</h2>
+
+<h3 id="遍历的分类">遍历的分类</h3>
+
+<p><img src="./../media/20200321-11.png" alt="二叉树遍历的分类" /></p>
+
+<h3 id="前序遍历">前序遍历</h3>
+
+<p>前序遍历一般规定先遍历左子树，然后遍历由子树。前序遍历的操作顺序如下：</p>
+
+<ol>
+<li>访问根节点。</li>
+<li>按照前序遍历方式遍历左子树。</li>
+<li>按照前序遍历方式遍历右子树。</li>
+</ol>
+
+<p>基于递归方式的前序遍历代码示例如下：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span></pre></td>
+<td class="lntd">
+<pre class="chroma">void preOrder(BinaryTreeNode root){
+    if(root!=null){
+        //先处理当前节点
+        System.out.println(root.getData());
+        //再处理左子树
+        preOrder(root.getLeft());
+        //最后处理右子树
+        preOrder(root.getRight());
+    }
+}</pre></td></tr></table>
+</div>
+</div>
+<p>基于迭代方式的前序遍历代码示例如下：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span></pre></td>
+<td class="lntd">
+<pre class="chroma">void preOrder(BinaryTreeNode root){
+    if(root==null) return null;
+    Stack&lt;BinaryTreeNode&gt; cache=new Stack&lt;&gt;();
+    while(true){
+        //先从根节点开始，将所有子树的根节点从高到低添加到栈内
+        while(root!=null){
+            //首先处理根节点（前序遍历首先处理根节点）
+            System.out.println(root.get);
+            cache.push(root);
+            root=root.getLeft();
+        }
+        //如果栈内没有节点了
+        if(cache.isEmpty()) break;
+        //出栈，找到其右子树
+        root=cache.pop().getRight();
+    }
+}</pre></td></tr></table>
+</div>
+</div>
+<h3 id="中序遍历">中序遍历</h3>
+
+<p>中序遍历的操作顺序如下：</p>
+
+<ol>
+<li>按中序遍历方式遍历左子树。</li>
+<li>访问根节点。</li>
+<li>按中序遍历方式遍历右子树。</li>
+</ol>
+
+<p>基于递归方式的中序遍历代码示例如下：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span></pre></td>
+<td class="lntd">
+<pre class="chroma">void inOrder(BinaryTreeNode root){
+    if(root!=null){
+        inOrder(root.getLeft());
+        System.out.println(root.getData());
+        inOrder(root.getRight());
+    }
+}</pre></td></tr></table>
+</div>
+</div>
+<p>基于迭代方式的代码示例如下：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span></pre></td>
+<td class="lntd">
+<pre class="chroma">void inOrder(BinaryTreeNode root){
+    if(root==null) return null;
+    Stack&lt;BinaryNode&gt; cache=new Stack&lt;&gt;();
+    while(true){
+        while(root!=null){
+            cache.push(root);
+            root=root.getLeft();
+        }
+        if(cache.isEmpty()) break;
+        root=root.pop();
+        System.out.println(root.getData());
+        root=root.getRight();
+    }
+}</pre></td></tr></table>
+</div>
+</div>
+<h3 id="后序遍历">后序遍历</h3>
+
+<p>后序遍历的操作顺序如下：</p>
+
+<ol>
+<li>按后序遍历左子树。</li>
+<li>按后序遍历右子树。</li>
+<li>访问根节点。</li>
+</ol>
+
+<p>基于递归方式的后序遍历代码示例如下：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span></pre></td>
+<td class="lntd">
+<pre class="chroma">void postOrder(BinaryTreeNode root){
+    if(root!=null){
+        postOrder(root.getLeft());
+        postOrder(root.getRight());
+        System.out.println(root.getData());
+    }
+}</pre></td></tr></table>
+</div>
+</div>
+<p>基于迭代方式的后序遍历代码示例如下：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span></pre></td>
+<td class="lntd">
+<pre class="chroma">void postOrder(BinaryTreeNode root){
+    if(root==null) return null;
+    Stack&lt;BinaryTreeNode&gt; cache=new Stack&lt;&gt;();
+    while(true){
+        if(root!=null){
+            cache.push(root);
+            root=root.getLeft();
+        }else{
+            if(cache.isEmpty()){
+                return;
+            }else{
+                if(cache.peek().getRight()==null){
+                    root=cache.pop();
+                    System.out.println(root.getData());
+                    if(root==cache.peek().getRight()){
+                        System.out.println(cache.pop().getData());
+                    }
+                }
+                if(!cache.isEmpty()){
+                    root=cache.peek().getRight();
+                }else{
+                    root=null;
+                }
+            }
+        }
+    }
+}</pre></td></tr></table>
+</div>
+</div>
+<h3 id="层次遍历">层次遍历</h3>
+
+<p>层次遍历的操作顺序如下：</p>
+
+<ol>
+<li>访问根节点。</li>
+<li>在访问第n层时，将n+1层的节点按顺序保存到队列中。</li>
+<li>进入下一层并访问该层的所有节点。</li>
+<li>重复上述操作直至所有层都访问完。</li>
+</ol>
+
+<p>一个代码示例如下：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span></pre></td>
+<td class="lntd">
+<pre class="chroma">void levelOrder(BinaryTreeNode root){
+    if(root==null) return;
+    BinaryTreeNode temp;
+    Queue&lt;BinaryTreeNode&gt; cache=new LinkedList&lt;&gt;();
+    cache.offer(root);
+    while(!cache.isEmpty){
+        temp=cache.poll();
+        BinaryTreeNode left=temp.getLeft();
+        BinaryTreeNode right=temp.getRight();
+        if(left!=null){
+            cache.offer(left);
+        }
+        if(right!=null){
+            cache.offer(right);
+        }
+    }
+}</pre></td></tr></table>
+</div>
+</div>
+    </div>
+
+    <div class="post-copyright">
+  <p class="copyright-item">
+    <span class="item-title">文章作者</span>
+    <span class="item-content">P1n93r</span>
+  </p>
+  <p class="copyright-item">
+    <span class="item-title">上次更新</span>
+    <span class="item-content">
+        2020-03-21
+        
+    </span>
+  </p>
+  
+  
+</div>
+<div class="post-reward">
+  <input type="checkbox" name="reward" id="reward" hidden />
+  <label class="reward-button" for="reward">赞赏支持</label>
+  <div class="qr-code">
+    
+    <label class="qr-code-image" for="reward">
+        <img class="image" src="/pay/wechat.jpg">
+        <span>微信打赏</span>
+      </label>
+    <label class="qr-code-image" for="reward">
+        <img class="image" src="/pay/alipay.jpg">
+        <span>支付宝打赏</span>
+      </label>
+  </div>
+</div><footer class="post-footer">
+      <div class="post-tags">
+          <a href="/tags/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/">数据结构与算法</a>
+          </div>
+      <nav class="post-nav">
+        
+        <a class="next" href="/post/other/git%E7%9A%84%E4%BD%BF%E7%94%A8/">
+            <span class="next-text nav-default">Git的使用</span>
+            <span class="next-text nav-mobile">下一篇</span>
+            <i class="iconfont icon-right"></i>
+          </a>
+      </nav>
+    </footer>
+  </article>
+        </div>
+        <div id="disqus_thread"></div>
+    <script type="text/javascript">
+    (function() {
+      
+      
+      if (window.location.hostname === 'localhost') return;
+
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      var disqus_shortname = 'p1n93r';
+      dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+    </script>
+    <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+
+  
+
+  
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="social-links">
+      <a href="mailto:pin83r@gmail.com" class="iconfont icon-email" title="email"></a>
+      <a href="https://github.com/p1n93r" class="iconfont icon-github" title="github"></a>
+  <a href="https://p1n93r.github.io/index.xml" type="application/rss+xml" class="iconfont icon-rss" title="rss"></a>
+</div>
+
+<div class="copyright">
+  <span class="power-by">
+    由 <a class="hexo-link" href="https://gohugo.io">Hugo</a> 强力驱动
+  </span>
+  <span class="division">|</span>
+  <span class="theme-info">
+    主题 - 
+    <a class="theme-link" href="https://github.com/olOwOlo/hugo-theme-even">Even</a>
+  </span>
+
+  <div class="busuanzi-footer">
+    <span id="busuanzi_container_site_pv"> 本站总访问量 <span id="busuanzi_value_site_pv"><img src="/img/spinner.svg" alt="spinner.svg"/></span> 次 </span>
+      <span class="division">|</span>
+    <span id="busuanzi_container_site_uv"> 本站总访客数 <span id="busuanzi_value_site_uv"><img src="/img/spinner.svg" alt="spinner.svg"/></span> 人 </span>
+  </div>
+
+  <span class="copyright-year">
+    &copy; 
+    2019 - 
+    2020
+    <span class="heart">
+      <i class="iconfont icon-heart"></i>
+    </span>
+    <span class="author">P1n93r</span>
+  </span>
+</div>
+    </footer>
+
+    <div class="back-to-top" id="back-to-top">
+      <i class="iconfont icon-up"></i>
+    </div>
+  </div>
+  
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/slideout@1.0.1/dist/slideout.min.js" integrity="sha256-t+zJ/g8/KXIJMjSVQdnibt4dlaDxc9zXr/9oNPeWqdg=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.js" integrity="sha256-XVLffZaxoWfGUEbdzuLi7pwaUJv1cecsQJQqGLe7axY=" crossorigin="anonymous"></script>
+<script type="text/javascript" src="/dist/even.26188efa.min.js"></script>
+
+
+
+
+
+
+
+
+</body>
+</html>
