@@ -50,7 +50,7 @@
 
 <meta itemprop="datePublished" content="2020-03-21T10:57:36&#43;08:00" />
 <meta itemprop="dateModified" content="2020-03-21T10:57:36&#43;08:00" />
-<meta itemprop="wordCount" content="2151">
+<meta itemprop="wordCount" content="2157">
 
 
 
@@ -131,7 +131,7 @@
         <div class="post-category">
             <a href="/categories/data_structure/"> data_structure </a>
             </div>
-          <span class="more-meta"> 约 2151 字 </span>
+          <span class="more-meta"> 约 2157 字 </span>
           <span class="more-meta"> 预计阅读 5 分钟 </span>
         <span id="busuanzi_container_page_pv" class="more-meta"> <span id="busuanzi_value_page_pv"><img src="/img/spinner.svg" alt="spinner.svg"/></span> 次阅读 </span>
       </div>
@@ -499,37 +499,31 @@
 </span><span class="lnt">22
 </span><span class="lnt">23
 </span><span class="lnt">24
-</span><span class="lnt">25
-</span><span class="lnt">26
-</span><span class="lnt">27
 </span></pre></td>
 <td class="lntd">
-<pre class="chroma">void postOrder(BinaryTreeNode root){
-    if(root==null) return null;
-    Stack&lt;BinaryTreeNode&gt; cache=new Stack&lt;&gt;();
-    while(true){
-        if(root!=null){
-            cache.push(root);
-            root=root.getLeft();
-        }else{
-            if(cache.isEmpty()){
-                return;
-            }else{
-                if(cache.peek().getRight()==null){
-                    root=cache.pop();
-                    System.out.println(root.getData());
-                    if(root==cache.peek().getRight()){
-                        System.out.println(cache.pop().getData());
-                    }
-                }
-                if(!cache.isEmpty()){
-                    root=cache.peek().getRight();
-                }else{
-                    root=null;
-                }
+<pre class="chroma">public List&lt;Integer&gt; postorderTraversal(TreeNode root){
+    ArrayList&lt;Integer&gt; result = new ArrayList&lt;&gt;();
+    if(root==null){
+        return result;
+    }
+    Stack&lt;TreeNode&gt; cache = new Stack&lt;&gt;();
+    cache.push(root);
+    TreeNode lastPop=null;
+    while(!cache.isEmpty()){
+        while(cache.peek().left!=null){
+            cache.push(cache.peek().left);
+        }
+        while(!cache.isEmpty()){
+            if(cache.peek().right==null||cache.peek().right==lastPop){
+                lastPop  = cache.pop();
+                result.add(lastPop.val);
+            }else if (cache.peek().right!=null){
+                cache.push(cache.peek().right);
+                break;
             }
         }
     }
+    return result;
 }</pre></td></tr></table>
 </div>
 </div>
