@@ -50,7 +50,7 @@
 
 <meta itemprop="datePublished" content="2020-03-21T10:57:36&#43;08:00" />
 <meta itemprop="dateModified" content="2020-03-21T10:57:36&#43;08:00" />
-<meta itemprop="wordCount" content="3599">
+<meta itemprop="wordCount" content="5260">
 
 
 
@@ -131,8 +131,8 @@
         <div class="post-category">
             <a href="/categories/data_structure/"> data_structure </a>
             </div>
-          <span class="more-meta"> 约 3599 字 </span>
-          <span class="more-meta"> 预计阅读 8 分钟 </span>
+          <span class="more-meta"> 约 5260 字 </span>
+          <span class="more-meta"> 预计阅读 11 分钟 </span>
         <span id="busuanzi_container_page_pv" class="more-meta"> <span id="busuanzi_value_page_pv"><img src="/img/spinner.svg" alt="spinner.svg"/></span> 次阅读 </span>
       </div>
     </header>
@@ -182,7 +182,38 @@
 <li><a href="#代码实现">代码实现</a></li>
 </ul></li>
 </ul></li>
-<li><a href="#异或树">异或树</a></li>
+<li><a href="#二叉搜索树">二叉搜索树</a>
+<ul>
+<li><a href="#为什么使用二叉搜索树-bst">为什么使用二叉搜索树(BST)</a></li>
+<li><a href="#bst的性质">BST的性质</a></li>
+<li><a href="#bst的注意事项">BST的注意事项</a></li>
+<li><a href="#在二叉搜索树中寻找元素">在二叉搜索树中寻找元素</a></li>
+<li><a href="#在bst中寻找最小元素">在BST中寻找最小元素</a></li>
+<li><a href="#在bst中寻找最大元素">在BST中寻找最大元素</a></li>
+<li><a href="#寻找中序序列前驱和后继">寻找中序序列前驱和后继</a></li>
+<li><a href="#在bst中插入元素">在BST中插入元素</a></li>
+<li><a href="#在bst中删除元素">在BST中删除元素</a></li>
+</ul></li>
+<li><a href="#平衡二叉搜索树">平衡二叉搜索树</a>
+<ul>
+<li><a href="#完全平衡二叉树">完全平衡二叉树</a></li>
+</ul></li>
+<li><a href="#avl树">AVL树</a>
+<ul>
+<li><a href="#avl树的性质">AVL树的性质</a></li>
+<li><a href="#旋转">旋转</a></li>
+<li><a href="#违背avl树性质的类型">违背AVL树性质的类型</a></li>
+<li><a href="#单旋转">单旋转</a>
+<ul>
+<li><a href="#右单旋">右单旋</a></li>
+<li><a href="#左单旋">左单旋</a></li>
+</ul></li>
+<li><a href="#双旋">双旋</a>
+<ul>
+<li><a href="#左右双旋">左右双旋</a></li>
+<li><a href="#右左双旋">右左双旋</a></li>
+</ul></li>
+</ul></li>
 </ul></li>
 </ul>
 </nav>
@@ -791,7 +822,366 @@
 }</pre></td></tr></table>
 </div>
 </div>
-<h2 id="异或树">异或树</h2>
+<h2 id="二叉搜索树">二叉搜索树</h2>
+
+<h3 id="为什么使用二叉搜索树-bst">为什么使用二叉搜索树(BST)</h3>
+
+<p>对于普通的二叉树，在最坏的情况下，搜索的时间复杂度为O(n)，但是如果使用BST，那么可以使得在最坏的情况下平均搜索的时间复杂度降低到O(logn)。</p>
+
+<h3 id="bst的性质">BST的性质</h3>
+
+<ul>
+<li>一个节点的左子树只能包含键值小于该节点键值的节点。</li>
+<li>一个节点的右子树只能包含键值大于该节点键值的节点。</li>
+<li>左子树和右子树也必须是二叉搜索树。</li>
+</ul>
+
+<p><strong><em>Notice：</em></strong> 树中的每个节点都要满足这个性质。</p>
+
+<p>例如如下图中右边的二叉树便不是二叉搜索树（2比3小）：</p>
+
+<p><img src="./../media/20200405-1.png" alt="二叉搜索树" /></p>
+
+<h3 id="bst的注意事项">BST的注意事项</h3>
+
+<ol>
+<li>由于根节点数据总是处于左子树和右子树数据之前，所以当中序遍历二叉搜索树时，将得到一个有序表。</li>
+<li>搜索一个元素时，如果根节点数据小于要搜索的元素，则跳过根节点的左子树；同样，如果根节点数据大于要查找的元素，则跳过根节点的右子树。总而言之： <strong>二叉搜索树要么在左子树中搜索，要么在右子树中搜索，不需要同时在两个数中搜索</strong> 。</li>
+</ol>
+
+<h3 id="在二叉搜索树中寻找元素">在二叉搜索树中寻找元素</h3>
+
+<p>递归版本代码示例如下：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span><span class="lnt">8
+</span><span class="lnt">9
+</span></pre></td>
+<td class="lntd">
+<pre class="chroma">BSTNode find(BSTNode root,int target){
+    if(root==null){ return null; }
+    if(target&lt;root.getData()){
+        return find(root.getLeft(),target);
+    }else if(target&gt;root.getData()){
+        return find(root.getRight(),target);
+    }
+    return root;
+}</pre></td></tr></table>
+</div>
+</div>
+<p>非递归版本代码示例如下：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span></pre></td>
+<td class="lntd">
+<pre class="chroma">BSTNode find(BSTNode root,int target){
+    if(root==null){ return null; }
+    while(root!=null){
+        if(target==root.getData()){
+            return root;
+        }else if(target&gt;root.getData()){
+            root=root.getRight();
+        }else{
+            root=root.getLeft();
+        }
+    }
+    return null;
+}</pre></td></tr></table>
+</div>
+</div>
+<h3 id="在bst中寻找最小元素">在BST中寻找最小元素</h3>
+
+<p>在BST中，最左边的为最小元素，它没有左子节点。根据这个特点得出如下两种代码写法：</p>
+
+<p>递归版本的代码示例如下：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span><span class="lnt">8
+</span></pre></td>
+<td class="lntd">
+<pre class="chroma">BSTNode findMin(BSTNode root){
+    if(root==null){ return null; }
+    if(root.getLeft()==null){
+        return root;
+    }else{
+        return findMin(root.getLeft());
+    }
+}</pre></td></tr></table>
+</div>
+</div>
+<p>非递归版本如下：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span></pre></td>
+<td class="lntd">
+<pre class="chroma">BSTNode findMin(BSTNode root){
+    if(root==null){ return null; }
+    while(root.getLeft()!=null){
+        root=root.getLeft();
+    }
+    return root;
+}</pre></td></tr></table>
+</div>
+</div>
+<h3 id="在bst中寻找最大元素">在BST中寻找最大元素</h3>
+
+<p>在BST中，最大元素在树的最右端，他没有右节点。根据这个特点得出如下两种代码写法：</p>
+
+<p>递归版本的代码示例如下：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span><span class="lnt">8
+</span></pre></td>
+<td class="lntd">
+<pre class="chroma">BSTNode findMax(BSTNode root){
+    if(root==null){ return null; }
+    if(root.getRight()==null){
+        return root;
+    }else{
+        return findMax(root.getRight());
+    }
+}</pre></td></tr></table>
+</div>
+</div>
+<p>非递归版本代码示例如下：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span></pre></td>
+<td class="lntd">
+<pre class="chroma">BSTNode findMax(BSTNode root){
+    if(root==null){ return null; }
+    while(root.getRight()!=null){
+        root=root.getRight();
+    }
+    return root;
+}</pre></td></tr></table>
+</div>
+</div>
+<h3 id="寻找中序序列前驱和后继">寻找中序序列前驱和后继</h3>
+
+<p>如果X节点有两个孩子节点，那么中序序列前驱为其左子树中值最大的元素，而其后继为其右子树中最小的元素。图示如下：</p>
+
+<p><img src="./../media/20200405-2.png" alt="BST中序序列前驱和后继" /></p>
+
+<h3 id="在bst中插入元素">在BST中插入元素</h3>
+
+<p>一个代码示例如下：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span></pre></td>
+<td class="lntd">
+<pre class="chroma">BSTNode insert(BSTNode root,int data){
+    if(root==null){
+        root=new BSTNode();
+        root.setData(data);
+    }else{
+        if(data&lt;root.getData()){
+            root.setLeft(insert(root.getLeft(),data));
+        }else if(data&gt;root.getData()){
+            root.setRight(insert(root.getRight(),data));
+        }
+    }
+    return root;
+}</pre></td></tr></table>
+</div>
+</div>
+<h3 id="在bst中删除元素">在BST中删除元素</h3>
+
+<p>一个代码示例如下：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span><span class="lnt">29
+</span><span class="lnt">30
+</span></pre></td>
+<td class="lntd">
+<pre class="chroma">BSTNode delete(BSTNode root,int data){
+    BSTNode temp;
+    if(root==null){
+        return null;
+    }else if(data&lt;root.getData()){
+        root.setLeft(delete(root.getLeft(),data));
+    }else if(data&gt;root.getData()){
+        root.setRight(delete(root.getRight(),data));
+    }else{
+        //如果找到该元素了
+        //如果被删除节点存在左右子树
+        if(root.getLeft()!=null&amp;&amp;root.getRight()!=null){
+            temp=findMax(root.getLeft());
+            root.setData(temp.getData());
+            root.setLeft(delete(root.getLeft(),root.getData()));
+        }else{
+            //如果不能存在孩子节点
+            if(root.getLeft()==null&amp;&amp;root.getRight()==null){
+                root=null;
+            }else if(root.getLeft()==null){
+                //如果存在右孩子节点
+                root=root.getRight();
+            }else if(root.getRight()==null){
+                //如果存在左孩子节点
+                root=root.getLeft();
+            }
+        }
+    }
+    return root;
+}</pre></td></tr></table>
+</div>
+</div>
+<h2 id="平衡二叉搜索树">平衡二叉搜索树</h2>
+
+<p>通常，高度平衡树用符号HB(k)表示，其中k为左子树和右子树的高度差。有时也把k叫做平衡因子。</p>
+
+<h3 id="完全平衡二叉树">完全平衡二叉树</h3>
+
+<p>在HB(k)中，如果k=0，那么就把这种二叉树叫做完全平衡二叉树。即，在HB(0)的二叉搜索树中，左子树和右子树的高度差最多为0。这就能够保证树为完全二叉树。例如下图：</p>
+
+<p><img src="./../media/20200405-3.png" alt="完全平衡二叉树" /></p>
+
+<h2 id="avl树">AVL树</h2>
+
+<p>在HB(k)中，如果k=1，那么这种的二叉搜索树叫做AVL树。即一个AVL树是带有平衡条件的二叉搜索树：左子树和右子树的高度差最多不能超过1。</p>
+
+<h3 id="avl树的性质">AVL树的性质</h3>
+
+<ul>
+<li>它是一颗二叉搜索树。</li>
+<li>对任意节点X，其左子树的高度与其右子树的高度的差最多不超过1。</li>
+</ul>
+
+<p>例如下图中，左边的树不是AVL树，而右边的是AVL树：</p>
+
+<p><img src="./../media/20200405-4.png" alt="AVL树图示" /></p>
+
+<h3 id="旋转">旋转</h3>
+
+<p>旋转是用来保持AVL树性质的技术。即，需要在节点X应用旋转操作。如果在AVL树中插入一个节点，那么我们需要修复这个AVL树（保证插入后整个树任然满足AVL的性质），我们只需要关注从插入点到根节点路径上的第一个不满足AVL性质的节点，并修复它。</p>
+
+<h3 id="违背avl树性质的类型">违背AVL树性质的类型</h3>
+
+<ul>
+<li>在节点X的左孩子节点的左子树中插入元素（LL型）。</li>
+<li>在节点X的左孩子节点的右子树中插入元素（LR型）。</li>
+<li>在节点X的右孩子节点的左子树中插入元素（RL型）。</li>
+<li>在节点X的右孩子节点的右子树中插入元素（RR型）。</li>
+</ul>
+
+<p>第1种情况和第4中情况是对称的，很容易由单旋转来解决。类似的，第2种情况和第3种，需要双旋转才能解决（需要两个单旋转）。</p>
+
+<h3 id="单旋转">单旋转</h3>
+
+<h4 id="右单旋">右单旋</h4>
+
+<p>右单旋用于处理LL型插入方式。一个图解如下：</p>
+
+<p><img src="./../media/20200405-5.png" alt="右单旋图解" /></p>
+
+<h4 id="左单旋">左单旋</h4>
+
+<p>左单旋用于处理RR型插入方式。一个图解如下：</p>
+
+<p><img src="./../media/20200405-6.png" alt="左单旋图解" /></p>
+
+<h3 id="双旋">双旋</h3>
+
+<h4 id="左右双旋">左右双旋</h4>
+
+<p>左右双旋用于处理LR插入方式。一个图解如下：</p>
+
+<p><img src="./../media/20200405-7.png" alt="左右双旋图解" /></p>
+
+<h4 id="右左双旋">右左双旋</h4>
+
+<p>右左双旋用于处理RL型插入。一个图解如下：</p>
+
+<p><img src="./../media/20200405-8.png" alt="右左双旋图解" /></p>
 
     </div>
 
