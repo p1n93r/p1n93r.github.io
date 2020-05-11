@@ -1,0 +1,686 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>支付宝easySDK的使用 - P1n93r - 博学而精一</title>
+  <meta name="renderer" content="webkit" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+<meta name="author" content="P1n93r" /><meta name="description" content="前言 需要知道的是，alipayEasySDK支持alipaySDK所支持的所有功能，而且alipayEasySDK提供了很多精简后的api（" /><meta name="keywords" content="SSM, Java, Web, Android" />
+
+
+
+
+
+
+<meta name="generator" content="Hugo 0.57.2 with theme even" />
+
+
+<link rel="canonical" href="https://p1n93r.github.io/post/other/%E6%94%AF%E4%BB%98%E5%AE%9Deasysdk%E7%9A%84%E4%BD%BF%E7%94%A8/" />
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/manifest.json">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+<link href="/dist/even.c2a46f00.min.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.css" integrity="sha256-7TyXnr2YU040zfSP+rEcz29ggW4j56/ujTPwjMzyqFY=" crossorigin="anonymous">
+
+
+<meta property="og:title" content="支付宝easySDK的使用" />
+<meta property="og:description" content="前言 需要知道的是，alipayEasySDK支持alipaySDK所支持的所有功能，而且alipayEasySDK提供了很多精简后的api（" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://p1n93r.github.io/post/other/%E6%94%AF%E4%BB%98%E5%AE%9Deasysdk%E7%9A%84%E4%BD%BF%E7%94%A8/" />
+<meta property="article:published_time" content="2020-05-11T08:04:36+08:00" />
+<meta property="article:modified_time" content="2020-05-11T08:04:36+08:00" />
+<meta itemprop="name" content="支付宝easySDK的使用">
+<meta itemprop="description" content="前言 需要知道的是，alipayEasySDK支持alipaySDK所支持的所有功能，而且alipayEasySDK提供了很多精简后的api（">
+
+
+<meta itemprop="datePublished" content="2020-05-11T08:04:36&#43;08:00" />
+<meta itemprop="dateModified" content="2020-05-11T08:04:36&#43;08:00" />
+<meta itemprop="wordCount" content="1418">
+
+
+
+<meta itemprop="keywords" content="支付宝," />
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="支付宝easySDK的使用"/>
+<meta name="twitter:description" content="前言 需要知道的是，alipayEasySDK支持alipaySDK所支持的所有功能，而且alipayEasySDK提供了很多精简后的api（"/>
+
+<!--[if lte IE 9]>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
+<![endif]-->
+
+<!--[if lt IE 9]>
+  <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+<![endif]-->
+
+</head>
+<body>
+  <div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/" class="logo">P1n93r</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    <a href="/">
+        <li class="mobile-menu-item">Home</li>
+      </a><a href="/post/">
+        <li class="mobile-menu-item">Archives</li>
+      </a><a href="/tags/">
+        <li class="mobile-menu-item">Tags</li>
+      </a><a href="/categories/">
+        <li class="mobile-menu-item">Categories</li>
+      </a><a href="/about/">
+        <li class="mobile-menu-item">About</li>
+      </a>
+  </ul>
+</nav>
+  <div class="container" id="mobile-panel">
+    <header id="header" class="header">
+        <div class="logo-wrapper">
+  <a href="/" class="logo">P1n93r</a>
+</div>
+
+<nav class="site-navbar">
+  <ul id="menu" class="menu">
+    <li class="menu-item">
+        <a class="menu-item-link" href="/">Home</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/">Archives</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/tags/">Tags</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/categories/">Categories</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/about/">About</a>
+      </li>
+  </ul>
+</nav>
+    </header>
+
+    <main id="main" class="main">
+      <div class="content-wrapper">
+        <div id="content" class="content">
+          <article class="post">
+    
+    <header class="post-header">
+      <h1 class="post-title">支付宝easySDK的使用</h1>
+
+      <div class="post-meta">
+        <span class="post-time"> 2020-05-11 </span>
+        <div class="post-category">
+            <a href="/categories/other/"> Other </a>
+            </div>
+          <span class="more-meta"> 约 1418 字 </span>
+          <span class="more-meta"> 预计阅读 3 分钟 </span>
+        <span id="busuanzi_container_page_pv" class="more-meta"> <span id="busuanzi_value_page_pv"><img src="/img/spinner.svg" alt="spinner.svg"/></span> 次阅读 </span>
+      </div>
+    </header>
+
+    <div class="post-toc" id="post-toc">
+  <h2 class="post-toc-title">文章目录</h2>
+  <div class="post-toc-content always-active">
+    <nav id="TableOfContents">
+<ul>
+<li>
+<ul>
+<li><a href="#前言">前言</a></li>
+<li><a href="#简单上手">简单上手</a>
+<ul>
+<li><a href="#准备资源文件">准备资源文件</a></li>
+<li><a href="#编写getconfig类">编写GetConfig类</a></li>
+<li><a href="#编写工具类payonpc">编写工具类PayOnPC</a></li>
+</ul></li>
+</ul></li>
+</ul>
+</nav>
+  </div>
+</div>
+    <div class="post-content">
+      
+
+<h2 id="前言">前言</h2>
+
+<p>需要知道的是，alipayEasySDK支持alipaySDK所支持的所有功能，而且alipayEasySDK提供了很多精简后的api（而在alipaySDK中使用相同的功能的api需要设置很多繁琐的参数），如果存在暂时没有提供的api，可以使用其通用接口调用支付宝的api。官方文档如下：</p>
+
+<ol>
+<li><a href='https://github.com/alipay/alipay-easysdk/blob/master/APIDoc.md' target="_blank">alipayEasySDK文档</a></li>
+<li><a href='https://opendocs.alipay.com/apis/' target="_blank">alipayApi文档</a></li>
+</ol>
+
+<h2 id="简单上手">简单上手</h2>
+
+<h3 id="准备资源文件">准备资源文件</h3>
+
+<ol>
+<li>准备支付宝的几个证书文件。</li>
+<li>准备填写了支付宝一些配置的配置文件。</li>
+</ol>
+
+<p>我的支付宝配置aplipay.properties文件内容如下：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span></pre></td>
+<td class="lntd">
+<pre class="chroma">config.protocol = http
+config.gatewayHost = openapi.alipaydev.com
+config.signType = RSA2
+config.appId = 2016102400753062
+config.notifyUrl=http://313j23614b.zicp.vip/takeExpress_war_exploded/alipay/notify
+# 为避免私钥随源码泄露，推荐从文件中读取私钥字符串而不是写入源码中
+config.merchantPrivateKey = xxxxxxxxxxx</pre></td></tr></table>
+</div>
+</div>
+<p>我的有关Alipay的资源文件列表如下：</p>
+
+<p><img src="./../media/20200511-1.png" alt="Alipay的资源文件" /></p>
+
+<h3 id="编写getconfig类">编写GetConfig类</h3>
+
+<p>GetConfig类的作用是返回一个加载了alipay.properties配置的Config实例，代码如下：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span><span class="lnt">29
+</span><span class="lnt">30
+</span><span class="lnt">31
+</span><span class="lnt">32
+</span><span class="lnt">33
+</span><span class="lnt">34
+</span><span class="lnt">35
+</span><span class="lnt">36
+</span><span class="lnt">37
+</span><span class="lnt">38
+</span><span class="lnt">39
+</span></pre></td>
+<td class="lntd">
+<pre class="chroma">public class GetConfig {
+
+    private static Config config;
+
+    static{
+        Properties properties=new Properties();
+        //获取配置文件的path
+        String path = GetConfig.class.getClassLoader().getResource(&#34;api/alipay/alipay.properties&#34;).getPath();
+        try (FileInputStream inputStream=new FileInputStream(path);){
+            properties.load(inputStream);
+            Config configTmp = new Config();
+            configTmp.protocol=properties.getProperty(&#34;config.protocol&#34;);
+            configTmp.gatewayHost=properties.getProperty(&#34;config.gatewayHost&#34;);
+            configTmp.signType=properties.getProperty(&#34;config.signType&#34;);
+            configTmp.appId=properties.getProperty(&#34;config.appId&#34;);
+            configTmp.merchantPrivateKey=properties.getProperty(&#34;config.merchantPrivateKey&#34;);
+
+            //设置异步回调url,进行订单后续操作
+            configTmp.notifyUrl=properties.getProperty(&#34;config.notifyUrl&#34;);
+
+            //注：证书文件路径支持设置为文件系统中的路径或CLASS_PATH中的路径，优先从文件系统中加载，加载失败后会继续尝试从CLASS_PATH中加载
+            configTmp.merchantCertPath = GetConfig.class.getClassLoader().getResource(&#34;api/alipay/appCertPublicKey_2016102400753062.crt&#34;).getPath();
+            configTmp.alipayCertPath = GetConfig.class.getClassLoader().getResource(&#34;api/alipay/alipayCertPublicKey_RSA2.crt&#34;).getPath();
+            configTmp.alipayRootCertPath = GetConfig.class.getClassLoader().getResource(&#34;api/alipay/alipayRootCert.crt&#34;).getPath();
+            //注：如果采用非证书模式，则无需赋值上面的三个证书路径，改为赋值如下的支付宝公钥字符串即可
+            // config.alipayPublicKey = &#34;&lt;-- 请填写您的支付宝公钥，例如：MIIBIjANBg... --&gt;&#34;;
+            config=configTmp;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * @return 返回alipay的一个配置实例
+     */
+    public static Config get(){
+        return config;
+    }
+}</pre></td></tr></table>
+</div>
+</div>
+<h3 id="编写工具类payonpc">编写工具类PayOnPC</h3>
+
+<p>此工具类主要用于PC网站支付，代码内容如下：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><span class="lnt">  1
+</span><span class="lnt">  2
+</span><span class="lnt">  3
+</span><span class="lnt">  4
+</span><span class="lnt">  5
+</span><span class="lnt">  6
+</span><span class="lnt">  7
+</span><span class="lnt">  8
+</span><span class="lnt">  9
+</span><span class="lnt"> 10
+</span><span class="lnt"> 11
+</span><span class="lnt"> 12
+</span><span class="lnt"> 13
+</span><span class="lnt"> 14
+</span><span class="lnt"> 15
+</span><span class="lnt"> 16
+</span><span class="lnt"> 17
+</span><span class="lnt"> 18
+</span><span class="lnt"> 19
+</span><span class="lnt"> 20
+</span><span class="lnt"> 21
+</span><span class="lnt"> 22
+</span><span class="lnt"> 23
+</span><span class="lnt"> 24
+</span><span class="lnt"> 25
+</span><span class="lnt"> 26
+</span><span class="lnt"> 27
+</span><span class="lnt"> 28
+</span><span class="lnt"> 29
+</span><span class="lnt"> 30
+</span><span class="lnt"> 31
+</span><span class="lnt"> 32
+</span><span class="lnt"> 33
+</span><span class="lnt"> 34
+</span><span class="lnt"> 35
+</span><span class="lnt"> 36
+</span><span class="lnt"> 37
+</span><span class="lnt"> 38
+</span><span class="lnt"> 39
+</span><span class="lnt"> 40
+</span><span class="lnt"> 41
+</span><span class="lnt"> 42
+</span><span class="lnt"> 43
+</span><span class="lnt"> 44
+</span><span class="lnt"> 45
+</span><span class="lnt"> 46
+</span><span class="lnt"> 47
+</span><span class="lnt"> 48
+</span><span class="lnt"> 49
+</span><span class="lnt"> 50
+</span><span class="lnt"> 51
+</span><span class="lnt"> 52
+</span><span class="lnt"> 53
+</span><span class="lnt"> 54
+</span><span class="lnt"> 55
+</span><span class="lnt"> 56
+</span><span class="lnt"> 57
+</span><span class="lnt"> 58
+</span><span class="lnt"> 59
+</span><span class="lnt"> 60
+</span><span class="lnt"> 61
+</span><span class="lnt"> 62
+</span><span class="lnt"> 63
+</span><span class="lnt"> 64
+</span><span class="lnt"> 65
+</span><span class="lnt"> 66
+</span><span class="lnt"> 67
+</span><span class="lnt"> 68
+</span><span class="lnt"> 69
+</span><span class="lnt"> 70
+</span><span class="lnt"> 71
+</span><span class="lnt"> 72
+</span><span class="lnt"> 73
+</span><span class="lnt"> 74
+</span><span class="lnt"> 75
+</span><span class="lnt"> 76
+</span><span class="lnt"> 77
+</span><span class="lnt"> 78
+</span><span class="lnt"> 79
+</span><span class="lnt"> 80
+</span><span class="lnt"> 81
+</span><span class="lnt"> 82
+</span><span class="lnt"> 83
+</span><span class="lnt"> 84
+</span><span class="lnt"> 85
+</span><span class="lnt"> 86
+</span><span class="lnt"> 87
+</span><span class="lnt"> 88
+</span><span class="lnt"> 89
+</span><span class="lnt"> 90
+</span><span class="lnt"> 91
+</span><span class="lnt"> 92
+</span><span class="lnt"> 93
+</span><span class="lnt"> 94
+</span><span class="lnt"> 95
+</span><span class="lnt"> 96
+</span><span class="lnt"> 97
+</span><span class="lnt"> 98
+</span><span class="lnt"> 99
+</span><span class="lnt">100
+</span><span class="lnt">101
+</span><span class="lnt">102
+</span><span class="lnt">103
+</span><span class="lnt">104
+</span><span class="lnt">105
+</span><span class="lnt">106
+</span><span class="lnt">107
+</span><span class="lnt">108
+</span><span class="lnt">109
+</span><span class="lnt">110
+</span><span class="lnt">111
+</span><span class="lnt">112
+</span><span class="lnt">113
+</span><span class="lnt">114
+</span><span class="lnt">115
+</span><span class="lnt">116
+</span><span class="lnt">117
+</span><span class="lnt">118
+</span><span class="lnt">119
+</span><span class="lnt">120
+</span><span class="lnt">121
+</span><span class="lnt">122
+</span><span class="lnt">123
+</span><span class="lnt">124
+</span><span class="lnt">125
+</span><span class="lnt">126
+</span><span class="lnt">127
+</span><span class="lnt">128
+</span><span class="lnt">129
+</span><span class="lnt">130
+</span><span class="lnt">131
+</span><span class="lnt">132
+</span></pre></td>
+<td class="lntd">
+<pre class="chroma"><span class="kn">package</span> <span class="nx">com</span><span class="p">.</span><span class="nx">express</span><span class="p">.</span><span class="nx">utils</span><span class="p">.</span><span class="nx">alipay</span><span class="p">;</span>
+
+<span class="kn">import</span> <span class="nx">com</span><span class="p">.</span><span class="nx">alipay</span><span class="p">.</span><span class="nx">easysdk</span><span class="p">.</span><span class="nx">factory</span><span class="p">.</span><span class="nx">Factory</span><span class="p">;</span>
+<span class="kn">import</span> <span class="nx">com</span><span class="p">.</span><span class="nx">alipay</span><span class="p">.</span><span class="nx">easysdk</span><span class="p">.</span><span class="nx">payment</span><span class="p">.</span><span class="nx">facetoface</span><span class="p">.</span><span class="nx">models</span><span class="p">.</span><span class="nx">AlipayTradePrecreateResponse</span><span class="p">;</span>
+<span class="kn">import</span> <span class="nx">com</span><span class="p">.</span><span class="nx">alipay</span><span class="p">.</span><span class="nx">easysdk</span><span class="p">.</span><span class="nx">util</span><span class="p">.</span><span class="nx">generic</span><span class="p">.</span><span class="nx">models</span><span class="p">.</span><span class="nx">AlipayOpenApiGenericResponse</span><span class="p">;</span>
+<span class="kn">import</span> <span class="nx">net</span><span class="p">.</span><span class="nx">sf</span><span class="p">.</span><span class="nx">json</span><span class="p">.</span><span class="nx">JSONObject</span><span class="p">;</span>
+<span class="kn">import</span> <span class="nx">java</span><span class="p">.</span><span class="nx">util</span><span class="p">.</span><span class="nx">HashMap</span><span class="p">;</span>
+<span class="kn">import</span> <span class="nx">java</span><span class="p">.</span><span class="nx">util</span><span class="p">.</span><span class="nx">UUID</span><span class="p">;</span>
+
+<span class="cm">/**
+</span><span class="cm"> * 基于网站的支付
+</span><span class="cm"> * @author Cassie
+</span><span class="cm"> */</span>
+<span class="nx">public</span> <span class="nx">class</span> <span class="nx">PayOnPc</span> <span class="p">{</span>
+
+    <span class="nx">static</span> <span class="p">{</span>
+        <span class="c1">// 1. 设置参数（全局只需设置一次）
+</span><span class="c1"></span>        <span class="nx">Factory</span><span class="p">.</span><span class="nf">setOptions</span><span class="p">(</span><span class="nx">GetConfig</span><span class="p">.</span><span class="nf">get</span><span class="p">());</span>
+    <span class="p">}</span>
+
+    <span class="cm">/**
+</span><span class="cm">     * @param subject 交易订单的主题，例如：苹果6plus
+</span><span class="cm">     * @param num 交易订单的订单号，在全站中此订单号需要唯一
+</span><span class="cm">     * @param money 交易金额
+</span><span class="cm">     * @return 一个二维码链接
+</span><span class="cm">     */</span>
+    <span class="nx">public</span> <span class="nx">static</span> <span class="nx">JSONObject</span> <span class="nf">pay</span><span class="p">(</span><span class="nx">String</span> <span class="nx">subject</span><span class="p">,</span><span class="nx">String</span> <span class="nx">num</span><span class="p">,</span><span class="nx">String</span> <span class="nx">money</span><span class="p">){</span>
+        <span class="nx">JSONObject</span> <span class="nx">res</span> <span class="p">=</span> <span class="nx">new</span> <span class="nf">JSONObject</span><span class="p">();</span>
+        <span class="nx">res</span><span class="p">.</span><span class="nf">put</span><span class="p">(</span><span class="s">&#34;result&#34;</span><span class="p">,</span><span class="kc">false</span><span class="p">);</span>
+        <span class="nx">try</span> <span class="p">{</span>
+            <span class="nx">AlipayTradePrecreateResponse</span> <span class="nx">response</span> <span class="p">=</span> <span class="nx">Factory</span><span class="p">.</span><span class="nx">Payment</span><span class="p">.</span><span class="nf">FaceToFace</span><span class="p">().</span><span class="nf">preCreate</span><span class="p">(</span><span class="nx">subject</span><span class="p">,</span> <span class="nx">num</span><span class="p">,</span> <span class="nx">money</span><span class="p">);</span>
+            <span class="nx">res</span><span class="p">.</span><span class="nf">put</span><span class="p">(</span><span class="s">&#34;result&#34;</span><span class="p">,</span><span class="kc">true</span><span class="p">);</span>
+            <span class="nx">res</span><span class="p">.</span><span class="nf">put</span><span class="p">(</span><span class="s">&#34;num&#34;</span><span class="p">,</span><span class="nx">num</span><span class="p">);</span>
+            <span class="nx">res</span><span class="p">.</span><span class="nf">put</span><span class="p">(</span><span class="s">&#34;url&#34;</span><span class="p">,</span><span class="nx">response</span><span class="p">.</span><span class="nx">qrCode</span><span class="p">);</span>
+        <span class="p">}</span> <span class="nf">catch</span> <span class="p">(</span><span class="nx">Exception</span> <span class="nx">e</span><span class="p">)</span> <span class="p">{</span>
+            <span class="nx">e</span><span class="p">.</span><span class="nf">printStackTrace</span><span class="p">();</span>
+        <span class="p">}</span>
+        <span class="k">return</span> <span class="nx">res</span><span class="p">;</span>
+    <span class="p">}</span>
+
+
+    <span class="cm">/**
+</span><span class="cm">     * 提供查询支付状态的接口
+</span><span class="cm">     * @param num 商家订单号
+</span><span class="cm">     * @return 支付宝返回的结果
+</span><span class="cm">     * @throws Exception 异常
+</span><span class="cm">     */</span>
+   <span class="nx">public</span> <span class="nx">static</span> <span class="nx">JSONObject</span> <span class="nf">query</span><span class="p">(</span><span class="nx">String</span> <span class="nx">num</span><span class="p">){</span>
+       <span class="nx">String</span> <span class="nx">body</span><span class="p">;</span>
+       <span class="nx">try</span> <span class="p">{</span>
+           <span class="nx">body</span> <span class="p">=</span> <span class="nx">Factory</span><span class="p">.</span><span class="nx">Payment</span><span class="p">.</span><span class="nf">Common</span><span class="p">().</span><span class="nf">query</span><span class="p">(</span><span class="nx">num</span><span class="p">).</span><span class="nx">httpBody</span><span class="p">;</span>
+       <span class="p">}</span> <span class="nf">catch</span> <span class="p">(</span><span class="nx">Exception</span> <span class="nx">e</span><span class="p">)</span> <span class="p">{</span>
+           <span class="nx">JSONObject</span> <span class="kt">error</span> <span class="p">=</span> <span class="nx">new</span> <span class="nf">JSONObject</span><span class="p">();</span>
+           <span class="kt">error</span><span class="p">.</span><span class="nf">put</span><span class="p">(</span><span class="s">&#34;code&#34;</span><span class="p">,</span><span class="s">&#34;400&#34;</span><span class="p">);</span>
+           <span class="kt">error</span><span class="p">.</span><span class="nf">put</span><span class="p">(</span><span class="s">&#34;msg&#34;</span><span class="p">,</span><span class="s">&#34;订单不存在&#34;</span><span class="p">);</span>
+           <span class="k">return</span> <span class="kt">error</span><span class="p">;</span>
+       <span class="p">}</span>
+       <span class="k">return</span> <span class="p">(</span><span class="nx">JSONObject</span><span class="p">)</span> <span class="nx">JSONObject</span><span class="p">.</span><span class="nf">fromObject</span><span class="p">(</span><span class="nx">body</span><span class="p">).</span><span class="nf">get</span><span class="p">(</span><span class="s">&#34;alipay_trade_query_response&#34;</span><span class="p">);</span>
+   <span class="p">}</span>
+
+
+    <span class="cm">/**
+</span><span class="cm">     * 取消未完成的订单，当主动查询发现为支付时，需要进行交易撤销
+</span><span class="cm">     * @param num 订单号
+</span><span class="cm">     * @return 是否撤销成功
+</span><span class="cm">     */</span>
+   <span class="nx">public</span> <span class="nx">static</span> <span class="nx">Boolean</span> <span class="nf">cancelPay</span><span class="p">(</span><span class="nx">String</span> <span class="nx">num</span><span class="p">){</span>
+       <span class="nx">try</span> <span class="p">{</span>
+           <span class="c1">//alipay_trade_cancel_response
+</span><span class="c1"></span>           <span class="nx">String</span> <span class="nx">body</span> <span class="p">=</span> <span class="nx">Factory</span><span class="p">.</span><span class="nx">Payment</span><span class="p">.</span><span class="nf">Common</span><span class="p">().</span><span class="nf">cancel</span><span class="p">(</span><span class="nx">num</span><span class="p">).</span><span class="nx">httpBody</span><span class="p">;</span>
+           <span class="nx">System</span><span class="p">.</span><span class="nx">out</span><span class="p">.</span><span class="nb">println</span><span class="p">(</span><span class="nx">body</span><span class="p">);</span>
+           <span class="nx">JSONObject</span> <span class="nx">res</span> <span class="p">=</span> <span class="p">(</span><span class="nx">JSONObject</span><span class="p">)</span> <span class="nx">JSONObject</span><span class="p">.</span><span class="nf">fromObject</span><span class="p">(</span><span class="nx">body</span><span class="p">).</span><span class="nf">get</span><span class="p">(</span><span class="s">&#34;alipay_trade_cancel_response&#34;</span><span class="p">);</span>
+           <span class="k">if</span><span class="p">(</span><span class="nx">res</span><span class="p">.</span><span class="nf">has</span><span class="p">(</span><span class="s">&#34;code&#34;</span><span class="p">)</span><span class="o">&amp;&amp;</span><span class="nx">res</span><span class="p">.</span><span class="nf">has</span><span class="p">(</span><span class="s">&#34;msg&#34;</span><span class="p">)){</span>
+               <span class="nx">String</span> <span class="nx">code</span> <span class="p">=</span> <span class="nx">res</span><span class="p">.</span><span class="nf">get</span><span class="p">(</span><span class="s">&#34;code&#34;</span><span class="p">).</span><span class="nf">toString</span><span class="p">();</span>
+               <span class="nx">String</span> <span class="nx">msg</span> <span class="p">=</span> <span class="nx">res</span><span class="p">.</span><span class="nf">get</span><span class="p">(</span><span class="s">&#34;msg&#34;</span><span class="p">).</span><span class="nf">toString</span><span class="p">();</span>
+               <span class="k">return</span> <span class="s">&#34;Success&#34;</span><span class="p">.</span><span class="nf">equals</span><span class="p">(</span><span class="nx">msg</span><span class="p">)</span> <span class="o">&amp;&amp;</span> <span class="s">&#34;10000&#34;</span><span class="p">.</span><span class="nf">equals</span><span class="p">(</span><span class="nx">code</span><span class="p">);</span>
+           <span class="p">}</span>
+       <span class="p">}</span> <span class="nf">catch</span> <span class="p">(</span><span class="nx">Exception</span> <span class="nx">e</span><span class="p">)</span> <span class="p">{</span>
+           <span class="nx">e</span><span class="p">.</span><span class="nf">printStackTrace</span><span class="p">();</span>
+       <span class="p">}</span>
+       <span class="k">return</span> <span class="kc">false</span><span class="p">;</span>
+   <span class="p">}</span>
+
+
+    <span class="cm">/**
+</span><span class="cm">     * 对订单进行退款，只能全额退款
+</span><span class="cm">     * @param num 订单号
+</span><span class="cm">     * @param money 退款金额
+</span><span class="cm">     * @return 是否退款成功
+</span><span class="cm">     */</span>
+   <span class="nx">public</span> <span class="nx">static</span> <span class="nx">Boolean</span> <span class="nf">refund</span><span class="p">(</span><span class="nx">String</span> <span class="nx">num</span><span class="p">,</span><span class="nx">String</span> <span class="nx">money</span><span class="p">){</span>
+       <span class="nx">try</span> <span class="p">{</span>
+           <span class="nx">String</span> <span class="nx">body</span> <span class="p">=</span> <span class="nx">Factory</span><span class="p">.</span><span class="nx">Payment</span><span class="p">.</span><span class="nf">Common</span><span class="p">().</span><span class="nf">refund</span><span class="p">(</span><span class="nx">num</span><span class="p">,</span> <span class="nx">money</span><span class="p">).</span><span class="nx">httpBody</span><span class="p">;</span>
+           <span class="nx">JSONObject</span> <span class="nx">res</span> <span class="p">=</span> <span class="p">(</span><span class="nx">JSONObject</span><span class="p">)</span> <span class="nx">JSONObject</span><span class="p">.</span><span class="nf">fromObject</span><span class="p">(</span><span class="nx">body</span><span class="p">).</span><span class="nf">get</span><span class="p">(</span><span class="s">&#34;alipay_trade_refund_response&#34;</span><span class="p">);</span>
+           <span class="nx">System</span><span class="p">.</span><span class="nx">out</span><span class="p">.</span><span class="nb">println</span><span class="p">(</span><span class="nx">res</span><span class="p">);</span>
+           <span class="k">if</span><span class="p">(</span><span class="nx">res</span><span class="p">.</span><span class="nf">has</span><span class="p">(</span><span class="s">&#34;code&#34;</span><span class="p">)</span><span class="o">&amp;&amp;</span><span class="nx">res</span><span class="p">.</span><span class="nf">has</span><span class="p">(</span><span class="s">&#34;msg&#34;</span><span class="p">)){</span>
+               <span class="nx">String</span> <span class="nx">code</span> <span class="p">=</span> <span class="nx">res</span><span class="p">.</span><span class="nf">get</span><span class="p">(</span><span class="s">&#34;code&#34;</span><span class="p">).</span><span class="nf">toString</span><span class="p">();</span>
+               <span class="nx">String</span> <span class="nx">msg</span> <span class="p">=</span> <span class="nx">res</span><span class="p">.</span><span class="nf">get</span><span class="p">(</span><span class="s">&#34;msg&#34;</span><span class="p">).</span><span class="nf">toString</span><span class="p">();</span>
+               <span class="k">return</span> <span class="s">&#34;Success&#34;</span><span class="p">.</span><span class="nf">equals</span><span class="p">(</span><span class="nx">msg</span><span class="p">)</span> <span class="o">&amp;&amp;</span> <span class="s">&#34;10000&#34;</span><span class="p">.</span><span class="nf">equals</span><span class="p">(</span><span class="nx">code</span><span class="p">);</span>
+           <span class="p">}</span>
+       <span class="p">}</span> <span class="nf">catch</span> <span class="p">(</span><span class="nx">Exception</span> <span class="nx">e</span><span class="p">)</span> <span class="p">{</span>
+           <span class="nx">e</span><span class="p">.</span><span class="nf">printStackTrace</span><span class="p">();</span>
+       <span class="p">}</span>
+       <span class="k">return</span> <span class="kc">false</span><span class="p">;</span>
+   <span class="p">}</span>
+
+
+    <span class="cm">/**
+</span><span class="cm">     * 转账
+</span><span class="cm">     * @param alipayLoginId 支付宝账号
+</span><span class="cm">     * @param trueName 真实姓名
+</span><span class="cm">     * @param money 金额
+</span><span class="cm">     * @return 是否成功
+</span><span class="cm">     * @throws Exception 异常
+</span><span class="cm">     */</span>
+   <span class="nx">public</span> <span class="nx">static</span> <span class="nx">Boolean</span> <span class="nf">transfer</span><span class="p">(</span><span class="nx">String</span> <span class="nx">alipayLoginId</span><span class="p">,</span><span class="nx">String</span> <span class="nx">trueName</span><span class="p">,</span><span class="nx">String</span> <span class="nx">money</span><span class="p">)</span> <span class="nx">throws</span> <span class="nx">Exception</span> <span class="p">{</span>
+       <span class="c1">//构造请求参数
+</span><span class="c1"></span>       <span class="nx">HashMap</span><span class="p">&lt;</span><span class="nx">String</span><span class="p">,</span> <span class="nx">Object</span><span class="p">&gt;</span> <span class="nx">bizParams</span> <span class="p">=</span> <span class="nx">new</span> <span class="nx">HashMap</span><span class="p">&lt;&gt;();</span>
+       <span class="nx">bizParams</span><span class="p">.</span><span class="nf">put</span><span class="p">(</span><span class="s">&#34;out_biz_no&#34;</span><span class="p">,</span><span class="nx">UUID</span><span class="p">.</span><span class="nf">randomUUID</span><span class="p">().</span><span class="nf">toString</span><span class="p">());</span>
+       <span class="nx">bizParams</span><span class="p">.</span><span class="nf">put</span><span class="p">(</span><span class="s">&#34;trans_amount&#34;</span><span class="p">,</span><span class="nx">money</span><span class="p">);</span>
+       <span class="nx">bizParams</span><span class="p">.</span><span class="nf">put</span><span class="p">(</span><span class="s">&#34;biz_scene&#34;</span><span class="p">,</span><span class="s">&#34;DIRECT_TRANSFER&#34;</span><span class="p">);</span>
+       <span class="nx">bizParams</span><span class="p">.</span><span class="nf">put</span><span class="p">(</span><span class="s">&#34;product_code&#34;</span><span class="p">,</span><span class="s">&#34;TRANS_ACCOUNT_NO_PWD&#34;</span><span class="p">);</span>
+       <span class="nx">JSONObject</span> <span class="nx">payeeInfo</span> <span class="p">=</span> <span class="nx">new</span> <span class="nf">JSONObject</span><span class="p">();</span>
+       <span class="nx">payeeInfo</span><span class="p">.</span><span class="nf">put</span><span class="p">(</span><span class="s">&#34;identity&#34;</span><span class="p">,</span><span class="nx">alipayLoginId</span><span class="p">);</span>
+       <span class="nx">payeeInfo</span><span class="p">.</span><span class="nf">put</span><span class="p">(</span><span class="s">&#34;identity_type&#34;</span><span class="p">,</span><span class="s">&#34;ALIPAY_LOGON_ID&#34;</span><span class="p">);</span>
+       <span class="nx">payeeInfo</span><span class="p">.</span><span class="nf">put</span><span class="p">(</span><span class="s">&#34;name&#34;</span><span class="p">,</span><span class="nx">trueName</span><span class="p">);</span>
+       <span class="nx">bizParams</span><span class="p">.</span><span class="nf">put</span><span class="p">(</span><span class="s">&#34;payee_info&#34;</span><span class="p">,</span><span class="nx">payeeInfo</span><span class="p">.</span><span class="nf">toString</span><span class="p">());</span>
+       <span class="nx">bizParams</span><span class="p">.</span><span class="nf">put</span><span class="p">(</span><span class="s">&#34;order_title&#34;</span><span class="p">,</span><span class="s">&#34;快递代取佣金&#34;</span><span class="p">);</span>
+       <span class="nx">AlipayOpenApiGenericResponse</span> <span class="nx">response</span> <span class="p">=</span> <span class="nx">Factory</span><span class="p">.</span><span class="nx">Util</span><span class="p">.</span><span class="nf">Generic</span><span class="p">().</span><span class="nf">execute</span><span class="p">(</span><span class="s">&#34;alipay.fund.trans.uni.transfer&#34;</span><span class="p">,</span> <span class="nx">null</span><span class="p">,</span> <span class="nx">bizParams</span><span class="p">);</span>
+       <span class="k">return</span> <span class="s">&#34;10000&#34;</span><span class="p">.</span><span class="nf">equals</span><span class="p">(</span><span class="nx">response</span><span class="p">.</span><span class="nx">code</span><span class="p">)</span><span class="o">&amp;&amp;</span><span class="s">&#34;Success&#34;</span><span class="p">.</span><span class="nf">equals</span><span class="p">(</span><span class="nx">response</span><span class="p">.</span><span class="nx">msg</span><span class="p">);</span>
+   <span class="p">}</span>
+<span class="p">}</span></pre></td></tr></table>
+</div>
+</div>
+    </div>
+
+    <div class="post-copyright">
+  <p class="copyright-item">
+    <span class="item-title">文章作者</span>
+    <span class="item-content">P1n93r</span>
+  </p>
+  <p class="copyright-item">
+    <span class="item-title">上次更新</span>
+    <span class="item-content">
+        2020-05-11
+        
+    </span>
+  </p>
+  
+  
+</div>
+<div class="post-reward">
+  <input type="checkbox" name="reward" id="reward" hidden />
+  <label class="reward-button" for="reward">赞赏支持</label>
+  <div class="qr-code">
+    
+    <label class="qr-code-image" for="reward">
+        <img class="image" src="/pay/wechat.jpg">
+        <span>微信打赏</span>
+      </label>
+    <label class="qr-code-image" for="reward">
+        <img class="image" src="/pay/alipay.jpg">
+        <span>支付宝打赏</span>
+      </label>
+  </div>
+</div><footer class="post-footer">
+      <div class="post-tags">
+          <a href="/tags/%E6%94%AF%E4%BB%98%E5%AE%9D/">支付宝</a>
+          </div>
+      <nav class="post-nav">
+        
+        <a class="next" href="/post/springmvc/springmvc%E4%BC%98%E9%9B%85%E7%9A%84%E5%8E%BB%E9%99%A4%E5%8F%82%E6%95%B0%E5%89%8D%E5%90%8E%E7%A9%BA%E6%A0%BC/">
+            <span class="next-text nav-default">SpringMVC优雅的去除参数的前后空格</span>
+            <span class="next-text nav-mobile">下一篇</span>
+            <i class="iconfont icon-right"></i>
+          </a>
+      </nav>
+    </footer>
+  </article>
+        </div>
+        <div id="disqus_thread"></div>
+    <script type="text/javascript">
+    (function() {
+      
+      
+      if (window.location.hostname === 'localhost') return;
+
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      var disqus_shortname = 'p1n93r';
+      dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+    </script>
+    <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+
+  
+
+  
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="social-links">
+      <a href="mailto:pin83r@gmail.com" class="iconfont icon-email" title="email"></a>
+      <a href="https://github.com/p1n93r" class="iconfont icon-github" title="github"></a>
+  <a href="https://p1n93r.github.io/index.xml" type="application/rss+xml" class="iconfont icon-rss" title="rss"></a>
+</div>
+
+<div class="copyright">
+  <span class="power-by">
+    由 <a class="hexo-link" href="https://gohugo.io">Hugo</a> 强力驱动
+  </span>
+  <span class="division">|</span>
+  <span class="theme-info">
+    主题 - 
+    <a class="theme-link" href="https://github.com/olOwOlo/hugo-theme-even">Even</a>
+  </span>
+
+  <div class="busuanzi-footer">
+    <span id="busuanzi_container_site_pv"> 本站总访问量 <span id="busuanzi_value_site_pv"><img src="/img/spinner.svg" alt="spinner.svg"/></span> 次 </span>
+      <span class="division">|</span>
+    <span id="busuanzi_container_site_uv"> 本站总访客数 <span id="busuanzi_value_site_uv"><img src="/img/spinner.svg" alt="spinner.svg"/></span> 人 </span>
+  </div>
+
+  <span class="copyright-year">
+    &copy; 
+    2019 - 
+    2020
+    <span class="heart">
+      <i class="iconfont icon-heart"></i>
+    </span>
+    <span class="author">P1n93r</span>
+  </span>
+</div>
+    </footer>
+
+    <div class="back-to-top" id="back-to-top">
+      <i class="iconfont icon-up"></i>
+    </div>
+  </div>
+  
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/slideout@1.0.1/dist/slideout.min.js" integrity="sha256-t+zJ/g8/KXIJMjSVQdnibt4dlaDxc9zXr/9oNPeWqdg=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.js" integrity="sha256-XVLffZaxoWfGUEbdzuLi7pwaUJv1cecsQJQqGLe7axY=" crossorigin="anonymous"></script>
+<script type="text/javascript" src="/dist/even.26188efa.min.js"></script>
+
+
+
+
+
+
+
+
+</body>
+</html>

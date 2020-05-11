@@ -10,48 +10,62 @@
   
   <url>
     <loc>https://p1n93r.github.io/categories/</loc>
-    <lastmod>2020-04-15T00:38:36+08:00</lastmod>
+    <lastmod>2020-05-11T08:04:36+08:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.5</priority>
   </url>
   
   <url>
     <loc>https://p1n93r.github.io/categories/other/</loc>
-    <lastmod>2020-04-15T00:38:36+08:00</lastmod>
+    <lastmod>2020-05-11T08:04:36+08:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.5</priority>
   </url>
   
   <url>
     <loc>https://p1n93r.github.io/</loc>
-    <lastmod>2020-04-15T00:38:36+08:00</lastmod>
+    <lastmod>2020-05-11T08:04:36+08:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.5</priority>
   </url>
   
   <url>
     <loc>https://p1n93r.github.io/post/</loc>
-    <lastmod>2020-04-15T00:38:36+08:00</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.5</priority>
-  </url>
-  
-  <url>
-    <loc>https://p1n93r.github.io/tags/springmvc/</loc>
-    <lastmod>2020-04-15T00:38:36+08:00</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.5</priority>
-  </url>
-  
-  <url>
-    <loc>https://p1n93r.github.io/post/other/springmvc%E4%BC%98%E9%9B%85%E7%9A%84%E5%8E%BB%E9%99%A4%E5%8F%82%E6%95%B0%E5%89%8D%E5%90%8E%E7%A9%BA%E6%A0%BC/</loc>
-    <lastmod>2020-04-15T00:38:36+08:00</lastmod>
+    <lastmod>2020-05-11T08:04:36+08:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.5</priority>
   </url>
   
   <url>
     <loc>https://p1n93r.github.io/tags/</loc>
+    <lastmod>2020-05-11T08:04:36+08:00</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.5</priority>
+  </url>
+  
+  <url>
+    <loc>https://p1n93r.github.io/tags/%E6%94%AF%E4%BB%98%E5%AE%9D/</loc>
+    <lastmod>2020-05-11T08:04:36+08:00</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.5</priority>
+  </url>
+  
+  <url>
+    <loc>https://p1n93r.github.io/post/other/%E6%94%AF%E4%BB%98%E5%AE%9Deasysdk%E7%9A%84%E4%BD%BF%E7%94%A8/</loc>
+    <lastmod>2020-05-11T08:04:36+08:00</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.5</priority>
+  </url>
+  
+  <url>
+    <loc>https://p1n93r.github.io/categories/springmvc/</loc>
+    <lastmod>2020-04-15T00:38:36+08:00</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.5</priority>
+  </url>
+  
+  <url>
+    <loc>https://p1n93r.github.io/post/springmvc/springmvc%E4%BC%98%E9%9B%85%E7%9A%84%E5%8E%BB%E9%99%A4%E5%8F%82%E6%95%B0%E5%89%8D%E5%90%8E%E7%A9%BA%E6%A0%BC/</loc>
     <lastmod>2020-04-15T00:38:36+08:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.5</priority>
@@ -396,13 +410,6 @@
   <url>
     <loc>https://p1n93r.github.io/post/android/android%E7%9F%A5%E8%AF%86%E7%82%B9x0/</loc>
     <lastmod>2019-09-04T17:48:36+08:00</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.5</priority>
-  </url>
-  
-  <url>
-    <loc>https://p1n93r.github.io/categories/springmvc/</loc>
-    <lastmod>2019-07-27T17:48:36+08:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.5</priority>
   </url>
