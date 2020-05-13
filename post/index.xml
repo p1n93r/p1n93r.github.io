@@ -6,10 +6,19 @@
     <description>Recent content in Posts on P1n93r - 博学而精一</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-cn</language>
-    <lastBuildDate>Mon, 11 May 2020 08:04:36 +0800</lastBuildDate>
+    <lastBuildDate>Tue, 12 May 2020 10:21:36 +0800</lastBuildDate>
     
 	<atom:link href="https://p1n93r.github.io/post/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>Java容器</title>
+      <link>https://p1n93r.github.io/post/java/java%E5%AE%B9%E5%99%A8/</link>
+      <pubDate>Tue, 12 May 2020 10:21:36 +0800</pubDate>
+      
+      <guid>https://p1n93r.github.io/post/java/java%E5%AE%B9%E5%99%A8/</guid>
+      <description>概览 Java容器主要包括Collection和Map两种，Collection存储对象集合，而Map存储键值对（两个对象）的映射表。 Collection Set Tr</description>
+    </item>
     
     <item>
       <title>支付宝easySDK的使用</title>
