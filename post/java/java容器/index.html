@@ -50,7 +50,7 @@
 
 <meta itemprop="datePublished" content="2020-05-12T10:21:36&#43;08:00" />
 <meta itemprop="dateModified" content="2020-05-12T10:21:36&#43;08:00" />
-<meta itemprop="wordCount" content="5845">
+<meta itemprop="wordCount" content="7864">
 
 
 
@@ -131,8 +131,8 @@
         <div class="post-category">
             <a href="/categories/java/"> Java </a>
             </div>
-          <span class="more-meta"> 约 5845 字 </span>
-          <span class="more-meta"> 预计阅读 12 分钟 </span>
+          <span class="more-meta"> 约 7864 字 </span>
+          <span class="more-meta"> 预计阅读 16 分钟 </span>
         <span id="busuanzi_container_page_pv" class="more-meta"> <span id="busuanzi_value_page_pv"><img src="/img/spinner.svg" alt="spinner.svg"/></span> 次阅读 </span>
       </div>
     </header>
@@ -195,8 +195,23 @@
 <ul>
 <li><a href="#计算hash值">计算hash值</a></li>
 <li><a href="#取模">取模</a></li>
-<li><a href="#扩容基本原理">扩容基本原理</a></li>
 </ul></li>
+<li><a href="#扩容基本原理">扩容基本原理</a></li>
+<li><a href="#扩容重新计算桶下标">扩容重新计算桶下标</a></li>
+<li><a href="#计算数组容量">计算数组容量</a></li>
+<li><a href="#链表转为红黑树">链表转为红黑树</a></li>
+<li><a href="#与hashtable的比较">与HashTable的比较</a></li>
+</ul></li>
+<li><a href="#concurrenthashmap">ConcurrentHashMap</a>
+<ul>
+<li><a href="#存储结构-1">存储结构</a></li>
+<li><a href="#size操作">size操作</a></li>
+<li><a href="#jdk-1-8的改动">JDK 1.8的改动</a></li>
+</ul></li>
+<li><a href="#linkedhashmap">LinkedHashMap</a>
+<ul>
+<li><a href="#存储结构-2">存储结构</a></li>
+<li><a href="#afternodeaccess">afterNodeAccess()</a></li>
 </ul></li>
 </ul></li>
 </ul></li>
@@ -1243,7 +1258,7 @@ y%x : 00000010</pre></td></tr></table>
 }</pre></td></tr></table>
 </div>
 </div>
-<h5 id="扩容基本原理">扩容基本原理</h5>
+<h4 id="扩容基本原理">扩容基本原理</h4>
 
 <p>设HashMap的table的长度为M，需要存储的键值对数量为N，如果哈希函数满足均匀性的要求，那么每条链表的长度大约为N/M，因此查找的复杂度为O(N/M)。为了让查找成本降低，应该是N/M尽可能小，因此需要保证M尽可能的大，也就是说table要尽可能大。HashMap采用动态扩容来根据当前的N值来调整M值，是的空间效率和时间效率得到保证。</p>
 
@@ -1369,6 +1384,7 @@ transient int modCount;</pre></td></tr></table>
 </span><span class="lnt">28
 </span><span class="lnt">29
 </span><span class="lnt">30
+</span><span class="lnt">31
 </span></pre></td>
 <td class="lntd">
 <pre class="chroma">void resize(int newCapacity) {
@@ -1394,6 +1410,7 @@ void transfer(Entry[] newTable) {
             do {
                 Entry&lt;K,V&gt; next = e.next;
                 int i = indexFor(e.hash, newCapacity);
+                //头插法
                 e.next = newTable[i];
                 newTable[i] = e;
                 e = next;
@@ -1403,6 +1420,360 @@ void transfer(Entry[] newTable) {
 }</pre></td></tr></table>
 </div>
 </div>
+<h4 id="扩容重新计算桶下标">扩容重新计算桶下标</h4>
+
+<p>在进行扩容时，需要把键值对重新计算桶下标，从而放在对应的桶上。HashMap使用hash%capacity来确定桶下标（确保capacity为2的n次方，便使用hash&amp;(capacity-1)同等替换）。</p>
+
+<p>假设原数组长度capacity为16，扩容后new capacity为32：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><span class="lnt">1
+</span><span class="lnt">2
+</span></pre></td>
+<td class="lntd">
+<pre class="chroma">capacity     : 00010000
+new capacity : 00100000</pre></td></tr></table>
+</div>
+</div>
+<p>此时观察hash值的第5位，如果第5位为0，则桶位置和原来一样，如果为1，则在原位置加2^5=16。</p>
+
+<h4 id="计算数组容量">计算数组容量</h4>
+
+<p>HashMap构造函数允许用户传入的容量不是2的n次方，因为它可以自动地将传入的容量转换为2的n次方。</p>
+
+<p>现在存在一个定理： <strong>大于某个数的最小的2的n次方，为此数的掩码加1</strong> 。那么如果计算一个数的掩码呢，例如对于10010000，它的掩码是11111111，可以使用如下方法得到其掩码：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span></pre></td>
+<td class="lntd">
+<pre class="chroma">mask |= mask &gt;&gt; 1    11011000
+mask |= mask &gt;&gt; 2    11111110
+mask |= mask &gt;&gt; 4    11111111</pre></td></tr></table>
+</div>
+</div>
+<p>那么mask+1就是 <strong>大于</strong> 原始数据的最小2的n次方：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><span class="lnt">1
+</span><span class="lnt">2
+</span></pre></td>
+<td class="lntd">
+<pre class="chroma">num     10010000
+mask+1 100000000</pre></td></tr></table>
+</div>
+</div>
+<p>以下是HashMap中计算数组容量的代码：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span><span class="lnt">8
+</span><span class="lnt">9
+</span></pre></td>
+<td class="lntd">
+<pre class="chroma">static final int tableSizeFor(int cap) {
+    int n = cap - 1;
+    n |= n &gt;&gt;&gt; 1;
+    n |= n &gt;&gt;&gt; 2;
+    n |= n &gt;&gt;&gt; 4;
+    n |= n &gt;&gt;&gt; 8;
+    n |= n &gt;&gt;&gt; 16;
+    return (n &lt; 0) ? 1 : (n &gt;= MAXIMUM_CAPACITY) ? MAXIMUM_CAPACITY : n + 1;
+}</pre></td></tr></table>
+</div>
+</div>
+<p><strong><em>Notice:</em></strong> tableSizeFor()函数一开始将cap-1，是因为如果不减一最终得到的是一个 <strong>大于</strong> cap的最小的2的n次方，首先将cap-1，就能够得到 <strong>大于等于</strong> cap的最小的2的n次方了。</p>
+
+<h4 id="链表转为红黑树">链表转为红黑树</h4>
+
+<p>从JDK 1.8开始，一个桶存储的链表长度大于等于8时将会将链表转为红黑树。</p>
+
+<h4 id="与hashtable的比较">与HashTable的比较</h4>
+
+<ul>
+<li>HashTable使用synchronized来进行同步。</li>
+<li>HashMap可以插入键为null的Entry。</li>
+<li>HashMap的迭代器是fail-fast迭代器。</li>
+<li>HashMap不能保证随着时间的推移Map中的元素次序是不变的。</li>
+</ul>
+
+<h3 id="concurrenthashmap">ConcurrentHashMap</h3>
+
+<h4 id="存储结构-1">存储结构</h4>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span></pre></td>
+<td class="lntd">
+<pre class="chroma">static final class HashEntry&lt;K,V&gt; {
+    final int hash;
+    final K key;
+    volatile V value;
+    volatile HashEntry&lt;K,V&gt; next;
+}</pre></td></tr></table>
+</div>
+</div>
+<p>ConcurrentHashMap和HashMap实现上类似，最主要的区别是ConcurrentHashMap采用了 <strong>分段锁(Segment)</strong> ，每个分段锁维护着几个桶(HashEntry)，多线程可以同时访问不同分段锁上的桶，从而使得其并发度更高（并发度就是Segment的个数）。</p>
+
+<p>Segment继承自ReentrantLock：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span></pre></td>
+<td class="lntd">
+<pre class="chroma">static final class Segment&lt;K,V&gt; extends ReentrantLock implements Serializable {
+
+    private static final long serialVersionUID = 2249069246763182397L;
+
+    static final int MAX_SCAN_RETRIES =
+        Runtime.getRuntime().availableProcessors() &gt; 1 ? 64 : 1;
+
+    transient volatile HashEntry&lt;K,V&gt;[] table;
+
+    transient int count;
+
+    transient int modCount;
+
+    transient int threshold;
+
+    final float loadFactor;
+}</pre></td></tr></table>
+</div>
+</div>
+<p>默认的并发级别是16，也就是说默认创建16个Segment：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><span class="lnt">1
+</span><span class="lnt">2
+</span></pre></td>
+<td class="lntd">
+<pre class="chroma">final Segment&lt;K,V&gt;[] segments;
+static final int DEFAULT_CONCURRENCY_LEVEL = 16;</pre></td></tr></table>
+</div>
+</div>
+<p><img src="./../media/20200514-1.png" alt="ConcurrentHashMap存储结构图" /></p>
+
+<h4 id="size操作">size操作</h4>
+
+<p>每个Segment维护一个count变量来统计该Segment中的键值对数目。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span></pre></td>
+<td class="lntd">
+<pre class="chroma">/**
+ * The number of elements. Accessed only either within locks
+ * or among other volatile reads that maintain visibility.
+ */
+transient int count;</pre></td></tr></table>
+</div>
+</div>
+<p>在执行size操作时，需要遍历所有的Segment然后把所有的count累计起来。ConcurrentHashMap在执行size操作的时候先尝试不加锁，如果连续两次不加锁操作得到modCount的结果一致，那么可以认为这个结果是正确的。尝试次数使用RETRIES_BEFORE_LOCK定义，该值为2，retries初始值为-1，因此尝试次数为3。如果尝试次数超过3次，就需要对每个Segment加锁。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span><span class="lnt">29
+</span><span class="lnt">30
+</span><span class="lnt">31
+</span><span class="lnt">32
+</span><span class="lnt">33
+</span><span class="lnt">34
+</span><span class="lnt">35
+</span><span class="lnt">36
+</span><span class="lnt">37
+</span><span class="lnt">38
+</span><span class="lnt">39
+</span><span class="lnt">40
+</span><span class="lnt">41
+</span><span class="lnt">42
+</span><span class="lnt">43
+</span><span class="lnt">44
+</span><span class="lnt">45
+</span><span class="lnt">46
+</span><span class="lnt">47
+</span><span class="lnt">48
+</span><span class="lnt">49
+</span></pre></td>
+<td class="lntd">
+<pre class="chroma">/**
+ * Number of unsynchronized retries in size and containsValue
+ * methods before resorting to locking. This is used to avoid
+ * unbounded retries if tables undergo continuous modification
+ * which would make it impossible to obtain an accurate result.
+ */
+static final int RETRIES_BEFORE_LOCK = 2;
+
+public int size() {
+    // Try a few times to get accurate count. On failure due to
+    // continuous async changes in table, resort to locking.
+    final Segment&lt;K,V&gt;[] segments = this.segments;
+    int size;
+    boolean overflow; // true if size overflows 32 bits
+    long sum;         // sum of modCounts
+    long last = 0L;   // previous sum
+    int retries = -1; // first iteration isn&#39;t retry
+    try {
+        for (;;) {
+            // 超过尝试次数，则对每个 Segment 加锁
+            if (retries++ == RETRIES_BEFORE_LOCK) {
+                for (int j = 0; j &lt; segments.length; ++j)
+                    ensureSegment(j).lock(); // force creation
+            }
+            sum = 0L;
+            size = 0;
+            overflow = false;
+            for (int j = 0; j &lt; segments.length; ++j) {
+                Segment&lt;K,V&gt; seg = segmentAt(segments, j);
+                if (seg != null) {
+                    sum += seg.modCount;
+                    int c = seg.count;
+                    if (c &lt; 0 || (size += c) &lt; 0)
+                        overflow = true;
+                }
+            }
+            // 连续两次得到modCount的结果一致，则认为这个结果是正确的
+            if (sum == last)
+                break;
+            last = sum;
+        }
+    } finally {
+        if (retries &gt; RETRIES_BEFORE_LOCK) {
+            for (int j = 0; j &lt; segments.length; ++j)
+                segmentAt(segments, j).unlock();
+        }
+    }
+    return overflow ? Integer.MAX_VALUE : size;
+}</pre></td></tr></table>
+</div>
+</div>
+<h4 id="jdk-1-8的改动">JDK 1.8的改动</h4>
+
+<ul>
+<li>JDK 1.7使用分段锁机制实现并发更新操作，核心类为Segment，它继承自重入锁ReentrantLock，并发度和Segment数量相等。</li>
+<li>JDK 1.8使用了CAS操作来支持更高的并发度，在CAS操作失败时使用内置锁synchronized。</li>
+<li>JDK 1.8的实现也在链表过长时会转换为红黑树。</li>
+</ul>
+
+<h3 id="linkedhashmap">LinkedHashMap</h3>
+
+<h4 id="存储结构-2">存储结构</h4>
+
+<p>继承自HashMap，因此具有和HashMap一样的快速查找特征：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><span class="lnt">1
+</span></pre></td>
+<td class="lntd">
+<pre class="chroma">public class LinkedHashMap&lt;K,V&gt; extends HashMap&lt;K,V&gt; implements Map&lt;K,V&gt;</pre></td></tr></table>
+</div>
+</div>
+<p>内部维护一个双向链表，用来维护插入顺序或者LRU顺序：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span><span class="lnt">8
+</span><span class="lnt">9
+</span></pre></td>
+<td class="lntd">
+<pre class="chroma">/**
+ * The head (eldest) of the doubly linked list.
+ */
+transient LinkedHashMap.Entry&lt;K,V&gt; head;
+
+/**
+ * The tail (youngest) of the doubly linked list.
+ */
+transient LinkedHashMap.Entry&lt;K,V&gt; tail;</pre></td></tr></table>
+</div>
+</div>
+<p>accessOrder决定了顺序，默认为false，此时维护的是插入顺序,否则维护的就是LRU顺序。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><span class="lnt">1
+</span></pre></td>
+<td class="lntd">
+<pre class="chroma">final boolean accessOrder;</pre></td></tr></table>
+</div>
+</div>
+<p>LinkedHashMap最重要的是以下用于维护顺序的函数，它们会在put、get等方法中调用。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><span class="lnt">1
+</span><span class="lnt">2
+</span></pre></td>
+<td class="lntd">
+<pre class="chroma">void afterNodeAccess(Node&lt;K,V&gt; p) { }
+void afterNodeInsertion(boolean evict) { }</pre></td></tr></table>
+</div>
+</div>
+<h4 id="afternodeaccess">afterNodeAccess()</h4>
+
     </div>
 
     <div class="post-copyright">
