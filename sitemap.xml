@@ -16,14 +16,7 @@
   </url>
   
   <url>
-    <loc>https://p1n93r.github.io/post/other/java%E9%9D%A2%E8%AF%95/</loc>
-    <lastmod>2020-06-10T16:04:36+08:00</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.5</priority>
-  </url>
-  
-  <url>
-    <loc>https://p1n93r.github.io/categories/other/</loc>
+    <loc>https://p1n93r.github.io/categories/java%E9%9D%A2%E8%AF%95/</loc>
     <lastmod>2020-06-10T16:04:36+08:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.5</priority>
@@ -44,14 +37,7 @@
   </url>
   
   <url>
-    <loc>https://p1n93r.github.io/tags/</loc>
-    <lastmod>2020-06-10T16:04:36+08:00</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.5</priority>
-  </url>
-  
-  <url>
-    <loc>https://p1n93r.github.io/tags/%E9%9D%A2%E8%AF%95/</loc>
+    <loc>https://p1n93r.github.io/post/interview/%E6%B3%A8%E8%A7%A3%E9%9B%86%E5%90%88%E5%92%8C%E6%B3%9B%E5%9E%8Bjava/</loc>
     <lastmod>2020-06-10T16:04:36+08:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.5</priority>
@@ -67,6 +53,20 @@
   <url>
     <loc>https://p1n93r.github.io/post/java/java%E5%AE%B9%E5%99%A8/</loc>
     <lastmod>2020-05-12T10:21:36+08:00</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.5</priority>
+  </url>
+  
+  <url>
+    <loc>https://p1n93r.github.io/categories/other/</loc>
+    <lastmod>2020-05-11T08:04:36+08:00</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.5</priority>
+  </url>
+  
+  <url>
+    <loc>https://p1n93r.github.io/tags/</loc>
+    <lastmod>2020-05-11T08:04:36+08:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.5</priority>
   </url>
@@ -494,6 +494,12 @@
   <url>
     <loc>https://p1n93r.github.io/post/mybatis/mybatis%E6%95%B4%E5%90%88spring/</loc>
     <lastmod>2019-07-10T17:48:36+08:00</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.5</priority>
+  </url>
+  
+  <url>
+    <loc>https://p1n93r.github.io/post/interview/%E5%BC%82%E5%B8%B8/</loc>
     <changefreq>weekly</changefreq>
     <priority>0.5</priority>
   </url>
