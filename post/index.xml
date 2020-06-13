@@ -417,6 +417,15 @@
     </item>
     
     <item>
+      <title>Mysql</title>
+      <link>https://p1n93r.github.io/post/interview/mysql/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>https://p1n93r.github.io/post/interview/mysql/</guid>
+      <description>如何设计一个关系型数据库？ 存储部分：类似文件系统将数据持久化到硬盘上。 程序实例部分，创建模块：存储管理、缓存机制、SQL解析、日志管理、权限</description>
+    </item>
+    
+    <item>
       <title>异常、IO和NIO(Java)</title>
       <link>https://p1n93r.github.io/post/interview/%E5%BC%82%E5%B8%B8/</link>
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
