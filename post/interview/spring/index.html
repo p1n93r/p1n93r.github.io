@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-  <title> - P1n93r - 博学而精一</title>
+  <title>Spring - P1n93r - 博学而精一</title>
   <meta name="renderer" content="webkit" />
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
 
@@ -16,7 +16,7 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
 
 
-<meta name="author" content="P1n93r" /><meta name="description" content="" /><meta name="keywords" content="SSM, Java, Web, Android" />
+<meta name="author" content="P1n93r" /><meta name="description" content="什么是Spring的IOC？ IOC（Inversion of Controller）即 控制反转 。反转获得依赖对象的过程，获得依赖对象的过程由自身管" /><meta name="keywords" content="SSM, Java, Web, Android" />
 
 
 
@@ -38,24 +38,26 @@
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.css" integrity="sha256-7TyXnr2YU040zfSP+rEcz29ggW4j56/ujTPwjMzyqFY=" crossorigin="anonymous">
 
 
-<meta property="og:title" content="" />
-<meta property="og:description" content="" />
+<meta property="og:title" content="Spring" />
+<meta property="og:description" content="什么是Spring的IOC？ IOC（Inversion of Controller）即 控制反转 。反转获得依赖对象的过程，获得依赖对象的过程由自身管" />
 <meta property="og:type" content="article" />
 <meta property="og:url" content="https://p1n93r.github.io/post/interview/spring/" />
+<meta property="article:published_time" content="2020-06-11T16:04:36+08:00" />
+<meta property="article:modified_time" content="2020-06-11T16:04:36+08:00" />
+<meta itemprop="name" content="Spring">
+<meta itemprop="description" content="什么是Spring的IOC？ IOC（Inversion of Controller）即 控制反转 。反转获得依赖对象的过程，获得依赖对象的过程由自身管">
 
-<meta itemprop="name" content="">
-<meta itemprop="description" content="">
 
-
-
-<meta itemprop="wordCount" content="0">
+<meta itemprop="datePublished" content="2020-06-11T16:04:36&#43;08:00" />
+<meta itemprop="dateModified" content="2020-06-11T16:04:36&#43;08:00" />
+<meta itemprop="wordCount" content="1596">
 
 
 
 <meta itemprop="keywords" content="" />
 <meta name="twitter:card" content="summary"/>
-<meta name="twitter:title" content=""/>
-<meta name="twitter:description" content=""/>
+<meta name="twitter:title" content="Spring"/>
+<meta name="twitter:description" content="什么是Spring的IOC？ IOC（Inversion of Controller）即 控制反转 。反转获得依赖对象的过程，获得依赖对象的过程由自身管"/>
 
 <!--[if lte IE 9]>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
@@ -122,13 +124,15 @@
           <article class="post">
     
     <header class="post-header">
-      <h1 class="post-title"></h1>
+      <h1 class="post-title">Spring</h1>
 
       <div class="post-meta">
-        <span class="post-time"> 0001-01-01 </span>
-        
-          <span class="more-meta"> 约 0 字 </span>
-          <span class="more-meta"> 预计阅读 0 分钟 </span>
+        <span class="post-time"> 2020-06-11 </span>
+        <div class="post-category">
+            <a href="/categories/interview/"> interview </a>
+            </div>
+          <span class="more-meta"> 约 1596 字 </span>
+          <span class="more-meta"> 预计阅读 4 分钟 </span>
         <span id="busuanzi_container_page_pv" class="more-meta"> <span id="busuanzi_value_page_pv"><img src="/img/spinner.svg" alt="spinner.svg"/></span> 次阅读 </span>
       </div>
     </header>
@@ -136,11 +140,69 @@
     <div class="post-toc" id="post-toc">
   <h2 class="post-toc-title">文章目录</h2>
   <div class="post-toc-content always-active">
-    
+    <nav id="TableOfContents">
+<ul>
+<li>
+<ul>
+<li><a href="#什么是spring的ioc">什么是Spring的IOC？</a></li>
+<li><a href="#说说spring的几个通知以及相关注解">说说Spring的几个通知以及相关注解？</a></li>
+<li><a href="#说说-resource-autowired和-qulifier注解">说说@Resource、@Autowired和@Qulifier注解？</a></li>
+<li><a href="#说说aop-springaop和aspectj">说说AOP、SpringAOP和AspectJ？</a></li>
+<li><a href="#如何理解-横切关注-这个概念">如何理解&rdquo;横切关注&rdquo;这个概念？</a></li>
+<li><a href="#如何理解aop中的连接点-joinpoint-切点-pointcut-增强-advice-引介-introdution-织入-weaving-和切面-aspect-这概念">如何理解AOP中的连接点(JoinPoint)、切点(PointCut)、增强(Advice)、引介(Introdution)、织入(Weaving)和切面(Aspect)这概念?</a></li>
+</ul></li>
+</ul>
+</nav>
   </div>
 </div>
     <div class="post-content">
       
+
+<h2 id="什么是spring的ioc">什么是Spring的IOC？</h2>
+
+<p>IOC（Inversion of Controller）即 <strong>控制反转</strong> 。反转获得依赖对象的过程，获得依赖对象的过程由自身管理变为了由IOC容器主动注入。例如，系统在未引入IOC容器之前，对象A依赖于对象B，那么必须主动去创建对象B，此时控制权在自己手上，软件系统引入IOC容器之后，对象A与对象B之间失去了直接联系，IOC会主动创建一个对象B注入到对象A需要的地方，对象A获得依赖对象B的过程，由主动变为了被动，控制权反转过来了。依赖注入(DI)和控制反转(IOC)是从不同角度描述的同一件事情，就是指 <strong>通过引入IOC容器，利用依赖关系注入的方式，实现对象之间的解耦</strong> 。</p>
+
+<h2 id="说说spring的几个通知以及相关注解">说说Spring的几个通知以及相关注解？</h2>
+
+<ol>
+<li>前置通知(Before)：在方法执行之前执行的通知，使用@Before注解进行装配。</li>
+<li>后置通知(After)：无论方法是否执行成功，都在方法执行后执行的通知，使用@After注解进行装配。</li>
+<li>返回通知(After-Retuning)：仅当方法执行成功完成后执行的通知，使用@AfterReturing注解进行装配。</li>
+<li>异常通知(After-Throwing)：在方法抛出异常退出后执行的通知，使用@AfterThrowing注解进行装配。</li>
+<li>环绕通知(Around)：在方法执行之前以及之后执行的通知。使用@Around注解进行装配。</li>
+</ol>
+
+<h2 id="说说-resource-autowired和-qulifier注解">说说@Resource、@Autowired和@Qulifier注解？</h2>
+
+<ul>
+<li>@Resource：默认按照by name的方式进行自动注入，是J2EE提供的，它有两个属性：name和type。当使用name属性的时候，按照by name的方式进行注入；当使用type属性的时候，按照by bype的方式进行注入；如果两个都缺省，则使用反射机制按照by name的方式进行注入。</li>
+<li>@Autowired：默认按照by type的方式进行自动注入，可以修饰构造器、setter方法、属性和任意名称/任意参数的普通方法。</li>
+<li>@Qulifier：当存在同个类型的多个bean时，利用@Autowired注入则无法确认注入哪一个，此时可以配合使用@Qulifier注解来确切的注入哪个bean来消除歧义。</li>
+</ul>
+
+<h2 id="说说aop-springaop和aspectj">说说AOP、SpringAOP和AspectJ？</h2>
+
+<ul>
+<li>AOP：AOP是一种程序设计范式，该范式以一种称为切面(aspect)的语言构成基础，切面是一种新的模块化机制，用来描述分散在对象、类或方法中的横切关注点。</li>
+<li>SpringAOP：是一个使用动态代理的AOP框架，不会改变字节码，每次运行时在内存中创建一个临时AOP增强对象，在特定的切点做了增强处理，并回调原对象方法。</li>
+<li>AspectJ：是一个使用静态代理的AOP框架，在编译阶段会将切面织入到字节码中，生成增强后的AOP代理类，运行时就是得到增强后的AOP对象。</li>
+</ul>
+
+<h2 id="如何理解-横切关注-这个概念">如何理解&rdquo;横切关注&rdquo;这个概念？</h2>
+
+<p>横切关注是会影响到 <strong>整个</strong> 应用程序的关注功能，它跟正常的业务逻辑是正交的，没有必然的联系，但是几乎所有的业务逻辑都会涉及到关注功能。通常，日志、事物、安全性等关注就是横切关注点。</p>
+
+<h2 id="如何理解aop中的连接点-joinpoint-切点-pointcut-增强-advice-引介-introdution-织入-weaving-和切面-aspect-这概念">如何理解AOP中的连接点(JoinPoint)、切点(PointCut)、增强(Advice)、引介(Introdution)、织入(Weaving)和切面(Aspect)这概念?</h2>
+
+<ul>
+<li>连接点(JoinPoint)：程序执行的某个特定位置，一个类或者一段程序代码中具有一些边界性质的特定点就是连接点。Spring仅支持方法的连接点。</li>
+<li>切点(PointCut)：如果说连接点相当于数据中的记录，那么切点相当于查询条件，一个切点可以匹配多个连接点。SpringAOP负责解析切点所设定的查询条件，找到对应的连接点。</li>
+<li>增强(Advice)：增强(通知)是植入到目标类连接点上的一段代码。</li>
+<li>引介(Introdution)：</li>
+<li>织入(Weaving)：</li>
+<li>切面(Aspect)：</li>
+</ul>
+
     </div>
 
     <div class="post-copyright">
@@ -151,7 +213,7 @@
   <p class="copyright-item">
     <span class="item-title">上次更新</span>
     <span class="item-content">
-        0001-01-01
+        2020-06-11
         
     </span>
   </p>
@@ -175,12 +237,16 @@
 </div><footer class="post-footer">
       
       <nav class="post-nav">
-        <a class="prev" href="/post/mybatis/mybatis%E6%95%B4%E5%90%88spring/">
+        <a class="prev" href="/post/interview/mysql/">
             <i class="iconfont icon-left"></i>
-            <span class="prev-text nav-default">Mybatis整合Spring</span>
+            <span class="prev-text nav-default">Mysql</span>
             <span class="prev-text nav-mobile">上一篇</span>
           </a>
-        
+        <a class="next" href="/post/interview/%E5%BC%82%E5%B8%B8/">
+            <span class="next-text nav-default">异常、IO和NIO(Java)</span>
+            <span class="next-text nav-mobile">下一篇</span>
+            <i class="iconfont icon-right"></i>
+          </a>
       </nav>
     </footer>
   </article>
