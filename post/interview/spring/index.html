@@ -50,7 +50,7 @@
 
 <meta itemprop="datePublished" content="2020-06-11T16:04:36&#43;08:00" />
 <meta itemprop="dateModified" content="2020-06-11T16:04:36&#43;08:00" />
-<meta itemprop="wordCount" content="1596">
+<meta itemprop="wordCount" content="1974">
 
 
 
@@ -131,7 +131,7 @@
         <div class="post-category">
             <a href="/categories/interview/"> interview </a>
             </div>
-          <span class="more-meta"> 约 1596 字 </span>
+          <span class="more-meta"> 约 1974 字 </span>
           <span class="more-meta"> 预计阅读 4 分钟 </span>
         <span id="busuanzi_container_page_pv" class="more-meta"> <span id="busuanzi_value_page_pv"><img src="/img/spinner.svg" alt="spinner.svg"/></span> 次阅读 </span>
       </div>
@@ -150,6 +150,7 @@
 <li><a href="#说说aop-springaop和aspectj">说说AOP、SpringAOP和AspectJ？</a></li>
 <li><a href="#如何理解-横切关注-这个概念">如何理解&rdquo;横切关注&rdquo;这个概念？</a></li>
 <li><a href="#如何理解aop中的连接点-joinpoint-切点-pointcut-增强-advice-引介-introdution-织入-weaving-和切面-aspect-这概念">如何理解AOP中的连接点(JoinPoint)、切点(PointCut)、增强(Advice)、引介(Introdution)、织入(Weaving)和切面(Aspect)这概念?</a></li>
+<li><a href="#说说-scope的五个作用域">说说@Scope的五个作用域？</a></li>
 </ul></li>
 </ul>
 </nav>
@@ -197,11 +198,23 @@
 <ul>
 <li>连接点(JoinPoint)：程序执行的某个特定位置，一个类或者一段程序代码中具有一些边界性质的特定点就是连接点。Spring仅支持方法的连接点。</li>
 <li>切点(PointCut)：如果说连接点相当于数据中的记录，那么切点相当于查询条件，一个切点可以匹配多个连接点。SpringAOP负责解析切点所设定的查询条件，找到对应的连接点。</li>
-<li>增强(Advice)：增强(通知)是植入到目标类连接点上的一段代码。</li>
-<li>引介(Introdution)：</li>
-<li>织入(Weaving)：</li>
-<li>切面(Aspect)：</li>
+<li>增强(Advice)：增强(通知)是织入到目标类连接点上的一段代码。</li>
+<li>引介(Introdution)：引介是一种特殊的增强，它为类添加一些属性和方法。</li>
+<li>织入(Weaving)：将通知添加到目标类具体的连接点上的过程。</li>
+<li>切面(Aspect)：由切点和通知(引介)组成，包括了对横切关注点功能的定义，也包括了对连接点的定义。</li>
 </ul>
+
+<h2 id="说说-scope的五个作用域">说说@Scope的五个作用域？</h2>
+
+<p>缺省的spring bean的作用域是singleton。</p>
+
+<ol>
+<li>singleton：bean在每个SpringIOC容器中只有一个实例。</li>
+<li>prototype：一个bean的定义可以存在多个实例。</li>
+<li>request：每次http请求都会创建一个bean。该作用域仅在基于web的spring应用下有效。</li>
+<li>session：在一个http session中，一个bean定义对应一个实例。该作用域仅在基于web的spring应用下有效。</li>
+<li>global-session：在一个全局的http session中，一个bean定义对应一个实例。该作用域仅在基于web的spring应用下有效。</li>
+</ol>
 
     </div>
 
