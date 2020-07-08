@@ -16,7 +16,7 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
 
 
-<meta name="author" content="P1n93r" /><meta name="description" content="事物 什么是事物 事物是由一个有限的数据库操作序列构成，这些操作要么全部执行，要么全部不执行。是一个不可分割的工作单位。 事物的四大特性 原子性(A" /><meta name="keywords" content="SSM, Java, Web, Android" />
+<meta name="author" content="P1n93r" /><meta name="description" content="事务 什么是事务 事务是由一个有限的数据库操作序列构成，这些操作要么全部执行，要么全部不执行。是一个不可分割的工作单位。 事务的四大特性 原子性(A" /><meta name="keywords" content="SSM, Java, Web, Android" />
 
 
 
@@ -39,25 +39,25 @@
 
 
 <meta property="og:title" content="Mysql四大隔离级别" />
-<meta property="og:description" content="事物 什么是事物 事物是由一个有限的数据库操作序列构成，这些操作要么全部执行，要么全部不执行。是一个不可分割的工作单位。 事物的四大特性 原子性(A" />
+<meta property="og:description" content="事务 什么是事务 事务是由一个有限的数据库操作序列构成，这些操作要么全部执行，要么全部不执行。是一个不可分割的工作单位。 事务的四大特性 原子性(A" />
 <meta property="og:type" content="article" />
 <meta property="og:url" content="https://p1n93r.github.io/post/interview/mysql%E5%9B%9B%E5%A4%A7%E9%9A%94%E7%A6%BB%E7%BA%A7%E5%88%AB/" />
 <meta property="article:published_time" content="2020-06-25T16:04:36+08:00" />
 <meta property="article:modified_time" content="2020-06-25T16:04:36+08:00" />
 <meta itemprop="name" content="Mysql四大隔离级别">
-<meta itemprop="description" content="事物 什么是事物 事物是由一个有限的数据库操作序列构成，这些操作要么全部执行，要么全部不执行。是一个不可分割的工作单位。 事物的四大特性 原子性(A">
+<meta itemprop="description" content="事务 什么是事务 事务是由一个有限的数据库操作序列构成，这些操作要么全部执行，要么全部不执行。是一个不可分割的工作单位。 事务的四大特性 原子性(A">
 
 
 <meta itemprop="datePublished" content="2020-06-25T16:04:36&#43;08:00" />
 <meta itemprop="dateModified" content="2020-06-25T16:04:36&#43;08:00" />
-<meta itemprop="wordCount" content="860">
+<meta itemprop="wordCount" content="1658">
 
 
 
 <meta itemprop="keywords" content="" />
 <meta name="twitter:card" content="summary"/>
 <meta name="twitter:title" content="Mysql四大隔离级别"/>
-<meta name="twitter:description" content="事物 什么是事物 事物是由一个有限的数据库操作序列构成，这些操作要么全部执行，要么全部不执行。是一个不可分割的工作单位。 事物的四大特性 原子性(A"/>
+<meta name="twitter:description" content="事务 什么是事务 事务是由一个有限的数据库操作序列构成，这些操作要么全部执行，要么全部不执行。是一个不可分割的工作单位。 事务的四大特性 原子性(A"/>
 
 <!--[if lte IE 9]>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
@@ -131,8 +131,8 @@
         <div class="post-category">
             <a href="/categories/mysql/"> Mysql </a>
             </div>
-          <span class="more-meta"> 约 860 字 </span>
-          <span class="more-meta"> 预计阅读 2 分钟 </span>
+          <span class="more-meta"> 约 1658 字 </span>
+          <span class="more-meta"> 预计阅读 4 分钟 </span>
         <span id="busuanzi_container_page_pv" class="more-meta"> <span id="busuanzi_value_page_pv"><img src="/img/spinner.svg" alt="spinner.svg"/></span> 次阅读 </span>
       </div>
     </header>
@@ -144,16 +144,23 @@
 <ul>
 <li>
 <ul>
-<li><a href="#事物">事物</a>
+<li><a href="#事务">事务</a>
 <ul>
-<li><a href="#什么是事物">什么是事物</a></li>
-<li><a href="#事物的四大特性">事物的四大特性</a></li>
+<li><a href="#什么是事务">什么是事务</a></li>
+<li><a href="#事务的四大特性">事务的四大特性</a></li>
 </ul></li>
-<li><a href="#事物并发存在的问题">事物并发存在的问题</a>
+<li><a href="#事务并发存在的问题">事务并发存在的问题</a>
 <ul>
 <li><a href="#脏读">脏读</a></li>
 <li><a href="#不可重复读">不可重复读</a></li>
 <li><a href="#幻读">幻读</a></li>
+</ul></li>
+<li><a href="#事务的四大隔离级别实践">事务的四大隔离级别实践</a>
+<ul>
+<li><a href="#读未提交">读未提交</a></li>
+<li><a href="#已提交读">已提交读</a></li>
+<li><a href="#可重复读">可重复读</a></li>
+<li><a href="#串行化">串行化</a></li>
 </ul></li>
 </ul></li>
 </ul>
@@ -163,13 +170,13 @@
     <div class="post-content">
       
 
-<h2 id="事物">事物</h2>
+<h2 id="事务">事务</h2>
 
-<h3 id="什么是事物">什么是事物</h3>
+<h3 id="什么是事务">什么是事务</h3>
 
-<p>事物是由一个有限的数据库操作序列构成，这些操作要么全部执行，要么全部不执行。是一个不可分割的工作单位。</p>
+<p>事务是由一个有限的数据库操作序列构成，这些操作要么全部执行，要么全部不执行。是一个不可分割的工作单位。</p>
 
-<h3 id="事物的四大特性">事物的四大特性</h3>
+<h3 id="事务的四大特性">事务的四大特性</h3>
 
 <ul>
 <li>原子性(Atomicity)：事物是一个不可分割的原子项，要么全都执行，要么全都不执行。</li>
@@ -178,7 +185,7 @@
 <li>持久性(Durabilily)：事物执行完后对数据的修改是持久化的。</li>
 </ul>
 
-<h2 id="事物并发存在的问题">事物并发存在的问题</h2>
+<h2 id="事务并发存在的问题">事务并发存在的问题</h2>
 
 <p>假设现在存在如下表：</p>
 <div class="highlight"><div class="chroma">
@@ -351,7 +358,7 @@
 </tbody>
 </table>
 
-<p>事务A被事务B干扰了，在事务A范围内，两个相同的查询，读取用一条记录，却返回了不同的数据，这就是 <strong>不可重复度</strong> 。</p>
+<p>事务A被事务B干扰了，在事务A范围内，两个相同的查询，读取用一条记录，却返回了不同的数据，这就是 <strong>不可重复读</strong> 。</p>
 
 <h3 id="幻读">幻读</h3>
 
@@ -416,6 +423,56 @@
 </tr>
 </tbody>
 </table>
+
+<p>事务A查询一个 <strong>范围结果集</strong> ，另一个并发事务B往这个范围中插入/删除了数据，并提交了，然后事务A再去查询相同的范围，两个读取到的结果集不一样了，这就是 <strong>幻读</strong> 。</p>
+
+<h2 id="事务的四大隔离级别实践">事务的四大隔离级别实践</h2>
+
+<p>并发事务存在 <strong>脏读、幻读、不可重复读</strong> 等问题，InnoDB实现了： <strong>读未提交（Read-Uncommitted）、读已提交（Read-Committed）、可重复读（Repeatable-Read）和串行化（Serializable）</strong> 。</p>
+
+<h3 id="读未提交">读未提交</h3>
+
+<p>在读未提交的事务隔离级别下，一个事务会读取到其他事务未提交的数据，存在 <strong>脏读</strong> 的问题，是隔离级别最低的一种。下面进行测试，首先设置两个窗口的事务隔离级别未读未提交，然后进行测试：</p>
+
+<p><img src="./../media/2020-07-08-1.png" alt="设置读未提交的事务隔离级别" /></p>
+
+<p><center><strong>设置读未提交的事务隔离级别</strong></center></p>
+
+<p><img src="./../media/2020-07-08-2.png" alt="测试读未提交的问题" /></p>
+
+<p><center><strong>测试读未提交的问题</strong></center></p>
+
+<h3 id="已提交读">已提交读</h3>
+
+<p>为了避免脏读，出现了已提交读（但还是会存在幻读的问题）。下面将事务隔离级别设置为已提交读，再次进行测试：</p>
+
+<p><img src="./../media/2020-07-08-3.png" alt="已提交读隔离级别下解决脏读" /></p>
+
+<p><center><strong>已提交读隔离级别下解决脏读</strong></center></p>
+
+<h3 id="可重复读">可重复读</h3>
+
+<p>可重复读指的是同一个事务内多次相同条件的查询，数据的结果不变。根据上面的测试，已提交读可以读取到其他事务已提交的数据，则同个事务内，相同的查询条件得到了不同的查询结果，由此造成了不可重读，为了解决这个问题，出现了可重复读的事务隔离级别。测试如下：</p>
+
+<p><img src="./../media/2020-07-08-4.png" alt="可重读" /></p>
+
+<p><center><strong>可重读隔离级别解决不可重读的问题</strong></center></p>
+
+<p>可重读可以解决不可重读的问题，那么是否可以解决幻读呢？先说结论： <strong>如果同一个事务当中使用了update语句（update添加的记录），那么还是会出现幻读的问题，反之不会</strong> 。下面进行测试：</p>
+
+<p><img src="./../media/2020-07-08-5.png" alt="不可重读隔离级别下的幻读现象" /></p>
+
+<p><center><strong>不可重读隔离级别下的幻读现象</strong></center></p>
+
+<p><strong><em>Notice:</em></strong> mysql可重复读隔离级别并不完全解决了幻读的问题，而是解决了读数据情况下的幻读问题，而对于修改操作依然存在幻读问题。</p>
+
+<h3 id="串行化">串行化</h3>
+
+<p>串行化是隔离级别中最严格的，它保证了最好的安全性。它要求事务序列化执行，事务只能一个接着一个地执行，不能并发执行。下面进行的测试当中，右边的事务进行写入数据时候，会等待左边的事务提交：</p>
+
+<p><img src="./../media/2020-07-08-6.png" alt="串行化隔离级别效果演示" /></p>
+
+<p><center><strong>串行化隔离级别效果演示</strong></center></p>
 
     </div>
 

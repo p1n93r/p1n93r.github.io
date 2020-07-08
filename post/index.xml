@@ -17,7 +17,7 @@
       <pubDate>Thu, 25 Jun 2020 16:04:36 +0800</pubDate>
       
       <guid>https://p1n93r.github.io/post/interview/mysql%E5%9B%9B%E5%A4%A7%E9%9A%94%E7%A6%BB%E7%BA%A7%E5%88%AB/</guid>
-      <description>事物 什么是事物 事物是由一个有限的数据库操作序列构成，这些操作要么全部执行，要么全部不执行。是一个不可分割的工作单位。 事物的四大特性 原子性(A</description>
+      <description>事务 什么是事务 事务是由一个有限的数据库操作序列构成，这些操作要么全部执行，要么全部不执行。是一个不可分割的工作单位。 事务的四大特性 原子性(A</description>
     </item>
     
     <item>
