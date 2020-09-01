@@ -39,6 +39,15 @@
     </item>
     
     <item>
+      <title>策略者模式</title>
+      <link>https://p1n93r.github.io/post/design_patterns/%E7%AD%96%E7%95%A5%E8%80%85%E6%A8%A1%E5%BC%8F/</link>
+      <pubDate>Sun, 30 Aug 2020 22:47:36 +0800</pubDate>
+      
+      <guid>https://p1n93r.github.io/post/design_patterns/%E7%AD%96%E7%95%A5%E8%80%85%E6%A8%A1%E5%BC%8F/</guid>
+      <description>原理 在策略模式中，我们创建表示各种策略的对象和一个行为随着策略对象改变而改变的 context/service 对象。策略对象改变 context/service 对象的执行算法。 具体案例 项目结构如下： A</description>
+    </item>
+    
+    <item>
       <title>mpvue学习笔记</title>
       <link>https://p1n93r.github.io/post/vue/mpvue%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/</link>
       <pubDate>Mon, 27 Jul 2020 19:51:36 +0800</pubDate>

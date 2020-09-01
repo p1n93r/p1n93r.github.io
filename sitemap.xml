@@ -44,6 +44,13 @@
   </url>
   
   <url>
+    <loc>https://p1n93r.github.io/categories/design_patterns/</loc>
+    <lastmod>2020-08-30T22:47:36+08:00</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.5</priority>
+  </url>
+  
+  <url>
     <loc>https://p1n93r.github.io/categories/feeling/</loc>
     <lastmod>2020-08-30T22:47:36+08:00</lastmod>
     <changefreq>weekly</changefreq>
@@ -52,6 +59,13 @@
   
   <url>
     <loc>https://p1n93r.github.io/post/feeling/%E7%AC%AC%E4%B8%80%E6%AC%A1%E5%AE%9E%E4%B9%A0%E6%84%9F%E5%8F%97/</loc>
+    <lastmod>2020-08-30T22:47:36+08:00</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.5</priority>
+  </url>
+  
+  <url>
+    <loc>https://p1n93r.github.io/post/design_patterns/%E7%AD%96%E7%95%A5%E8%80%85%E6%A8%A1%E5%BC%8F/</loc>
     <lastmod>2020-08-30T22:47:36+08:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.5</priority>
