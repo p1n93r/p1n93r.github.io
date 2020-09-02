@@ -10,21 +10,35 @@
   
   <url>
     <loc>https://p1n93r.github.io/categories/</loc>
-    <lastmod>2020-09-02T14:40:36+08:00</lastmod>
+    <lastmod>2020-09-02T21:37:36+08:00</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.5</priority>
+  </url>
+  
+  <url>
+    <loc>https://p1n93r.github.io/categories/design_patterns/</loc>
+    <lastmod>2020-09-02T21:37:36+08:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.5</priority>
   </url>
   
   <url>
     <loc>https://p1n93r.github.io/</loc>
-    <lastmod>2020-09-02T14:40:36+08:00</lastmod>
+    <lastmod>2020-09-02T21:37:36+08:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.5</priority>
   </url>
   
   <url>
     <loc>https://p1n93r.github.io/post/</loc>
-    <lastmod>2020-09-02T14:40:36+08:00</lastmod>
+    <lastmod>2020-09-02T21:37:36+08:00</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.5</priority>
+  </url>
+  
+  <url>
+    <loc>https://p1n93r.github.io/post/design_patterns/%E8%A7%82%E5%AF%9F%E8%80%85%E6%A8%A1%E5%BC%8F/</loc>
+    <lastmod>2020-09-02T21:37:36+08:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.5</priority>
   </url>
@@ -46,13 +60,6 @@
   <url>
     <loc>https://p1n93r.github.io/post/spring/%E5%85%A8%E6%B3%A8%E8%A7%A3%E4%B8%8B%E7%9A%84spring-ioc/</loc>
     <lastmod>2020-08-31T16:00:36+08:00</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.5</priority>
-  </url>
-  
-  <url>
-    <loc>https://p1n93r.github.io/categories/design_patterns/</loc>
-    <lastmod>2020-08-30T22:47:36+08:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.5</priority>
   </url>
