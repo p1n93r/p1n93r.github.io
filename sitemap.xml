@@ -10,28 +10,35 @@
   
   <url>
     <loc>https://p1n93r.github.io/categories/</loc>
-    <lastmod>2020-08-31T16:00:36+08:00</lastmod>
+    <lastmod>2020-09-02T14:40:36+08:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.5</priority>
   </url>
   
   <url>
     <loc>https://p1n93r.github.io/</loc>
-    <lastmod>2020-08-31T16:00:36+08:00</lastmod>
+    <lastmod>2020-09-02T14:40:36+08:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.5</priority>
   </url>
   
   <url>
     <loc>https://p1n93r.github.io/post/</loc>
-    <lastmod>2020-08-31T16:00:36+08:00</lastmod>
+    <lastmod>2020-09-02T14:40:36+08:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.5</priority>
   </url>
   
   <url>
     <loc>https://p1n93r.github.io/categories/spring/</loc>
-    <lastmod>2020-08-31T16:00:36+08:00</lastmod>
+    <lastmod>2020-09-02T14:40:36+08:00</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.5</priority>
+  </url>
+  
+  <url>
+    <loc>https://p1n93r.github.io/post/spring/spring-aop/</loc>
+    <lastmod>2020-09-02T14:40:36+08:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.5</priority>
   </url>
