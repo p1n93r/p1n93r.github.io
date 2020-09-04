@@ -50,7 +50,7 @@
 
 <meta itemprop="datePublished" content="2019-10-26T20:40:36&#43;08:00" />
 <meta itemprop="dateModified" content="2019-10-26T20:40:36&#43;08:00" />
-<meta itemprop="wordCount" content="856">
+<meta itemprop="wordCount" content="937">
 
 
 
@@ -131,7 +131,7 @@
         <div class="post-category">
             <a href="/categories/mybatis/"> Mybatis </a>
             </div>
-          <span class="more-meta"> 约 856 字 </span>
+          <span class="more-meta"> 约 937 字 </span>
           <span class="more-meta"> 预计阅读 2 分钟 </span>
         <span id="busuanzi_container_page_pv" class="more-meta"> <span id="busuanzi_value_page_pv"><img src="/img/spinner.svg" alt="spinner.svg"/></span> 次阅读 </span>
       </div>
@@ -161,7 +161,8 @@
 <h2 id="结论">结论</h2>
 
 <ul>
-<li>当Mapper接口的形参使用了@Param标记，那么映射文件中用#{0},#{1}&hellip;这种形式取值时，与@Param位置对应的那个#{}会被替换成@Param里的值。</li>
+<li>mybatis低版本：当Mapper接口的形参使用了@Param标记，那么映射文件中用#{0},#{1}&hellip;这种形式取值时，与@Param位置对应的那个#{}会被替换成@Param里的值。</li>
+<li>mybatis高版本：使用@Param注解，则只能通过@Parma的属性值以及param1,param2,param3&hellip;来取。</li>
 <li>映射文件中使用#{param1}，#{param2}&hellip;的形式取值时，总是可以取到Mapper形参列表里的第一个、第二个&hellip;参数。</li>
 <li>映射文件中可以使用 <code>_parameter</code> 。当Mapper接口形参列表只有一个值时，此参数就代表这个值；当形参存在多个值时，此参数就代表这几个形参形成的Map，其key为0,1,2&hellip;,param1,pram2,param3&hellip;，如果存在使用了@Param的情况，则对应位置的#{0},#{1}&hellip;会被替换成@Param里的值。并且利用_parameter.get()方式取值时，不能取0,1,2&hellip;，只能取param1,param2&hellip;,或者@Param标记设置的值。</li>
 <li>当Mapper接口只有一个形参时，如果此形参是一个List，那么foreach的collection取值只能是list；如果此形参是一个数组，collection的取值只能是array；如果此形参是一个Map，则collection的取值只能是Map的key（对应的value为可迭代对象）；如果此形参用了@Param标记，则collection只能取@Param标记的值，或者_parameter.get(&lsquo;标记的值&rsquo;)。</li>
