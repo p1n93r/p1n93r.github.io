@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-  <title>Mybatis类型转换器和别名 - P1n93r - 博学而精一</title>
+  <title>Lambda表达式 - P1n93r - 博学而精一</title>
   <meta name="renderer" content="webkit" />
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
 
@@ -16,7 +16,7 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
 
 
-<meta name="author" content="P1n93r" /><meta name="description" content="注意 mybatis不同版本可能有区别。 本次测试基于mybatis-spring-boot-starter，所以配置方式和spring整合my" /><meta name="keywords" content="SSM, Java, Web, Android" />
+<meta name="author" content="P1n93r" /><meta name="description" content="Lambda介绍 Lambda可以简单的理解为可以传递的匿名函数的一种方式，它没有名称，但是有参数列表、函数主体、返回类型以及可以抛出的异常列" /><meta name="keywords" content="SSM, Java, Web, Android" />
 
 
 
@@ -26,7 +26,7 @@
 <meta name="generator" content="Hugo 0.57.2 with theme even" />
 
 
-<link rel="canonical" href="https://p1n93r.github.io/post/mybatis/mybatis%E7%B1%BB%E5%9E%8B%E8%BD%AC%E6%8D%A2%E5%99%A8%E5%92%8C%E5%88%AB%E5%90%8D/" />
+<link rel="canonical" href="https://p1n93r.github.io/post/java/lambda/" />
 <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
 <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
 <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
@@ -38,26 +38,26 @@
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.css" integrity="sha256-7TyXnr2YU040zfSP+rEcz29ggW4j56/ujTPwjMzyqFY=" crossorigin="anonymous">
 
 
-<meta property="og:title" content="Mybatis类型转换器和别名" />
-<meta property="og:description" content="注意 mybatis不同版本可能有区别。 本次测试基于mybatis-spring-boot-starter，所以配置方式和spring整合my" />
+<meta property="og:title" content="Lambda表达式" />
+<meta property="og:description" content="Lambda介绍 Lambda可以简单的理解为可以传递的匿名函数的一种方式，它没有名称，但是有参数列表、函数主体、返回类型以及可以抛出的异常列" />
 <meta property="og:type" content="article" />
-<meta property="og:url" content="https://p1n93r.github.io/post/mybatis/mybatis%E7%B1%BB%E5%9E%8B%E8%BD%AC%E6%8D%A2%E5%99%A8%E5%92%8C%E5%88%AB%E5%90%8D/" />
-<meta property="article:published_time" content="2020-09-04T10:04:36+08:00" />
-<meta property="article:modified_time" content="2020-09-04T10:04:36+08:00" />
-<meta itemprop="name" content="Mybatis类型转换器和别名">
-<meta itemprop="description" content="注意 mybatis不同版本可能有区别。 本次测试基于mybatis-spring-boot-starter，所以配置方式和spring整合my">
+<meta property="og:url" content="https://p1n93r.github.io/post/java/lambda/" />
+<meta property="article:published_time" content="2020-09-05T10:34:36+08:00" />
+<meta property="article:modified_time" content="2020-09-05T10:34:36+08:00" />
+<meta itemprop="name" content="Lambda表达式">
+<meta itemprop="description" content="Lambda介绍 Lambda可以简单的理解为可以传递的匿名函数的一种方式，它没有名称，但是有参数列表、函数主体、返回类型以及可以抛出的异常列">
 
 
-<meta itemprop="datePublished" content="2020-09-04T10:04:36&#43;08:00" />
-<meta itemprop="dateModified" content="2020-09-04T10:04:36&#43;08:00" />
-<meta itemprop="wordCount" content="878">
+<meta itemprop="datePublished" content="2020-09-05T10:34:36&#43;08:00" />
+<meta itemprop="dateModified" content="2020-09-05T10:34:36&#43;08:00" />
+<meta itemprop="wordCount" content="964">
 
 
 
 <meta itemprop="keywords" content="" />
 <meta name="twitter:card" content="summary"/>
-<meta name="twitter:title" content="Mybatis类型转换器和别名"/>
-<meta name="twitter:description" content="注意 mybatis不同版本可能有区别。 本次测试基于mybatis-spring-boot-starter，所以配置方式和spring整合my"/>
+<meta name="twitter:title" content="Lambda表达式"/>
+<meta name="twitter:description" content="Lambda介绍 Lambda可以简单的理解为可以传递的匿名函数的一种方式，它没有名称，但是有参数列表、函数主体、返回类型以及可以抛出的异常列"/>
 
 <!--[if lte IE 9]>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
@@ -124,14 +124,14 @@
           <article class="post">
     
     <header class="post-header">
-      <h1 class="post-title">Mybatis类型转换器和别名</h1>
+      <h1 class="post-title">Lambda表达式</h1>
 
       <div class="post-meta">
-        <span class="post-time"> 2020-09-04 </span>
+        <span class="post-time"> 2020-09-05 </span>
         <div class="post-category">
-            <a href="/categories/mybatis/"> Mybatis </a>
+            <a href="/categories/java/"> Java </a>
             </div>
-          <span class="more-meta"> 约 878 字 </span>
+          <span class="more-meta"> 约 964 字 </span>
           <span class="more-meta"> 预计阅读 2 分钟 </span>
         <span id="busuanzi_container_page_pv" class="more-meta"> <span id="busuanzi_value_page_pv"><img src="/img/spinner.svg" alt="spinner.svg"/></span> 次阅读 </span>
       </div>
@@ -144,12 +144,15 @@
 <ul>
 <li>
 <ul>
-<li><a href="#注意">注意</a></li>
-<li><a href="#实体">实体</a></li>
-<li><a href="#类型转换器">类型转换器</a></li>
-<li><a href="#mybatis配置">Mybatis配置</a></li>
-<li><a href="#接口编写">接口编写</a></li>
-<li><a href="#测试">测试</a></li>
+<li><a href="#lambda介绍">Lambda介绍</a></li>
+<li><a href="#使用lambda">使用Lambda</a></li>
+<li><a href="#使用函数式接口">使用函数式接口</a>
+<ul>
+<li><a href="#predicate">Predicate</a></li>
+<li><a href="#consumer">Consumer</a></li>
+<li><a href="#function">Function</a></li>
+</ul></li>
+<li><a href="#方法引用">方法引用</a></li>
 </ul></li>
 </ul>
 </nav>
@@ -158,51 +161,52 @@
     <div class="post-content">
       
 
-<h2 id="注意">注意</h2>
+<h2 id="lambda介绍">Lambda介绍</h2>
 
 <ul>
-<li>mybatis不同版本可能有区别。</li>
-<li>本次测试基于mybatis-spring-boot-starter，所以配置方式和spring整合mybatis不一样。</li>
+<li>Lambda可以简单的理解为可以传递的匿名函数的一种方式，它没有名称，但是有参数列表、函数主体、返回类型以及可以抛出的异常列表。</li>
+<li>Lambda的基本语法为： <code>(parameters)-&gt;expression</code> 或者 <code>(parameters)-&gt;{statements;}</code> 。</li>
 </ul>
 
-<h2 id="实体">实体</h2>
+<h2 id="使用lambda">使用Lambda</h2>
 
-<p>User实体如下：</p>
+<p>可以在 <strong>函数式接口上使用Lambda表达式 。函数式接口就是只定义一个抽象方法的接口，哪怕接口定义了很多默认方法，只要接口只定义了一个抽象方法，它就仍然是一个函数式接口。</strong></p>
+
+<p>一个代码示例如下：</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><span class="lnt"> 1
-</span><span class="lnt"> 2
-</span><span class="lnt"> 3
-</span><span class="lnt"> 4
-</span><span class="lnt"> 5
-</span><span class="lnt"> 6
-</span><span class="lnt"> 7
-</span><span class="lnt"> 8
-</span><span class="lnt"> 9
-</span><span class="lnt">10
-</span><span class="lnt">11
-</span><span class="lnt">12
-</span><span class="lnt">13
-</span><span class="lnt">14
+<pre class="chroma"><span class="lnt">1
+</span><span class="lnt">2
 </span></pre></td>
 <td class="lntd">
-<pre class="chroma">@Alias(&#34;user&#34;)
-@Data
-public class User implements Serializable {
-    private Integer id;
+<pre class="chroma">Runnable runnable=()-&gt; System.out.println(&#34;dasd&#34;);
+runnable.run();</pre></td></tr></table>
+</div>
+</div>
+<h2 id="使用函数式接口">使用函数式接口</h2>
 
-    private String username;
+<p>接下来将测试java.util.function包下的几个新的函数式接口。</p>
 
-    private String pwd;
+<h3 id="predicate">Predicate</h3>
 
+<p>java.util.function.Predicate<T>接口定义了一个名叫test的抽象方法，它接收泛型T对象，并返回一个boolean。</p>
 
-    private SexEnum sex;
-
-    private static final long serialVersionUID = 1L;
+<p>Predicate部分源码如下：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span></pre></td>
+<td class="lntd">
+<pre class="chroma">@FunctionalInterface
+public interface Predicate&lt;T&gt; {
+    boolean test(T t);
 }</pre></td></tr></table>
 </div>
 </div>
-<p>SexEnum枚举如下：</p>
+<p>一个代码示例如下：</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre class="chroma"><span class="lnt"> 1
@@ -222,96 +226,47 @@ public class User implements Serializable {
 </span><span class="lnt">15
 </span><span class="lnt">16
 </span><span class="lnt">17
-</span><span class="lnt">18
-</span><span class="lnt">19
-</span><span class="lnt">20
-</span><span class="lnt">21
-</span><span class="lnt">22
-</span><span class="lnt">23
-</span><span class="lnt">24
-</span><span class="lnt">25
-</span><span class="lnt">26
-</span><span class="lnt">27
-</span><span class="lnt">28
-</span><span class="lnt">29
-</span><span class="lnt">30
-</span><span class="lnt">31
-</span><span class="lnt">32
-</span><span class="lnt">33
-</span><span class="lnt">34
-</span><span class="lnt">35
-</span><span class="lnt">36
-</span><span class="lnt">37
-</span><span class="lnt">38
-</span><span class="lnt">39
-</span><span class="lnt">40
-</span><span class="lnt">41
-</span><span class="lnt">42
-</span><span class="lnt">43
-</span><span class="lnt">44
-</span><span class="lnt">45
-</span><span class="lnt">46
-</span><span class="lnt">47
-</span><span class="lnt">48
-</span><span class="lnt">49
 </span></pre></td>
 <td class="lntd">
-<pre class="chroma">public enum SexEnum {
-
-    /**
-     * 男和女
-     */
-    MAN(1,&#39;男&#39;),
-    WOMAM(0,&#39;女&#39;);
-
-
-    SexEnum(Integer id,Character val){
-        this.id=id;
-        this.val=val;
-    }
-
-    public static SexEnum getById(Integer id){
-        if(null==id){
-            return null;
-        }
-        SexEnum[] values = SexEnum.values();
-        for(SexEnum v:values){
-            if(id.equals(v.getId())){
-                return v;
+<pre class="chroma">public static &lt;T&gt; List&lt;T&gt; filter(List&lt;T&gt; list,Predicate&lt;T&gt; predicate){
+        ArrayList&lt;T&gt; res = new ArrayList&lt;&gt;();
+        for(T v:list){
+            if(predicate.test(v)){
+                res.add(v);
             }
         }
-        return null;
+        return res;
     }
 
+    @Test
+    public void test4(){
+        ArrayList&lt;String&gt; source = new ArrayList&lt;&gt;();
+        source.add(&#34;吾生也有涯&#34;);
+        source.add(&#34;而学也无涯&#34;);
+        System.out.println(Arrays.asList(filter(source,(String a)-&gt;!a.isEmpty())));
+    }</pre></td></tr></table>
+</div>
+</div>
+<h3 id="consumer">Consumer</h3>
 
-    private Integer id;
-    private Character val;
+<p>java.util.function.Consumer<T>定义了一个名为accept的抽象方法，它接收泛型T的对象，没有返回。</p>
 
-
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
-    }
-
-
-    public Character getVal() {
-        return val;
-    }
-
-    public void setVal(Character val) {
-        this.val = val;
-    }
+<p>Consumer部分源码如下：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span></pre></td>
+<td class="lntd">
+<pre class="chroma">@FunctionalInterface
+public interface Consumer&lt;T&gt; {
+    void accept(T t);
 }</pre></td></tr></table>
 </div>
 </div>
-<p><strong><em>Notice:</em></strong> User实体的@Alias注解表明本实体类的别名为user，mapper.xml文件中可以不用写User类的全限定名称，直接使用别名即可。其实如果配置了别名扫描包，这个注解可以不用写，默认为扫描包下的实体加上别名，别名为实体类名或者其小写。</p>
-
-<h2 id="类型转换器">类型转换器</h2>
-
-<p>SexTypeHandler代码如下：</p>
+<p>一个示例代码如下：</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre class="chroma"><span class="lnt"> 1
@@ -331,108 +286,32 @@ public class User implements Serializable {
 </span><span class="lnt">15
 </span><span class="lnt">16
 </span><span class="lnt">17
-</span><span class="lnt">18
-</span><span class="lnt">19
-</span><span class="lnt">20
-</span><span class="lnt">21
-</span><span class="lnt">22
-</span><span class="lnt">23
-</span><span class="lnt">24
-</span><span class="lnt">25
-</span><span class="lnt">26
-</span><span class="lnt">27
-</span><span class="lnt">28
-</span><span class="lnt">29
-</span><span class="lnt">30
-</span><span class="lnt">31
-</span><span class="lnt">32
-</span><span class="lnt">33
-</span><span class="lnt">34
-</span><span class="lnt">35
-</span><span class="lnt">36
-</span><span class="lnt">37
-</span><span class="lnt">38
-</span><span class="lnt">39
-</span><span class="lnt">40
 </span></pre></td>
 <td class="lntd">
-<pre class="chroma">@MappedJdbcTypes(JdbcType.INTEGER)
-@MappedTypes(SexEnum.class)
-public class SexTypeHandler extends BaseTypeHandler&lt;SexEnum&gt; {
+<pre class="chroma">@FunctionalInterface
+public interface Processor{
+    void process(List list,Consumer consumer);
+}
 
-    /**
-     * 设置非空性别参数
-     */
-    @Override
-    public void setNonNullParameter(PreparedStatement preparedStatement, int i, SexEnum sexEnum, JdbcType jdbcType) throws SQLException {
-        preparedStatement.setInt(i,sexEnum.getId());
-    }
+@Test
+public void test5(){
+    Processor processor=(List a,Consumer b)-&gt;{
+        for(Object v:a){
+            b.accept(v);
+        }
+    };
 
-
-    /**
-     * 通过列名读取性别
-     */
-    @Override
-    public SexEnum getNullableResult(ResultSet resultSet, String s) throws SQLException {
-        int sexId = resultSet.getInt(s);
-        return SexEnum.getById(sexId);
-    }
-
-    /**
-     * 通过下标读取性别
-     */
-    @Override
-    public SexEnum getNullableResult(ResultSet resultSet, int i) throws SQLException {
-        int sexId = resultSet.getInt(i);
-        return SexEnum.getById(sexId);
-    }
-
-    /**
-     * 通过存储过程读取性别
-     */
-    @Override
-    public SexEnum getNullableResult(CallableStatement callableStatement, int i) throws SQLException {
-        int sexId = callableStatement.getInt(i);
-        return SexEnum.getById(sexId);
-    }
+    processor.process(Arrays.asList(1,2,3,4,5),(Object a)-&gt;{
+        System.out.println(a);
+    });
 }</pre></td></tr></table>
 </div>
 </div>
-<h2 id="mybatis配置">Mybatis配置</h2>
-<div class="highlight"><div class="chroma">
-<table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><span class="lnt">1
-</span><span class="lnt">2
-</span><span class="lnt">3
-</span><span class="lnt">4
-</span><span class="lnt">5
-</span></pre></td>
-<td class="lntd">
-<pre class="chroma"># **********************************mybatis配置*************************************
-mybatis.type-aliases-package=com.example.mybatisdemo.domain
-mybatis.mapper-locations=classpath*:mapper/*Mapper.xml
-mybatis.configuration.log-impl=org.apache.ibatis.logging.stdout.StdOutImpl
-mybatis.type-handlers-package=com.example.mybatisdemo.typeHandler</pre></td></tr></table>
-</div>
-</div>
-<p><strong><em>Notice:</em></strong> 这个配置是在springboot环境下的，需要导入mybatis-spring-boot-starter包以及配置数据源等。</p>
+<h3 id="function">Function</h3>
 
-<h2 id="接口编写">接口编写</h2>
+<p>java.util.function.Function<T,R>接口定义了一个叫做apply的方法，它接收一个泛型T的对象，并返回一个泛型R的对象。</p>
 
-<p>UserMapper.xml文件内容如下：</p>
-<div class="highlight"><div class="chroma">
-<table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><span class="lnt">1
-</span><span class="lnt">2
-</span><span class="lnt">3
-</span></pre></td>
-<td class="lntd">
-<pre class="chroma">&lt;select id=&#34;selectById&#34; parameterType=&#34;Integer&#34; resultType=&#34;user&#34;&gt;
-    select * from user where id=#{param1}
-&lt;/select&gt;</pre></td></tr></table>
-</div>
-</div>
-<p>UserMapper接口如下：</p>
+<p>Function的部分源码如下：</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre class="chroma"><span class="lnt">1
@@ -441,34 +320,54 @@ mybatis.type-handlers-package=com.example.mybatisdemo.typeHandler</pre></td></tr
 </span><span class="lnt">4
 </span></pre></td>
 <td class="lntd">
-<pre class="chroma">@Repository
-public interface UserMapper {
-    User selectById(Integer id);
+<pre class="chroma">@FunctionalInterface
+public interface Function&lt;T, R&gt; {
+    R applay(T t);
 }</pre></td></tr></table>
 </div>
 </div>
-<h2 id="测试">测试</h2>
-
-<p>测试代码如下：</p>
+<p>一个示例代码如下：</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><span class="lnt">1
-</span><span class="lnt">2
-</span><span class="lnt">3
-</span><span class="lnt">4
-</span><span class="lnt">5
+<pre class="chroma"><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
 </span></pre></td>
 <td class="lntd">
-<pre class="chroma">@Test
-public void test0(){
-    User user = userMapper.selectById(1);
-    System.out.println(user);
+<pre class="chroma">public static &lt;T,R&gt; List&lt;R&gt; map(List&lt;T&gt; list,Function&lt;T, R&gt; function){
+    ArrayList&lt;R&gt; res = new ArrayList&lt;&gt;();
+    for(T v:list){
+        res.add(function.apply(v));
+    }
+    return res;
+}
+
+@Test
+public void test7(){
+    List&lt;Integer&gt; map = map(Arrays.asList(&#34;123&#34;, &#34;pinger&#34;, &#34;p1n93r&#34;), (String a) -&gt; a.length());
+    System.out.println(Arrays.asList(map));
 }</pre></td></tr></table>
 </div>
 </div>
-<p>测试结果如下：</p>
+<h2 id="方法引用">方法引用</h2>
 
-<p><img src="./../media/20200904-1.png" alt="测试结果" /></p>
+<p>方法引用可以重复使用现有的方法定义，并像Lambda一样传递它们。方法引用主要有三类：</p>
+
+<ol>
+<li>指向静态方法的方法引用：例如Integer的parseInt方法，写作Integer::parseInt()。</li>
+<li>指向任意类型实例方法的方法引用：例如String的length方法，写作String::length。</li>
+<li>指向现有对象的实例方法的方法引用：例如()-&gt;test.getVal()可以写作test::getVal。</li>
+</ol>
 
     </div>
 
@@ -480,7 +379,7 @@ public void test0(){
   <p class="copyright-item">
     <span class="item-title">上次更新</span>
     <span class="item-content">
-        2020-09-04
+        2020-09-05
         
     </span>
   </p>
@@ -504,13 +403,9 @@ public void test0(){
 </div><footer class="post-footer">
       
       <nav class="post-nav">
-        <a class="prev" href="/post/java/lambda/">
-            <i class="iconfont icon-left"></i>
-            <span class="prev-text nav-default">Lambda表达式</span>
-            <span class="prev-text nav-mobile">上一篇</span>
-          </a>
-        <a class="next" href="/post/spring/spring%E8%AE%BF%E9%97%AE%E6%95%B0%E6%8D%AE%E5%BA%93/">
-            <span class="next-text nav-default">Spring访问数据库</span>
+        
+        <a class="next" href="/post/mybatis/mybatis%E7%B1%BB%E5%9E%8B%E8%BD%AC%E6%8D%A2%E5%99%A8%E5%92%8C%E5%88%AB%E5%90%8D/">
+            <span class="next-text nav-default">Mybatis类型转换器和别名</span>
             <span class="next-text nav-mobile">下一篇</span>
             <i class="iconfont icon-right"></i>
           </a>
