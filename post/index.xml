@@ -6,10 +6,19 @@
     <description>Recent content in Posts on P1n93r - 博学而精一</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-cn</language>
-    <lastBuildDate>Sat, 05 Sep 2020 10:34:36 +0800</lastBuildDate>
+    <lastBuildDate>Tue, 08 Sep 2020 17:50:36 +0800</lastBuildDate>
     
 	<atom:link href="https://p1n93r.github.io/post/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>SpringBoot操作Redis</title>
+      <link>https://p1n93r.github.io/post/spring/springboot%E6%93%8D%E4%BD%9Credis/</link>
+      <pubDate>Tue, 08 Sep 2020 17:50:36 +0800</pubDate>
+      
+      <guid>https://p1n93r.github.io/post/spring/springboot%E6%93%8D%E4%BD%9Credis/</guid>
+      <description>Redis介绍 Redis是一个开源的、高性能key-value数据结构存储，可以用来作为 数据库、缓存和消息队列。 以下是Redis的特点： Re</description>
+    </item>
     
     <item>
       <title>Lambda表达式</title>
