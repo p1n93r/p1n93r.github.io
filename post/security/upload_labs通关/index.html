@@ -1,0 +1,1713 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>upload_labs通关 - P1n93r - 博学而精一</title>
+  <meta name="renderer" content="webkit" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+<meta name="author" content="P1n93r" /><meta name="description" content="第一关 源码 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 function checkFile() { var file = document.getElementsByName(&amp;#39;upload_file&amp;#39;)[0].value; if (file == null || file == &amp;#34;&amp;#34;) { alert(&amp;#34;请选择要上传的文件!&amp;#34;); return false; } /" /><meta name="keywords" content="SSM, Java, Web, Android" />
+
+
+
+
+
+
+<meta name="generator" content="Hugo 0.57.2 with theme even" />
+
+
+<link rel="canonical" href="https://p1n93r.github.io/post/security/upload_labs%E9%80%9A%E5%85%B3/" />
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/manifest.json">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+<link href="/dist/even.c2a46f00.min.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.css" integrity="sha256-7TyXnr2YU040zfSP+rEcz29ggW4j56/ujTPwjMzyqFY=" crossorigin="anonymous">
+
+
+<meta property="og:title" content="upload_labs通关" />
+<meta property="og:description" content="第一关 源码 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 function checkFile() { var file = document.getElementsByName(&#39;upload_file&#39;)[0].value; if (file == null || file == &#34;&#34;) { alert(&#34;请选择要上传的文件!&#34;); return false; } /" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://p1n93r.github.io/post/security/upload_labs%E9%80%9A%E5%85%B3/" />
+<meta property="article:published_time" content="2020-11-08T13:04:36+08:00" />
+<meta property="article:modified_time" content="2020-11-08T13:04:36+08:00" />
+<meta itemprop="name" content="upload_labs通关">
+<meta itemprop="description" content="第一关 源码 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 function checkFile() { var file = document.getElementsByName(&#39;upload_file&#39;)[0].value; if (file == null || file == &#34;&#34;) { alert(&#34;请选择要上传的文件!&#34;); return false; } /">
+
+
+<meta itemprop="datePublished" content="2020-11-08T13:04:36&#43;08:00" />
+<meta itemprop="dateModified" content="2020-11-08T13:04:36&#43;08:00" />
+<meta itemprop="wordCount" content="5455">
+
+
+
+<meta itemprop="keywords" content="file_upload," />
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="upload_labs通关"/>
+<meta name="twitter:description" content="第一关 源码 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 function checkFile() { var file = document.getElementsByName(&#39;upload_file&#39;)[0].value; if (file == null || file == &#34;&#34;) { alert(&#34;请选择要上传的文件!&#34;); return false; } /"/>
+
+<!--[if lte IE 9]>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
+<![endif]-->
+
+<!--[if lt IE 9]>
+  <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+<![endif]-->
+
+</head>
+<body>
+  <div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/" class="logo">P1n93r</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    <a href="/">
+        <li class="mobile-menu-item">Home</li>
+      </a><a href="/post/">
+        <li class="mobile-menu-item">Archives</li>
+      </a><a href="/tags/">
+        <li class="mobile-menu-item">Tags</li>
+      </a><a href="/categories/">
+        <li class="mobile-menu-item">Categories</li>
+      </a><a href="/about/">
+        <li class="mobile-menu-item">About</li>
+      </a>
+  </ul>
+</nav>
+  <div class="container" id="mobile-panel">
+    <header id="header" class="header">
+        <div class="logo-wrapper">
+  <a href="/" class="logo">P1n93r</a>
+</div>
+
+<nav class="site-navbar">
+  <ul id="menu" class="menu">
+    <li class="menu-item">
+        <a class="menu-item-link" href="/">Home</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/">Archives</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/tags/">Tags</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/categories/">Categories</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/about/">About</a>
+      </li>
+  </ul>
+</nav>
+    </header>
+
+    <main id="main" class="main">
+      <div class="content-wrapper">
+        <div id="content" class="content">
+          <article class="post">
+    
+    <header class="post-header">
+      <h1 class="post-title">upload_labs通关</h1>
+
+      <div class="post-meta">
+        <span class="post-time"> 2020-11-08 </span>
+        <div class="post-category">
+            <a href="/categories/security/"> security </a>
+            </div>
+          <span class="more-meta"> 约 5455 字 </span>
+          <span class="more-meta"> 预计阅读 11 分钟 </span>
+        <span id="busuanzi_container_page_pv" class="more-meta"> <span id="busuanzi_value_page_pv"><img src="/img/spinner.svg" alt="spinner.svg"/></span> 次阅读 </span>
+      </div>
+    </header>
+
+    <div class="post-toc" id="post-toc">
+  <h2 class="post-toc-title">文章目录</h2>
+  <div class="post-toc-content always-active">
+    <nav id="TableOfContents">
+<ul>
+<li>
+<ul>
+<li><a href="#第一关">第一关</a>
+<ul>
+<li><a href="#源码">源码</a></li>
+<li><a href="#过关">过关</a></li>
+</ul></li>
+<li><a href="#第二关">第二关</a>
+<ul>
+<li><a href="#源码-1">源码</a></li>
+<li><a href="#过关-1">过关</a></li>
+</ul></li>
+<li><a href="#第三关">第三关</a>
+<ul>
+<li><a href="#源码-2">源码</a></li>
+<li><a href="#过关-2">过关</a></li>
+</ul></li>
+<li><a href="#第四关">第四关</a>
+<ul>
+<li><a href="#源码-3">源码</a></li>
+<li><a href="#过关-3">过关</a></li>
+</ul></li>
+<li><a href="#第五关">第五关</a>
+<ul>
+<li><a href="#源码-4">源码</a></li>
+<li><a href="#过关-4">过关</a></li>
+</ul></li>
+<li><a href="#第六关">第六关</a>
+<ul>
+<li><a href="#源码-5">源码</a></li>
+<li><a href="#过关-5">过关</a></li>
+</ul></li>
+<li><a href="#第七关">第七关</a>
+<ul>
+<li><a href="#源码-6">源码</a></li>
+<li><a href="#过关-6">过关</a></li>
+</ul></li>
+<li><a href="#第八关">第八关</a>
+<ul>
+<li><a href="#源码-7">源码</a></li>
+<li><a href="#过关-7">过关</a></li>
+</ul></li>
+<li><a href="#第九关">第九关</a>
+<ul>
+<li><a href="#源码-8">源码</a></li>
+<li><a href="#过关-8">过关</a></li>
+</ul></li>
+<li><a href="#第十关">第十关</a>
+<ul>
+<li><a href="#源码-9">源码</a></li>
+<li><a href="#过关-9">过关</a></li>
+</ul></li>
+<li><a href="#第十一关">第十一关</a>
+<ul>
+<li><a href="#源码-10">源码</a></li>
+<li><a href="#过关-10">过关</a></li>
+</ul></li>
+<li><a href="#第十二关">第十二关</a>
+<ul>
+<li><a href="#源码-11">源码</a></li>
+<li><a href="#过关-11">过关</a></li>
+</ul></li>
+<li><a href="#第十三关">第十三关</a>
+<ul>
+<li><a href="#源码-12">源码</a></li>
+<li><a href="#过关-12">过关</a></li>
+</ul></li>
+<li><a href="#第十四关">第十四关</a>
+<ul>
+<li><a href="#源码-13">源码</a></li>
+<li><a href="#过关-13">过关</a></li>
+</ul></li>
+<li><a href="#第十五关">第十五关</a>
+<ul>
+<li><a href="#源码-14">源码</a></li>
+<li><a href="#过关-14">过关</a></li>
+</ul></li>
+<li><a href="#第十六关">第十六关</a>
+<ul>
+<li><a href="#源码-15">源码</a></li>
+<li><a href="#过关-15">过关</a></li>
+</ul></li>
+<li><a href="#第十七关">第十七关</a>
+<ul>
+<li><a href="#源码-16">源码</a></li>
+<li><a href="#过关-16">过关</a></li>
+</ul></li>
+<li><a href="#第十八关">第十八关</a>
+<ul>
+<li><a href="#源码-17">源码</a></li>
+<li><a href="#过关-17">过关</a></li>
+</ul></li>
+</ul></li>
+</ul>
+</nav>
+  </div>
+</div>
+    <div class="post-content">
+      
+
+<h2 id="第一关">第一关</h2>
+
+<h3 id="源码">源码</h3>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span></pre></td>
+<td class="lntd">
+<pre class="chroma">function checkFile() {
+    var file = document.getElementsByName(&#39;upload_file&#39;)[0].value;
+    if (file == null || file == &#34;&#34;) {
+        alert(&#34;请选择要上传的文件!&#34;);
+        return false;
+    }
+    //定义允许上传的文件类型
+    var allow_ext = &#34;.jpg|.png|.gif&#34;;
+    //提取上传文件的类型
+    var ext_name = file.substring(file.lastIndexOf(&#34;.&#34;));
+    //判断上传文件类型是否允许上传
+    if (allow_ext.indexOf(ext_name + &#34;|&#34;) == -1) {
+        var errMsg = &#34;该文件不允许上传，请上传&#34; + allow_ext + &#34;类型的文件,当前文件类型为：&#34; + ext_name;
+        alert(errMsg);
+        return false;
+    }
+}</pre></td></tr></table>
+</div>
+</div>
+<h3 id="过关">过关</h3>
+
+<p>第一关是一个 <strong>前端校验</strong> ，直接将php文件的后缀改成 <code>.jpg</code> ，然后点击上传后抓包，直接改包，此时将文件名再改为 <code>.php</code> 后缀，然后放包即可上传。发送的数据包以及回包如下：</p>
+
+<p><img src="./../media/2020-11-08-1.png" alt="第一关" /></p>
+
+<h2 id="第二关">第二关</h2>
+
+<h3 id="源码-1">源码</h3>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span></pre></td>
+<td class="lntd">
+<pre class="chroma">$is_upload = false;
+$msg = null;
+if (isset($_POST[&#39;submit&#39;])) {
+    if (file_exists(UPLOAD_PATH)) {
+        if (($_FILES[&#39;upload_file&#39;][&#39;type&#39;] == &#39;image/jpeg&#39;) || ($_FILES[&#39;upload_file&#39;][&#39;type&#39;] == &#39;image/png&#39;) || ($_FILES[&#39;upload_file&#39;][&#39;type&#39;] == &#39;image/gif&#39;)) {
+            $temp_file = $_FILES[&#39;upload_file&#39;][&#39;tmp_name&#39;];
+            $img_path = UPLOAD_PATH . &#39;/&#39; . $_FILES[&#39;upload_file&#39;][&#39;name&#39;]            
+            if (move_uploaded_file($temp_file, $img_path)) {
+                $is_upload = true;
+            } else {
+                $msg = &#39;上传出错！&#39;;
+            }
+        } else {
+            $msg = &#39;文件类型不正确，请重新上传！&#39;;
+        }
+    } else {
+        $msg = UPLOAD_PATH.&#39;文件夹不存在,请手工创建！&#39;;
+    }
+}</pre></td></tr></table>
+</div>
+</div>
+<h3 id="过关-1">过关</h3>
+
+<p>由源码知道，就是校验了请求包的content-type，所以我们可以直接上传一个php文件，然后修改其content-type为 <code>image/jpeg</code> 即可绕过校验。如下：</p>
+
+<p><img src="./../media/2020-11-08-2.png" alt="第二关" /></p>
+
+<h2 id="第三关">第三关</h2>
+
+<h3 id="源码-2">源码</h3>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span></pre></td>
+<td class="lntd">
+<pre class="chroma">$is_upload = false;
+$msg = null;
+if (isset($_POST[&#39;submit&#39;])) {
+    if (file_exists(UPLOAD_PATH)) {
+        $deny_ext = array(&#39;.asp&#39;,&#39;.aspx&#39;,&#39;.php&#39;,&#39;.jsp&#39;);
+        $file_name = trim($_FILES[&#39;upload_file&#39;][&#39;name&#39;]);
+        $file_name = deldot($file_name);//删除文件名末尾的点
+        $file_ext = strrchr($file_name, &#39;.&#39;);
+        $file_ext = strtolower($file_ext); //转换为小写
+        $file_ext = str_ireplace(&#39;::$DATA&#39;, &#39;&#39;, $file_ext);//去除字符串::$DATA
+        $file_ext = trim($file_ext); //收尾去空
+
+        if(!in_array($file_ext, $deny_ext)) {
+            $temp_file = $_FILES[&#39;upload_file&#39;][&#39;tmp_name&#39;];
+            $img_path = UPLOAD_PATH.&#39;/&#39;.date(&#34;YmdHis&#34;).rand(1000,9999).$file_ext;            
+            if (move_uploaded_file($temp_file,$img_path)) {
+                 $is_upload = true;
+            } else {
+                $msg = &#39;上传出错！&#39;;
+            }
+        } else {
+            $msg = &#39;不允许上传.asp,.aspx,.php,.jsp后缀文件！&#39;;
+        }
+    } else {
+        $msg = UPLOAD_PATH . &#39;文件夹不存在,请手工创建！&#39;;
+    }
+}</pre></td></tr></table>
+</div>
+</div>
+<h3 id="过关-2">过关</h3>
+
+<p>这一关无法使用 <code>0x00/%00</code> 截断，无法使用 <code>::$DATA</code> 或者 <code>.</code> 绕过，也无法使用大小写绕过。思路就是上传apache可解析的其他类型文件，比如 <code>phtml</code> 等。</p>
+
+<p>这里举一个实际案例，上次挖到一个任意文件上传，但是是springboot项目，且项目没有配置解析 <code>jsp</code> ，上传了 <code>jsp</code> 文件并不解析。后来发现项目使用了freemaker，于是上传 <code>ftl</code> 文件即可解析，于是可以执行任何freemaker语句。这一关的通关过程如下：</p>
+
+<p><img src="./../media/2020-11-08-3.png" alt="第三关" /></p>
+
+<p>解析效果如下(前提是apache配置的可以解析phtml文件嗷)：</p>
+
+<p><img src="./../media/2020-11-08-4.png" alt="第三关解析效果" /></p>
+
+<h2 id="第四关">第四关</h2>
+
+<h3 id="源码-3">源码</h3>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span></pre></td>
+<td class="lntd">
+<pre class="chroma">$is_upload = false;
+$msg = null;
+if (isset($_POST[&#39;submit&#39;])) {
+    if (file_exists(UPLOAD_PATH)) {
+        $deny_ext = array(&#34;.php&#34;,&#34;.php5&#34;,&#34;.php4&#34;,&#34;.php3&#34;,&#34;.php2&#34;,&#34;.php1&#34;,&#34;.html&#34;,&#34;.htm&#34;,&#34;.phtml&#34;,&#34;.pht&#34;,&#34;.pHp&#34;,&#34;.pHp5&#34;,&#34;.pHp4&#34;,&#34;.pHp3&#34;,&#34;.pHp2&#34;,&#34;.pHp1&#34;,&#34;.Html&#34;,&#34;.Htm&#34;,&#34;.pHtml&#34;,&#34;.jsp&#34;,&#34;.jspa&#34;,&#34;.jspx&#34;,&#34;.jsw&#34;,&#34;.jsv&#34;,&#34;.jspf&#34;,&#34;.jtml&#34;,&#34;.jSp&#34;,&#34;.jSpx&#34;,&#34;.jSpa&#34;,&#34;.jSw&#34;,&#34;.jSv&#34;,&#34;.jSpf&#34;,&#34;.jHtml&#34;,&#34;.asp&#34;,&#34;.aspx&#34;,&#34;.asa&#34;,&#34;.asax&#34;,&#34;.ascx&#34;,&#34;.ashx&#34;,&#34;.asmx&#34;,&#34;.cer&#34;,&#34;.aSp&#34;,&#34;.aSpx&#34;,&#34;.aSa&#34;,&#34;.aSax&#34;,&#34;.aScx&#34;,&#34;.aShx&#34;,&#34;.aSmx&#34;,&#34;.cEr&#34;,&#34;.sWf&#34;,&#34;.swf&#34;,&#34;.ini&#34;);
+        $file_name = trim($_FILES[&#39;upload_file&#39;][&#39;name&#39;]);
+        $file_name = deldot($file_name);//删除文件名末尾的点
+        $file_ext = strrchr($file_name, &#39;.&#39;);
+        $file_ext = strtolower($file_ext); //转换为小写
+        $file_ext = str_ireplace(&#39;::$DATA&#39;, &#39;&#39;, $file_ext);//去除字符串::$DATA
+        $file_ext = trim($file_ext); //收尾去空
+
+        if (!in_array($file_ext, $deny_ext)) {
+            $temp_file = $_FILES[&#39;upload_file&#39;][&#39;tmp_name&#39;];
+            $img_path = UPLOAD_PATH.&#39;/&#39;.$file_name;
+            if (move_uploaded_file($temp_file, $img_path)) {
+                $is_upload = true;
+            } else {
+                $msg = &#39;上传出错！&#39;;
+            }
+        } else {
+            $msg = &#39;此文件不允许上传!&#39;;
+        }
+    } else {
+        $msg = UPLOAD_PATH . &#39;文件夹不存在,请手工创建！&#39;;
+    }
+}</pre></td></tr></table>
+</div>
+</div>
+<h3 id="过关-3">过关</h3>
+
+<p>这一关可以利用 <code>.</code> 绕过， <code>deldot($file_name)</code> 可以去掉末尾的点，那么我们上传的文件名如果为 <code>index.php. .</code> ，去掉最后一个点 <code>.</code> 后，结果文件名会是 <code>index.php.</code> ，末尾有一个点+空格，最终可以这样绕过的原因是：文件上传的路径拼接了上传文件的文件名（windows下文件上传，最后的点和空格会被去掉）。如果是拼接的后缀，则无法利用（因为此时后缀为一个空格）。完整的过程如下：</p>
+
+<p><img src="./../media/2020-11-08-5.png" alt="第四关0" /></p>
+
+<p>访问upload/index.php，效果如下：</p>
+
+<p><img src="./../media/2020-11-08-6.png" alt="第四关1" /></p>
+
+<h2 id="第五关">第五关</h2>
+
+<h3 id="源码-4">源码</h3>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span></pre></td>
+<td class="lntd">
+<pre class="chroma">$is_upload = false;
+$msg = null;
+if (isset($_POST[&#39;submit&#39;])) {
+    if (file_exists(UPLOAD_PATH)) {
+        $deny_ext = array(&#34;.php&#34;,&#34;.php5&#34;,&#34;.php4&#34;,&#34;.php3&#34;,&#34;.php2&#34;,&#34;.html&#34;,&#34;.htm&#34;,&#34;.phtml&#34;,&#34;.pht&#34;,&#34;.pHp&#34;,&#34;.pHp5&#34;,&#34;.pHp4&#34;,&#34;.pHp3&#34;,&#34;.pHp2&#34;,&#34;.Html&#34;,&#34;.Htm&#34;,&#34;.pHtml&#34;,&#34;.jsp&#34;,&#34;.jspa&#34;,&#34;.jspx&#34;,&#34;.jsw&#34;,&#34;.jsv&#34;,&#34;.jspf&#34;,&#34;.jtml&#34;,&#34;.jSp&#34;,&#34;.jSpx&#34;,&#34;.jSpa&#34;,&#34;.jSw&#34;,&#34;.jSv&#34;,&#34;.jSpf&#34;,&#34;.jHtml&#34;,&#34;.asp&#34;,&#34;.aspx&#34;,&#34;.asa&#34;,&#34;.asax&#34;,&#34;.ascx&#34;,&#34;.ashx&#34;,&#34;.asmx&#34;,&#34;.cer&#34;,&#34;.aSp&#34;,&#34;.aSpx&#34;,&#34;.aSa&#34;,&#34;.aSax&#34;,&#34;.aScx&#34;,&#34;.aShx&#34;,&#34;.aSmx&#34;,&#34;.cEr&#34;,&#34;.sWf&#34;,&#34;.swf&#34;,&#34;.htaccess&#34;);
+        $file_name = trim($_FILES[&#39;upload_file&#39;][&#39;name&#39;]);
+        $file_name = deldot($file_name);//删除文件名末尾的点
+        $file_ext = strrchr($file_name, &#39;.&#39;);
+        $file_ext = strtolower($file_ext); //转换为小写
+        $file_ext = str_ireplace(&#39;::$DATA&#39;, &#39;&#39;, $file_ext);//去除字符串::$DATA
+        $file_ext = trim($file_ext); //首尾去空
+
+        if (!in_array($file_ext, $deny_ext)) {
+            $temp_file = $_FILES[&#39;upload_file&#39;][&#39;tmp_name&#39;];
+            $img_path = UPLOAD_PATH.&#39;/&#39;.$file_name;
+            if (move_uploaded_file($temp_file, $img_path)) {
+                $is_upload = true;
+            } else {
+                $msg = &#39;上传出错！&#39;;
+            }
+        } else {
+            $msg = &#39;此文件类型不允许上传！&#39;;
+        }
+    } else {
+        $msg = UPLOAD_PATH . &#39;文件夹不存在,请手工创建！&#39;;
+    }
+}</pre></td></tr></table>
+</div>
+</div>
+<h3 id="过关-4">过关</h3>
+
+<p>这一关也可以用第四关的方法，而且目前只有第四关的方法能过，就不再演示啦。其实第四关还有一种方法（这一关不能，因为添加了黑名单），就是上传 <code>.htaccess</code> 文件，然后在这个文件中加一条解析规则，让 <code>png</code> 等其他格式的文件能解析为php。从而上传一个 <code>png</code> 文件，但是内容是php木马，则可以访问这个 <code>png</code> 文件来执行木马啦。 <code>.htaccess</code> 添加解析规则的示例如下：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span></pre></td>
+<td class="lntd">
+<pre class="chroma">// 方式一，精确的匹配某个文件
+&lt;FilesMatch &#34;文件名&#34;&gt;
+  SetHandler application/x-httpd-php
+&lt;/FilesMatch&gt;
+
+//方式二，匹配某种类型
+AddType application/x-httpd-php .jpg</pre></td></tr></table>
+</div>
+</div>
+<h2 id="第六关">第六关</h2>
+
+<h3 id="源码-5">源码</h3>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span></pre></td>
+<td class="lntd">
+<pre class="chroma">$is_upload = false;
+$msg = null;
+if (isset($_POST[&#39;submit&#39;])) {
+    if (file_exists(UPLOAD_PATH)) {
+        $deny_ext = array(&#34;.php&#34;,&#34;.php5&#34;,&#34;.php4&#34;,&#34;.php3&#34;,&#34;.php2&#34;,&#34;.html&#34;,&#34;.htm&#34;,&#34;.phtml&#34;,&#34;.pht&#34;,&#34;.pHp&#34;,&#34;.pHp5&#34;,&#34;.pHp4&#34;,&#34;.pHp3&#34;,&#34;.pHp2&#34;,&#34;.Html&#34;,&#34;.Htm&#34;,&#34;.pHtml&#34;,&#34;.jsp&#34;,&#34;.jspa&#34;,&#34;.jspx&#34;,&#34;.jsw&#34;,&#34;.jsv&#34;,&#34;.jspf&#34;,&#34;.jtml&#34;,&#34;.jSp&#34;,&#34;.jSpx&#34;,&#34;.jSpa&#34;,&#34;.jSw&#34;,&#34;.jSv&#34;,&#34;.jSpf&#34;,&#34;.jHtml&#34;,&#34;.asp&#34;,&#34;.aspx&#34;,&#34;.asa&#34;,&#34;.asax&#34;,&#34;.ascx&#34;,&#34;.ashx&#34;,&#34;.asmx&#34;,&#34;.cer&#34;,&#34;.aSp&#34;,&#34;.aSpx&#34;,&#34;.aSa&#34;,&#34;.aSax&#34;,&#34;.aScx&#34;,&#34;.aShx&#34;,&#34;.aSmx&#34;,&#34;.cEr&#34;,&#34;.sWf&#34;,&#34;.swf&#34;,&#34;.htaccess&#34;,&#34;.ini&#34;);
+        $file_name = trim($_FILES[&#39;upload_file&#39;][&#39;name&#39;]);
+        $file_name = deldot($file_name);//删除文件名末尾的点
+        $file_ext = strrchr($file_name, &#39;.&#39;);
+        $file_ext = str_ireplace(&#39;::$DATA&#39;, &#39;&#39;, $file_ext);//去除字符串::$DATA
+        $file_ext = trim($file_ext); //首尾去空
+
+        if (!in_array($file_ext, $deny_ext)) {
+            $temp_file = $_FILES[&#39;upload_file&#39;][&#39;tmp_name&#39;];
+            $img_path = UPLOAD_PATH.&#39;/&#39;.date(&#34;YmdHis&#34;).rand(1000,9999).$file_ext;
+            if (move_uploaded_file($temp_file, $img_path)) {
+                $is_upload = true;
+            } else {
+                $msg = &#39;上传出错！&#39;;
+            }
+        } else {
+            $msg = &#39;此文件类型不允许上传！&#39;;
+        }
+    } else {
+        $msg = UPLOAD_PATH . &#39;文件夹不存在,请手工创建！&#39;;
+    }
+}</pre></td></tr></table>
+</div>
+</div>
+<h3 id="过关-5">过关</h3>
+
+<p>这一关不能用第四关和四五关的方法了，但是发现没有做大小写处理，所以直接大写绕过：</p>
+
+<p><img src="./../media/2020-11-08-7.png" alt="第六关" /></p>
+
+<h2 id="第七关">第七关</h2>
+
+<h3 id="源码-6">源码</h3>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span></pre></td>
+<td class="lntd">
+<pre class="chroma">$is_upload = false;
+$msg = null;
+if (isset($_POST[&#39;submit&#39;])) {
+    if (file_exists(UPLOAD_PATH)) {
+        $deny_ext = array(&#34;.php&#34;,&#34;.php5&#34;,&#34;.php4&#34;,&#34;.php3&#34;,&#34;.php2&#34;,&#34;.html&#34;,&#34;.htm&#34;,&#34;.phtml&#34;,&#34;.pht&#34;,&#34;.pHp&#34;,&#34;.pHp5&#34;,&#34;.pHp4&#34;,&#34;.pHp3&#34;,&#34;.pHp2&#34;,&#34;.Html&#34;,&#34;.Htm&#34;,&#34;.pHtml&#34;,&#34;.jsp&#34;,&#34;.jspa&#34;,&#34;.jspx&#34;,&#34;.jsw&#34;,&#34;.jsv&#34;,&#34;.jspf&#34;,&#34;.jtml&#34;,&#34;.jSp&#34;,&#34;.jSpx&#34;,&#34;.jSpa&#34;,&#34;.jSw&#34;,&#34;.jSv&#34;,&#34;.jSpf&#34;,&#34;.jHtml&#34;,&#34;.asp&#34;,&#34;.aspx&#34;,&#34;.asa&#34;,&#34;.asax&#34;,&#34;.ascx&#34;,&#34;.ashx&#34;,&#34;.asmx&#34;,&#34;.cer&#34;,&#34;.aSp&#34;,&#34;.aSpx&#34;,&#34;.aSa&#34;,&#34;.aSax&#34;,&#34;.aScx&#34;,&#34;.aShx&#34;,&#34;.aSmx&#34;,&#34;.cEr&#34;,&#34;.sWf&#34;,&#34;.swf&#34;,&#34;.htaccess&#34;,&#34;.ini&#34;);
+        $file_name = $_FILES[&#39;upload_file&#39;][&#39;name&#39;];
+        $file_name = deldot($file_name);//删除文件名末尾的点
+        $file_ext = strrchr($file_name, &#39;.&#39;);
+        $file_ext = strtolower($file_ext); //转换为小写
+        $file_ext = str_ireplace(&#39;::$DATA&#39;, &#39;&#39;, $file_ext);//去除字符串::$DATA
+
+        if (!in_array($file_ext, $deny_ext)) {
+            $temp_file = $_FILES[&#39;upload_file&#39;][&#39;tmp_name&#39;];
+            $img_path = UPLOAD_PATH.&#39;/&#39;.date(&#34;YmdHis&#34;).rand(1000,9999).$file_ext;
+            if (move_uploaded_file($temp_file,$img_path)) {
+                $is_upload = true;
+            } else {
+                $msg = &#39;上传出错！&#39;;
+            }
+        } else {
+            $msg = &#39;此文件不允许上传&#39;;
+        }
+    } else {
+        $msg = UPLOAD_PATH . &#39;文件夹不存在,请手工创建！&#39;;
+    }
+}</pre></td></tr></table>
+</div>
+</div>
+<h3 id="过关-6">过关</h3>
+
+<p>通过阅读源码可以知道，没有去掉文件名的前后空格，所以可以利用空格绕过，上传的文件的文件名末尾加一个空格即可，如下：</p>
+
+<p><img src="./../media/2020-11-08-8.png" alt="第七关" /></p>
+
+<h2 id="第八关">第八关</h2>
+
+<h3 id="源码-7">源码</h3>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span></pre></td>
+<td class="lntd">
+<pre class="chroma">$is_upload = false;
+$msg = null;
+if (isset($_POST[&#39;submit&#39;])) {
+    if (file_exists(UPLOAD_PATH)) {
+        $deny_ext = array(&#34;.php&#34;,&#34;.php5&#34;,&#34;.php4&#34;,&#34;.php3&#34;,&#34;.php2&#34;,&#34;.html&#34;,&#34;.htm&#34;,&#34;.phtml&#34;,&#34;.pht&#34;,&#34;.pHp&#34;,&#34;.pHp5&#34;,&#34;.pHp4&#34;,&#34;.pHp3&#34;,&#34;.pHp2&#34;,&#34;.Html&#34;,&#34;.Htm&#34;,&#34;.pHtml&#34;,&#34;.jsp&#34;,&#34;.jspa&#34;,&#34;.jspx&#34;,&#34;.jsw&#34;,&#34;.jsv&#34;,&#34;.jspf&#34;,&#34;.jtml&#34;,&#34;.jSp&#34;,&#34;.jSpx&#34;,&#34;.jSpa&#34;,&#34;.jSw&#34;,&#34;.jSv&#34;,&#34;.jSpf&#34;,&#34;.jHtml&#34;,&#34;.asp&#34;,&#34;.aspx&#34;,&#34;.asa&#34;,&#34;.asax&#34;,&#34;.ascx&#34;,&#34;.ashx&#34;,&#34;.asmx&#34;,&#34;.cer&#34;,&#34;.aSp&#34;,&#34;.aSpx&#34;,&#34;.aSa&#34;,&#34;.aSax&#34;,&#34;.aScx&#34;,&#34;.aShx&#34;,&#34;.aSmx&#34;,&#34;.cEr&#34;,&#34;.sWf&#34;,&#34;.swf&#34;,&#34;.htaccess&#34;,&#34;.ini&#34;);
+        $file_name = trim($_FILES[&#39;upload_file&#39;][&#39;name&#39;]);
+        $file_ext = strrchr($file_name, &#39;.&#39;);
+        $file_ext = strtolower($file_ext); //转换为小写
+        $file_ext = str_ireplace(&#39;::$DATA&#39;, &#39;&#39;, $file_ext);//去除字符串::$DATA
+        $file_ext = trim($file_ext); //首尾去空
+
+        if (!in_array($file_ext, $deny_ext)) {
+            $temp_file = $_FILES[&#39;upload_file&#39;][&#39;tmp_name&#39;];
+            $img_path = UPLOAD_PATH.&#39;/&#39;.$file_name;
+            if (move_uploaded_file($temp_file, $img_path)) {
+                $is_upload = true;
+            } else {
+                $msg = &#39;上传出错！&#39;;
+            }
+        } else {
+            $msg = &#39;此文件类型不允许上传！&#39;;
+        }
+    } else {
+        $msg = UPLOAD_PATH . &#39;文件夹不存在,请手工创建！&#39;;
+    }
+}</pre></td></tr></table>
+</div>
+</div>
+<h3 id="过关-7">过关</h3>
+
+<p>根据源码，可以发现，没有去除上传文件名末尾的点，所以可以利用 <code>.</code> 绕过（当然，也可以用第四关的方法）。如下：</p>
+
+<p><img src="./../media/2020-11-08-9.png" alt="第八关" /></p>
+
+<h2 id="第九关">第九关</h2>
+
+<h3 id="源码-8">源码</h3>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span></pre></td>
+<td class="lntd">
+<pre class="chroma">$is_upload = false;
+$msg = null;
+if (isset($_POST[&#39;submit&#39;])) {
+    if (file_exists(UPLOAD_PATH)) {
+        $deny_ext = array(&#34;.php&#34;,&#34;.php5&#34;,&#34;.php4&#34;,&#34;.php3&#34;,&#34;.php2&#34;,&#34;.html&#34;,&#34;.htm&#34;,&#34;.phtml&#34;,&#34;.pht&#34;,&#34;.pHp&#34;,&#34;.pHp5&#34;,&#34;.pHp4&#34;,&#34;.pHp3&#34;,&#34;.pHp2&#34;,&#34;.Html&#34;,&#34;.Htm&#34;,&#34;.pHtml&#34;,&#34;.jsp&#34;,&#34;.jspa&#34;,&#34;.jspx&#34;,&#34;.jsw&#34;,&#34;.jsv&#34;,&#34;.jspf&#34;,&#34;.jtml&#34;,&#34;.jSp&#34;,&#34;.jSpx&#34;,&#34;.jSpa&#34;,&#34;.jSw&#34;,&#34;.jSv&#34;,&#34;.jSpf&#34;,&#34;.jHtml&#34;,&#34;.asp&#34;,&#34;.aspx&#34;,&#34;.asa&#34;,&#34;.asax&#34;,&#34;.ascx&#34;,&#34;.ashx&#34;,&#34;.asmx&#34;,&#34;.cer&#34;,&#34;.aSp&#34;,&#34;.aSpx&#34;,&#34;.aSa&#34;,&#34;.aSax&#34;,&#34;.aScx&#34;,&#34;.aShx&#34;,&#34;.aSmx&#34;,&#34;.cEr&#34;,&#34;.sWf&#34;,&#34;.swf&#34;,&#34;.htaccess&#34;,&#34;.ini&#34;);
+        $file_name = trim($_FILES[&#39;upload_file&#39;][&#39;name&#39;]);
+        $file_name = deldot($file_name);//删除文件名末尾的点
+        $file_ext = strrchr($file_name, &#39;.&#39;);
+        $file_ext = strtolower($file_ext); //转换为小写
+        $file_ext = trim($file_ext); //首尾去空
+
+        if (!in_array($file_ext, $deny_ext)) {
+            $temp_file = $_FILES[&#39;upload_file&#39;][&#39;tmp_name&#39;];
+            $img_path = UPLOAD_PATH.&#39;/&#39;.date(&#34;YmdHis&#34;).rand(1000,9999).$file_ext;
+            if (move_uploaded_file($temp_file, $img_path)) {
+                $is_upload = true;
+            } else {
+                $msg = &#39;上传出错！&#39;;
+            }
+        } else {
+            $msg = &#39;此文件类型不允许上传！&#39;;
+        }
+    } else {
+        $msg = UPLOAD_PATH . &#39;文件夹不存在,请手工创建！&#39;;
+    }
+}</pre></td></tr></table>
+</div>
+</div>
+<h3 id="过关-8">过关</h3>
+
+<p>利用windos特性，可以使用 <code>::$DATA</code> 绕过， <code>::$DATA</code> 之后的字符在windows下会被认为是文件流数据，且保持 <code>::$DATA</code> 之前的文件名。如下：</p>
+
+<p><img src="./../media/2020-11-08-10.png" alt="第九关" /></p>
+
+<h2 id="第十关">第十关</h2>
+
+<h3 id="源码-9">源码</h3>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span></pre></td>
+<td class="lntd">
+<pre class="chroma">$is_upload = false;
+$msg = null;
+if (isset($_POST[&#39;submit&#39;])) {
+    if (file_exists(UPLOAD_PATH)) {
+        $deny_ext = array(&#34;.php&#34;,&#34;.php5&#34;,&#34;.php4&#34;,&#34;.php3&#34;,&#34;.php2&#34;,&#34;.html&#34;,&#34;.htm&#34;,&#34;.phtml&#34;,&#34;.pht&#34;,&#34;.pHp&#34;,&#34;.pHp5&#34;,&#34;.pHp4&#34;,&#34;.pHp3&#34;,&#34;.pHp2&#34;,&#34;.Html&#34;,&#34;.Htm&#34;,&#34;.pHtml&#34;,&#34;.jsp&#34;,&#34;.jspa&#34;,&#34;.jspx&#34;,&#34;.jsw&#34;,&#34;.jsv&#34;,&#34;.jspf&#34;,&#34;.jtml&#34;,&#34;.jSp&#34;,&#34;.jSpx&#34;,&#34;.jSpa&#34;,&#34;.jSw&#34;,&#34;.jSv&#34;,&#34;.jSpf&#34;,&#34;.jHtml&#34;,&#34;.asp&#34;,&#34;.aspx&#34;,&#34;.asa&#34;,&#34;.asax&#34;,&#34;.ascx&#34;,&#34;.ashx&#34;,&#34;.asmx&#34;,&#34;.cer&#34;,&#34;.aSp&#34;,&#34;.aSpx&#34;,&#34;.aSa&#34;,&#34;.aSax&#34;,&#34;.aScx&#34;,&#34;.aShx&#34;,&#34;.aSmx&#34;,&#34;.cEr&#34;,&#34;.sWf&#34;,&#34;.swf&#34;,&#34;.htaccess&#34;,&#34;.ini&#34;);
+        $file_name = trim($_FILES[&#39;upload_file&#39;][&#39;name&#39;]);
+        $file_name = deldot($file_name);//删除文件名末尾的点
+        $file_ext = strrchr($file_name, &#39;.&#39;);
+        $file_ext = strtolower($file_ext); //转换为小写
+        $file_ext = str_ireplace(&#39;::$DATA&#39;, &#39;&#39;, $file_ext);//去除字符串::$DATA
+        $file_ext = trim($file_ext); //首尾去空
+
+        if (!in_array($file_ext, $deny_ext)) {
+            $temp_file = $_FILES[&#39;upload_file&#39;][&#39;tmp_name&#39;];
+            $img_path = UPLOAD_PATH.&#39;/&#39;.$file_name;
+            if (move_uploaded_file($temp_file, $img_path)) {
+                $is_upload = true;
+            } else {
+                $msg = &#39;上传出错！&#39;;
+            }
+        } else {
+            $msg = &#39;此文件类型不允许上传！&#39;;
+        }
+    } else {
+        $msg = UPLOAD_PATH . &#39;文件夹不存在,请手工创建！&#39;;
+    }
+}</pre></td></tr></table>
+</div>
+</div>
+<h3 id="过关-9">过关</h3>
+
+<p>还是利用第四关的方法，如下：</p>
+
+<p><img src="./../media/2020-11-08-11.png" alt="第十关" /></p>
+
+<h2 id="第十一关">第十一关</h2>
+
+<h3 id="源码-10">源码</h3>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span></pre></td>
+<td class="lntd">
+<pre class="chroma">$is_upload = false;
+$msg = null;
+if (isset($_POST[&#39;submit&#39;])) {
+    if (file_exists(UPLOAD_PATH)) {
+        $deny_ext = array(&#34;php&#34;,&#34;php5&#34;,&#34;php4&#34;,&#34;php3&#34;,&#34;php2&#34;,&#34;html&#34;,&#34;htm&#34;,&#34;phtml&#34;,&#34;pht&#34;,&#34;jsp&#34;,&#34;jspa&#34;,&#34;jspx&#34;,&#34;jsw&#34;,&#34;jsv&#34;,&#34;jspf&#34;,&#34;jtml&#34;,&#34;asp&#34;,&#34;aspx&#34;,&#34;asa&#34;,&#34;asax&#34;,&#34;ascx&#34;,&#34;ashx&#34;,&#34;asmx&#34;,&#34;cer&#34;,&#34;swf&#34;,&#34;htaccess&#34;,&#34;ini&#34;);
+
+        $file_name = trim($_FILES[&#39;upload_file&#39;][&#39;name&#39;]);
+        $file_name = str_ireplace($deny_ext,&#34;&#34;, $file_name);
+        $temp_file = $_FILES[&#39;upload_file&#39;][&#39;tmp_name&#39;];
+        $img_path = UPLOAD_PATH.&#39;/&#39;.$file_name;        
+        if (move_uploaded_file($temp_file, $img_path)) {
+            $is_upload = true;
+        } else {
+            $msg = &#39;上传出错！&#39;;
+        }
+    } else {
+        $msg = UPLOAD_PATH . &#39;文件夹不存在,请手工创建！&#39;;
+    }
+}</pre></td></tr></table>
+</div>
+</div>
+<h3 id="过关-10">过关</h3>
+
+<p>首先看源码，获取上传文件的文件名，然后根据黑名单将文件名中的黑名单字符替换成空，于是想到可以通过双写绕过，所谓双写不是类似 <code>.phpphp</code> 这种，这样两个 <code>php</code> 字符都会被替换成空，不能达到效果。可以这样双写 <code>.phphpp</code> ，这个字符串中间的 <code>php</code> 被替换成空，替换后就是 <code>.php</code> 了，于是可以达到效果，如下：</p>
+
+<p><img src="./../media/2020-11-08-12.png" alt="第十一关" /></p>
+
+<h2 id="第十二关">第十二关</h2>
+
+<h3 id="源码-11">源码</h3>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span></pre></td>
+<td class="lntd">
+<pre class="chroma">$is_upload = false;
+$msg = null;
+if(isset($_POST[&#39;submit&#39;])){
+    $ext_arr = array(&#39;jpg&#39;,&#39;png&#39;,&#39;gif&#39;);
+    $file_ext = substr($_FILES[&#39;upload_file&#39;][&#39;name&#39;],strrpos($_FILES[&#39;upload_file&#39;][&#39;name&#39;],&#34;.&#34;)+1);
+    if(in_array($file_ext,$ext_arr)){
+        $temp_file = $_FILES[&#39;upload_file&#39;][&#39;tmp_name&#39;];
+        $img_path = $_GET[&#39;save_path&#39;].&#34;/&#34;.rand(10, 99).date(&#34;YmdHis&#34;).&#34;.&#34;.$file_ext;
+
+        if(move_uploaded_file($temp_file,$img_path)){
+            $is_upload = true;
+        } else {
+            $msg = &#39;上传出错！&#39;;
+        }
+    } else{
+        $msg = &#34;只允许上传.jpg|.png|.gif类型文件！&#34;;
+    }
+}</pre></td></tr></table>
+</div>
+</div>
+<h3 id="过关-11">过关</h3>
+
+<p>使用了白名单，但是注意到这行代码： <code>$img_path = $_GET['save_path'].&quot;/&quot;.rand(10, 99).date(&quot;YmdHis&quot;).&quot;.&quot;.$file_ext;</code> ，拼接了前端传来的参数save_path,可以想到使用%00截断，这样 <code>.&quot;/&quot;.rand(10, 99).date(&quot;YmdHis&quot;).&quot;.&quot;.$file_ext;</code> 被截断，最终生成的文件路径和文件名都是由%00前的字符串来控制。</p>
+
+<p>但是这关%00截断要成功需要一定条件，如下条件：</p>
+
+<ol>
+<li>php版本小于5.3.4</li>
+<li>php的magic_quotes_gpc为OFF状态,如果不修改将无法上传成功，默认为ON</li>
+</ol>
+
+<p>所以在保证上面两个条件下，复现如下：</p>
+
+<p><img src="./../media/2020-11-08-13.png" alt="第十二关" /></p>
+
+<h2 id="第十三关">第十三关</h2>
+
+<h3 id="源码-12">源码</h3>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span></pre></td>
+<td class="lntd">
+<pre class="chroma">$is_upload = false;
+$msg = null;
+if(isset($_POST[&#39;submit&#39;])){
+    $ext_arr = array(&#39;jpg&#39;,&#39;png&#39;,&#39;gif&#39;);
+    $file_ext = substr($_FILES[&#39;upload_file&#39;][&#39;name&#39;],strrpos($_FILES[&#39;upload_file&#39;][&#39;name&#39;],&#34;.&#34;)+1);
+    if(in_array($file_ext,$ext_arr)){
+        $temp_file = $_FILES[&#39;upload_file&#39;][&#39;tmp_name&#39;];
+        $img_path = $_POST[&#39;save_path&#39;].&#34;/&#34;.rand(10, 99).date(&#34;YmdHis&#34;).&#34;.&#34;.$file_ext;
+
+        if(move_uploaded_file($temp_file,$img_path)){
+            $is_upload = true;
+        } else {
+            $msg = &#34;上传失败&#34;;
+        }
+    } else {
+        $msg = &#34;只允许上传.jpg|.png|.gif类型文件！&#34;;
+    }
+}</pre></td></tr></table>
+</div>
+</div>
+<h3 id="过关-12">过关</h3>
+
+<p>也是00截断，不过是post里的00截断，如下：</p>
+
+<p><img src="./../media/2020-11-08-14.png" alt="十三关" /></p>
+
+<h2 id="第十四关">第十四关</h2>
+
+<h3 id="源码-13">源码</h3>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span><span class="lnt">29
+</span><span class="lnt">30
+</span><span class="lnt">31
+</span><span class="lnt">32
+</span><span class="lnt">33
+</span><span class="lnt">34
+</span><span class="lnt">35
+</span><span class="lnt">36
+</span><span class="lnt">37
+</span><span class="lnt">38
+</span><span class="lnt">39
+</span><span class="lnt">40
+</span></pre></td>
+<td class="lntd">
+<pre class="chroma">function getReailFileType($filename){
+    $file = fopen($filename, &#34;rb&#34;);
+    $bin = fread($file, 2); //只读2字节
+    fclose($file);
+    $strInfo = @unpack(&#34;C2chars&#34;, $bin);    
+    $typeCode = intval($strInfo[&#39;chars1&#39;].$strInfo[&#39;chars2&#39;]);    
+    $fileType = &#39;&#39;;    
+    switch($typeCode){      
+        case 255216:            
+            $fileType = &#39;jpg&#39;;
+            break;
+        case 13780:            
+            $fileType = &#39;png&#39;;
+            break;        
+        case 7173:            
+            $fileType = &#39;gif&#39;;
+            break;
+        default:            
+            $fileType = &#39;unknown&#39;;
+        }    
+        return $fileType;
+}
+
+$is_upload = false;
+$msg = null;
+if(isset($_POST[&#39;submit&#39;])){
+    $temp_file = $_FILES[&#39;upload_file&#39;][&#39;tmp_name&#39;];
+    $file_type = getReailFileType($temp_file);
+
+    if($file_type == &#39;unknown&#39;){
+        $msg = &#34;文件未知，上传失败！&#34;;
+    }else{
+        $img_path = UPLOAD_PATH.&#34;/&#34;.rand(10, 99).date(&#34;YmdHis&#34;).&#34;.&#34;.$file_type;
+        if(move_uploaded_file($temp_file,$img_path)){
+            $is_upload = true;
+        } else {
+            $msg = &#34;上传出错！&#34;;
+        }
+    }
+}</pre></td></tr></table>
+</div>
+</div>
+<h3 id="过关-13">过关</h3>
+
+<p>根据源码，可以知道程序是提取文件中二进制数据的头两个字节（魔数）来判断文件的类型，由此可以制作图片木马然后上传，制作图片木马的步骤如下：</p>
+
+<ol>
+<li>创建一个正常的图片：1.png</li>
+<li>创建一个木马文件：1.php</li>
+<li>当前目录下cmd运行：copy 1.png/b+1.php/a 2.png，输出的2.png就是图片马，可执行木马语句在图片二进制数据的最后。</li>
+</ol>
+
+<p>上传过程如下：</p>
+
+<p><img src="./../media/2020-11-08-15.png" alt="第十四关" /></p>
+
+<p>利用文件包含访问图片马效果如下：</p>
+
+<p><img src="./../media/2020-11-08-16.png" alt="第十四关1" /></p>
+
+<h2 id="第十五关">第十五关</h2>
+
+<h3 id="源码-14">源码</h3>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span><span class="lnt">29
+</span><span class="lnt">30
+</span><span class="lnt">31
+</span></pre></td>
+<td class="lntd">
+<pre class="chroma">function isImage($filename){
+    $types = &#39;.jpeg|.png|.gif&#39;;
+    if(file_exists($filename)){
+        $info = getimagesize($filename);
+        $ext = image_type_to_extension($info[2]);
+        if(stripos($types,$ext)&gt;=0){
+            return $ext;
+        }else{
+            return false;
+        }
+    }else{
+        return false;
+    }
+}
+
+$is_upload = false;
+$msg = null;
+if(isset($_POST[&#39;submit&#39;])){
+    $temp_file = $_FILES[&#39;upload_file&#39;][&#39;tmp_name&#39;];
+    $res = isImage($temp_file);
+    if(!$res){
+        $msg = &#34;文件未知，上传失败！&#34;;
+    }else{
+        $img_path = UPLOAD_PATH.&#34;/&#34;.rand(10, 99).date(&#34;YmdHis&#34;).$res;
+        if(move_uploaded_file($temp_file,$img_path)){
+            $is_upload = true;
+        } else {
+            $msg = &#34;上传出错！&#34;;
+        }
+    }
+}</pre></td></tr></table>
+</div>
+</div>
+<h3 id="过关-14">过关</h3>
+
+<p><code>getimagesize()</code> 函数用于获取图像大小及相关信息，成功返回一个数组，失败则返回 <code>FALSE</code> 并产生一条 <code>E_WARNING</code> 级的错误信息。所以上传图片马即可，可执行语句放在图片马最后。</p>
+
+<h2 id="第十六关">第十六关</h2>
+
+<h3 id="源码-15">源码</h3>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span><span class="lnt">29
+</span><span class="lnt">30
+</span><span class="lnt">31
+</span><span class="lnt">32
+</span><span class="lnt">33
+</span><span class="lnt">34
+</span><span class="lnt">35
+</span></pre></td>
+<td class="lntd">
+<pre class="chroma">function isImage($filename){
+    //需要开启php_exif模块
+    $image_type = exif_imagetype($filename);
+    switch ($image_type) {
+        case IMAGETYPE_GIF:
+            return &#34;gif&#34;;
+            break;
+        case IMAGETYPE_JPEG:
+            return &#34;jpg&#34;;
+            break;
+        case IMAGETYPE_PNG:
+            return &#34;png&#34;;
+            break;    
+        default:
+            return false;
+            break;
+    }
+}
+
+$is_upload = false;
+$msg = null;
+if(isset($_POST[&#39;submit&#39;])){
+    $temp_file = $_FILES[&#39;upload_file&#39;][&#39;tmp_name&#39;];
+    $res = isImage($temp_file);
+    if(!$res){
+        $msg = &#34;文件未知，上传失败！&#34;;
+    }else{
+        $img_path = UPLOAD_PATH.&#34;/&#34;.rand(10, 99).date(&#34;YmdHis&#34;).&#34;.&#34;.$res;
+        if(move_uploaded_file($temp_file,$img_path)){
+            $is_upload = true;
+        } else {
+            $msg = &#34;上传出错！&#34;;
+        }
+    }
+}</pre></td></tr></table>
+</div>
+</div>
+<h3 id="过关-15">过关</h3>
+
+<p>exif_imagetype()读取一个图像的第一个字节并检查其签名。所以从原理上来将，也是直接上传图片马，将执行语句放在图片马的最后。</p>
+
+<h2 id="第十七关">第十七关</h2>
+
+<h3 id="源码-16">源码</h3>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span><span class="lnt">29
+</span><span class="lnt">30
+</span><span class="lnt">31
+</span><span class="lnt">32
+</span><span class="lnt">33
+</span><span class="lnt">34
+</span><span class="lnt">35
+</span><span class="lnt">36
+</span><span class="lnt">37
+</span><span class="lnt">38
+</span><span class="lnt">39
+</span><span class="lnt">40
+</span><span class="lnt">41
+</span><span class="lnt">42
+</span><span class="lnt">43
+</span><span class="lnt">44
+</span><span class="lnt">45
+</span><span class="lnt">46
+</span><span class="lnt">47
+</span><span class="lnt">48
+</span><span class="lnt">49
+</span><span class="lnt">50
+</span><span class="lnt">51
+</span><span class="lnt">52
+</span><span class="lnt">53
+</span><span class="lnt">54
+</span><span class="lnt">55
+</span><span class="lnt">56
+</span><span class="lnt">57
+</span><span class="lnt">58
+</span><span class="lnt">59
+</span><span class="lnt">60
+</span><span class="lnt">61
+</span><span class="lnt">62
+</span><span class="lnt">63
+</span><span class="lnt">64
+</span><span class="lnt">65
+</span><span class="lnt">66
+</span><span class="lnt">67
+</span><span class="lnt">68
+</span><span class="lnt">69
+</span><span class="lnt">70
+</span><span class="lnt">71
+</span><span class="lnt">72
+</span><span class="lnt">73
+</span><span class="lnt">74
+</span><span class="lnt">75
+</span><span class="lnt">76
+</span><span class="lnt">77
+</span><span class="lnt">78
+</span><span class="lnt">79
+</span><span class="lnt">80
+</span><span class="lnt">81
+</span><span class="lnt">82
+</span><span class="lnt">83
+</span><span class="lnt">84
+</span></pre></td>
+<td class="lntd">
+<pre class="chroma">$is_upload = false;
+$msg = null;
+if (isset($_POST[&#39;submit&#39;])){
+    // 获得上传文件的基本信息，文件名，类型，大小，临时文件路径
+    $filename = $_FILES[&#39;upload_file&#39;][&#39;name&#39;];
+    $filetype = $_FILES[&#39;upload_file&#39;][&#39;type&#39;];
+    $tmpname = $_FILES[&#39;upload_file&#39;][&#39;tmp_name&#39;];
+
+    $target_path=UPLOAD_PATH.&#39;/&#39;.basename($filename);
+
+    // 获得上传文件的扩展名
+    $fileext= substr(strrchr($filename,&#34;.&#34;),1);
+
+    //判断文件后缀与类型，合法才进行上传操作
+    if(($fileext == &#34;jpg&#34;) &amp;&amp; ($filetype==&#34;image/jpeg&#34;)){
+        if(move_uploaded_file($tmpname,$target_path)){
+            //使用上传的图片生成新的图片
+            $im = imagecreatefromjpeg($target_path);
+
+            if($im == false){
+                $msg = &#34;该文件不是jpg格式的图片！&#34;;
+                @unlink($target_path);
+            }else{
+                //给新图片指定文件名
+                srand(time());
+                $newfilename = strval(rand()).&#34;.jpg&#34;;
+                //显示二次渲染后的图片（使用用户上传图片生成的新图片）
+                $img_path = UPLOAD_PATH.&#39;/&#39;.$newfilename;
+                imagejpeg($im,$img_path);
+                @unlink($target_path);
+                $is_upload = true;
+            }
+        } else {
+            $msg = &#34;上传出错！&#34;;
+        }
+
+    }else if(($fileext == &#34;png&#34;) &amp;&amp; ($filetype==&#34;image/png&#34;)){
+        if(move_uploaded_file($tmpname,$target_path)){
+            //使用上传的图片生成新的图片
+            $im = imagecreatefrompng($target_path);
+
+            if($im == false){
+                $msg = &#34;该文件不是png格式的图片！&#34;;
+                @unlink($target_path);
+            }else{
+                 //给新图片指定文件名
+                srand(time());
+                $newfilename = strval(rand()).&#34;.png&#34;;
+                //显示二次渲染后的图片（使用用户上传图片生成的新图片）
+                $img_path = UPLOAD_PATH.&#39;/&#39;.$newfilename;
+                imagepng($im,$img_path);
+
+                @unlink($target_path);
+                $is_upload = true;               
+            }
+        } else {
+            $msg = &#34;上传出错！&#34;;
+        }
+
+    }else if(($fileext == &#34;gif&#34;) &amp;&amp; ($filetype==&#34;image/gif&#34;)){
+        if(move_uploaded_file($tmpname,$target_path)){
+            //使用上传的图片生成新的图片
+            $im = imagecreatefromgif($target_path);
+            if($im == false){
+                $msg = &#34;该文件不是gif格式的图片！&#34;;
+                @unlink($target_path);
+            }else{
+                //给新图片指定文件名
+                srand(time());
+                $newfilename = strval(rand()).&#34;.gif&#34;;
+                //显示二次渲染后的图片（使用用户上传图片生成的新图片）
+                $img_path = UPLOAD_PATH.&#39;/&#39;.$newfilename;
+                imagegif($im,$img_path);
+
+                @unlink($target_path);
+                $is_upload = true;
+            }
+        } else {
+            $msg = &#34;上传出错！&#34;;
+        }
+    }else{
+        $msg = &#34;只允许上传后缀为.jpg|.png|.gif的图片文件！&#34;;
+    }
+}</pre></td></tr></table>
+</div>
+</div>
+<h3 id="过关-16">过关</h3>
+
+<p>这一关有两种思路，如下：</p>
+
+<ol>
+<li>利用条件竞争，在文件未删除前访问上传的文件。</li>
+<li>对比图片 <code>imagecreatefrompng()</code> 前后的二进制数据，然后将不变的数据替换成同等长度的可执行语句。那么经过 <code>imagecreatefrompng()</code> 生成的图片仍旧会保留木马。</li>
+</ol>
+
+<h2 id="第十八关">第十八关</h2>
+
+<h3 id="源码-17">源码</h3>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span></pre></td>
+<td class="lntd">
+<pre class="chroma">$is_upload = false;
+$msg = null;
+
+if(isset($_POST[&#39;submit&#39;])){
+    $ext_arr = array(&#39;jpg&#39;,&#39;png&#39;,&#39;gif&#39;);
+    $file_name = $_FILES[&#39;upload_file&#39;][&#39;name&#39;];
+    $temp_file = $_FILES[&#39;upload_file&#39;][&#39;tmp_name&#39;];
+    $file_ext = substr($file_name,strrpos($file_name,&#34;.&#34;)+1);
+    $upload_file = UPLOAD_PATH . &#39;/&#39; . $file_name;
+
+    if(move_uploaded_file($temp_file, $upload_file)){
+        if(in_array($file_ext,$ext_arr)){
+             $img_path = UPLOAD_PATH . &#39;/&#39;. rand(10, 99).date(&#34;YmdHis&#34;).&#34;.&#34;.$file_ext;
+             rename($upload_file, $img_path);
+             $is_upload = true;
+        }else{
+            $msg = &#34;只允许上传.jpg|.png|.gif类型文件！&#34;;
+            unlink($upload_file);
+        }
+    }else{
+        $msg = &#39;上传出错！&#39;;
+    }
+}</pre></td></tr></table>
+</div>
+</div>
+<h3 id="过关-17">过关</h3>
+
+<p>仍旧是条件竞争。</p>
+
+    </div>
+
+    <div class="post-copyright">
+  <p class="copyright-item">
+    <span class="item-title">文章作者</span>
+    <span class="item-content">P1n93r</span>
+  </p>
+  <p class="copyright-item">
+    <span class="item-title">上次更新</span>
+    <span class="item-content">
+        2020-11-08
+        
+    </span>
+  </p>
+  
+  
+</div>
+<div class="post-reward">
+  <input type="checkbox" name="reward" id="reward" hidden />
+  <label class="reward-button" for="reward">赞赏支持</label>
+  <div class="qr-code">
+    
+    <label class="qr-code-image" for="reward">
+        <img class="image" src="/pay/wechat.jpg">
+        <span>微信打赏</span>
+      </label>
+    <label class="qr-code-image" for="reward">
+        <img class="image" src="/pay/alipay.jpg">
+        <span>支付宝打赏</span>
+      </label>
+  </div>
+</div><footer class="post-footer">
+      <div class="post-tags">
+          <a href="/tags/file_upload/">file_upload</a>
+          </div>
+      <nav class="post-nav">
+        
+        <a class="next" href="/post/security/%E4%BD%8E%E4%BA%8E1.5.0%E7%89%88%E6%9C%ACshiro%E8%BA%AB%E4%BB%BD%E7%BB%95%E8%BF%87%E6%BC%8F%E6%B4%9E%E5%88%86%E6%9E%90/">
+            <span class="next-text nav-default">低于1.5.0版本shiro身份绕过漏洞分析</span>
+            <span class="next-text nav-mobile">下一篇</span>
+            <i class="iconfont icon-right"></i>
+          </a>
+      </nav>
+    </footer>
+  </article>
+        </div>
+        <div id="disqus_thread"></div>
+    <script type="text/javascript">
+    (function() {
+      
+      
+      if (window.location.hostname === 'localhost') return;
+
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      var disqus_shortname = 'p1n93r';
+      dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+    </script>
+    <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+
+  
+
+  
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="social-links">
+      <a href="mailto:pin83r@gmail.com" class="iconfont icon-email" title="email"></a>
+      <a href="https://github.com/p1n93r" class="iconfont icon-github" title="github"></a>
+  <a href="https://p1n93r.github.io/index.xml" type="application/rss+xml" class="iconfont icon-rss" title="rss"></a>
+</div>
+
+<div class="copyright">
+  <span class="power-by">
+    由 <a class="hexo-link" href="https://gohugo.io">Hugo</a> 强力驱动
+  </span>
+  <span class="division">|</span>
+  <span class="theme-info">
+    主题 - 
+    <a class="theme-link" href="https://github.com/olOwOlo/hugo-theme-even">Even</a>
+  </span>
+
+  <div class="busuanzi-footer">
+    <span id="busuanzi_container_site_pv"> 本站总访问量 <span id="busuanzi_value_site_pv"><img src="/img/spinner.svg" alt="spinner.svg"/></span> 次 </span>
+      <span class="division">|</span>
+    <span id="busuanzi_container_site_uv"> 本站总访客数 <span id="busuanzi_value_site_uv"><img src="/img/spinner.svg" alt="spinner.svg"/></span> 人 </span>
+  </div>
+
+  <span class="copyright-year">
+    &copy; 
+    2019 - 
+    2020
+    <span class="heart">
+      <i class="iconfont icon-heart"></i>
+    </span>
+    <span class="author">P1n93r</span>
+  </span>
+</div>
+    </footer>
+
+    <div class="back-to-top" id="back-to-top">
+      <i class="iconfont icon-up"></i>
+    </div>
+  </div>
+  
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/slideout@1.0.1/dist/slideout.min.js" integrity="sha256-t+zJ/g8/KXIJMjSVQdnibt4dlaDxc9zXr/9oNPeWqdg=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.js" integrity="sha256-XVLffZaxoWfGUEbdzuLi7pwaUJv1cecsQJQqGLe7axY=" crossorigin="anonymous"></script>
+<script type="text/javascript" src="/dist/even.26188efa.min.js"></script>
+
+
+
+
+
+
+
+
+</body>
+</html>
