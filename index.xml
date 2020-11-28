@@ -6,7 +6,7 @@
     <description>Recent content on P1n93r - 博学而精一</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-cn</language>
-    <lastBuildDate>Sun, 08 Nov 2020 13:04:36 +0800</lastBuildDate>
+    <lastBuildDate>Sat, 28 Nov 2020 20:04:36 +0800</lastBuildDate>
     
 	<atom:link href="https://p1n93r.github.io/index.xml" rel="self" type="application/rss+xml" />
     
@@ -20,6 +20,15 @@
       <description>We chose to go to the moon We choose to go to the moon in this decade and do the other things,
 not because they are easy,
 but because they are hard.</description>
+    </item>
+    
+    <item>
+      <title>sqli_labs通关</title>
+      <link>https://p1n93r.github.io/post/security/sqli-labs%E9%80%9A%E5%85%B3/</link>
+      <pubDate>Sat, 28 Nov 2020 20:04:36 +0800</pubDate>
+      
+      <guid>https://p1n93r.github.io/post/security/sqli-labs%E9%80%9A%E5%85%B3/</guid>
+      <description>前置知识 常用函数 version()：mysql版本； user()：当前数据库链接用户名； database()：当前链接数据库名； @@data</description>
     </item>
     
     <item>
