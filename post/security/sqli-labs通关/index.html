@@ -50,7 +50,7 @@
 
 <meta itemprop="datePublished" content="2020-11-28T20:04:36&#43;08:00" />
 <meta itemprop="dateModified" content="2020-11-28T20:04:36&#43;08:00" />
-<meta itemprop="wordCount" content="1225">
+<meta itemprop="wordCount" content="1483">
 
 
 
@@ -131,7 +131,7 @@
         <div class="post-category">
             <a href="/categories/security/"> security </a>
             </div>
-          <span class="more-meta"> 约 1225 字 </span>
+          <span class="more-meta"> 约 1483 字 </span>
           <span class="more-meta"> 预计阅读 3 分钟 </span>
         <span id="busuanzi_container_page_pv" class="more-meta"> <span id="busuanzi_value_page_pv"><img src="/img/spinner.svg" alt="spinner.svg"/></span> 次阅读 </span>
       </div>
@@ -154,10 +154,12 @@
 <li><a href="#基于布尔的盲注">基于布尔的盲注</a></li>
 <li><a href="#基于报错的盲注">基于报错的盲注</a></li>
 <li><a href="#基于时间的盲注">基于时间的盲注</a></li>
+<li><a href="#导入导出相关操作">导入导出相关操作</a></li>
 </ul></li>
 <li><a href="#notice">Notice</a></li>
 <li><a href="#less-1-4">Less-1~4</a></li>
 <li><a href="#less-5">Less-5</a></li>
+<li><a href="#less-7">Less-7</a></li>
 </ul></li>
 </ul>
 </nav>
@@ -276,6 +278,15 @@ ERROR 1060 (42S21): Duplicate column name &#39;name&#39;</pre></td></tr></table>
 <li><code>benchmark()</code> 函数：例如， <code>select if(mid(version(),1,1)=8,benchmark(5000000,md5('hack_by_p1n93r')),null) from users;</code> 。</li>
 </ul>
 
+<h3 id="导入导出相关操作">导入导出相关操作</h3>
+
+<ul>
+<li><code>load_file()</code> 函数：例如，<code>select load_file(0x433a5c55736572735c31383134385c4465736b746f705c6e6578742e747874);</code> 。</li>
+<li><code>select ... into outfile</code> 函数：例如，<code>select 0x6861636b65645f62795f70316e393372 into outfile 'C:/Users/18148/Desktop/hack.txt';</code> 。</li>
+</ul>
+
+<p><strong><em>注意：</em></strong> :高版本的mysql，即使是root权限，也默认不允许进行文件的导入和导出，只能在mysql的secure-file-priv设置的目录下进行导入和导出操作。</p>
+
 <h2 id="notice">Notice</h2>
 
 <p>只打一些有代表性的过关，目的是过一遍理论知识。没时间全部打，事实上很多关没有代表性，还不如打CTF的SQLI，比较有代表性。</p>
@@ -309,6 +320,34 @@ ERROR 1060 (42S21): Duplicate column name &#39;name&#39;</pre></td></tr></table>
 <h2 id="less-5">Less-5</h2>
 
 <p>没有数据回显，但是查询成功和查询失败的响应有区别，所以可以用基于布尔和时间的盲注，且能显示错误信息，所以可以利用基于报错的盲注。</p>
+
+<p>① 基于布尔的盲注例子如下：</p>
+
+<p><img src="./../media/2020-12-09-1.png" alt="基于布尔的盲注" /></p>
+
+<p>② 基于时间的盲注例子如下(payload的设置和前面一样)：</p>
+
+<p><img src="./../media/2020-12-09-2.png" alt="基于时间的盲注" /></p>
+
+<p>③ 基于报错的盲注例子如下：</p>
+
+<p><img src="./../media/2020-12-09-3.png" alt="基于报错的盲注" /></p>
+
+<h2 id="less-7">Less-7</h2>
+
+<p>这一关就是提示我们使用文件导入导出来进行通关，这里演示使用load_file()和outfile的常用手法：</p>
+
+<p>① 使用 <code>outfile</code> 写入可执行文件：</p>
+
+<p><img src="./../media/2020-12-09-4.png" alt="outfile写入可执行文件" /></p>
+
+<p><img src="./../media/2020-12-09-5.png" alt="outfile写入成功" /></p>
+
+<p>② 使用 <code>load_file()</code> 和 <code>outfile</code> 结合：</p>
+
+<p><img src="./../media/2020-12-09-6.png" alt="结合使用" /></p>
+
+<p><img src="./../media/2020-12-09-7.png" alt="结合效果" /></p>
 
     </div>
 
