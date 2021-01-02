@@ -6,10 +6,19 @@
     <description>Recent content in Java on P1n93r - 博学而精一</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-cn</language>
-    <lastBuildDate>Sat, 05 Sep 2020 10:34:36 +0800</lastBuildDate>
+    <lastBuildDate>Fri, 01 Jan 2021 21:28:36 +0800</lastBuildDate>
     
 	<atom:link href="https://p1n93r.github.io/categories/java/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>Java注解</title>
+      <link>https://p1n93r.github.io/post/java/java%E6%B3%A8%E8%A7%A3/</link>
+      <pubDate>Fri, 01 Jan 2021 21:28:36 +0800</pubDate>
+      
+      <guid>https://p1n93r.github.io/post/java/java%E6%B3%A8%E8%A7%A3/</guid>
+      <description>元注解 元注解的作用就是 注解其他注解 ，Java5.0定义了以下4个标准元注解，它们被用来对其他注解类型作说明： @Target @Retention @Documented @Inherited @Target @Target说明了注</description>
+    </item>
     
     <item>
       <title>Lambda表达式</title>
