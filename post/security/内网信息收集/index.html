@@ -1,0 +1,749 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>第二章：内网信息收集 - P1n93r - 博学而精一</title>
+  <meta name="renderer" content="webkit" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+<meta name="author" content="P1n93r" /><meta name="description" content="概述 当进入内网后，面对的是一片黑暗森林。我们需要对当前网络环境进行判断，涉及如下几个方面： 我是谁：对当前机器角色的判断。 这是哪：对当前机器所" /><meta name="keywords" content="SSM, Java, Web, Android" />
+
+
+
+
+
+
+<meta name="generator" content="Hugo 0.57.2 with theme even" />
+
+
+<link rel="canonical" href="https://p1n93r.github.io/post/security/%E5%86%85%E7%BD%91%E4%BF%A1%E6%81%AF%E6%94%B6%E9%9B%86/" />
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/manifest.json">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+<link href="/dist/even.c2a46f00.min.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.css" integrity="sha256-7TyXnr2YU040zfSP+rEcz29ggW4j56/ujTPwjMzyqFY=" crossorigin="anonymous">
+
+
+<meta property="og:title" content="第二章：内网信息收集" />
+<meta property="og:description" content="概述 当进入内网后，面对的是一片黑暗森林。我们需要对当前网络环境进行判断，涉及如下几个方面： 我是谁：对当前机器角色的判断。 这是哪：对当前机器所" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://p1n93r.github.io/post/security/%E5%86%85%E7%BD%91%E4%BF%A1%E6%81%AF%E6%94%B6%E9%9B%86/" />
+<meta property="article:published_time" content="2021-01-23T16:07:36+08:00" />
+<meta property="article:modified_time" content="2021-01-23T16:07:36+08:00" />
+<meta itemprop="name" content="第二章：内网信息收集">
+<meta itemprop="description" content="概述 当进入内网后，面对的是一片黑暗森林。我们需要对当前网络环境进行判断，涉及如下几个方面： 我是谁：对当前机器角色的判断。 这是哪：对当前机器所">
+
+
+<meta itemprop="datePublished" content="2021-01-23T16:07:36&#43;08:00" />
+<meta itemprop="dateModified" content="2021-01-23T16:07:36&#43;08:00" />
+<meta itemprop="wordCount" content="1594">
+
+
+
+<meta itemprop="keywords" content="" />
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="第二章：内网信息收集"/>
+<meta name="twitter:description" content="概述 当进入内网后，面对的是一片黑暗森林。我们需要对当前网络环境进行判断，涉及如下几个方面： 我是谁：对当前机器角色的判断。 这是哪：对当前机器所"/>
+
+<!--[if lte IE 9]>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
+<![endif]-->
+
+<!--[if lt IE 9]>
+  <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+<![endif]-->
+
+</head>
+<body>
+  <div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/" class="logo">P1n93r</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    <a href="/">
+        <li class="mobile-menu-item">Home</li>
+      </a><a href="/post/">
+        <li class="mobile-menu-item">Archives</li>
+      </a><a href="/tags/">
+        <li class="mobile-menu-item">Tags</li>
+      </a><a href="/categories/">
+        <li class="mobile-menu-item">Categories</li>
+      </a><a href="/about/">
+        <li class="mobile-menu-item">About</li>
+      </a>
+  </ul>
+</nav>
+  <div class="container" id="mobile-panel">
+    <header id="header" class="header">
+        <div class="logo-wrapper">
+  <a href="/" class="logo">P1n93r</a>
+</div>
+
+<nav class="site-navbar">
+  <ul id="menu" class="menu">
+    <li class="menu-item">
+        <a class="menu-item-link" href="/">Home</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/">Archives</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/tags/">Tags</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/categories/">Categories</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/about/">About</a>
+      </li>
+  </ul>
+</nav>
+    </header>
+
+    <main id="main" class="main">
+      <div class="content-wrapper">
+        <div id="content" class="content">
+          <article class="post">
+    
+    <header class="post-header">
+      <h1 class="post-title">第二章：内网信息收集</h1>
+
+      <div class="post-meta">
+        <span class="post-time"> 2021-01-23 </span>
+        <div class="post-category">
+            <a href="/categories/security/"> security </a>
+            </div>
+          <span class="more-meta"> 约 1594 字 </span>
+          <span class="more-meta"> 预计阅读 4 分钟 </span>
+        <span id="busuanzi_container_page_pv" class="more-meta"> <span id="busuanzi_value_page_pv"><img src="/img/spinner.svg" alt="spinner.svg"/></span> 次阅读 </span>
+      </div>
+    </header>
+
+    <div class="post-toc" id="post-toc">
+  <h2 class="post-toc-title">文章目录</h2>
+  <div class="post-toc-content always-active">
+    <nav id="TableOfContents">
+<ul>
+<li>
+<ul>
+<li><a href="#概述">概述</a></li>
+<li><a href="#收集本机信息">收集本机信息</a>
+<ul>
+<li><a href="#手动信息收集">手动信息收集</a>
+<ul>
+<li><a href="#查询网络配置信息">查询网络配置信息</a></li>
+<li><a href="#查询操作系统及软件的信息">查询操作系统及软件的信息</a></li>
+<li><a href="#查询本机服务信息">查询本机服务信息</a></li>
+<li><a href="#查询进程列表">查询进程列表</a></li>
+<li><a href="#查询启动程序信息">查询启动程序信息</a></li>
+<li><a href="#查询计划任务">查询计划任务</a></li>
+<li><a href="#查询主机开机时间">查询主机开机时间</a></li>
+<li><a href="#查询用户列表">查询用户列表</a></li>
+<li><a href="#列出或断开本地计算机与所连接的客户端之间的会话">列出或断开本地计算机与所连接的客户端之间的会话</a></li>
+<li><a href="#查看端口列表">查看端口列表</a></li>
+<li><a href="#查看补丁列表">查看补丁列表</a></li>
+<li><a href="#查看本机共享列表">查看本机共享列表</a></li>
+<li><a href="#查询路由表及所有可用接口的arp缓存表">查询路由表及所有可用接口的ARP缓存表</a></li>
+<li><a href="#查询防火墙相关配置">查询防火墙相关配置</a></li>
+<li><a href="#查询代理配置情况">查询代理配置情况</a></li>
+<li><a href="#自动化信息收集">自动化信息收集</a></li>
+</ul></li>
+</ul></li>
+</ul></li>
+</ul>
+</nav>
+  </div>
+</div>
+    <div class="post-content">
+      
+
+<h2 id="概述">概述</h2>
+
+<p>当进入内网后，面对的是一片黑暗森林。我们需要对当前网络环境进行判断，涉及如下几个方面：</p>
+
+<ul>
+<li>我是谁：对当前机器角色的判断。</li>
+<li>这是哪：对当前机器所处网络环境的拓扑结构进行分析判断。</li>
+<li>我在哪：对当前机器所处区域的判断。</li>
+</ul>
+
+<h2 id="收集本机信息">收集本机信息</h2>
+
+<h3 id="手动信息收集">手动信息收集</h3>
+
+<p>本机信息收集包括：操作系统、权限、内网ip地址段、杀毒软件、端口、服务、补丁更新频率、网络连接、共享和会话等。如果是域内主机，操作系统、杀毒软件、应用软件、补丁和服务一般是批量安装的。</p>
+
+<h4 id="查询网络配置信息">查询网络配置信息</h4>
+
+<p>输入如下命令获取本机的网络配置信息：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><span class="lnt">1
+</span></pre></td>
+<td class="lntd">
+<pre class="chroma">ipconfig /all</pre></td></tr></table>
+</div>
+</div>
+<p>如图所示：</p>
+
+<p><img src="./../media/2021-01-23-1.jpg" alt="本机网络配置信息" /></p>
+
+<h4 id="查询操作系统及软件的信息">查询操作系统及软件的信息</h4>
+
+<p>（1）查询操作系统和版本信息(cmd下无乱码，ps下有乱码)：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><span class="lnt">1
+</span></pre></td>
+<td class="lntd">
+<pre class="chroma">systeminfo | findstr /B /C:&#34;OS&#34;</pre></td></tr></table>
+</div>
+</div>
+<p>如图所示：</p>
+
+<p><img src="./../media/2021-01-23-2.jpg" alt="查看本机操作系统及版本" /></p>
+
+<p>（2）查看系统体系结构(只能cmd下执行)：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><span class="lnt">1
+</span></pre></td>
+<td class="lntd">
+<pre class="chroma">echo %PROCESSOR_ARCHITECTURE%</pre></td></tr></table>
+</div>
+</div>
+<p>如图所示：</p>
+
+<p><img src="./../media/2021-01-23-3.jpg" alt="查看本机系统体系结构" /></p>
+
+<p>（3）查看安装的软件及版本等：
+利用wmic命令，将结果输出到文本文件中：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><span class="lnt">1
+</span></pre></td>
+<td class="lntd">
+<pre class="chroma">wmic product get name,version</pre></td></tr></table>
+</div>
+</div>
+<p>如图所示：</p>
+
+<p><img src="./../media/2021-01-23-4.jpg" alt="查看本机安装的软件及版本" /></p>
+
+<p>利用powershell收集软件的版本信息：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><span class="lnt">1
+</span></pre></td>
+<td class="lntd">
+<pre class="chroma">powershell &#34;Get-WmiObject -class Win32_Product |Select-Object -Property name,version&#34;</pre></td></tr></table>
+</div>
+</div>
+<p>如图所示：</p>
+
+<p><img src="./../media/2021-01-23-5.jpg" alt="查看本机安装的软件和版本" /></p>
+
+<h4 id="查询本机服务信息">查询本机服务信息</h4>
+
+<p>执行如下命令查询本机服务信息：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><span class="lnt">1
+</span></pre></td>
+<td class="lntd">
+<pre class="chroma">wmic service list brief</pre></td></tr></table>
+</div>
+</div>
+<p>如图所示：</p>
+
+<p><img src="./../media/2021-01-23-6.jpg" alt="查看本机运行的服务" /></p>
+
+<h4 id="查询进程列表">查询进程列表</h4>
+
+<p>输入如下命令可以查看当前进程列表和进程用户，分析软件、邮件客户端、VPN和杀毒软件等进行：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><span class="lnt">1
+</span></pre></td>
+<td class="lntd">
+<pre class="chroma">tasklist</pre></td></tr></table>
+</div>
+</div>
+<p>如图所示：</p>
+
+<p><img src="./../media/2021-01-23-7.jpg" alt="查看当前运行的进程和进程用户" /></p>
+
+<p>输入如下命令查询进程信息：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><span class="lnt">1
+</span></pre></td>
+<td class="lntd">
+<pre class="chroma">wmic process list brief</pre></td></tr></table>
+</div>
+</div>
+<p>如图所示：</p>
+
+<p><img src="./../media/2021-01-23-8.jpg" alt="查看进行信息" /></p>
+
+<h4 id="查询启动程序信息">查询启动程序信息</h4>
+
+<p>执行如下命令查看启动程序信息：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><span class="lnt">1
+</span></pre></td>
+<td class="lntd">
+<pre class="chroma">wmic startup get command,caption</pre></td></tr></table>
+</div>
+</div>
+<p>如图所示：</p>
+
+<p><img src="./../media/2021-01-23-9.jpg" alt="查询启动程序信息" /></p>
+
+<h4 id="查询计划任务">查询计划任务</h4>
+
+<p>输入如下命令查询计划任务：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><span class="lnt">1
+</span></pre></td>
+<td class="lntd">
+<pre class="chroma">schtasks /query /fo LIST /v</pre></td></tr></table>
+</div>
+</div>
+<p>如图所示：</p>
+
+<p><img src="./../media/2021-01-23-10.jpg" alt="查询计划任务" /></p>
+
+<h4 id="查询主机开机时间">查询主机开机时间</h4>
+
+<p>执行如下命令查询主机的开机时间：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><span class="lnt">1
+</span></pre></td>
+<td class="lntd">
+<pre class="chroma">net statistics workstation</pre></td></tr></table>
+</div>
+</div>
+<p>如图所示：</p>
+
+<p><img src="./../media/2021-01-23-11.jpg" alt="查看主机开机时间" /></p>
+
+<h4 id="查询用户列表">查询用户列表</h4>
+
+<p>执行如下命令查询本机的用户列表</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><span class="lnt">1
+</span></pre></td>
+<td class="lntd">
+<pre class="chroma">net user</pre></td></tr></table>
+</div>
+</div>
+<p>如图所示：</p>
+
+<p><img src="./../media/2021-01-23-12.jpg" alt="获取用户列表" /></p>
+
+<p>执行如下命令查询本地管理员（通常包含域用户）信息：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><span class="lnt">1
+</span></pre></td>
+<td class="lntd">
+<pre class="chroma">net localgroup administrators</pre></td></tr></table>
+</div>
+</div>
+<p>如图所示：</p>
+
+<p><img src="./../media/2021-01-23-13.jpg" alt="查询本地管理员" /></p>
+
+<p>输入如下命令查询当前在线用户：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><span class="lnt">1
+</span></pre></td>
+<td class="lntd">
+<pre class="chroma">query user || qwinsta</pre></td></tr></table>
+</div>
+</div>
+<p>如图所示：</p>
+
+<p><img src="./../media/2021-01-23-14.jpg" alt="查询当前在线用户" /></p>
+
+<h4 id="列出或断开本地计算机与所连接的客户端之间的会话">列出或断开本地计算机与所连接的客户端之间的会话</h4>
+
+<p>输入如下命令即可：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><span class="lnt">1
+</span></pre></td>
+<td class="lntd">
+<pre class="chroma">net session</pre></td></tr></table>
+</div>
+</div>
+<p>如图所示：</p>
+
+<p><img src="./../media/2021-01-23-15.jpg" alt="列出或端口本地计算机与所连接的客户端之间的会话" /></p>
+
+<h4 id="查看端口列表">查看端口列表</h4>
+
+<p>执行如下命令，查询本机开放的端口列表、本机开放的端口所对应的服务和应用程序：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><span class="lnt">1
+</span></pre></td>
+<td class="lntd">
+<pre class="chroma">netstat -ano</pre></td></tr></table>
+</div>
+</div>
+<p>如图所示：</p>
+
+<p><img src="./../media/2021-01-23-16.jpg" alt="查看本机开发的端口和对应的服务" /></p>
+
+<h4 id="查看补丁列表">查看补丁列表</h4>
+
+<p>输入如下信息获取系统的详细信息，需要注意系统的版本、位数、域、补丁信息以及更新频率等：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><span class="lnt">1
+</span></pre></td>
+<td class="lntd">
+<pre class="chroma">systeminfo</pre></td></tr></table>
+</div>
+</div>
+<p>如图所示(可以看到还没打补丁的)：</p>
+
+<p><img src="./../media/2021-01-23-17.jpg" alt="查询补丁列表" /></p>
+
+<p>使用wmic查询安装在系统中的补丁，命令如下：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><span class="lnt">1
+</span></pre></td>
+<td class="lntd">
+<pre class="chroma">wmic qfe get Caption,Description,HotFixID,InstalledOn</pre></td></tr></table>
+</div>
+</div>
+<p>如图所示：</p>
+
+<p><img src="./../media/2021-01-23-18.jpg" alt="利用wmic查询补丁安装情况" /></p>
+
+<h4 id="查看本机共享列表">查看本机共享列表</h4>
+
+<p>执行如下命令查询本机共享列表和可访问的域共享列表：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><span class="lnt">1
+</span></pre></td>
+<td class="lntd">
+<pre class="chroma">net share</pre></td></tr></table>
+</div>
+</div>
+<p>如图所示：</p>
+
+<p><img src="./../media/2021-01-23-19.jpg" alt="查询本机的共享列表和可访问的域共享列表" /></p>
+
+<p>利用wmic查询本机的共享列表：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><span class="lnt">1
+</span></pre></td>
+<td class="lntd">
+<pre class="chroma">wmic share get name,path,status</pre></td></tr></table>
+</div>
+</div>
+<p>如图所示：</p>
+
+<p><img src="./../media/2021-01-23-20.jpg" alt="wmic查询本机的共享列表" /></p>
+
+<h4 id="查询路由表及所有可用接口的arp缓存表">查询路由表及所有可用接口的ARP缓存表</h4>
+
+<p>输入如下命令即可：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><span class="lnt">1
+</span><span class="lnt">2
+</span></pre></td>
+<td class="lntd">
+<pre class="chroma">route print
+arp -a</pre></td></tr></table>
+</div>
+</div>
+<p>如图所示：</p>
+
+<p><img src="./../media/2021-01-23-21.jpg" alt="查询路由表及所有可用接口的ARP缓存表" /></p>
+
+<h4 id="查询防火墙相关配置">查询防火墙相关配置</h4>
+
+<p>（1）关闭防护墙：
+windows server 2003及之前的版本，命令如下：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><span class="lnt">1
+</span></pre></td>
+<td class="lntd">
+<pre class="chroma">netsh firewall set opmode disable</pre></td></tr></table>
+</div>
+</div>
+<p>windows server 2003之后的版本，命令如下：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><span class="lnt">1
+</span></pre></td>
+<td class="lntd">
+<pre class="chroma">netsh advfirewall set allprofiles state off</pre></td></tr></table>
+</div>
+</div>
+<p>（2）查询防火墙配置</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><span class="lnt">1
+</span></pre></td>
+<td class="lntd">
+<pre class="chroma">netsh firewall shwo config</pre></td></tr></table>
+</div>
+</div>
+<p>（3）修改防火墙配置
+windows server 2003及之前的版本，允许执行程序全部连接，命令如下：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><span class="lnt">1
+</span></pre></td>
+<td class="lntd">
+<pre class="chroma">netsh firewall add allowedprogram c:\nc.exe &#34;allow nc&#34; enable</pre></td></tr></table>
+</div>
+</div>
+<p>windows server 2003之后的版本，情况如下：</p>
+
+<p>① 允许指定程序进入，命令如下：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><span class="lnt">1
+</span></pre></td>
+<td class="lntd">
+<pre class="chroma">netsh advfirewall firewall add rule name=&#34;pass nc&#34; dir=in action=allow program=&#34;C:\nc.exe&#34;</pre></td></tr></table>
+</div>
+</div>
+<p>② 允许指定程序退出，命令如下：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><span class="lnt">1
+</span></pre></td>
+<td class="lntd">
+<pre class="chroma">netsh advfirewall firewall add rule name=&#34;Allow nc&#34; dir=out action=allow program=&#34;C:\nc.exe&#34;</pre></td></tr></table>
+</div>
+</div>
+<p>③ 允许3389端口放行，命令如下：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><span class="lnt">1
+</span></pre></td>
+<td class="lntd">
+<pre class="chroma">netsh advfirewall firewall add rule name=&#34;Remote Desktop&#34; protocal=TCP dir=in localport=3389 action=allow</pre></td></tr></table>
+</div>
+</div>
+<p>（4）自定义防火墙日志的存储位置：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><span class="lnt">1
+</span></pre></td>
+<td class="lntd">
+<pre class="chroma">netsh advfirewall set currentprofile logging filename &#34;C:\windows\temp\fw.log&#34;</pre></td></tr></table>
+</div>
+</div>
+<h4 id="查询代理配置情况">查询代理配置情况</h4>
+
+<p>执行如下命令，可以查询服务器127.0.0.1的1080端口的代理配置信息：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><span class="lnt">1
+</span></pre></td>
+<td class="lntd">
+<pre class="chroma">reg query &#34;HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Internet Settings&#34;</pre></td></tr></table>
+</div>
+</div>
+<p>如图所示：</p>
+
+<p><img src="./../media/2021-01-23-22.jpg" alt="查询代理配置情况" /></p>
+
+<h4 id="自动化信息收集">自动化信息收集</h4>
+
+<p>通过前面的学习，也发现使用wmic进行本机信息收集比较方便和易于阅读，所以我们可以使用网上开源的利用wmic进行自动化信息收集的脚本来进行信息收集。</p>
+
+<p>这里推荐使用fuzzysecurity上的一个利用wmic进行本机信息收集的一个bat脚本，内容如下：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span></pre></td>
+<td class="lntd">
+<pre class="chroma">for /f &#34;delims=&#34; %%A in (&#39;dir /s /b %WINDIR%\system32\*htable.xsl&#39;) do set &#34;var=%%A&#34;
+
+wmic process get CSName,Description,ExecutablePath,ProcessId /format:&#34;%var%&#34; &gt;&gt; out.html
+wmic service get Caption,Name,PathName,ServiceType,Started,StartMode,StartName /format:&#34;%var%&#34; &gt;&gt; out.html
+wmic USERACCOUNT list full /format:&#34;%var%&#34; &gt;&gt; out.html
+wmic group list full /format:&#34;%var%&#34; &gt;&gt; out.html
+wmic nicconfig where IPEnabled=&#39;true&#39; get Caption,DefaultIPGateway,Description,DHCPEnabled,DHCPServer,IPAddress,IPSubnet,MACAddress /format:&#34;%var%&#34; &gt;&gt; out.html
+wmic volume get Label,DeviceID,DriveLetter,FileSystem,Capacity,FreeSpace /format:&#34;%var%&#34; &gt;&gt; out.html
+wmic netuse list full /format:&#34;%var%&#34; &gt;&gt; out.html
+wmic qfe get Caption,Description,HotFixID,InstalledOn /format:&#34;%var%&#34; &gt;&gt; out.html
+wmic startup get Caption,Command,Location,User /format:&#34;%var%&#34; &gt;&gt; out.html
+wmic PRODUCT get Description,InstallDate,InstallLocation,PackageCache,Vendor,Version /format:&#34;%var%&#34; &gt;&gt; out.html
+wmic os get name,version,InstallDate,LastBootUpTime,LocalDateTime,Manufacturer,RegisteredUser,ServicePackMajorVersion,SystemDirectory /format:&#34;%var%&#34; &gt;&gt; out.html
+wmic Timezone get DaylightName,Description,StandardName /format:&#34;%var%&#34; &gt;&gt; out.html</pre></td></tr></table>
+</div>
+</div>
+<p>作用就是执行一些wmic命令，输出到当前执行目录的out.html文件夹中。</p>
+
+    </div>
+
+    <div class="post-copyright">
+  <p class="copyright-item">
+    <span class="item-title">文章作者</span>
+    <span class="item-content">P1n93r</span>
+  </p>
+  <p class="copyright-item">
+    <span class="item-title">上次更新</span>
+    <span class="item-content">
+        2021-01-23
+        
+    </span>
+  </p>
+  
+  
+</div>
+<div class="post-reward">
+  <input type="checkbox" name="reward" id="reward" hidden />
+  <label class="reward-button" for="reward">赞赏支持</label>
+  <div class="qr-code">
+    
+    <label class="qr-code-image" for="reward">
+        <img class="image" src="/pay/wechat.jpg">
+        <span>微信打赏</span>
+      </label>
+    <label class="qr-code-image" for="reward">
+        <img class="image" src="/pay/alipay.jpg">
+        <span>支付宝打赏</span>
+      </label>
+  </div>
+</div><footer class="post-footer">
+      
+      <nav class="post-nav">
+        
+        <a class="next" href="/post/security/%E5%86%85%E7%BD%91%E6%B8%97%E9%80%8F%E5%9F%BA%E7%A1%80/">
+            <span class="next-text nav-default">第一章：内网渗透基础</span>
+            <span class="next-text nav-mobile">下一篇</span>
+            <i class="iconfont icon-right"></i>
+          </a>
+      </nav>
+    </footer>
+  </article>
+        </div>
+        <div id="disqus_thread"></div>
+    <script type="text/javascript">
+    (function() {
+      
+      
+      if (window.location.hostname === 'localhost') return;
+
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      var disqus_shortname = 'p1n93r';
+      dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+    </script>
+    <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+
+  
+
+  
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="social-links">
+      <a href="mailto:pin83r@gmail.com" class="iconfont icon-email" title="email"></a>
+      <a href="https://github.com/p1n93r" class="iconfont icon-github" title="github"></a>
+  <a href="https://p1n93r.github.io/index.xml" type="application/rss+xml" class="iconfont icon-rss" title="rss"></a>
+</div>
+
+<div class="copyright">
+  <span class="power-by">
+    由 <a class="hexo-link" href="https://gohugo.io">Hugo</a> 强力驱动
+  </span>
+  <span class="division">|</span>
+  <span class="theme-info">
+    主题 - 
+    <a class="theme-link" href="https://github.com/olOwOlo/hugo-theme-even">Even</a>
+  </span>
+
+  <div class="busuanzi-footer">
+    <span id="busuanzi_container_site_pv"> 本站总访问量 <span id="busuanzi_value_site_pv"><img src="/img/spinner.svg" alt="spinner.svg"/></span> 次 </span>
+      <span class="division">|</span>
+    <span id="busuanzi_container_site_uv"> 本站总访客数 <span id="busuanzi_value_site_uv"><img src="/img/spinner.svg" alt="spinner.svg"/></span> 人 </span>
+  </div>
+
+  <span class="copyright-year">
+    &copy; 
+    2019 - 
+    2021
+    <span class="heart">
+      <i class="iconfont icon-heart"></i>
+    </span>
+    <span class="author">P1n93r</span>
+  </span>
+</div>
+    </footer>
+
+    <div class="back-to-top" id="back-to-top">
+      <i class="iconfont icon-up"></i>
+    </div>
+  </div>
+  
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/slideout@1.0.1/dist/slideout.min.js" integrity="sha256-t+zJ/g8/KXIJMjSVQdnibt4dlaDxc9zXr/9oNPeWqdg=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.js" integrity="sha256-XVLffZaxoWfGUEbdzuLi7pwaUJv1cecsQJQqGLe7axY=" crossorigin="anonymous"></script>
+<script type="text/javascript" src="/dist/even.26188efa.min.js"></script>
+
+
+
+
+
+
+
+
+</body>
+</html>
