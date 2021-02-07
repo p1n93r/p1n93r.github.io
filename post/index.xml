@@ -6,10 +6,28 @@
     <description>Recent content in Posts on P1n93r - 博学而精一</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-cn</language>
-    <lastBuildDate>Sat, 23 Jan 2021 16:07:36 +0800</lastBuildDate>
+    <lastBuildDate>Sun, 07 Feb 2021 22:07:36 +0800</lastBuildDate>
     
 	<atom:link href="https://p1n93r.github.io/post/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>第三章：隐藏通信隧道技术</title>
+      <link>https://p1n93r.github.io/post/security/%E9%9A%90%E8%97%8F%E9%80%9A%E4%BF%A1%E9%9A%A7%E9%81%93%E6%8A%80%E6%9C%AF/</link>
+      <pubDate>Sun, 07 Feb 2021 22:07:36 +0800</pubDate>
+      
+      <guid>https://p1n93r.github.io/post/security/%E9%9A%90%E8%97%8F%E9%80%9A%E4%BF%A1%E9%9A%A7%E9%81%93%E6%8A%80%E6%9C%AF/</guid>
+      <description>基础知识 概述 下面所说的隧道，就是一种绕过端口屏蔽的通信方式，其实也就是使用不同协议的通信，以达到绕过防火墙的目的。常见的隧道如下： 网络层：I</description>
+    </item>
+    
+    <item>
+      <title>Java安全</title>
+      <link>https://p1n93r.github.io/post/code_audit/java%E5%AE%89%E5%85%A8/</link>
+      <pubDate>Tue, 02 Feb 2021 17:52:36 +0800</pubDate>
+      
+      <guid>https://p1n93r.github.io/post/code_audit/java%E5%AE%89%E5%85%A8/</guid>
+      <description>Java反射 Java安全中最火的不过反序列化漏洞，而反序列化漏洞离不开反射。通过反射可以为Java附加上动态特性。 Java中获取java.l</description>
+    </item>
     
     <item>
       <title>第二章：内网信息收集</title>

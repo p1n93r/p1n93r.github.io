@@ -6,10 +6,19 @@
     <description>Recent content in code_audit on P1n93r - 博学而精一</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-cn</language>
-    <lastBuildDate>Sat, 16 Jan 2021 12:28:36 +0800</lastBuildDate>
+    <lastBuildDate>Tue, 02 Feb 2021 17:52:36 +0800</lastBuildDate>
     
 	<atom:link href="https://p1n93r.github.io/categories/code_audit/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>Java安全</title>
+      <link>https://p1n93r.github.io/post/code_audit/java%E5%AE%89%E5%85%A8/</link>
+      <pubDate>Tue, 02 Feb 2021 17:52:36 +0800</pubDate>
+      
+      <guid>https://p1n93r.github.io/post/code_audit/java%E5%AE%89%E5%85%A8/</guid>
+      <description>Java反射 Java安全中最火的不过反序列化漏洞，而反序列化漏洞离不开反射。通过反射可以为Java附加上动态特性。 Java中获取java.l</description>
+    </item>
     
     <item>
       <title>代码审计思路</title>
