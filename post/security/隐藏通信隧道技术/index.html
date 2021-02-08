@@ -50,7 +50,7 @@
 
 <meta itemprop="datePublished" content="2021-02-07T22:07:36&#43;08:00" />
 <meta itemprop="dateModified" content="2021-02-07T22:07:36&#43;08:00" />
-<meta itemprop="wordCount" content="596">
+<meta itemprop="wordCount" content="2267">
 
 
 
@@ -131,8 +131,8 @@
         <div class="post-category">
             <a href="/categories/security/"> security </a>
             </div>
-          <span class="more-meta"> 约 596 字 </span>
-          <span class="more-meta"> 预计阅读 2 分钟 </span>
+          <span class="more-meta"> 约 2267 字 </span>
+          <span class="more-meta"> 预计阅读 5 分钟 </span>
         <span id="busuanzi_container_page_pv" class="more-meta"> <span id="busuanzi_value_page_pv"><img src="/img/spinner.svg" alt="spinner.svg"/></span> 次阅读 </span>
       </div>
     </header>
@@ -158,6 +158,26 @@
 <li><a href="#网络层隧道技术">网络层隧道技术</a>
 <ul>
 <li><a href="#ipv6隧道">IPv6隧道</a></li>
+<li><a href="#icmp隧道">ICMP隧道</a>
+<ul>
+<li><a href="#icmpsh">icmpsh</a></li>
+<li><a href="#pingtunnel">PingTunnel</a></li>
+</ul></li>
+</ul></li>
+<li><a href="#传输层隧道协议">传输层隧道协议</a>
+<ul>
+<li><a href="#lcx端口转发">lcx端口转发</a>
+<ul>
+<li><a href="#内网端口转发">内网端口转发</a></li>
+<li><a href="#本地端口映射">本地端口映射</a></li>
+</ul></li>
+<li><a href="#netcat">netcat</a>
+<ul>
+<li><a href="#banner抓取">Banner抓取</a></li>
+<li><a href="#连接远程主机">连接远程主机</a></li>
+<li><a href="#端口扫描">端口扫描</a></li>
+<li><a href="#文件传输">文件传输</a></li>
+</ul></li>
 </ul></li>
 </ul></li>
 </ul>
@@ -234,6 +254,178 @@ nc -vz 49.234.105.98 22</pre></td></tr></table>
 <p>网络层最常用ICMP和IPv6两个协议进行隧道传输。</p>
 
 <h3 id="ipv6隧道">IPv6隧道</h3>
+
+<ul>
+<li>IPv6是用来设计为了替代IPv4的一种新协议。</li>
+<li>IPv6隧道技术，就是<strong>将Ipv4作为隧道载体，将Ipv6报文整体封装在IPv4数据报文中</strong>。</li>
+</ul>
+
+<p>一个示意图如下所示：</p>
+
+<p><img src="./../media/2021-02-08-1.jpg" alt="IPv6隧道示意图" /></p>
+
+<p>支持IPv6隧道的工具有：socat,6tunnel,nt6tunnel等。</p>
+
+<h3 id="icmp隧道">ICMP隧道</h3>
+
+<p>ICMP协议比较特殊，通信双方不需要开放端口。如果攻击者上层隧道失败了，那么可以尝试使用ping建立ICMP隧道，将TCP/UDP数据封装到ICMP的ping数据包中，从而绕过防火墙，实现不受限制的网络访问。</p>
+
+<p>常用的ICMP隧道工具有icmpsh、PingTunnel、icmptunnel、powershell icmp等。</p>
+
+<h4 id="icmpsh">icmpsh</h4>
+
+<p>使用此工具不需要管理员权限，且跨平台。但是<strong>slave只能是windows平台</strong>。我这里在linux上将icmpsh-m.c编译成master.out运行作为master，然后windows运行icmpsh.exe来连接master，将shell反弹给master，具体操作如下：</p>
+
+<p>首先在攻击机上关闭本机的ICMP应答，防止shell不稳定：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><span class="lnt">1
+</span><span class="lnt">2
+</span></pre></td>
+<td class="lntd">
+<pre class="chroma"># 设置为0就是开启
+sysctl -w net.ipv4.icmp_echo_ignore_all=1</pre></td></tr></table>
+</div>
+</div>
+<p>然后linux开启master监听如下：</p>
+
+<p><img src="./../media/2021-02-08-2.jpg" alt="icmpsh开启master" /></p>
+
+<p>然后windows反弹shell连接master如下：</p>
+
+<p><img src="./../media/2021-02-08-3.jpg" alt="icmpsh反弹shell" /></p>
+
+<p>过一会，就会发现linux已经反弹得到了windows的shell：</p>
+
+<p><img src="./../media/2021-02-08-4.jpg" alt="icmpsh反弹成功" /></p>
+
+<p>此工具的一些参数说明如下：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span></pre></td>
+<td class="lntd">
+<pre class="chroma">-t host            host ip address to send ping requests to. This option is mandatory!
+
+-r                 send a single test icmp request containing the string &#34;Test1234&#34; and then quit. 
+                   This is for testing the connection.
+
+-d milliseconds    delay between requests in milliseconds 
+
+-o milliseconds    timeout of responses in milliseconds. If a response has not received in time, 
+                   the slave will increase a counter of blanks. If that counter reaches a limit, the slave will quit.
+                   The counter is set back to 0 if a response was received.
+
+-b num             limit of blanks (unanswered icmp requests before quitting
+
+-s bytes           maximal data buffer size in bytes</pre></td></tr></table>
+</div>
+</div>
+<h4 id="pingtunnel">PingTunnel</h4>
+
+<p>PingTunnel也是一个常用的ICMP隧道工具，可以跨平台使用，且<strong>可以设置密码，也支持socke5、tcp/udp隧道。</strong></p>
+
+<p>如果内网的机器A不能直接访问机器B，但是机器A可以ping通机器B，此时可以尝试将机器A与外网建立ICMP隧道，将机器A作为跳板与机器B利用ICMP通信。例如如下图示：</p>
+
+<p><img src="./../media/2021-02-08-5.jpg" alt="PingTunnel图示" /></p>
+
+<p>详情可以查看链接：<a href="https://github.com/esrrhs/pingtunnel">PingTunnel工具</a></p>
+
+<h2 id="传输层隧道协议">传输层隧道协议</h2>
+
+<p>传输层包括TCP隧道、UDP隧道和常规端口转发等。</p>
+
+<h3 id="lcx端口转发">lcx端口转发</h3>
+
+<p>端口转发最经典的工具，是一个基于socket套接字实现的端口转发工具。<strong>有windows和linux两个版本，windows版本为lcx.exe,linux版本为portmap</strong>，一个正常的socket隧道必须具备两端：一端服务端，监听一个端口，等待客户端的链接；一段作为客户端，通过服务端的ip和端口与服务器主动进行连接。</p>
+
+<h4 id="内网端口转发">内网端口转发</h4>
+
+<p>可以使用内网端口转发实现内网穿透，将内网机器的端口转发到公网vps，然后通过公网vps就可以连接内网的端口了。</p>
+
+<p>例如将内网的22端口抓发到公网：</p>
+
+<p><img src="./../media/2021-02-08-6.jpg" alt="内网端口转发到公网" /></p>
+
+<p>然后公网vps启动监听：</p>
+
+<p><img src="./../media/2021-02-08-7.jpg" alt="公网vps端口转发监听" /></p>
+
+<p>然后我们访问公网vps的33579端口就可以和内网的被转发机器的22端口通信了：</p>
+
+<p><img src="./../media/2021-02-08-8.jpg" alt="内网通信" /></p>
+
+<h4 id="本地端口映射">本地端口映射</h4>
+
+<p>如果目标服务器的某些端口无法通过防火墙，可以将目标服务器相应端口的数据传到防火墙允许的其他端口。在靶机上执行如下命令，就可以通过连接目标的80端口转发到22端口：</p>
+
+<p><img src="./../media/2021-02-08-9.jpg" alt="本地端口转发" /></p>
+
+<h3 id="netcat">netcat</h3>
+
+<p>netcat也就是大家常用的nc，俗称网络界的瑞士军刀，基于TCP/UDP协议。一些常用参数如下：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span><span class="lnt">8
+</span><span class="lnt">9
+</span></pre></td>
+<td class="lntd">
+<pre class="chroma">-d:后台模式。
+-e:程序重定向，正向shell用。
+-l:使用监听模式，管理和控制传入的数据。
+-n:直接使用ip地址，不通过域名服务器解析。
+-o &lt;输出文件&gt;:指定文件名，把往来传输的数据转换为16进制字节码保存在该文件中。
+-p &lt;端口&gt;:设置本地主机通信端口。
+-u:使用UDP传输协议。
+-v:详细输出。
+-z:将输入/输出功能关闭，仅在用于扫描通信端口时使用。</pre></td></tr></table>
+</div>
+</div>
+<h4 id="banner抓取">Banner抓取</h4>
+
+<p>命令如下：</p>
+
+<p><img src="./../media/2021-02-08-10.jpg" alt="Banner抓取" /></p>
+
+<h4 id="连接远程主机">连接远程主机</h4>
+
+<p>也就是正向的nc连接，例如靶机先开启监听，重定向/bash/sh，如下所示：</p>
+
+<p><img src="./../media/2021-02-08-11.jpg" alt="靶机正向nc-shell" /></p>
+
+<p>然后nc正向连接shell，如下所示：</p>
+
+<p><img src="./../media/2021-02-08-12.jpg" alt="nc正向连接shell" /></p>
+
+<h4 id="端口扫描">端口扫描</h4>
+
+<p>如果只是想查看目标某个端口是否打开，可以使用nc的 <code>-v</code> 选项即可。如果想批量扫描端口段，可以使用nc的 <code>-z</code> 选项：</p>
+
+<p><img src="./../media/2021-02-08-13.jpg" alt="nc端口扫描" /></p>
+
+<h4 id="文件传输">文件传输</h4>
+
+<p>使用nc还可以传输文件呦！例如在本地输入如下命令：</p>
 
     </div>
 
