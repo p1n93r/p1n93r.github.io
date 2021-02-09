@@ -50,7 +50,7 @@
 
 <meta itemprop="datePublished" content="2021-02-07T22:07:36&#43;08:00" />
 <meta itemprop="dateModified" content="2021-02-07T22:07:36&#43;08:00" />
-<meta itemprop="wordCount" content="2267">
+<meta itemprop="wordCount" content="3477">
 
 
 
@@ -131,8 +131,8 @@
         <div class="post-category">
             <a href="/categories/security/"> security </a>
             </div>
-          <span class="more-meta"> 约 2267 字 </span>
-          <span class="more-meta"> 预计阅读 5 分钟 </span>
+          <span class="more-meta"> 约 3477 字 </span>
+          <span class="more-meta"> 预计阅读 7 分钟 </span>
         <span id="busuanzi_container_page_pv" class="more-meta"> <span id="busuanzi_value_page_pv"><img src="/img/spinner.svg" alt="spinner.svg"/></span> 次阅读 </span>
       </div>
     </header>
@@ -177,7 +177,17 @@
 <li><a href="#连接远程主机">连接远程主机</a></li>
 <li><a href="#端口扫描">端口扫描</a></li>
 <li><a href="#文件传输">文件传输</a></li>
+<li><a href="#获取shell">获取shell</a></li>
+<li><a href="#内网代理">内网代理</a></li>
 </ul></li>
+<li><a href="#powercat">powercat</a></li>
+</ul></li>
+<li><a href="#应用层隧道技术">应用层隧道技术</a>
+<ul>
+<li><a href="#ssh协议">SSH协议</a></li>
+<li><a href="#本地转发">本地转发</a></li>
+<li><a href="#远程转发">远程转发</a></li>
+<li><a href="#动态转发">动态转发</a></li>
 </ul></li>
 </ul></li>
 </ul>
@@ -426,6 +436,119 @@ sysctl -w net.ipv4.icmp_echo_ignore_all=1</pre></td></tr></table>
 <h4 id="文件传输">文件传输</h4>
 
 <p>使用nc还可以传输文件呦！例如在本地输入如下命令：</p>
+
+<p>例如机器A上存在一个test.txt文件，想传输到机器B上，那么可以先在机器B上输入如下命令：</p>
+
+<p><img src="./../media/2021-02-09-1.jpg" alt="nc传输文件" /></p>
+
+<p>机器A上输入如下命令将本机上的test.txt传输过去：</p>
+
+<p><img src="./../media/2021-02-09-2.jpg" alt="nc传输文件" /></p>
+
+<h4 id="获取shell">获取shell</h4>
+
+<p>nc用的最多的就是获取shell，分为正向和反向。一般反弹shell用的多。正向连接shell举个linux下的例子如下：</p>
+
+<p>攻击机开启监听，如下：</p>
+
+<p><img src="./../media/2021-02-09-3.jpg" alt="nc正向连接shell" /></p>
+
+<p>靶机正向连接攻击机转发shell：</p>
+
+<p><img src="./../media/2021-02-09-4.jpg" alt="nc正向连接shell" /></p>
+
+<p>然后攻击机就获取靶机的shell了：</p>
+
+<p><img src="./../media/2021-02-09-5.jpg" alt="nc正向连接shell" /></p>
+
+<p>反弹shell的时候，一般靶机没有nc，所以一般需要依赖其他方式反弹shell。常用的有bash、php、python、perl等方式。</p>
+
+<h4 id="内网代理">内网代理</h4>
+
+<p>假设存在机器A、B、C。机器A是公网VPS、机器B和C是内网机器、机器B可以出网，但是C不能出网且无法从公网访问。现在想获取机器C的shell：</p>
+
+<p>首先机器A上开启nc监听：</p>
+
+<p><img src="./../media/2021-02-09-6.jpg" alt="nc内网代理" /></p>
+
+<p>在机器C上开启正向nc监听：</p>
+
+<p><img src="./../media/2021-02-09-7.jpg" alt="nc内网代理" /></p>
+
+<p>然后在机器B上开启转发，将机器C的shell转发到机器A上：</p>
+
+<p><img src="./../media/2021-02-09-8.jpg" alt="nc内网代理" /></p>
+
+<p>于是机器A就反弹到了机器C的shell，如下所示：</p>
+
+<p><img src="./../media/2021-02-09-9.jpg" alt="nc内网代理" /></p>
+
+<h3 id="powercat">powercat</h3>
+
+<p>powercat是nc的powershell版本。用法和nc差不多，但是 <strong>可以返回powershell。</strong></p>
+
+<h2 id="应用层隧道技术">应用层隧道技术</h2>
+
+<p>常用的隧道协议有SSH、HTTP、HTTPS和DNS。</p>
+
+<h3 id="ssh协议">SSH协议</h3>
+
+<p>SSH协议一般是可以通过防火墙的，而且很难区分合法的SSH会话和攻击者利用其他网络建立的隧道。</p>
+
+<p>常用参数如下：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span><span class="lnt">8
+</span></pre></td>
+<td class="lntd">
+<pre class="chroma">-C:压缩传输，提高传输速度。
+-f:将SSH传输转入后台执行，不占用当前shell。
+-N:建立静默连接（建立了连接，但是看不到具体会话）。
+-g:允许远程主机连接本地用于转发的端口。
+-L:本地端口转发。
+-R:远程端口转发.
+-D:动态转发（SOCKS代理）。
+-P:指定SSH端口。</pre></td></tr></table>
+</div>
+</div>
+<h3 id="本地转发">本地转发</h3>
+
+<p>例如，存在机器A、B、C。机器A为公网VPS，机器B、C内网服务器。现在想通过机器B（机器B有公网IP）作为跳板访问机器C的3389端口。可以如下操作：</p>
+
+<p>在机器A上输入如下命令后，就可以机器A的本地访问1152端口连接机器C的3389端口了：</p>
+
+<p><img src="./../media/2021-02-09-10.jpg" alt="ssh本地端口转发" /></p>
+
+<h3 id="远程转发">远程转发</h3>
+
+<p>例如，存在机器A、B、C。机器A为公网VPS，机器B、C内网服务器。现在想通过机器B（机器B没有公网IP，但是能出网）作为跳板访问机器C的3389端口。可以如下操作：</p>
+
+<p>在机器B上输入如下命令后，就可以在公网机器A的1152端口连接机器的3389端口了：</p>
+
+<p><img src="./../media/2021-02-09-11.jpg" alt="ssg远程转发" /></p>
+
+<p>由于我公网VPS无法连接桌面，所以我把公网VPS的1152端口转发到了1153端口，这样我们在本地连接公网VPS的1153端口就会转发到1152端口，从而与机器C的3389端口通信，如下所示：</p>
+
+<p><img src="./../media/2021-02-09-12.jpg" alt="ssh远程转发" /></p>
+
+<h3 id="动态转发">动态转发</h3>
+
+<p>例如，存在机器A、B、C。机器A为公网VPS，机器B、C内网服务器。现在想通过机器B（机器B有公网IP）作为socket4/5跳板漫游内网。可以如下操作：</p>
+
+<p>在机器A公网VPS上输入如下命令，建立一个动态的socket4/5隧道，需要输入机器B的密码：</p>
+
+<p><img src="./../media/2021-02-09-13.jpg" alt="动态转发" /></p>
+
+<p>然后浏览器设置socket代理就可以访问内网的应用了：</p>
+
+<p><img src="./../media/2021-02-09-14.jpg" alt="动态转发" /></p>
 
     </div>
 
