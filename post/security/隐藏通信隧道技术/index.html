@@ -50,7 +50,7 @@
 
 <meta itemprop="datePublished" content="2021-02-07T22:07:36&#43;08:00" />
 <meta itemprop="dateModified" content="2021-02-07T22:07:36&#43;08:00" />
-<meta itemprop="wordCount" content="3477">
+<meta itemprop="wordCount" content="4801">
 
 
 
@@ -131,8 +131,8 @@
         <div class="post-category">
             <a href="/categories/security/"> security </a>
             </div>
-          <span class="more-meta"> 约 3477 字 </span>
-          <span class="more-meta"> 预计阅读 7 分钟 </span>
+          <span class="more-meta"> 约 4801 字 </span>
+          <span class="more-meta"> 预计阅读 10 分钟 </span>
         <span id="busuanzi_container_page_pv" class="more-meta"> <span id="busuanzi_value_page_pv"><img src="/img/spinner.svg" alt="spinner.svg"/></span> 次阅读 </span>
       </div>
     </header>
@@ -184,11 +184,20 @@
 </ul></li>
 <li><a href="#应用层隧道技术">应用层隧道技术</a>
 <ul>
-<li><a href="#ssh协议">SSH协议</a></li>
+<li><a href="#ssh协议">SSH协议</a>
+<ul>
 <li><a href="#本地转发">本地转发</a></li>
 <li><a href="#远程转发">远程转发</a></li>
 <li><a href="#动态转发">动态转发</a></li>
 </ul></li>
+<li><a href="#http-https协议">HTTP/HTTPS协议</a></li>
+<li><a href="#dns协议">DNS协议</a>
+<ul>
+<li><a href="#查看dns的连通性">查看DNS的连通性</a></li>
+<li><a href="#dnscat2">dnscat2</a></li>
+</ul></li>
+</ul></li>
+<li><a href="#socket代理">Socket代理</a></li>
 </ul></li>
 </ul>
 </nav>
@@ -518,7 +527,7 @@ sysctl -w net.ipv4.icmp_echo_ignore_all=1</pre></td></tr></table>
 -P:指定SSH端口。</pre></td></tr></table>
 </div>
 </div>
-<h3 id="本地转发">本地转发</h3>
+<h4 id="本地转发">本地转发</h4>
 
 <p>例如，存在机器A、B、C。机器A为公网VPS，机器B、C内网服务器。现在想通过机器B（机器B有公网IP）作为跳板访问机器C的3389端口。可以如下操作：</p>
 
@@ -526,7 +535,7 @@ sysctl -w net.ipv4.icmp_echo_ignore_all=1</pre></td></tr></table>
 
 <p><img src="./../media/2021-02-09-10.jpg" alt="ssh本地端口转发" /></p>
 
-<h3 id="远程转发">远程转发</h3>
+<h4 id="远程转发">远程转发</h4>
 
 <p>例如，存在机器A、B、C。机器A为公网VPS，机器B、C内网服务器。现在想通过机器B（机器B没有公网IP，但是能出网）作为跳板访问机器C的3389端口。可以如下操作：</p>
 
@@ -538,7 +547,7 @@ sysctl -w net.ipv4.icmp_echo_ignore_all=1</pre></td></tr></table>
 
 <p><img src="./../media/2021-02-09-12.jpg" alt="ssh远程转发" /></p>
 
-<h3 id="动态转发">动态转发</h3>
+<h4 id="动态转发">动态转发</h4>
 
 <p>例如，存在机器A、B、C。机器A为公网VPS，机器B、C内网服务器。现在想通过机器B（机器B有公网IP）作为socket4/5跳板漫游内网。可以如下操作：</p>
 
@@ -549,6 +558,110 @@ sysctl -w net.ipv4.icmp_echo_ignore_all=1</pre></td></tr></table>
 <p>然后浏览器设置socket代理就可以访问内网的应用了：</p>
 
 <p><img src="./../media/2021-02-09-14.jpg" alt="动态转发" /></p>
+
+<h3 id="http-https协议">HTTP/HTTPS协议</h3>
+
+<p>HTTPService代理用于将所有流量转发到内网。常见的代理工具有reGeorg、meterpreter、tunna等。下面演示使用reGeorg：</p>
+
+<p>先将tunnel（我这里是http.jsp）上传到web服务器：</p>
+
+<p><img src="./../media/2021-02-09-15.jpg" alt="reGeorg通道" /></p>
+
+<p>然后本机攻击机启动py脚本，如下所示：</p>
+
+<p><img src="./../media/2021-02-09-16.jpg" alt="reGeorg通道" /></p>
+
+<p>然后浏览器挂上代理，或者攻击机挂上全局代理，就可以访问内网应用啦：</p>
+
+<p><img src="./../media/2021-02-09-17.jpg" alt="reGeorg通道" /></p>
+
+<h3 id="dns协议">DNS协议</h3>
+
+<p>现在DNS、ICMP、HTTP/HTTPS等难以被禁用的协议已成为攻击者控制隧道的主流。</p>
+
+<h4 id="查看dns的连通性">查看DNS的连通性</h4>
+
+<p>需要测试DNS的连通性，也就是能否通过内部DNS解析外部域名。输入如下命令查看内部域名和IP地址：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><span class="lnt">1
+</span></pre></td>
+<td class="lntd">
+<pre class="chroma">cat /etc/resolv.conf|grep -v &#34;#&#34;</pre></td></tr></table>
+</div>
+</div>
+<p>如图所示：</p>
+
+<p><img src="./../media/2021-02-09-18.jpg" alt="DNS内部域名和ip" /></p>
+
+<p>然后使用dig或者nslookup测试能否解析外部域名：</p>
+
+<p><img src="./../media/2021-02-09-19.jpg" alt="测试DNS联通性" /></p>
+
+<h4 id="dnscat2">dnscat2</h4>
+
+<p>dnscat2的客户端是C编写的，服务端是Ruby编写的。有如下特点：</p>
+
+<ul>
+<li>支持直连和中继模式。</li>
+<li>支持多个会话。</li>
+<li>使用密钥防止MiTM攻击。</li>
+<li>在内存中直接执行PowerShell脚本。</li>
+<li>隐蔽通信。</li>
+</ul>
+
+<p>（1）配置域名解析：</p>
+
+<p>要使用dnscat2首先需要配置域名解析，以下是我的配置：</p>
+
+<p><img src="./../media/2021-02-09-20.jpg" alt="域名解析" /></p>
+
+<p><strong><em>Notice：</em></strong> 如果直接访问ns1.pinger.fun，因为此域名对应A记录，所以可以直接得到IP，不需要再请求域名解析。所以我们如果采用中继模式建立DNS隧道，那么应该再配置一个NS记录，指向ns1.pinger.fun，让ns1.pinger.fun对应ip的服务器给出域名解析结果。</p>
+
+<p>此时我们直接ping以下ns1.pinger.fun，就可以查看A类解析是否生效：</p>
+
+<p><img src="./../media/2021-02-09-21.jpg" alt="判断A解析是否生效" /></p>
+
+<p>然后在攻击机，也就是ns1.pinger.fun对应IP的服务器上开启抓包，此时dig一下www.pinger.fun，可以在攻击机上看到有域名解析请求，也就代表NS解析配置生效了：</p>
+
+<p><img src="./../media/2021-02-09-22.jpg" alt="判断NS解析是否生效" /></p>
+
+<p>（2）安装dnscat2服务端：</p>
+
+<p>dnscat2的服务端是ruby编写的，需要安装一些库。安装好后，启动服务端的命令如下(采用的中继模式)：</p>
+
+<p><img src="./../media/2021-02-09-23.jpg" alt="dnscat2-server" /></p>
+
+<p><strong><em>Notice：</em></strong> -c选择设置密钥预防中间人攻击；-e指定安全级别，open表示服务端允许客户端不进行加密；&ndash;no-cache表示禁止缓存，务必要添加此选项，防止兼容问题。</p>
+
+<p>（3）在目标机上安装客户端</p>
+
+<p>windows下需要使用编译打包好的exe文件，在<a href="https://downloads.skullsecurity.org/dnscat2/">dnscat2</a>进行下载。linux下直接进入client目录运行 <code>make</code> 即可安装。</p>
+
+<p>首先需要测试能否与服务端通信，输入如下命令进行测试(注意选项带两个横杠)：</p>
+
+<p><img src="./../media/2021-02-09-24.jpg" alt="dnscat-client-ping" /></p>
+
+<p>保证能通信后，就可以与服务端进行连接了，在客户端靶机上输入如下所示命令：</p>
+
+<p><img src="./../media/2021-02-09-25.jpg" alt="dnscat-client-link" /></p>
+
+<p>然后攻击机就能控制靶机啦~有点和msf类似的使用方式，但是感觉这shell不咋友好：</p>
+
+<p><img src="./../media/2021-02-09-26.jpg" alt="dnscat-server-attack" /></p>
+
+<p>如果想直连，不用中继，那么可以使用如下参数开启Server(Client怎么连，会给出提示)：</p>
+
+<p><img src="./../media/2021-02-09-27.jpg" alt="直连模式" /></p>
+
+<h2 id="socket代理">Socket代理</h2>
+
+<ul>
+<li>Socket是一种代理服务，可以将一端系统连接另一端。</li>
+<li>Socket4只支持TCP协议；Socket5不仅支持TCP/UDP协议，还支持各种身份验证机制等，其标准端口为1080.</li>
+</ul>
+
+<p>前面其实已经用过一个Socket代理工具了，就是reGeorg，其利用webshell建立一个Socket代理进行内网穿透。然后其他常用的工具有：EarthWorm和SocketCap64、ProxyChains等。</p>
 
     </div>
 
