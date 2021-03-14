@@ -16,6 +16,13 @@
   </url>
   
   <url>
+    <loc>https://p1n93r.github.io/categories/code_audit/</loc>
+    <lastmod>2021-03-14T22:07:36+08:00</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.5</priority>
+  </url>
+  
+  <url>
     <loc>https://p1n93r.github.io/</loc>
     <lastmod>2021-03-14T22:07:36+08:00</lastmod>
     <changefreq>weekly</changefreq>
@@ -24,13 +31,6 @@
   
   <url>
     <loc>https://p1n93r.github.io/post/</loc>
-    <lastmod>2021-03-14T22:07:36+08:00</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.5</priority>
-  </url>
-  
-  <url>
-    <loc>https://p1n93r.github.io/categories/shiro/</loc>
     <lastmod>2021-03-14T22:07:36+08:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.5</priority>
@@ -67,13 +67,6 @@
   <url>
     <loc>https://p1n93r.github.io/post/security/%E9%9A%90%E8%97%8F%E9%80%9A%E4%BF%A1%E9%9A%A7%E9%81%93%E6%8A%80%E6%9C%AF/</loc>
     <lastmod>2021-02-07T22:07:36+08:00</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.5</priority>
-  </url>
-  
-  <url>
-    <loc>https://p1n93r.github.io/categories/code_audit/</loc>
-    <lastmod>2021-02-02T17:52:36+08:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.5</priority>
   </url>
