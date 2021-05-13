@@ -50,7 +50,7 @@
 
 <meta itemprop="datePublished" content="2021-03-07T22:07:36&#43;08:00" />
 <meta itemprop="dateModified" content="2021-03-07T22:07:36&#43;08:00" />
-<meta itemprop="wordCount" content="339">
+<meta itemprop="wordCount" content="2401">
 
 
 
@@ -131,8 +131,8 @@
         <div class="post-category">
             <a href="/categories/security/"> security </a>
             </div>
-          <span class="more-meta"> 约 339 字 </span>
-          <span class="more-meta"> 预计阅读 1 分钟 </span>
+          <span class="more-meta"> 约 2401 字 </span>
+          <span class="more-meta"> 预计阅读 5 分钟 </span>
         <span id="busuanzi_container_page_pv" class="more-meta"> <span id="busuanzi_value_page_pv"><img src="/img/spinner.svg" alt="spinner.svg"/></span> 次阅读 </span>
       </div>
     </header>
@@ -145,6 +145,28 @@
 <li>
 <ul>
 <li><a href="#前言">前言</a></li>
+<li><a href="#系统内核溢出漏洞提权">系统内核溢出漏洞提权</a>
+<ul>
+<li><a href="#使用msf进行提权">使用MSF进行提权</a></li>
+</ul></li>
+<li><a href="#windows配置错误提权">Windows配置错误提权</a>
+<ul>
+<li><a href="#利用系统服务权限配置错误提权">利用系统服务权限配置错误提权</a></li>
+<li><a href="#利用注册表键alwaysinstallelevated提权">利用注册表键AlwaysInstallElevated提权</a></li>
+<li><a href="#利用可信任服务路径漏洞提权">利用可信任服务路径漏洞提权</a></li>
+<li><a href="#检查自动安装配置文件中的账号密码进行提权">检查自动安装配置文件中的账号密码进行提权</a></li>
+<li><a href="#利用计划任务权限配置错误进行提权">利用计划任务权限配置错误进行提权</a></li>
+</ul></li>
+<li><a href="#组策略首选项提权">组策略首选项提权</a></li>
+<li><a href="#bypassuac提权">BypassUAC提权</a>
+<ul>
+<li><a href="#msf使用bypassuac-injection提权">MSF使用bypassuac_injection提权</a></li>
+<li><a href="#msf使用bypassuac提权">MSF使用bypassuac提权</a></li>
+<li><a href="#msf使用ask提权">MSF使用ask提权</a></li>
+<li><a href="#msf使用bypassuac-eventvwr提权">MSF使用bypassuac_eventvwr提权</a></li>
+<li><a href="#msf使用bypassuac-comhijack提权">MSF使用bypassuac_comhijack提权</a></li>
+</ul></li>
+<li><a href="#令牌窃取提权">令牌窃取提权</a></li>
 </ul></li>
 </ul>
 </nav>
@@ -169,6 +191,180 @@
 <ul>
 <li>纵向提权：低权限角色获取高权限角色的权限。</li>
 </ul>
+
+<p>常用的提权手法有： <strong>系统内核溢出提权、数据库提权、错误的系统配置提权、组策略首选项提权、WEB中间件漏洞提权、DLL劫持提权、滥用高权限令牌提权、第三方软件和服务提权</strong> 。</p>
+
+<h2 id="系统内核溢出漏洞提权">系统内核溢出漏洞提权</h2>
+
+<p>关键点就是寻找系统中没有及时安装的补丁。以下是几种常用手法：</p>
+
+<ul>
+<li>手动对比：运行 <code>systeminfo</code> 或者 <code>wmic qfe get Caption,Description,HotFixID,InstalledOn</code> 获取漏洞编号，然后再对比。</li>
+<li>MSF：使用MSF的 <code>local_exploit_suggester</code> 模块进行查询可利用的漏洞。</li>
+<li>Sherlock：使用powershell下的Sherlock脚本跑（但是已经不维护更新了），然后配合CS的 <code>elevate</code> 功能进行提权。</li>
+<li>win-exp-suggester：使用windows-exploit-suggester脚本跑，看看有哪些可以利用的EXP。</li>
+</ul>
+
+<h3 id="使用msf进行提权">使用MSF进行提权</h3>
+
+<p>首先进行可利用漏洞信息收集，如下所示：</p>
+
+<p><img src="./../media/2021-05-13-1.png" alt="msf可利用漏洞信息收集" /></p>
+
+<p>然后就可以根据提示使用响应的EXP进行攻击了，如下所示，使用ms16_014进行攻击，发现提权成功：</p>
+
+<p><img src="./../media/2021-05-13-2.png" alt="ms16-014攻击" /></p>
+
+<h2 id="windows配置错误提权">Windows配置错误提权</h2>
+
+<p>主要分为如下几种手法：</p>
+
+<ul>
+<li>利用系统服务权限配置错误提权；</li>
+<li>利用注册表键AlwaysInstallElevated提权；</li>
+<li>利用可信任服务路径漏洞提权；</li>
+<li>检查自动安装配置文件中的账号密码进行提权；</li>
+<li>利用计划任务权限配置错误进行提权；</li>
+</ul>
+
+<h3 id="利用系统服务权限配置错误提权">利用系统服务权限配置错误提权</h3>
+
+<p>能够利用此漏洞进行提权的原因：</p>
+
+<ul>
+<li>Windows的服务是以System权限执行的；</li>
+<li>如果存在某个系统服务，低权限用户对其有可写目录权限，那么将存在系统服务权限配置错误漏洞；</li>
+</ul>
+
+<p>利用手法如下：
+- 服务未运行：使用恶意服务替换原来的服务，然后重启服务；
+- 服务已运行且无法被终止：使用DLL劫持然后尝试重启服务；</p>
+
+<p>针对此种漏洞，以下是使用MSF的service_permissions模块进行提权的操作：</p>
+
+<p><img src="./../media/2021-05-13-3.png" alt="MSF攻击服务权限配置错误漏洞" /></p>
+
+<p>以下是使用Powerup脚本查找可利用的服务权限配置漏洞（没发现）：</p>
+
+<p><img src="./../media/2021-05-13-4.png" alt="Powerup查找服务权限漏洞" /></p>
+
+<h3 id="利用注册表键alwaysinstallelevated提权">利用注册表键AlwaysInstallElevated提权</h3>
+
+<p>如果设置了此键，那么任何用户都能以System权限执行安装msi程序，利用此特性进行提权；前面利用PowerUp进行扫描时，如果发现目标存在此漏洞，那么就可以直接用PowerUp进行提权；</p>
+
+<h3 id="利用可信任服务路径漏洞提权">利用可信任服务路径漏洞提权</h3>
+
+<p>简单来说，在windows下如果一个服务没有被双引号引起来，且包含空格，那么这个服务就存在该漏洞；</p>
+
+<p>如下是针对此漏洞下使用MSF的案例（失败了）：</p>
+
+<p><img src="./../media/2021-05-13-5.png" alt="MSF使用可信任服务路径漏洞提权" /></p>
+
+<h3 id="检查自动安装配置文件中的账号密码进行提权">检查自动安装配置文件中的账号密码进行提权</h3>
+
+<p>一般内网的机器比较多，管理员一般采用脚本批量部署，此过程会安装配置文件，这些文件中包含了所有要安装的配置信息，其中一些可能包括本地管理员账号和密码信息，枚举这些文件，查看是否包含账号密码等信息进行提权。前面利用PowerUp进行扫描时，如果发现了存在这类文件，那么就可以一个个查看并利用公开的密钥解密了。</p>
+
+<h3 id="利用计划任务权限配置错误进行提权">利用计划任务权限配置错误进行提权</h3>
+
+<p>如果某个计划任务是以高权限执行，且攻击者有其目录的读写权限，那么我们可以使用木马将计划任务目录下的程序替换掉，下次执行时将触发执行。一般常用accesschk工具来进行查询有问题的目录，然后对比计划任务中的目录，因为此工具是微软官方的，一般不会被杀。</p>
+
+<p>首先输入如下命令查看计划任务：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><span class="lnt">1
+</span></pre></td>
+<td class="lntd">
+<pre class="chroma">schtasks /query /fo LIST /v</pre></td></tr></table>
+</div>
+</div>
+<p>然后执行accesschk常用的查询目录权限命令，对比前面查询的计划任务目录，观察是否存在可以利用的计划任务：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span></pre></td>
+<td class="lntd">
+<pre class="chroma"># 查询指定目录下的权限配置情况
+accesschk.exe -dqv &#34;C:\Windows\system32&#34; -accepteula
+# 查询某个驱动盘下的所有有权限配置缺陷的文件
+accesschk.exe -uwqs Users c:\*.*
+accesschk.exe -uwqs &#34;Authenticated Users&#34; c:\*.*</pre></td></tr></table>
+</div>
+</div>
+<h2 id="组策略首选项提权">组策略首选项提权</h2>
+
+<p><strong>组策略首选项漏洞，微软在2014年进行了修复</strong>。 该漏洞形成的原因是网络管理员使用策略组统一修改域内机器的本地管理员密码。而所有的域策略都存放在 <code>C:\\Windows\sysvol\your_domain\Policies\</code> 文件夹中，域内用户和域信任的用户都可以对该目录进行访问，而利用组策略更新密码时，会在这个共享目录内生成一个XML配置文件，我们可以直接查看该配置文件，可以看到一个AES-256加密的密码，但是这个密码的密钥被微软公开了，所以可以打。</p>
+
+<p>利用cmd shell查看组策略中的密码如下所示：</p>
+
+<p><img src="./../media/2021-05-13-6.png" alt="查看组策略统一密码" /></p>
+
+<p>利用工具解密得到明文如下所示：</p>
+
+<p><img src="./../media/2021-05-13-7.png" alt="利用工具解密组策略密码" /></p>
+
+<p>当然，也可以用msf进行EXP的利用，如下所示：</p>
+
+<p><img src="./../media/2021-05-13-8.png" alt="msf获取cpassword" /></p>
+
+<h2 id="bypassuac提权">BypassUAC提权</h2>
+
+<p>主要是使用MSF的几个不同的bypass模块， <strong>一般都需要当前用户在管理员组中，且UAC必须为默认设置，才能提权成功</strong> ，如下所示：</p>
+
+<ul>
+<li>exploit/windows/local/bypassuac_injection</li>
+<li>exploit/windows/local/bypassuac</li>
+<li>exploit/windows/local/ask</li>
+<li>exploit/windows/local/bypassuac_eventvwr</li>
+<li>exploit/windows/local/bypassuac_comhijack</li>
+</ul>
+
+<h3 id="msf使用bypassuac-injection提权">MSF使用bypassuac_injection提权</h3>
+
+<p>此种方式提权直接运行在内存的反射DLL中，降低了杀毒软件查杀的风险。操作如下所示：</p>
+
+<p><img src="./../media/2021-05-13-9.png" alt="MSF使用bypassuac_injection提权" /></p>
+
+<h3 id="msf使用bypassuac提权">MSF使用bypassuac提权</h3>
+
+<p>操作如下所示：</p>
+
+<p><img src="./../media/2021-05-13-10.png" alt="msf-bypassuac" /></p>
+
+<h3 id="msf使用ask提权">MSF使用ask提权</h3>
+
+<p>操作如下，会在靶机上弹出一个确认框，如果用户点击了，我们就可以弹到一个高权限的meterpreter，如下所示：</p>
+
+<p><img src="./../media/2021-05-13-11.png" alt="ask提权" /></p>
+
+<p><img src="./../media/2021-05-13-12.png" alt="ask提权" /></p>
+
+<h3 id="msf使用bypassuac-eventvwr提权">MSF使用bypassuac_eventvwr提权</h3>
+
+<p>操作如下所示：</p>
+
+<p><img src="./../media/2021-05-13-13.png" alt="bypassuac_eventvwr提权" /></p>
+
+<h3 id="msf使用bypassuac-comhijack提权">MSF使用bypassuac_comhijack提权</h3>
+
+<p>操作如下所示：</p>
+
+<p><img src="./../media/2021-05-13-14.png" alt="bypassuac_comhijack提权" /></p>
+
+<h2 id="令牌窃取提权">令牌窃取提权</h2>
+
+<p>主要是在MSF meterpreter下，可以列举出可用的令牌，然后通过伪造可利用的令牌进行提权。</p>
+
+<p>首先在meterpreter下输入 <code>use incognito</code> 和 <code>listT_token -u</code> 列举出可用的令牌：</p>
+
+<p><img src="./../media/2021-05-13-15.png" alt="msf列举出可用令牌" /></p>
+
+<p>然后可以输入 <code>impersonate_token WIN7\\pinger</code> 进行伪造，注意，需要双引号，否则容易出错：</p>
+
+<p><img src="./../media/2021-05-13-16.png" alt="msf伪造令牌" /></p>
 
     </div>
 

