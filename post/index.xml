@@ -6,10 +6,19 @@
     <description>Recent content in Posts on P1n93r - 博学而精一</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-cn</language>
-    <lastBuildDate>Sun, 23 May 2021 09:07:36 +0800</lastBuildDate>
+    <lastBuildDate>Mon, 24 May 2021 17:07:36 +0800</lastBuildDate>
     
 	<atom:link href="https://p1n93r.github.io/post/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>域控权限持久化</title>
+      <link>https://p1n93r.github.io/post/security/%E5%9F%9F%E6%8E%A7%E6%9D%83%E9%99%90%E6%8C%81%E4%B9%85%E5%8C%96/</link>
+      <pubDate>Mon, 24 May 2021 17:07:36 +0800</pubDate>
+      
+      <guid>https://p1n93r.github.io/post/security/%E5%9F%9F%E6%8E%A7%E6%9D%83%E9%99%90%E6%8C%81%E4%B9%85%E5%8C%96/</guid>
+      <description>DSRM域后门 DSRM（Directory Service Restore Model，目录服务恢复模式）是windows域环境中域控的安全模式启动选项。每个域控都有一个</description>
+    </item>
     
     <item>
       <title>第六章：域控制器安全</title>
