@@ -6,7 +6,7 @@
     <description>Recent content on P1n93r - 博学而精一</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-cn</language>
-    <lastBuildDate>Sat, 22 May 2021 12:07:36 +0800</lastBuildDate>
+    <lastBuildDate>Sun, 23 May 2021 09:07:36 +0800</lastBuildDate>
     
 	<atom:link href="https://p1n93r.github.io/index.xml" rel="self" type="application/rss+xml" />
     
@@ -20,6 +20,15 @@
       <description>We chose to go to the moon We choose to go to the moon in this decade and do the other things,
 not because they are easy,
 but because they are hard.</description>
+    </item>
+    
+    <item>
+      <title>第六章：域控制器安全</title>
+      <link>https://p1n93r.github.io/post/security/%E5%9F%9F%E6%8E%A7%E5%88%B6%E5%99%A8%E5%AE%89%E5%85%A8/</link>
+      <pubDate>Sun, 23 May 2021 09:07:36 +0800</pubDate>
+      
+      <guid>https://p1n93r.github.io/post/security/%E5%9F%9F%E6%8E%A7%E5%88%B6%E5%99%A8%E5%AE%89%E5%85%A8/</guid>
+      <description>利用ntds.dit读取域内哈希 提取ntds.dit 主要分为以下几种方式提取： 在域控上使用ntdsutil的IFM提取，支持win2k03、</description>
     </item>
     
     <item>
