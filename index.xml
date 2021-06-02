@@ -6,7 +6,7 @@
     <description>Recent content on P1n93r - 博学而精一</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-cn</language>
-    <lastBuildDate>Wed, 02 Jun 2021 09:07:36 +0800</lastBuildDate>
+    <lastBuildDate>Wed, 02 Jun 2021 15:46:36 +0800</lastBuildDate>
     
 	<atom:link href="https://p1n93r.github.io/index.xml" rel="self" type="application/rss+xml" />
     
@@ -20,6 +20,15 @@
       <description>We chose to go to the moon We choose to go to the moon in this decade and do the other things,
 not because they are easy,
 but because they are hard.</description>
+    </item>
+    
+    <item>
+      <title>Tomcat之Valve内存马</title>
+      <link>https://p1n93r.github.io/post/security/tomcat%E4%B9%8Bvalve%E5%86%85%E5%AD%98%E9%A9%AC/</link>
+      <pubDate>Wed, 02 Jun 2021 15:46:36 +0800</pubDate>
+      
+      <guid>https://p1n93r.github.io/post/security/tomcat%E4%B9%8Bvalve%E5%86%85%E5%AD%98%E9%A9%AC/</guid>
+      <description>前置知识 需要掌握《Tomcat架构原理》。 这一招是真的厉害，脑袋一拍，我咋没想到？直接在Pipeline-Valve内植入木马，简单粗暴，非</description>
     </item>
     
     <item>
