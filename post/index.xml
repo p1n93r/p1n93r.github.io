@@ -6,10 +6,19 @@
     <description>Recent content in Posts on P1n93r - 博学而精一</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-cn</language>
-    <lastBuildDate>Wed, 02 Jun 2021 17:07:36 +0800</lastBuildDate>
+    <lastBuildDate>Tue, 15 Jun 2021 17:07:36 +0800</lastBuildDate>
     
 	<atom:link href="https://p1n93r.github.io/post/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>JDBC反序列化</title>
+      <link>https://p1n93r.github.io/post/security/jdbc%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96/</link>
+      <pubDate>Tue, 15 Jun 2021 17:07:36 +0800</pubDate>
+      
+      <guid>https://p1n93r.github.io/post/security/jdbc%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96/</guid>
+      <description>Gadget Chain 如下图所示，关键点是：ResultSetImpl#getObject()： POC 1 2 3 4 5 6 7 8 9 10 11 # 8.0.11版本测试通过，8.0.2</description>
+    </item>
     
     <item>
       <title>Tomcat之Valve内存马</title>
