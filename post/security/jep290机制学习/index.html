@@ -1,545 +1,164 @@
-<!DOCTYPE html>
-<html lang="zh-cn">
-<head>
-  <meta charset="utf-8">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-  <title>JEP290机制学习 - P1n93r - 博学而精一</title>
-  <meta name="renderer" content="webkit" />
-<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
-
-<meta http-equiv="Cache-Control" content="no-transform" />
-<meta http-equiv="Cache-Control" content="no-siteapp" />
-
-<meta name="theme-color" content="#f8f5ec" />
-<meta name="msapplication-navbutton-color" content="#f8f5ec">
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
-
-
-<meta name="author" content="P1n93r" /><meta name="description" content="介绍 官方介绍：https://openjdk.java.net/jeps/290 （1）什么是JEP？ JEP 即 JDK Enhancement Proposal （JDK增强提议），目前索引编" /><meta name="keywords" content="Security, Java, Web, Android" />
-
-
-
-
-
-
-<meta name="generator" content="Hugo 0.96.0 with theme even" />
-
-
-<link rel="canonical" href="https://p1n93r.github.io/post/security/jep290%E6%9C%BA%E5%88%B6%E5%AD%A6%E4%B9%A0/" />
-<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
-<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
-<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
-<link rel="manifest" href="/manifest.json">
-<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
-
-<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
-
-<link href="/sass/main.min.f92fd13721ddf72129410fd8250e73152cc6f2438082b6c0208dc24ee7c13fc4.css" rel="stylesheet">
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.css" integrity="sha256-7TyXnr2YU040zfSP+rEcz29ggW4j56/ujTPwjMzyqFY=" crossorigin="anonymous">
-
-
-<meta property="og:title" content="JEP290机制学习" />
-<meta property="og:description" content="介绍 官方介绍：https://openjdk.java.net/jeps/290 （1）什么是JEP？ JEP 即 JDK Enhancement Proposal （JDK增强提议），目前索引编" />
-<meta property="og:type" content="article" />
-<meta property="og:url" content="https://p1n93r.github.io/post/security/jep290%E6%9C%BA%E5%88%B6%E5%AD%A6%E4%B9%A0/" /><meta property="article:section" content="post" />
-<meta property="article:published_time" content="2021-07-04T17:07:36+08:00" />
-<meta property="article:modified_time" content="2021-07-04T17:07:36+08:00" />
-
-<meta itemprop="name" content="JEP290机制学习">
-<meta itemprop="description" content="介绍 官方介绍：https://openjdk.java.net/jeps/290 （1）什么是JEP？ JEP 即 JDK Enhancement Proposal （JDK增强提议），目前索引编"><meta itemprop="datePublished" content="2021-07-04T17:07:36+08:00" />
-<meta itemprop="dateModified" content="2021-07-04T17:07:36+08:00" />
-<meta itemprop="wordCount" content="2102">
-<meta itemprop="keywords" content="" /><meta name="twitter:card" content="summary"/>
-<meta name="twitter:title" content="JEP290机制学习"/>
-<meta name="twitter:description" content="介绍 官方介绍：https://openjdk.java.net/jeps/290 （1）什么是JEP？ JEP 即 JDK Enhancement Proposal （JDK增强提议），目前索引编"/>
-
-<!--[if lte IE 9]>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
-<![endif]-->
-
-<!--[if lt IE 9]>
-  <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
-<![endif]-->
-
-</head>
-<body>
-  <div id="mobile-navbar" class="mobile-navbar">
-  <div class="mobile-header-logo">
-    <a href="/" class="logo">P1n93r</a>
-  </div>
-  <div class="mobile-navbar-icon">
-    <span></span>
-    <span></span>
-    <span></span>
-  </div>
-</div>
-<nav id="mobile-menu" class="mobile-menu slideout-menu">
-  <ul class="mobile-menu-list">
-    <a href="/">
-        <li class="mobile-menu-item">Home</li>
-      </a><a href="/post/">
-        <li class="mobile-menu-item">Archives</li>
-      </a><a href="/tags/">
-        <li class="mobile-menu-item">Tags</li>
-      </a><a href="/categories/">
-        <li class="mobile-menu-item">Categories</li>
-      </a><a href="/about/">
-        <li class="mobile-menu-item">About</li>
-      </a>
-  </ul>
-
-  
-
-
-</nav>
-
-  <div class="container" id="mobile-panel">
-    <header id="header" class="header">
-        <div class="logo-wrapper">
-  <a href="/" class="logo">P1n93r</a>
-</div>
-
-
-
-
-
-<nav class="site-navbar">
-  <ul id="menu" class="menu">
-    <li class="menu-item">
-        <a class="menu-item-link" href="/">Home</a>
-      </li><li class="menu-item">
-        <a class="menu-item-link" href="/post/">Archives</a>
-      </li><li class="menu-item">
-        <a class="menu-item-link" href="/tags/">Tags</a>
-      </li><li class="menu-item">
-        <a class="menu-item-link" href="/categories/">Categories</a>
-      </li><li class="menu-item">
-        <a class="menu-item-link" href="/about/">About</a>
-      </li>
-  </ul>
-</nav>
-
-    </header>
-
-    <main id="main" class="main">
-      <div class="content-wrapper">
-        <div id="content" class="content">
-          <article class="post">
-    
-    <header class="post-header">
-      <h1 class="post-title">JEP290机制学习</h1>
-
-      <div class="post-meta">
-        <span class="post-time"> 2021-07-04 </span>
-        <div class="post-category">
-            <a href="/categories/security/"> security </a>
-            </div>
-          <span class="more-meta"> 约 2102 字 </span>
-          <span class="more-meta"> 预计阅读 5 分钟 </span>
-        <span id="busuanzi_container_page_pv" class="more-meta"> <span id="busuanzi_value_page_pv"><img src="/img/spinner.svg" alt="spinner.svg"/></span> 次阅读 </span>
-      </div>
-    </header>
-
-    <div class="post-toc" id="post-toc">
-  <h2 class="post-toc-title">文章目录</h2>
-  <div class="post-toc-content always-active">
-    <nav id="TableOfContents">
-  <ul>
-    <li>
-      <ul>
-        <li><a href="#介绍">介绍</a></li>
-        <li><a href="#目的">目的</a></li>
-        <li><a href="#注意点">注意点</a></li>
-        <li><a href="#jep290具体内容">JEP290具体内容</a></li>
-        <li><a href="#一些思考">一些思考</a></li>
-      </ul>
-    </li>
-  </ul>
-</nav>
-  </div>
-</div>
-    <div class="post-content">
-      <h2 id="介绍">介绍</h2>
-<p>官方介绍：https://openjdk.java.net/jeps/290</p>
-<p><strong>（1）什么是JEP？</strong></p>
-<p><code>JEP</code> 即 <code>JDK Enhancement Proposal</code> （JDK增强提议），目前索引编号已经达到了 <a href="https://openjdk.java.net/jeps/415">JEP415</a> 。</p>
-<p><strong>（2）什么是JEP290？</strong></p>
-<p><code>JEP290</code> 允许过滤输入流中对象的序列化数据，以提高程序的安全性和稳健性。</p>
-<p><strong>（2）JEP290的影响范围</strong></p>
-<p>最主要的分水岭还是JDK8u121：</p>
-<ul>
-<li>Java™ SE Development Kit 8, Update 121 (JDK 8u121)</li>
-<li>Java™ SE Development Kit 7, Update 131 (JDK 7u131)</li>
-<li>Java™ SE Development Kit 6, Update 141 (JDK 6u141)</li>
-</ul>
-<h2 id="目的">目的</h2>
-<p>直接引用官方的话：</p>
-<ul>
-<li>Provide a flexible mechanism to narrow the classes that can be  deserialized from any class available to an application down to a  context-appropriate set of classes.[提供一种灵活的机制，将可以反序列化的类从应用程序可用的任何类缩小到适合上下文的类集。]</li>
-<li>Provide metrics to the filter for graph size and complexity during deserialization to validate normal graph behaviors.[在反序列化期间向过滤器提供图大小和复杂性的指标，以验证正常的图行为。]</li>
-<li>Provide a mechanism for RMI-exported objects to validate the classes expected in invocations.[为 RMI 导出的对象提供一种机制，以验证调用中预期的类。]</li>
-<li>The filter mechanism must not require subclassing or modification to existing subclasses of ObjectInputStream.[过滤器机制不得要求对 ObjectInputStream 的现有子类进行子类化或修改。]</li>
-<li>Define a global filter that can be configured by properties or a configuration file.[定义可以通过属性或配置文件配置的全局过滤器。]</li>
-</ul>
-<p>可以看到，从 <code>JEP290</code> 开始，对 <code>RMI</code> 反序列化开始进行了限制。 <code>JEP290</code> 影响最大的还是 <code>RMI</code> 反序列化。</p>
-<h2 id="注意点">注意点</h2>
-<ul>
-<li>JEP290需要手动设置，只有设置了之后才会有过滤，没有设置的话就还是可以正常的反序列化漏洞利用；</li>
-<li>JEP290默认只为 RMI 注册表（RMI Register层）、 RMI分布式垃圾回收器（DGC层）以及 JMX 提供了相应的内置过滤器；</li>
-</ul>
-<p>所以从这里也可以看出， <code>JEP290</code>  影响最大的是 <code>RMI</code> 反序列化。</p>
-<h2 id="jep290具体内容">JEP290具体内容</h2>
-<p>JEP290主要是支持三种过滤器配置：</p>
-<ul>
-<li>自定义过滤器；</li>
-<li>全局过滤器；</li>
-<li>内置过滤器（RMI Register、RMI DGC等内置过滤器）；</li>
-</ul>
-<p><strong>（1）自定义过滤器[ObjectInputFilter Interface]</strong></p>
-<p>自定义过滤器需要实现 <code>ObjectInputFilter</code> 接口，并实现其 <code>checkInput(FilterInfo filterInfo)</code> 方法，一个例子如下：</p>
-<div class="highlight"><div class="chroma">
-<table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
-</span><span class="lnt"> 2
-</span><span class="lnt"> 3
-</span><span class="lnt"> 4
-</span><span class="lnt"> 5
-</span><span class="lnt"> 6
-</span><span class="lnt"> 7
-</span><span class="lnt"> 8
-</span><span class="lnt"> 9
-</span><span class="lnt">10
-</span><span class="lnt">11
-</span><span class="lnt">12
-</span><span class="lnt">13
-</span><span class="lnt">14
-</span><span class="lnt">15
-</span><span class="lnt">16
-</span><span class="lnt">17
-</span><span class="lnt">18
-</span><span class="lnt">19
-</span><span class="lnt">20
-</span><span class="lnt">21
-</span><span class="lnt">22
-</span><span class="lnt">23
-</span><span class="lnt">24
-</span><span class="lnt">25
-</span><span class="lnt">26
-</span><span class="lnt">27
-</span><span class="lnt">28
-</span><span class="lnt">29
-</span><span class="lnt">30
-</span><span class="lnt">31
-</span><span class="lnt">32
-</span><span class="lnt">33
-</span><span class="lnt">34
-</span><span class="lnt">35
-</span><span class="lnt">36
-</span><span class="lnt">37
-</span><span class="lnt">38
-</span><span class="lnt">39
-</span><span class="lnt">40
-</span><span class="lnt">41
-</span><span class="lnt">42
-</span><span class="lnt">43
-</span><span class="lnt">44
-</span><span class="lnt">45
-</span><span class="lnt">46
-</span><span class="lnt">47
-</span></code></pre></td>
-<td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="line"><span class="cl"><span class="cm">/**
-</span></span></span><span class="line"><span class="cl"><span class="cm"> * @author : p1n93r
-</span></span></span><span class="line"><span class="cl"><span class="cm"> * @date : 2021/9/23 15:08
-</span></span></span><span class="line"><span class="cl"><span class="cm"> * 自定义一个反序列化过滤器
-</span></span></span><span class="line"><span class="cl"><span class="cm"> */</span>
-</span></span><span class="line"><span class="cl"><span class="kd">public</span> <span class="kd">class</span> <span class="nc">CustomObjectInputFilter</span> <span class="kd">implements</span> <span class="n">ObjectInputFilter</span> <span class="o">{</span>
-</span></span><span class="line"><span class="cl">    <span class="kd">private</span> <span class="kd">static</span> <span class="kd">final</span> <span class="n">Class</span><span class="o">&lt;?&gt;</span> <span class="n">CLAZZ</span> <span class="o">=</span> <span class="n">User</span><span class="o">.</span><span class="na">class</span><span class="o">;</span>
-</span></span><span class="line"><span class="cl">    <span class="cm">/**
-</span></span></span><span class="line"><span class="cl"><span class="cm">     * 限制反序列化类数组的数组大小
-</span></span></span><span class="line"><span class="cl"><span class="cm">     */</span>
-</span></span><span class="line"><span class="cl">    <span class="kd">private</span> <span class="kd">static</span> <span class="kd">final</span> <span class="kt">long</span> <span class="n">ARRAY_LENGTH</span> <span class="o">=</span> <span class="o">-</span><span class="n">1L</span><span class="o">;</span>
-</span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl">    <span class="cm">/**
-</span></span></span><span class="line"><span class="cl"><span class="cm">     * 限制反序列化时，引用的数量
-</span></span></span><span class="line"><span class="cl"><span class="cm">     */</span>
-</span></span><span class="line"><span class="cl">    <span class="kd">private</span> <span class="kd">static</span> <span class="kd">final</span> <span class="kt">long</span> <span class="n">TOTAL_OBJECT_REFS</span> <span class="o">=</span> <span class="n">1L</span><span class="o">;</span>
-</span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl">    <span class="cm">/**
-</span></span></span><span class="line"><span class="cl"><span class="cm">     * 限制反序列化的深度
-</span></span></span><span class="line"><span class="cl"><span class="cm">     */</span>
-</span></span><span class="line"><span class="cl">    <span class="kd">private</span> <span class="kd">static</span> <span class="kd">final</span> <span class="kt">long</span> <span class="n">DEPTH</span> <span class="o">=</span> <span class="n">1l</span><span class="o">;</span>
-</span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl">    <span class="cm">/**
-</span></span></span><span class="line"><span class="cl"><span class="cm">     * 限制反序列化流的大小
-</span></span></span><span class="line"><span class="cl"><span class="cm">     */</span>
-</span></span><span class="line"><span class="cl">    <span class="kd">private</span> <span class="kd">static</span> <span class="kd">final</span> <span class="kt">long</span> <span class="n">STREAM_BYTES</span> <span class="o">=</span> <span class="n">95L</span><span class="o">;</span>
-</span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl">    <span class="nd">@Override</span>
-</span></span><span class="line"><span class="cl">    <span class="kd">public</span> <span class="n">Status</span> <span class="nf">checkInput</span><span class="o">(</span><span class="n">FilterInfo</span> <span class="n">filterInfo</span><span class="o">)</span> <span class="o">{</span>
-</span></span><span class="line"><span class="cl">        <span class="k">if</span> <span class="o">(</span><span class="n">filterInfo</span><span class="o">.</span><span class="na">arrayLength</span><span class="o">()</span> <span class="o">!=</span> <span class="n">ARRAY_LENGTH</span>
-</span></span><span class="line"><span class="cl">            <span class="o">||</span> <span class="n">filterInfo</span><span class="o">.</span><span class="na">references</span><span class="o">()</span> <span class="o">!=</span> <span class="n">TOTAL_OBJECT_REFS</span>
-</span></span><span class="line"><span class="cl">            <span class="o">||</span> <span class="n">filterInfo</span><span class="o">.</span><span class="na">depth</span><span class="o">()</span> <span class="o">!=</span> <span class="n">DEPTH</span>
-</span></span><span class="line"><span class="cl">            <span class="o">||</span> <span class="n">filterInfo</span><span class="o">.</span><span class="na">streamBytes</span><span class="o">()</span> <span class="o">!=</span> <span class="n">STREAM_BYTES</span>
-</span></span><span class="line"><span class="cl">        <span class="o">)</span> <span class="o">{</span>
-</span></span><span class="line"><span class="cl">            <span class="k">return</span> <span class="n">Status</span><span class="o">.</span><span class="na">REJECTED</span><span class="o">;</span>
-</span></span><span class="line"><span class="cl">        <span class="o">}</span>
-</span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl">        <span class="k">if</span> <span class="o">(</span><span class="n">filterInfo</span><span class="o">.</span><span class="na">serialClass</span><span class="o">()</span> <span class="o">==</span> <span class="kc">null</span><span class="o">)</span> <span class="o">{</span>
-</span></span><span class="line"><span class="cl">            <span class="k">return</span> <span class="n">Status</span><span class="o">.</span><span class="na">UNDECIDED</span><span class="o">;</span>
-</span></span><span class="line"><span class="cl">        <span class="o">}</span>
-</span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl">        <span class="k">if</span> <span class="o">(</span><span class="n">filterInfo</span><span class="o">.</span><span class="na">serialClass</span><span class="o">()</span> <span class="o">!=</span> <span class="kc">null</span> <span class="o">&amp;&amp;</span> <span class="n">filterInfo</span><span class="o">.</span><span class="na">serialClass</span><span class="o">()</span> <span class="o">==</span> <span class="n">CLAZZ</span><span class="o">)</span> <span class="o">{</span>
-</span></span><span class="line"><span class="cl">            <span class="k">return</span> <span class="n">Status</span><span class="o">.</span><span class="na">ALLOWED</span><span class="o">;</span>
-</span></span><span class="line"><span class="cl">        <span class="o">}</span>
-</span></span><span class="line"><span class="cl">        <span class="k">return</span> <span class="n">Status</span><span class="o">.</span><span class="na">REJECTED</span><span class="o">;</span>
-</span></span><span class="line"><span class="cl">    <span class="o">}</span>
-</span></span><span class="line"><span class="cl"><span class="o">}</span>
-</span></span></code></pre></td></tr></table>
-</div>
-</div><p>然后就可以使用如下代码为程序内所有的 <code>ObjectInputStream</code> 设置反序列化过滤器：</p>
-<div class="highlight"><div class="chroma">
-<table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt">1
-</span></code></pre></td>
-<td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="line"><span class="cl"><span class="n">ObjectInputFilter</span><span class="o">.</span><span class="na">Config</span><span class="o">.</span><span class="na">setSerialFilter</span><span class="o">(</span><span class="k">new</span> <span class="n">CustomObjectInputFilter</span><span class="o">());</span>
-</span></span></code></pre></td></tr></table>
-</div>
-</div><p>或者使用如下代码为某个特定的 <code>ObjectInputStream</code> 设置反序列化过滤器：</p>
-<div class="highlight"><div class="chroma">
-<table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt">1
-</span><span class="lnt">2
-</span></code></pre></td>
-<td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="line"><span class="cl"><span class="n">ObjectInputStream</span> <span class="n">objectInputStream</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ObjectInputStream</span><span class="o">(</span><span class="k">new</span> <span class="n">FileInputStream</span><span class="o">(</span><span class="s">&#34;xxxx/xxx&#34;</span><span class="o">));</span>
-</span></span><span class="line"><span class="cl"><span class="n">ObjectInputFilter</span><span class="o">.</span><span class="na">Config</span><span class="o">.</span><span class="na">setObjectInputFilter</span><span class="o">(</span><span class="n">objectInputStream</span><span class="o">,</span><span class="k">new</span> <span class="n">CustomObjectInputFilter</span><span class="o">());</span>
-</span></span></code></pre></td></tr></table>
-</div>
-</div><p><strong>（2）全局过滤器[Process-wide Filter]</strong></p>
-<p>全局过滤器可以通过系统属性或者配置文件来配置，如果配置了系统属性，那么会覆盖配置文件的配置：</p>
-<ul>
-<li>系统属性： <code>jdk.serialFilter</code> ；</li>
-<li>配置文件： <code>$JAVA_HOME/conf/security/java.properties</code> (JDK9及以上)或者 <code>$JAVA_HOME/lib/security/java.security</code> (JDK6/7/8);</li>
-</ul>
-<p>配置系统属性，其实就是在Java程序启动前，加上JVM选项：</p>
-<div class="highlight"><div class="chroma">
-<table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt">1
-</span></code></pre></td>
-<td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-sh" data-lang="sh"><span class="line"><span class="cl">-Djdk.serialFilter<span class="o">=</span>&lt;白名单类1&gt;<span class="p">;</span>&lt;白名单类2&gt;<span class="p">;</span>!&lt;黑名单类&gt;
-</span></span></code></pre></td></tr></table>
-</div>
-</div><p>选项的值，是一系列规则(模式)，以封号分隔：</p>
-<ul>
-<li>如果模式以  <code>!</code> 开头，如果模式的其余部分匹配，则拒绝该类，否则接受该类</li>
-<li>如果模式包含 <code>/</code> ，则 <code>/</code> 之前的非空前缀是模块名称。如果模块名称与类的模块名称匹配，则剩余模式与类名称匹配。如果没有 <code>/</code> ，则不比较模块名称。</li>
-<li>如果模式以 <code>.**</code> 结尾，则匹配包和所有子包中的任何类</li>
-<li>如果模式以  <code>.*</code> 结尾，则匹配包中的任何类</li>
-<li>如果模式以  <code>*</code> 结尾，则匹配任何以该模式为前缀的类。</li>
-<li>如果模式等于类名，则匹配。</li>
-<li>否则，状态未定。</li>
-</ul>
-<p>一个例子如下：</p>
-<div class="highlight"><div class="chroma">
-<table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
-</span><span class="lnt"> 2
-</span><span class="lnt"> 3
-</span><span class="lnt"> 4
-</span><span class="lnt"> 5
-</span><span class="lnt"> 6
-</span><span class="lnt"> 7
-</span><span class="lnt"> 8
-</span><span class="lnt"> 9
-</span><span class="lnt">10
-</span><span class="lnt">11
-</span></code></pre></td>
-<td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-sh" data-lang="sh"><span class="line"><span class="cl"><span class="c1"># 匹配特定的类并拒绝非列表中的类</span>
-</span></span><span class="line"><span class="cl">-Djdk.serialFilter<span class="o">=</span>org.example.Test<span class="p">;</span>!*
-</span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl"><span class="c1"># 匹配包和所有子包中的类并拒绝非列表中的类</span>
-</span></span><span class="line"><span class="cl">-Djdk.serialFilter<span class="o">=</span>org.example.**<span class="p">;</span>!*
-</span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl"><span class="c1"># 匹配包中的所有类并拒绝非列表中的类</span>
-</span></span><span class="line"><span class="cl">-Djdk.serialFilter<span class="o">=</span>org.example.*<span class="p">;</span>!*
-</span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl"><span class="c1"># 匹配任何以设置样式为前缀的类</span>
-</span></span><span class="line"><span class="cl">-Djdk.serialFilter<span class="o">=</span>*<span class="p">;</span>
-</span></span></code></pre></td></tr></table>
-</div>
-</div><p><strong>（3）内置过滤器</strong></p>
-<p>对于JEP290而言，存在默认开启的内置过滤器，这个内置过滤器适用于RMI 注册表（RMI Register层）、 RMI分布式垃圾回收器（DGC层）以及 JMX 。</p>
-<p>这个过滤器影响比较大，对于 <code>RMI Register</code> 的限制，代码主要体现在 <code>RegistryImpl#registryFilter</code> ，其中过滤逻辑是使用白名单，反序列化白名单类如下：</p>
-<ul>
-<li>java.rmi.Remote</li>
-<li>java.lang.Number</li>
-<li>java.lang.reflect.Proxy</li>
-<li>java.rmi.server.UnicastRef</li>
-<li>java.rmi.activation.ActivationId</li>
-<li>java.rmi.server.UID</li>
-<li>java.rmi.server.RMIClientSocketFactory</li>
-<li>java.rmi.server.RMIServerSocketFactory</li>
-</ul>
-<p>并且还存在两个限制：</p>
-<div class="highlight"><div class="chroma">
-<table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt">1
-</span><span class="lnt">2
-</span></code></pre></td>
-<td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="line"><span class="cl"><span class="n">maxarray</span><span class="o">=</span><span class="n">1000000</span>
-</span></span><span class="line"><span class="cl"><span class="n">maxdepth</span><span class="o">=</span><span class="n">20</span>
-</span></span></code></pre></td></tr></table>
-</div>
-</div><p>对于 <code>RMI DGC</code> 的限制，代码主要体现在 <code>sun.rmi.transport.DGCImpl_Stub#dirty()</code> 方法中，其中的主要过滤逻辑也是白名单，反序列化白名单如下：</p>
-<ul>
-<li>java.rmi.server.ObjID</li>
-<li>java.rmi.server.UID</li>
-<li>java.rmi.dgc.VMID</li>
-<li>java.rmi.dgc.Lease</li>
-</ul>
-<p>同样存在深度和数组大小限制：</p>
-<div class="highlight"><div class="chroma">
-<table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt">1
-</span><span class="lnt">2
-</span></code></pre></td>
-<td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="line"><span class="cl"><span class="n">maxarray</span><span class="o">=</span><span class="n">1000000</span>
-</span></span><span class="line"><span class="cl"><span class="n">maxdepth</span><span class="o">=</span><span class="n">20</span>
-</span></span></code></pre></td></tr></table>
-</div>
-</div><h2 id="一些思考">一些思考</h2>
-<p>一般人们常说的 Bypass JEP290 都是基于一个条件：没有配置全局过滤器；</p>
-<p>JEP290 中的默认过滤器，影响最大的还是RMI，除了上面提到的默认内置过滤器外，还加了一些限制：</p>
-<div class="highlight"><div class="chroma">
-<table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt">1
-</span><span class="lnt">2
-</span><span class="lnt">3
-</span></code></pre></td>
-<td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">java.rmi.server.useCodebaseOnly default true
-</span></span><span class="line"><span class="cl">com.sun.jndi.rmi.object.trustURLCodebase default false
-</span></span><span class="line"><span class="cl">com.sun.jndi.ldap.object.trustURLCodebase default false
-</span></span></code></pre></td></tr></table>
-</div>
-</div><p>这些限制，禁止从远程加载Class。但是JEP290并不是一出来就是完善的，例如我们熟知的 JRMP Gadget 就是为了绕过JEP290下的RMI反序列化限制的（JDK8u121 &lt;= version &lt; JDK8u231）。</p>
-<p>此外还有一个Gadget可以绕过：UnicastRemoteObject Gadget（JDK8u231 &lt;= version &lt; JDK8u241），我没有细细研究这个Gadget，因为一般情况下就直接使用LDAP代替RMI进行绕过了，很少会用到 UnicastRemoteObject  这个 Gadget。</p>
-
-    </div>
-
-    <div class="post-copyright">
-  <p class="copyright-item">
-    <span class="item-title">文章作者</span>
-    <span class="item-content">P1n93r</span>
-  </p>
-  <p class="copyright-item">
-    <span class="item-title">上次更新</span>
-    <span class="item-content">
-        2021-07-04
-        
-    </span>
-  </p>
-  
-  
-</div>
-<footer class="post-footer">
-      
-      <nav class="post-nav">
-        <a class="prev" href="/post/security/fastjson%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E6%94%BB%E5%87%BB/">
-            <i class="iconfont icon-left"></i>
-            <span class="prev-text nav-default">Fastjson反序列化攻击</span>
-            <span class="prev-text nav-mobile">上一篇</span>
-          </a>
-        <a class="next" href="/post/security/apache_dubbo_cve-2020-1948%E5%88%86%E6%9E%90/">
-            <span class="next-text nav-default">Apache_Dubbo_CVE-2020-1948分析</span>
-            <span class="next-text nav-mobile">下一篇</span>
-            <i class="iconfont icon-right"></i>
-          </a>
-      </nav>
-    </footer>
-  </article>
-        </div>
-        <div id="disqus_thread"></div>
-    <script type="text/javascript">
-    (function() {
-      
-      
-      if (window.location.hostname === 'localhost') return;
-
-      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
-      var disqus_shortname = 'p1n93r';
-      dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
-      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
-    })();
-    </script>
-    <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
-
-  
-
-  
-
-      </div>
-    </main>
-
-    <footer id="footer" class="footer">
-      <div class="social-links">
-      <a href="mailto:pin83r@gmail.com" class="iconfont icon-email" title="email"></a>
-      <a href="https://github.com/p1n93r" class="iconfont icon-github" title="github"></a>
-  <a href="https://p1n93r.github.io/index.xml" type="application/rss+xml" class="iconfont icon-rss" title="rss"></a>
-</div>
-
-<div class="copyright">
-  <span class="power-by">
-    由 <a class="hexo-link" href="https://gohugo.io">Hugo</a> 强力驱动
-  </span>
-  <span class="division">|</span>
-  <span class="theme-info">
-    主题 - 
-    <a class="theme-link" href="https://github.com/olOwOlo/hugo-theme-even">Even</a>
-  </span>
-
-  <div class="busuanzi-footer">
-    <span id="busuanzi_container_site_pv"> 本站总访问量 <span id="busuanzi_value_site_pv"><img src="/img/spinner.svg" alt="spinner.svg"/></span> 次 </span>
-      <span class="division">|</span>
-    <span id="busuanzi_container_site_uv"> 本站总访客数 <span id="busuanzi_value_site_uv"><img src="/img/spinner.svg" alt="spinner.svg"/></span> 人 </span>
-  </div>
-
-  <span class="copyright-year">
-    &copy; 
-    2019 - 
-    2022<span class="heart"><i class="iconfont icon-heart"></i></span><span>P1n93r</span>
-  </span>
-</div>
-
-    </footer>
-
-    <div class="back-to-top" id="back-to-top">
-      <i class="iconfont icon-up"></i>
-    </div>
-  </div>
-  
-  <script src="https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
-  <script src="https://cdn.jsdelivr.net/npm/slideout@1.0.1/dist/slideout.min.js" integrity="sha256-t+zJ/g8/KXIJMjSVQdnibt4dlaDxc9zXr/9oNPeWqdg=" crossorigin="anonymous"></script>
-  <script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.js" integrity="sha256-XVLffZaxoWfGUEbdzuLi7pwaUJv1cecsQJQqGLe7axY=" crossorigin="anonymous"></script>
-
-
-
-<script type="text/javascript" src="/js/main.min.64437849d125a2d603b3e71d6de5225d641a32d17168a58106e0b61852079683.js"></script>
-
-
-
-
-
-
-
-
-</body>
-</html>
+<!doctype html><html lang=zh-cn><head><meta charset=utf-8><meta http-equiv=x-ua-compatible content="IE=edge,chrome=1"><title>JEP290机制学习 - P1n93r - 博学而精一</title><meta name=renderer content="webkit"><meta name=viewport content="width=device-width,initial-scale=1,maximum-scale=1"><meta http-equiv=cache-control content="no-transform"><meta http-equiv=cache-control content="no-siteapp"><meta name=theme-color content="#f8f5ec"><meta name=msapplication-navbutton-color content="#f8f5ec"><meta name=apple-mobile-web-app-capable content="yes"><meta name=apple-mobile-web-app-status-bar-style content="#f8f5ec"><meta name=author content="P1n93r"><meta name=description content="介绍 官方介绍：https://openjdk.java.net/jeps/290 （1）什么是JEP？ JEP 即 JDK Enhancement Proposal （JDK增强提议），目前索引编"><meta name=keywords content="Security,Java,Web,Android"><meta name=generator content="Hugo 0.97.3 with theme even"><link rel=canonical href=https://p1n93r.github.io/post/security/jep290%E6%9C%BA%E5%88%B6%E5%AD%A6%E4%B9%A0/><link rel=apple-touch-icon sizes=180x180 href=/apple-touch-icon.png><link rel=icon type=image/png sizes=32x32 href=/favicon-32x32.png><link rel=icon type=image/png sizes=16x16 href=/favicon-16x16.png><link rel=manifest href=/manifest.json><link rel=mask-icon href=/safari-pinned-tab.svg color=#5bbad5><script async src=//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js></script>
+<link href=/sass/main.min.f92fd13721ddf72129410fd8250e73152cc6f2438082b6c0208dc24ee7c13fc4.css rel=stylesheet><link rel=stylesheet href=https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.css integrity="sha256-7TyXnr2YU040zfSP+rEcz29ggW4j56/ujTPwjMzyqFY=" crossorigin=anonymous><meta property="og:title" content="JEP290机制学习"><meta property="og:description" content="介绍 官方介绍：https://openjdk.java.net/jeps/290 （1）什么是JEP？ JEP 即 JDK Enhancement Proposal （JDK增强提议），目前索引编"><meta property="og:type" content="article"><meta property="og:url" content="https://p1n93r.github.io/post/security/jep290%E6%9C%BA%E5%88%B6%E5%AD%A6%E4%B9%A0/"><meta property="article:section" content="post"><meta property="article:published_time" content="2021-07-04T17:07:36+08:00"><meta property="article:modified_time" content="2021-07-04T17:07:36+08:00"><meta itemprop=name content="JEP290机制学习"><meta itemprop=description content="介绍 官方介绍：https://openjdk.java.net/jeps/290 （1）什么是JEP？ JEP 即 JDK Enhancement Proposal （JDK增强提议），目前索引编"><meta itemprop=datePublished content="2021-07-04T17:07:36+08:00"><meta itemprop=dateModified content="2021-07-04T17:07:36+08:00"><meta itemprop=wordCount content="2102"><meta itemprop=keywords content><meta name=twitter:card content="summary"><meta name=twitter:title content="JEP290机制学习"><meta name=twitter:description content="介绍 官方介绍：https://openjdk.java.net/jeps/290 （1）什么是JEP？ JEP 即 JDK Enhancement Proposal （JDK增强提议），目前索引编"><!--[if lte IE 9]><script src=https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js></script><![endif]--><!--[if lt IE 9]><script src=https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js></script>
+<script src=https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js></script><![endif]--></head><body><div id=mobile-navbar class=mobile-navbar><div class=mobile-header-logo><a href=/ class=logo>P1n93r</a></div><div class=mobile-navbar-icon><span></span>
+<span></span>
+<span></span></div></div><nav id=mobile-menu class="mobile-menu slideout-menu"><ul class=mobile-menu-list><a href=/><li class=mobile-menu-item>Home</li></a><a href=/post/><li class=mobile-menu-item>Archives</li></a><a href=/tags/><li class=mobile-menu-item>Tags</li></a><a href=/categories/><li class=mobile-menu-item>Categories</li></a><a href=/about/><li class=mobile-menu-item>About</li></a></ul></nav><div class=container id=mobile-panel><header id=header class=header><div class=logo-wrapper><a href=/ class=logo>P1n93r</a></div><nav class=site-navbar><ul id=menu class=menu><li class=menu-item><a class=menu-item-link href=/>Home</a></li><li class=menu-item><a class=menu-item-link href=/post/>Archives</a></li><li class=menu-item><a class=menu-item-link href=/tags/>Tags</a></li><li class=menu-item><a class=menu-item-link href=/categories/>Categories</a></li><li class=menu-item><a class=menu-item-link href=/about/>About</a></li></ul></nav></header><main id=main class=main><div class=content-wrapper><div id=content class=content><article class=post><header class=post-header><h1 class=post-title>JEP290机制学习</h1><div class=post-meta><span class=post-time>2021-07-04</span><div class=post-category><a href=/categories/security/>security</a></div><span class=more-meta>约 2102 字</span>
+<span class=more-meta>预计阅读 5 分钟</span>
+<span id=busuanzi_container_page_pv class=more-meta><span id=busuanzi_value_page_pv><img src=/img/spinner.svg alt=spinner.svg></span> 次阅读</span></div></header><div class=post-toc id=post-toc><h2 class=post-toc-title>文章目录</h2><div class="post-toc-content always-active"><nav id=TableOfContents><ul><li><ul><li><a href=#介绍>介绍</a></li><li><a href=#目的>目的</a></li><li><a href=#注意点>注意点</a></li><li><a href=#jep290具体内容>JEP290具体内容</a></li><li><a href=#一些思考>一些思考</a></li></ul></li></ul></nav></div></div><div class=post-content><h2 id=介绍>介绍</h2><p>官方介绍：https://openjdk.java.net/jeps/290</p><p><strong>（1）什么是JEP？</strong></p><p><code>JEP</code> 即 <code>JDK Enhancement Proposal</code> （JDK增强提议），目前索引编号已经达到了 <a href=https://openjdk.java.net/jeps/415>JEP415</a> 。</p><p><strong>（2）什么是JEP290？</strong></p><p><code>JEP290</code> 允许过滤输入流中对象的序列化数据，以提高程序的安全性和稳健性。</p><p><strong>（2）JEP290的影响范围</strong></p><p>最主要的分水岭还是JDK8u121：</p><ul><li>Java™ SE Development Kit 8, Update 121 (JDK 8u121)</li><li>Java™ SE Development Kit 7, Update 131 (JDK 7u131)</li><li>Java™ SE Development Kit 6, Update 141 (JDK 6u141)</li></ul><h2 id=目的>目的</h2><p>直接引用官方的话：</p><ul><li>Provide a flexible mechanism to narrow the classes that can be deserialized from any class available to an application down to a context-appropriate set of classes.[提供一种灵活的机制，将可以反序列化的类从应用程序可用的任何类缩小到适合上下文的类集。]</li><li>Provide metrics to the filter for graph size and complexity during deserialization to validate normal graph behaviors.[在反序列化期间向过滤器提供图大小和复杂性的指标，以验证正常的图行为。]</li><li>Provide a mechanism for RMI-exported objects to validate the classes expected in invocations.[为 RMI 导出的对象提供一种机制，以验证调用中预期的类。]</li><li>The filter mechanism must not require subclassing or modification to existing subclasses of ObjectInputStream.[过滤器机制不得要求对 ObjectInputStream 的现有子类进行子类化或修改。]</li><li>Define a global filter that can be configured by properties or a configuration file.[定义可以通过属性或配置文件配置的全局过滤器。]</li></ul><p>可以看到，从 <code>JEP290</code> 开始，对 <code>RMI</code> 反序列化开始进行了限制。 <code>JEP290</code> 影响最大的还是 <code>RMI</code> 反序列化。</p><h2 id=注意点>注意点</h2><ul><li>JEP290需要手动设置，只有设置了之后才会有过滤，没有设置的话就还是可以正常的反序列化漏洞利用；</li><li>JEP290默认只为 RMI 注册表（RMI Register层）、 RMI分布式垃圾回收器（DGC层）以及 JMX 提供了相应的内置过滤器；</li></ul><p>所以从这里也可以看出， <code>JEP290</code> 影响最大的是 <code>RMI</code> 反序列化。</p><h2 id=jep290具体内容>JEP290具体内容</h2><p>JEP290主要是支持三种过滤器配置：</p><ul><li>自定义过滤器；</li><li>全局过滤器；</li><li>内置过滤器（RMI Register、RMI DGC等内置过滤器）；</li></ul><p><strong>（1）自定义过滤器[ObjectInputFilter Interface]</strong></p><p>自定义过滤器需要实现 <code>ObjectInputFilter</code> 接口，并实现其 <code>checkInput(FilterInfo filterInfo)</code> 方法，一个例子如下：</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span><span class=lnt>17
+</span><span class=lnt>18
+</span><span class=lnt>19
+</span><span class=lnt>20
+</span><span class=lnt>21
+</span><span class=lnt>22
+</span><span class=lnt>23
+</span><span class=lnt>24
+</span><span class=lnt>25
+</span><span class=lnt>26
+</span><span class=lnt>27
+</span><span class=lnt>28
+</span><span class=lnt>29
+</span><span class=lnt>30
+</span><span class=lnt>31
+</span><span class=lnt>32
+</span><span class=lnt>33
+</span><span class=lnt>34
+</span><span class=lnt>35
+</span><span class=lnt>36
+</span><span class=lnt>37
+</span><span class=lnt>38
+</span><span class=lnt>39
+</span><span class=lnt>40
+</span><span class=lnt>41
+</span><span class=lnt>42
+</span><span class=lnt>43
+</span><span class=lnt>44
+</span><span class=lnt>45
+</span><span class=lnt>46
+</span><span class=lnt>47
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-java data-lang=java><span class=line><span class=cl><span class=cm>/**
+</span></span></span><span class=line><span class=cl><span class=cm> * @author : p1n93r
+</span></span></span><span class=line><span class=cl><span class=cm> * @date : 2021/9/23 15:08
+</span></span></span><span class=line><span class=cl><span class=cm> * 自定义一个反序列化过滤器
+</span></span></span><span class=line><span class=cl><span class=cm> */</span>
+</span></span><span class=line><span class=cl><span class=kd>public</span> <span class=kd>class</span> <span class=nc>CustomObjectInputFilter</span> <span class=kd>implements</span> <span class=n>ObjectInputFilter</span> <span class=o>{</span>
+</span></span><span class=line><span class=cl>    <span class=kd>private</span> <span class=kd>static</span> <span class=kd>final</span> <span class=n>Class</span><span class=o>&lt;?&gt;</span> <span class=n>CLAZZ</span> <span class=o>=</span> <span class=n>User</span><span class=o>.</span><span class=na>class</span><span class=o>;</span>
+</span></span><span class=line><span class=cl>    <span class=cm>/**
+</span></span></span><span class=line><span class=cl><span class=cm>     * 限制反序列化类数组的数组大小
+</span></span></span><span class=line><span class=cl><span class=cm>     */</span>
+</span></span><span class=line><span class=cl>    <span class=kd>private</span> <span class=kd>static</span> <span class=kd>final</span> <span class=kt>long</span> <span class=n>ARRAY_LENGTH</span> <span class=o>=</span> <span class=o>-</span><span class=n>1L</span><span class=o>;</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>    <span class=cm>/**
+</span></span></span><span class=line><span class=cl><span class=cm>     * 限制反序列化时，引用的数量
+</span></span></span><span class=line><span class=cl><span class=cm>     */</span>
+</span></span><span class=line><span class=cl>    <span class=kd>private</span> <span class=kd>static</span> <span class=kd>final</span> <span class=kt>long</span> <span class=n>TOTAL_OBJECT_REFS</span> <span class=o>=</span> <span class=n>1L</span><span class=o>;</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>    <span class=cm>/**
+</span></span></span><span class=line><span class=cl><span class=cm>     * 限制反序列化的深度
+</span></span></span><span class=line><span class=cl><span class=cm>     */</span>
+</span></span><span class=line><span class=cl>    <span class=kd>private</span> <span class=kd>static</span> <span class=kd>final</span> <span class=kt>long</span> <span class=n>DEPTH</span> <span class=o>=</span> <span class=n>1l</span><span class=o>;</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>    <span class=cm>/**
+</span></span></span><span class=line><span class=cl><span class=cm>     * 限制反序列化流的大小
+</span></span></span><span class=line><span class=cl><span class=cm>     */</span>
+</span></span><span class=line><span class=cl>    <span class=kd>private</span> <span class=kd>static</span> <span class=kd>final</span> <span class=kt>long</span> <span class=n>STREAM_BYTES</span> <span class=o>=</span> <span class=n>95L</span><span class=o>;</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>    <span class=nd>@Override</span>
+</span></span><span class=line><span class=cl>    <span class=kd>public</span> <span class=n>Status</span> <span class=nf>checkInput</span><span class=o>(</span><span class=n>FilterInfo</span> <span class=n>filterInfo</span><span class=o>)</span> <span class=o>{</span>
+</span></span><span class=line><span class=cl>        <span class=k>if</span> <span class=o>(</span><span class=n>filterInfo</span><span class=o>.</span><span class=na>arrayLength</span><span class=o>()</span> <span class=o>!=</span> <span class=n>ARRAY_LENGTH</span>
+</span></span><span class=line><span class=cl>            <span class=o>||</span> <span class=n>filterInfo</span><span class=o>.</span><span class=na>references</span><span class=o>()</span> <span class=o>!=</span> <span class=n>TOTAL_OBJECT_REFS</span>
+</span></span><span class=line><span class=cl>            <span class=o>||</span> <span class=n>filterInfo</span><span class=o>.</span><span class=na>depth</span><span class=o>()</span> <span class=o>!=</span> <span class=n>DEPTH</span>
+</span></span><span class=line><span class=cl>            <span class=o>||</span> <span class=n>filterInfo</span><span class=o>.</span><span class=na>streamBytes</span><span class=o>()</span> <span class=o>!=</span> <span class=n>STREAM_BYTES</span>
+</span></span><span class=line><span class=cl>        <span class=o>)</span> <span class=o>{</span>
+</span></span><span class=line><span class=cl>            <span class=k>return</span> <span class=n>Status</span><span class=o>.</span><span class=na>REJECTED</span><span class=o>;</span>
+</span></span><span class=line><span class=cl>        <span class=o>}</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>        <span class=k>if</span> <span class=o>(</span><span class=n>filterInfo</span><span class=o>.</span><span class=na>serialClass</span><span class=o>()</span> <span class=o>==</span> <span class=kc>null</span><span class=o>)</span> <span class=o>{</span>
+</span></span><span class=line><span class=cl>            <span class=k>return</span> <span class=n>Status</span><span class=o>.</span><span class=na>UNDECIDED</span><span class=o>;</span>
+</span></span><span class=line><span class=cl>        <span class=o>}</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>        <span class=k>if</span> <span class=o>(</span><span class=n>filterInfo</span><span class=o>.</span><span class=na>serialClass</span><span class=o>()</span> <span class=o>!=</span> <span class=kc>null</span> <span class=o>&amp;&amp;</span> <span class=n>filterInfo</span><span class=o>.</span><span class=na>serialClass</span><span class=o>()</span> <span class=o>==</span> <span class=n>CLAZZ</span><span class=o>)</span> <span class=o>{</span>
+</span></span><span class=line><span class=cl>            <span class=k>return</span> <span class=n>Status</span><span class=o>.</span><span class=na>ALLOWED</span><span class=o>;</span>
+</span></span><span class=line><span class=cl>        <span class=o>}</span>
+</span></span><span class=line><span class=cl>        <span class=k>return</span> <span class=n>Status</span><span class=o>.</span><span class=na>REJECTED</span><span class=o>;</span>
+</span></span><span class=line><span class=cl>    <span class=o>}</span>
+</span></span><span class=line><span class=cl><span class=o>}</span>
+</span></span></code></pre></td></tr></table></div></div><p>然后就可以使用如下代码为程序内所有的 <code>ObjectInputStream</code> 设置反序列化过滤器：</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-java data-lang=java><span class=line><span class=cl><span class=n>ObjectInputFilter</span><span class=o>.</span><span class=na>Config</span><span class=o>.</span><span class=na>setSerialFilter</span><span class=o>(</span><span class=k>new</span> <span class=n>CustomObjectInputFilter</span><span class=o>());</span>
+</span></span></code></pre></td></tr></table></div></div><p>或者使用如下代码为某个特定的 <code>ObjectInputStream</code> 设置反序列化过滤器：</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-java data-lang=java><span class=line><span class=cl><span class=n>ObjectInputStream</span> <span class=n>objectInputStream</span> <span class=o>=</span> <span class=k>new</span> <span class=n>ObjectInputStream</span><span class=o>(</span><span class=k>new</span> <span class=n>FileInputStream</span><span class=o>(</span><span class=s>&#34;xxxx/xxx&#34;</span><span class=o>));</span>
+</span></span><span class=line><span class=cl><span class=n>ObjectInputFilter</span><span class=o>.</span><span class=na>Config</span><span class=o>.</span><span class=na>setObjectInputFilter</span><span class=o>(</span><span class=n>objectInputStream</span><span class=o>,</span><span class=k>new</span> <span class=n>CustomObjectInputFilter</span><span class=o>());</span>
+</span></span></code></pre></td></tr></table></div></div><p><strong>（2）全局过滤器[Process-wide Filter]</strong></p><p>全局过滤器可以通过系统属性或者配置文件来配置，如果配置了系统属性，那么会覆盖配置文件的配置：</p><ul><li>系统属性： <code>jdk.serialFilter</code> ；</li><li>配置文件： <code>$JAVA_HOME/conf/security/java.properties</code> (JDK9及以上)或者 <code>$JAVA_HOME/lib/security/java.security</code> (JDK6/7/8);</li></ul><p>配置系统属性，其实就是在Java程序启动前，加上JVM选项：</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-sh data-lang=sh><span class=line><span class=cl>-Djdk.serialFilter<span class=o>=</span>&lt;白名单类1&gt;<span class=p>;</span>&lt;白名单类2&gt;<span class=p>;</span>!&lt;黑名单类&gt;
+</span></span></code></pre></td></tr></table></div></div><p>选项的值，是一系列规则(模式)，以封号分隔：</p><ul><li>如果模式以 <code>!</code> 开头，如果模式的其余部分匹配，则拒绝该类，否则接受该类</li><li>如果模式包含 <code>/</code> ，则 <code>/</code> 之前的非空前缀是模块名称。如果模块名称与类的模块名称匹配，则剩余模式与类名称匹配。如果没有 <code>/</code> ，则不比较模块名称。</li><li>如果模式以 <code>.**</code> 结尾，则匹配包和所有子包中的任何类</li><li>如果模式以 <code>.*</code> 结尾，则匹配包中的任何类</li><li>如果模式以 <code>*</code> 结尾，则匹配任何以该模式为前缀的类。</li><li>如果模式等于类名，则匹配。</li><li>否则，状态未定。</li></ul><p>一个例子如下：</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-sh data-lang=sh><span class=line><span class=cl><span class=c1># 匹配特定的类并拒绝非列表中的类</span>
+</span></span><span class=line><span class=cl>-Djdk.serialFilter<span class=o>=</span>org.example.Test<span class=p>;</span>!*
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=c1># 匹配包和所有子包中的类并拒绝非列表中的类</span>
+</span></span><span class=line><span class=cl>-Djdk.serialFilter<span class=o>=</span>org.example.**<span class=p>;</span>!*
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=c1># 匹配包中的所有类并拒绝非列表中的类</span>
+</span></span><span class=line><span class=cl>-Djdk.serialFilter<span class=o>=</span>org.example.*<span class=p>;</span>!*
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=c1># 匹配任何以设置样式为前缀的类</span>
+</span></span><span class=line><span class=cl>-Djdk.serialFilter<span class=o>=</span>*<span class=p>;</span>
+</span></span></code></pre></td></tr></table></div></div><p><strong>（3）内置过滤器</strong></p><p>对于JEP290而言，存在默认开启的内置过滤器，这个内置过滤器适用于RMI 注册表（RMI Register层）、 RMI分布式垃圾回收器（DGC层）以及 JMX 。</p><p>这个过滤器影响比较大，对于 <code>RMI Register</code> 的限制，代码主要体现在 <code>RegistryImpl#registryFilter</code> ，其中过滤逻辑是使用白名单，反序列化白名单类如下：</p><ul><li>java.rmi.Remote</li><li>java.lang.Number</li><li>java.lang.reflect.Proxy</li><li>java.rmi.server.UnicastRef</li><li>java.rmi.activation.ActivationId</li><li>java.rmi.server.UID</li><li>java.rmi.server.RMIClientSocketFactory</li><li>java.rmi.server.RMIServerSocketFactory</li></ul><p>并且还存在两个限制：</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-java data-lang=java><span class=line><span class=cl><span class=n>maxarray</span><span class=o>=</span><span class=n>1000000</span>
+</span></span><span class=line><span class=cl><span class=n>maxdepth</span><span class=o>=</span><span class=n>20</span>
+</span></span></code></pre></td></tr></table></div></div><p>对于 <code>RMI DGC</code> 的限制，代码主要体现在 <code>sun.rmi.transport.DGCImpl_Stub#dirty()</code> 方法中，其中的主要过滤逻辑也是白名单，反序列化白名单如下：</p><ul><li>java.rmi.server.ObjID</li><li>java.rmi.server.UID</li><li>java.rmi.dgc.VMID</li><li>java.rmi.dgc.Lease</li></ul><p>同样存在深度和数组大小限制：</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-java data-lang=java><span class=line><span class=cl><span class=n>maxarray</span><span class=o>=</span><span class=n>1000000</span>
+</span></span><span class=line><span class=cl><span class=n>maxdepth</span><span class=o>=</span><span class=n>20</span>
+</span></span></code></pre></td></tr></table></div></div><h2 id=一些思考>一些思考</h2><p>一般人们常说的 Bypass JEP290 都是基于一个条件：没有配置全局过滤器；</p><p>JEP290 中的默认过滤器，影响最大的还是RMI，除了上面提到的默认内置过滤器外，还加了一些限制：</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-fallback data-lang=fallback><span class=line><span class=cl>java.rmi.server.useCodebaseOnly default true
+</span></span><span class=line><span class=cl>com.sun.jndi.rmi.object.trustURLCodebase default false
+</span></span><span class=line><span class=cl>com.sun.jndi.ldap.object.trustURLCodebase default false
+</span></span></code></pre></td></tr></table></div></div><p>这些限制，禁止从远程加载Class。但是JEP290并不是一出来就是完善的，例如我们熟知的 JRMP Gadget 就是为了绕过JEP290下的RMI反序列化限制的（JDK8u121 &lt;= version &lt; JDK8u231）。</p><p>此外还有一个Gadget可以绕过：UnicastRemoteObject Gadget（JDK8u231 &lt;= version &lt; JDK8u241），我没有细细研究这个Gadget，因为一般情况下就直接使用LDAP代替RMI进行绕过了，很少会用到 UnicastRemoteObject 这个 Gadget。</p></div><div class=post-copyright><p class=copyright-item><span class=item-title>文章作者</span>
+<span class=item-content>P1n93r</span></p><p class=copyright-item><span class=item-title>上次更新</span>
+<span class=item-content>2021-07-04</span></p></div><footer class=post-footer><nav class=post-nav><a class=prev href=/post/security/fastjson%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E6%94%BB%E5%87%BB/><i class="iconfont icon-left"></i>
+<span class="prev-text nav-default">Fastjson反序列化攻击</span>
+<span class="prev-text nav-mobile">上一篇</span></a>
+<a class=next href=/post/security/apache_dubbo_cve-2020-1948%E5%88%86%E6%9E%90/><span class="next-text nav-default">Apache_Dubbo_CVE-2020-1948分析</span>
+<span class="next-text nav-mobile">下一篇</span>
+<i class="iconfont icon-right"></i></a></nav></footer></article></div><div id=disqus_thread></div><script type=text/javascript>(function(){if(window.location.hostname==="localhost")return;var t,e=document.createElement("script");e.type="text/javascript",e.async=!0,t="p1n93r",e.src="//"+t+".disqus.com/embed.js",(document.getElementsByTagName("head")[0]||document.getElementsByTagName("body")[0]).appendChild(e)})()</script><noscript>Please enable JavaScript to view the <a href=http://disqus.com/?ref_noscript>comments powered by Disqus.</a></noscript></div></main><footer id=footer class=footer><div class=social-links><a href=mailto:pin83r@gmail.com class="iconfont icon-email" title=email></a>
+<a href=https://github.com/p1n93r class="iconfont icon-github" title=github></a>
+<a href=https://p1n93r.github.io/index.xml type=application/rss+xml class="iconfont icon-rss" title=rss></a></div><div class=copyright><span class=power-by>由 <a class=hexo-link href=https://gohugo.io>Hugo</a> 强力驱动</span>
+<span class=division>|</span>
+<span class=theme-info>主题 -
+<a class=theme-link href=https://github.com/olOwOlo/hugo-theme-even>Even</a></span><div class=busuanzi-footer><span id=busuanzi_container_site_pv>本站总访问量 <span id=busuanzi_value_site_pv><img src=/img/spinner.svg alt=spinner.svg></span> 次</span>
+<span class=division>|</span>
+<span id=busuanzi_container_site_uv>本站总访客数 <span id=busuanzi_value_site_uv><img src=/img/spinner.svg alt=spinner.svg></span> 人</span></div><span class=copyright-year>&copy;
+2019 -
+2022<span class=heart><i class="iconfont icon-heart"></i></span><span>P1n93r</span></span></div></footer><div class=back-to-top id=back-to-top><i class="iconfont icon-up"></i></div></div><script src=https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin=anonymous></script>
+<script src=https://cdn.jsdelivr.net/npm/slideout@1.0.1/dist/slideout.min.js integrity="sha256-t+zJ/g8/KXIJMjSVQdnibt4dlaDxc9zXr/9oNPeWqdg=" crossorigin=anonymous></script>
+<script src=https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.js integrity="sha256-XVLffZaxoWfGUEbdzuLi7pwaUJv1cecsQJQqGLe7axY=" crossorigin=anonymous></script>
+<script type=text/javascript src=/js/main.min.64437849d125a2d603b3e71d6de5225d641a32d17168a58106e0b61852079683.js></script></body></html>

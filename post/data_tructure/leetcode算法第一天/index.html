@@ -1,188 +1,10 @@
-<!DOCTYPE html>
-<html lang="zh-cn">
-<head>
-  <meta charset="utf-8">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-  <title>LeetCode算法(第一天) - P1n93r - 博学而精一</title>
-  <meta name="renderer" content="webkit" />
-<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
-
-<meta http-equiv="Cache-Control" content="no-transform" />
-<meta http-equiv="Cache-Control" content="no-siteapp" />
-
-<meta name="theme-color" content="#f8f5ec" />
-<meta name="msapplication-navbutton-color" content="#f8f5ec">
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
-
-
-<meta name="author" content="P1n93r" /><meta name="description" content="两数之和 题目描述如下： //给定一个整数数组 nums 和一个目标值 target，请你在该数组中找出和为目标值的那 两个 整数，并返回他们的数组下标。 // // 你" /><meta name="keywords" content="Security, Java, Web, Android" />
-
-
-
-
-
-
-<meta name="generator" content="Hugo 0.96.0 with theme even" />
-
-
-<link rel="canonical" href="https://p1n93r.github.io/post/data_tructure/leetcode%E7%AE%97%E6%B3%95%E7%AC%AC%E4%B8%80%E5%A4%A9/" />
-<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
-<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
-<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
-<link rel="manifest" href="/manifest.json">
-<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
-
-<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
-
-<link href="/sass/main.min.f92fd13721ddf72129410fd8250e73152cc6f2438082b6c0208dc24ee7c13fc4.css" rel="stylesheet">
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.css" integrity="sha256-7TyXnr2YU040zfSP+rEcz29ggW4j56/ujTPwjMzyqFY=" crossorigin="anonymous">
-
-
-<meta property="og:title" content="LeetCode算法(第一天)" />
-<meta property="og:description" content="两数之和 题目描述如下： //给定一个整数数组 nums 和一个目标值 target，请你在该数组中找出和为目标值的那 两个 整数，并返回他们的数组下标。 // // 你" />
-<meta property="og:type" content="article" />
-<meta property="og:url" content="https://p1n93r.github.io/post/data_tructure/leetcode%E7%AE%97%E6%B3%95%E7%AC%AC%E4%B8%80%E5%A4%A9/" /><meta property="article:section" content="post" />
-<meta property="article:published_time" content="2020-09-15T18:57:36+08:00" />
-<meta property="article:modified_time" content="2020-09-15T18:57:36+08:00" />
-
-<meta itemprop="name" content="LeetCode算法(第一天)">
-<meta itemprop="description" content="两数之和 题目描述如下： //给定一个整数数组 nums 和一个目标值 target，请你在该数组中找出和为目标值的那 两个 整数，并返回他们的数组下标。 // // 你"><meta itemprop="datePublished" content="2020-09-15T18:57:36+08:00" />
-<meta itemprop="dateModified" content="2020-09-15T18:57:36+08:00" />
-<meta itemprop="wordCount" content="2828">
-<meta itemprop="keywords" content="数据结构与算法," /><meta name="twitter:card" content="summary"/>
-<meta name="twitter:title" content="LeetCode算法(第一天)"/>
-<meta name="twitter:description" content="两数之和 题目描述如下： //给定一个整数数组 nums 和一个目标值 target，请你在该数组中找出和为目标值的那 两个 整数，并返回他们的数组下标。 // // 你"/>
-
-<!--[if lte IE 9]>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
-<![endif]-->
-
-<!--[if lt IE 9]>
-  <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
-<![endif]-->
-
-</head>
-<body>
-  <div id="mobile-navbar" class="mobile-navbar">
-  <div class="mobile-header-logo">
-    <a href="/" class="logo">P1n93r</a>
-  </div>
-  <div class="mobile-navbar-icon">
-    <span></span>
-    <span></span>
-    <span></span>
-  </div>
-</div>
-<nav id="mobile-menu" class="mobile-menu slideout-menu">
-  <ul class="mobile-menu-list">
-    <a href="/">
-        <li class="mobile-menu-item">Home</li>
-      </a><a href="/post/">
-        <li class="mobile-menu-item">Archives</li>
-      </a><a href="/tags/">
-        <li class="mobile-menu-item">Tags</li>
-      </a><a href="/categories/">
-        <li class="mobile-menu-item">Categories</li>
-      </a><a href="/about/">
-        <li class="mobile-menu-item">About</li>
-      </a>
-  </ul>
-
-  
-
-
-</nav>
-
-  <div class="container" id="mobile-panel">
-    <header id="header" class="header">
-        <div class="logo-wrapper">
-  <a href="/" class="logo">P1n93r</a>
-</div>
-
-
-
-
-
-<nav class="site-navbar">
-  <ul id="menu" class="menu">
-    <li class="menu-item">
-        <a class="menu-item-link" href="/">Home</a>
-      </li><li class="menu-item">
-        <a class="menu-item-link" href="/post/">Archives</a>
-      </li><li class="menu-item">
-        <a class="menu-item-link" href="/tags/">Tags</a>
-      </li><li class="menu-item">
-        <a class="menu-item-link" href="/categories/">Categories</a>
-      </li><li class="menu-item">
-        <a class="menu-item-link" href="/about/">About</a>
-      </li>
-  </ul>
-</nav>
-
-    </header>
-
-    <main id="main" class="main">
-      <div class="content-wrapper">
-        <div id="content" class="content">
-          <article class="post">
-    
-    <header class="post-header">
-      <h1 class="post-title">LeetCode算法(第一天)</h1>
-
-      <div class="post-meta">
-        <span class="post-time"> 2020-09-15 </span>
-        <div class="post-category">
-            <a href="/categories/data_structure/"> data_structure </a>
-            </div>
-          <span class="more-meta"> 约 2828 字 </span>
-          <span class="more-meta"> 预计阅读 6 分钟 </span>
-        <span id="busuanzi_container_page_pv" class="more-meta"> <span id="busuanzi_value_page_pv"><img src="/img/spinner.svg" alt="spinner.svg"/></span> 次阅读 </span>
-      </div>
-    </header>
-
-    <div class="post-toc" id="post-toc">
-  <h2 class="post-toc-title">文章目录</h2>
-  <div class="post-toc-content always-active">
-    <nav id="TableOfContents">
-  <ul>
-    <li>
-      <ul>
-        <li><a href="#两数之和">两数之和</a>
-          <ul>
-            <li><a href="#解法1">解法1</a></li>
-            <li><a href="#解法2">解法2</a></li>
-            <li><a href="#解法3">解法3</a></li>
-          </ul>
-        </li>
-        <li><a href="#两数相加">两数相加</a>
-          <ul>
-            <li><a href="#解法">解法</a></li>
-          </ul>
-        </li>
-        <li><a href="#无重复字符的最长子串">无重复字符的最长子串</a>
-          <ul>
-            <li><a href="#解法1-1">解法1</a></li>
-            <li><a href="#解法2-1">解法2</a></li>
-          </ul>
-        </li>
-        <li><a href="#寻找两个正序数组的中位数">寻找两个正序数组的中位数</a>
-          <ul>
-            <li><a href="#解法1-2">解法1</a></li>
-            <li><a href="#解法2-2">解法2</a></li>
-          </ul>
-        </li>
-      </ul>
-    </li>
-  </ul>
-</nav>
-  </div>
-</div>
-    <div class="post-content">
-      <h2 id="两数之和">两数之和</h2>
-<p>题目描述如下：</p>
-<pre><code>//给定一个整数数组 nums 和一个目标值 target，请你在该数组中找出和为目标值的那 两个 整数，并返回他们的数组下标。
+<!doctype html><html lang=zh-cn><head><meta charset=utf-8><meta http-equiv=x-ua-compatible content="IE=edge,chrome=1"><title>LeetCode算法(第一天) - P1n93r - 博学而精一</title><meta name=renderer content="webkit"><meta name=viewport content="width=device-width,initial-scale=1,maximum-scale=1"><meta http-equiv=cache-control content="no-transform"><meta http-equiv=cache-control content="no-siteapp"><meta name=theme-color content="#f8f5ec"><meta name=msapplication-navbutton-color content="#f8f5ec"><meta name=apple-mobile-web-app-capable content="yes"><meta name=apple-mobile-web-app-status-bar-style content="#f8f5ec"><meta name=author content="P1n93r"><meta name=description content="两数之和 题目描述如下： //给定一个整数数组 nums 和一个目标值 target，请你在该数组中找出和为目标值的那 两个 整数，并返回他们的数组下标。 // // 你"><meta name=keywords content="Security,Java,Web,Android"><meta name=generator content="Hugo 0.97.3 with theme even"><link rel=canonical href=https://p1n93r.github.io/post/data_tructure/leetcode%E7%AE%97%E6%B3%95%E7%AC%AC%E4%B8%80%E5%A4%A9/><link rel=apple-touch-icon sizes=180x180 href=/apple-touch-icon.png><link rel=icon type=image/png sizes=32x32 href=/favicon-32x32.png><link rel=icon type=image/png sizes=16x16 href=/favicon-16x16.png><link rel=manifest href=/manifest.json><link rel=mask-icon href=/safari-pinned-tab.svg color=#5bbad5><script async src=//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js></script>
+<link href=/sass/main.min.f92fd13721ddf72129410fd8250e73152cc6f2438082b6c0208dc24ee7c13fc4.css rel=stylesheet><link rel=stylesheet href=https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.css integrity="sha256-7TyXnr2YU040zfSP+rEcz29ggW4j56/ujTPwjMzyqFY=" crossorigin=anonymous><meta property="og:title" content="LeetCode算法(第一天)"><meta property="og:description" content="两数之和 题目描述如下： //给定一个整数数组 nums 和一个目标值 target，请你在该数组中找出和为目标值的那 两个 整数，并返回他们的数组下标。 // // 你"><meta property="og:type" content="article"><meta property="og:url" content="https://p1n93r.github.io/post/data_tructure/leetcode%E7%AE%97%E6%B3%95%E7%AC%AC%E4%B8%80%E5%A4%A9/"><meta property="article:section" content="post"><meta property="article:published_time" content="2020-09-15T18:57:36+08:00"><meta property="article:modified_time" content="2020-09-15T18:57:36+08:00"><meta itemprop=name content="LeetCode算法(第一天)"><meta itemprop=description content="两数之和 题目描述如下： //给定一个整数数组 nums 和一个目标值 target，请你在该数组中找出和为目标值的那 两个 整数，并返回他们的数组下标。 // // 你"><meta itemprop=datePublished content="2020-09-15T18:57:36+08:00"><meta itemprop=dateModified content="2020-09-15T18:57:36+08:00"><meta itemprop=wordCount content="2828"><meta itemprop=keywords content="数据结构与算法,"><meta name=twitter:card content="summary"><meta name=twitter:title content="LeetCode算法(第一天)"><meta name=twitter:description content="两数之和 题目描述如下： //给定一个整数数组 nums 和一个目标值 target，请你在该数组中找出和为目标值的那 两个 整数，并返回他们的数组下标。 // // 你"><!--[if lte IE 9]><script src=https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js></script><![endif]--><!--[if lt IE 9]><script src=https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js></script>
+<script src=https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js></script><![endif]--></head><body><div id=mobile-navbar class=mobile-navbar><div class=mobile-header-logo><a href=/ class=logo>P1n93r</a></div><div class=mobile-navbar-icon><span></span>
+<span></span>
+<span></span></div></div><nav id=mobile-menu class="mobile-menu slideout-menu"><ul class=mobile-menu-list><a href=/><li class=mobile-menu-item>Home</li></a><a href=/post/><li class=mobile-menu-item>Archives</li></a><a href=/tags/><li class=mobile-menu-item>Tags</li></a><a href=/categories/><li class=mobile-menu-item>Categories</li></a><a href=/about/><li class=mobile-menu-item>About</li></a></ul></nav><div class=container id=mobile-panel><header id=header class=header><div class=logo-wrapper><a href=/ class=logo>P1n93r</a></div><nav class=site-navbar><ul id=menu class=menu><li class=menu-item><a class=menu-item-link href=/>Home</a></li><li class=menu-item><a class=menu-item-link href=/post/>Archives</a></li><li class=menu-item><a class=menu-item-link href=/tags/>Tags</a></li><li class=menu-item><a class=menu-item-link href=/categories/>Categories</a></li><li class=menu-item><a class=menu-item-link href=/about/>About</a></li></ul></nav></header><main id=main class=main><div class=content-wrapper><div id=content class=content><article class=post><header class=post-header><h1 class=post-title>LeetCode算法(第一天)</h1><div class=post-meta><span class=post-time>2020-09-15</span><div class=post-category><a href=/categories/data_structure/>data_structure</a></div><span class=more-meta>约 2828 字</span>
+<span class=more-meta>预计阅读 6 分钟</span>
+<span id=busuanzi_container_page_pv class=more-meta><span id=busuanzi_value_page_pv><img src=/img/spinner.svg alt=spinner.svg></span> 次阅读</span></div></header><div class=post-toc id=post-toc><h2 class=post-toc-title>文章目录</h2><div class="post-toc-content always-active"><nav id=TableOfContents><ul><li><ul><li><a href=#两数之和>两数之和</a><ul><li><a href=#解法1>解法1</a></li><li><a href=#解法2>解法2</a></li><li><a href=#解法3>解法3</a></li></ul></li><li><a href=#两数相加>两数相加</a><ul><li><a href=#解法>解法</a></li></ul></li><li><a href=#无重复字符的最长子串>无重复字符的最长子串</a><ul><li><a href=#解法1-1>解法1</a></li><li><a href=#解法2-1>解法2</a></li></ul></li><li><a href=#寻找两个正序数组的中位数>寻找两个正序数组的中位数</a><ul><li><a href=#解法1-2>解法1</a></li><li><a href=#解法2-2>解法2</a></li></ul></li></ul></li></ul></nav></div></div><div class=post-content><h2 id=两数之和>两数之和</h2><p>题目描述如下：</p><pre><code>//给定一个整数数组 nums 和一个目标值 target，请你在该数组中找出和为目标值的那 两个 整数，并返回他们的数组下标。
 //
 // 你可以假设每种输入只会对应一个答案。但是，数组中同一个元素不能使用两遍。
 //
@@ -197,10 +19,7 @@
 //
 // Related Topics 数组 哈希表
 // 👍 9044 👎 0
-</code></pre>
-<h3 id="解法1">解法1</h3>
-<p>一开始想到暴力解法，遍历每个值，然后根据target-current得到当前遍历的值需要对应的值，然后遍历剩余的元素，查看是否存在需要的值，如果存在就返回当前遍历的值以及找到的需要的值的下标。代码如下：</p>
-<pre><code>//解法1：暴力解法，不好
+</code></pre><h3 id=解法1>解法1</h3><p>一开始想到暴力解法，遍历每个值，然后根据target-current得到当前遍历的值需要对应的值，然后遍历剩余的元素，查看是否存在需要的值，如果存在就返回当前遍历的值以及找到的需要的值的下标。代码如下：</p><pre><code>//解法1：暴力解法，不好
 class Solution0 {
     public int[] twoSum(int[] nums, int target) {
         for (int i = 0; i &lt; nums.length; i++) {
@@ -215,10 +34,7 @@ class Solution0 {
         return null;
     }
 }
-</code></pre>
-<h3 id="解法2">解法2</h3>
-<p>然后感觉可以优化，想到使用hash表，就是先将数组中的元素存到hash表中，表的value是元素对应的索引，表的key是元素的值。这样就不会用到内循环了，查找target-current的值，直接从hash表中查找。代码如下：</p>
-<pre><code>//解法2：哈希表
+</code></pre><h3 id=解法2>解法2</h3><p>然后感觉可以优化，想到使用hash表，就是先将数组中的元素存到hash表中，表的value是元素对应的索引，表的key是元素的值。这样就不会用到内循环了，查找target-current的值，直接从hash表中查找。代码如下：</p><pre><code>//解法2：哈希表
 class Solution1 {
     public int[] twoSum(int[] nums, int target) {
         //将数据存放在hash表中,key:数值，val:数据在数组中的索引
@@ -236,10 +52,7 @@ class Solution1 {
         return null;
     }
 }
-</code></pre>
-<h3 id="解法3">解法3</h3>
-<p>对于解法2其实可以优化，没必要首先将数组的元素全部放入hash表中，因为已知两数相加的和，以及其中一个数，可以得到另一个数，所以可以一边遍历一边存放。代码如下：</p>
-<pre><code>//解法3：一遍哈希表,一边查找哈希表一边添加元素
+</code></pre><h3 id=解法3>解法3</h3><p>对于解法2其实可以优化，没必要首先将数组的元素全部放入hash表中，因为已知两数相加的和，以及其中一个数，可以得到另一个数，所以可以一边遍历一边存放。代码如下：</p><pre><code>//解法3：一遍哈希表,一边查找哈希表一边添加元素
 class Solution {
     public int[] twoSum(int[] nums, int target) {
         //将数据存放在hash表中,key:数值，val:数据在数组中的索引
@@ -255,10 +68,7 @@ class Solution {
         return null;
     }
 }
-</code></pre>
-<h2 id="两数相加">两数相加</h2>
-<p>题目描述如下：</p>
-<pre><code>//给出两个 非空 的链表用来表示两个非负的整数。其中，它们各自的位数是按照 逆序 的方式存储的，并且它们的每个节点只能存储 一位 数字。
+</code></pre><h2 id=两数相加>两数相加</h2><p>题目描述如下：</p><pre><code>//给出两个 非空 的链表用来表示两个非负的整数。其中，它们各自的位数是按照 逆序 的方式存储的，并且它们的每个节点只能存储 一位 数字。
 //
 // 如果，我们将这两个数相加起来，则会返回一个新的链表来表示它们的和。
 //
@@ -272,10 +82,7 @@ class Solution {
 //
 // Related Topics 链表 数学
 // 👍 4889 👎 0
-</code></pre>
-<h3 id="解法">解法</h3>
-<p>一开始看错了题目，以为要得到反转后的链表，所以写了一个反转链表的辅助函数（对于这个题目没有用），代码如下：</p>
-<pre><code>/**
+</code></pre><h3 id=解法>解法</h3><p>一开始看错了题目，以为要得到反转后的链表，所以写了一个反转链表的辅助函数（对于这个题目没有用），代码如下：</p><pre><code>/**
  * 返回一个反转后的链表
  */
 private ListNode reverseListNode(ListNode target){
@@ -293,9 +100,7 @@ private ListNode reverseListNode(ListNode target){
     }
     return temp;
 }
-</code></pre>
-<p>然后看清了题目，得到这样的思路：同时从两个链表的最左端开始相加，然后相加（包括进位）结果超过了9就产生进位1，如果没有就将进位变为0。需要考虑： <strong>如果到了最右边，也就是最后一位（我是将结果存在了第一个链表中），如果存在进位，但是第一个链表的下一个节点为null，或者没有进位，同时第一个链表的下一个节点为null并且第二个链表的下一个节点不为null，就要为第一个链表的下一个节点分配一个空白节点。</strong> 。代码如下：</p>
-<pre><code>public ListNode addTwoNumbers(ListNode l1, ListNode l2) {
+</code></pre><p>然后看清了题目，得到这样的思路：同时从两个链表的最左端开始相加，然后相加（包括进位）结果超过了9就产生进位1，如果没有就将进位变为0。需要考虑： <strong>如果到了最右边，也就是最后一位（我是将结果存在了第一个链表中），如果存在进位，但是第一个链表的下一个节点为null，或者没有进位，同时第一个链表的下一个节点为null并且第二个链表的下一个节点不为null，就要为第一个链表的下一个节点分配一个空白节点。</strong> 。代码如下：</p><pre><code>public ListNode addTwoNumbers(ListNode l1, ListNode l2) {
     if(l1==null){
         return l2;
     }else if(l2==null){
@@ -330,10 +135,7 @@ private ListNode reverseListNode(ListNode target){
     }
     return res;
 }
-</code></pre>
-<h2 id="无重复字符的最长子串">无重复字符的最长子串</h2>
-<p>题目描述如下：</p>
-<pre><code>//给定一个字符串，请你找出其中不含有重复字符的 最长子串 的长度。
+</code></pre><h2 id=无重复字符的最长子串>无重复字符的最长子串</h2><p>题目描述如下：</p><pre><code>//给定一个字符串，请你找出其中不含有重复字符的 最长子串 的长度。
 //
 // 示例 1:
 //
@@ -358,10 +160,7 @@ private ListNode reverseListNode(ListNode target){
 //
 // Related Topics 哈希表 双指针 字符串 Sliding Window
 // 👍 4310 👎 0
-</code></pre>
-<h3 id="解法1-1">解法1</h3>
-<p>暴力法，通过遍历每个子串，得到最长的子串。代码如下：</p>
-<pre><code>//暴力法：最后一个测试用例没有通过，最后一个测试用例耗时14秒
+</code></pre><h3 id=解法1-1>解法1</h3><p>暴力法，通过遍历每个子串，得到最长的子串。代码如下：</p><pre><code>//暴力法：最后一个测试用例没有通过，最后一个测试用例耗时14秒
 public int lengthOfLongestSubstring0(String s) {
     if(null==s||s.equals(&quot;&quot;)){
         return 0;
@@ -406,10 +205,7 @@ public int lengthOfLongestSubstring0(String s) {
     }
     return max;
 }
-</code></pre>
-<h3 id="解法2-1">解法2</h3>
-<p>使用Sliding Window（滑动窗口）得到无重复的最长子串的长度。代码如下：</p>
-<pre><code>//滑动窗口，最后一个测试用例耗时：1毫秒
+</code></pre><h3 id=解法2-1>解法2</h3><p>使用Sliding Window（滑动窗口）得到无重复的最长子串的长度。代码如下：</p><pre><code>//滑动窗口，最后一个测试用例耗时：1毫秒
 public int lengthOfLongestSubstring(String s) {
     if (s.length()==0) return 0;
     //hash表，用于存放已存在最新字符的索引
@@ -427,10 +223,7 @@ public int lengthOfLongestSubstring(String s) {
     }
     return max;
 }
-</code></pre>
-<h2 id="寻找两个正序数组的中位数">寻找两个正序数组的中位数</h2>
-<p>题目表述如下：</p>
-<pre><code>//给定两个大小为 m 和 n 的正序（从小到大）数组 nums1 和 nums2。
+</code></pre><h2 id=寻找两个正序数组的中位数>寻找两个正序数组的中位数</h2><p>题目表述如下：</p><pre><code>//给定两个大小为 m 和 n 的正序（从小到大）数组 nums1 和 nums2。
 //
 // 请你找出这两个正序数组的中位数，并且要求算法的时间复杂度为 O(log(m + n))。
 //
@@ -455,10 +248,7 @@ public int lengthOfLongestSubstring(String s) {
 //
 // Related Topics 数组 二分查找 分治算法
 // 👍 3177 👎 0
-</code></pre>
-<h3 id="解法1-2">解法1</h3>
-<p>脑袋简单的我又想到了暴力法=-=&rsquo;&rsquo;&rsquo;&rsquo;，思路很简单，就是将两个数组归并，排序，然后直接得到中位数。代码如下（使用Java提供的工具类归并排序）：</p>
-<pre><code>//暴力法：先归并数组，然后求中位数
+</code></pre><h3 id=解法1-2>解法1</h3><p>脑袋简单的我又想到了暴力法=-=&rsquo;&rsquo;&rsquo;&rsquo;，思路很简单，就是将两个数组归并，排序，然后直接得到中位数。代码如下（使用Java提供的工具类归并排序）：</p><pre><code>//暴力法：先归并数组，然后求中位数
 public double findMedianSortedArrays1(int[] nums1, int[] nums2) {
     //准备合并两个数组
     int[] res = new int[nums1.length + nums2.length];
@@ -471,10 +261,7 @@ public double findMedianSortedArrays1(int[] nums1, int[] nums2) {
     int mid=res.length/2;
     return isDouble? (res[mid]+res[mid-1])/2.0:res[mid];
 }
-</code></pre>
-<h3 id="解法2-2">解法2</h3>
-<p>改良版暴力法~~就是把上面解法1的归并排序用自己的算法实现，代码如下：</p>
-<pre><code>//暴力法：先归并数组，然后求中位数（自己实现归并排序）
+</code></pre><h3 id=解法2-2>解法2</h3><p>改良版暴力法~~就是把上面解法1的归并排序用自己的算法实现，代码如下：</p><pre><code>//暴力法：先归并数组，然后求中位数（自己实现归并排序）
 public double findMedianSortedArrays(int[] nums1, int[] nums2) {
 
     int i=0,j=0,count=0;
@@ -508,117 +295,23 @@ public double findMedianSortedArrays(int[] nums1, int[] nums2) {
     boolean isDouble=res.length%2==0;
     int mid=res.length/2;
     return isDouble? (res[mid]+res[mid-1])/2.0:res[mid];
-}</code></pre>
-
-    </div>
-
-    <div class="post-copyright">
-  <p class="copyright-item">
-    <span class="item-title">文章作者</span>
-    <span class="item-content">P1n93r</span>
-  </p>
-  <p class="copyright-item">
-    <span class="item-title">上次更新</span>
-    <span class="item-content">
-        2020-09-15
-        
-    </span>
-  </p>
-  
-  
-</div>
-<footer class="post-footer">
-      <div class="post-tags">
-          <a href="/tags/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/">数据结构与算法</a>
-          </div>
-      <nav class="post-nav">
-        <a class="prev" href="/post/sql/leetcode%E6%95%B0%E6%8D%AE%E5%BA%93%E7%AC%AC%E4%BA%8C%E5%A4%A9/">
-            <i class="iconfont icon-left"></i>
-            <span class="prev-text nav-default">LeetCode数据库(第二天)</span>
-            <span class="prev-text nav-mobile">上一篇</span>
-          </a>
-        <a class="next" href="/post/data_tructure/%E6%8E%92%E5%BA%8F/">
-            <span class="next-text nav-default">排序</span>
-            <span class="next-text nav-mobile">下一篇</span>
-            <i class="iconfont icon-right"></i>
-          </a>
-      </nav>
-    </footer>
-  </article>
-        </div>
-        <div id="disqus_thread"></div>
-    <script type="text/javascript">
-    (function() {
-      
-      
-      if (window.location.hostname === 'localhost') return;
-
-      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
-      var disqus_shortname = 'p1n93r';
-      dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
-      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
-    })();
-    </script>
-    <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
-
-  
-
-  
-
-      </div>
-    </main>
-
-    <footer id="footer" class="footer">
-      <div class="social-links">
-      <a href="mailto:pin83r@gmail.com" class="iconfont icon-email" title="email"></a>
-      <a href="https://github.com/p1n93r" class="iconfont icon-github" title="github"></a>
-  <a href="https://p1n93r.github.io/index.xml" type="application/rss+xml" class="iconfont icon-rss" title="rss"></a>
-</div>
-
-<div class="copyright">
-  <span class="power-by">
-    由 <a class="hexo-link" href="https://gohugo.io">Hugo</a> 强力驱动
-  </span>
-  <span class="division">|</span>
-  <span class="theme-info">
-    主题 - 
-    <a class="theme-link" href="https://github.com/olOwOlo/hugo-theme-even">Even</a>
-  </span>
-
-  <div class="busuanzi-footer">
-    <span id="busuanzi_container_site_pv"> 本站总访问量 <span id="busuanzi_value_site_pv"><img src="/img/spinner.svg" alt="spinner.svg"/></span> 次 </span>
-      <span class="division">|</span>
-    <span id="busuanzi_container_site_uv"> 本站总访客数 <span id="busuanzi_value_site_uv"><img src="/img/spinner.svg" alt="spinner.svg"/></span> 人 </span>
-  </div>
-
-  <span class="copyright-year">
-    &copy; 
-    2019 - 
-    2022<span class="heart"><i class="iconfont icon-heart"></i></span><span>P1n93r</span>
-  </span>
-</div>
-
-    </footer>
-
-    <div class="back-to-top" id="back-to-top">
-      <i class="iconfont icon-up"></i>
-    </div>
-  </div>
-  
-  <script src="https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
-  <script src="https://cdn.jsdelivr.net/npm/slideout@1.0.1/dist/slideout.min.js" integrity="sha256-t+zJ/g8/KXIJMjSVQdnibt4dlaDxc9zXr/9oNPeWqdg=" crossorigin="anonymous"></script>
-  <script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.js" integrity="sha256-XVLffZaxoWfGUEbdzuLi7pwaUJv1cecsQJQqGLe7axY=" crossorigin="anonymous"></script>
-
-
-
-<script type="text/javascript" src="/js/main.min.64437849d125a2d603b3e71d6de5225d641a32d17168a58106e0b61852079683.js"></script>
-
-
-
-
-
-
-
-
-</body>
-</html>
+}</code></pre></div><div class=post-copyright><p class=copyright-item><span class=item-title>文章作者</span>
+<span class=item-content>P1n93r</span></p><p class=copyright-item><span class=item-title>上次更新</span>
+<span class=item-content>2020-09-15</span></p></div><footer class=post-footer><div class=post-tags><a href=/tags/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/>数据结构与算法</a></div><nav class=post-nav><a class=prev href=/post/sql/leetcode%E6%95%B0%E6%8D%AE%E5%BA%93%E7%AC%AC%E4%BA%8C%E5%A4%A9/><i class="iconfont icon-left"></i>
+<span class="prev-text nav-default">LeetCode数据库(第二天)</span>
+<span class="prev-text nav-mobile">上一篇</span></a>
+<a class=next href=/post/data_tructure/%E6%8E%92%E5%BA%8F/><span class="next-text nav-default">排序</span>
+<span class="next-text nav-mobile">下一篇</span>
+<i class="iconfont icon-right"></i></a></nav></footer></article></div><div id=disqus_thread></div><script type=text/javascript>(function(){if(window.location.hostname==="localhost")return;var t,e=document.createElement("script");e.type="text/javascript",e.async=!0,t="p1n93r",e.src="//"+t+".disqus.com/embed.js",(document.getElementsByTagName("head")[0]||document.getElementsByTagName("body")[0]).appendChild(e)})()</script><noscript>Please enable JavaScript to view the <a href=http://disqus.com/?ref_noscript>comments powered by Disqus.</a></noscript></div></main><footer id=footer class=footer><div class=social-links><a href=mailto:pin83r@gmail.com class="iconfont icon-email" title=email></a>
+<a href=https://github.com/p1n93r class="iconfont icon-github" title=github></a>
+<a href=https://p1n93r.github.io/index.xml type=application/rss+xml class="iconfont icon-rss" title=rss></a></div><div class=copyright><span class=power-by>由 <a class=hexo-link href=https://gohugo.io>Hugo</a> 强力驱动</span>
+<span class=division>|</span>
+<span class=theme-info>主题 -
+<a class=theme-link href=https://github.com/olOwOlo/hugo-theme-even>Even</a></span><div class=busuanzi-footer><span id=busuanzi_container_site_pv>本站总访问量 <span id=busuanzi_value_site_pv><img src=/img/spinner.svg alt=spinner.svg></span> 次</span>
+<span class=division>|</span>
+<span id=busuanzi_container_site_uv>本站总访客数 <span id=busuanzi_value_site_uv><img src=/img/spinner.svg alt=spinner.svg></span> 人</span></div><span class=copyright-year>&copy;
+2019 -
+2022<span class=heart><i class="iconfont icon-heart"></i></span><span>P1n93r</span></span></div></footer><div class=back-to-top id=back-to-top><i class="iconfont icon-up"></i></div></div><script src=https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin=anonymous></script>
+<script src=https://cdn.jsdelivr.net/npm/slideout@1.0.1/dist/slideout.min.js integrity="sha256-t+zJ/g8/KXIJMjSVQdnibt4dlaDxc9zXr/9oNPeWqdg=" crossorigin=anonymous></script>
+<script src=https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.js integrity="sha256-XVLffZaxoWfGUEbdzuLi7pwaUJv1cecsQJQqGLe7axY=" crossorigin=anonymous></script>
+<script type=text/javascript src=/js/main.min.64437849d125a2d603b3e71d6de5225d641a32d17168a58106e0b61852079683.js></script></body></html>

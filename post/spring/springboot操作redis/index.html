@@ -1,182 +1,10 @@
-<!DOCTYPE html>
-<html lang="zh-cn">
-<head>
-  <meta charset="utf-8">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-  <title>SpringBoot操作Redis - P1n93r - 博学而精一</title>
-  <meta name="renderer" content="webkit" />
-<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
-
-<meta http-equiv="Cache-Control" content="no-transform" />
-<meta http-equiv="Cache-Control" content="no-siteapp" />
-
-<meta name="theme-color" content="#f8f5ec" />
-<meta name="msapplication-navbutton-color" content="#f8f5ec">
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
-
-
-<meta name="author" content="P1n93r" /><meta name="description" content="Redis介绍 Redis是一个开源的、高性能key-value数据结构存储，可以用来作为 数据库、缓存和消息队列。 以下是Redis的特点： Re" /><meta name="keywords" content="Security, Java, Web, Android" />
-
-
-
-
-
-
-<meta name="generator" content="Hugo 0.96.0 with theme even" />
-
-
-<link rel="canonical" href="https://p1n93r.github.io/post/spring/springboot%E6%93%8D%E4%BD%9Credis/" />
-<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
-<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
-<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
-<link rel="manifest" href="/manifest.json">
-<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
-
-<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
-
-<link href="/sass/main.min.f92fd13721ddf72129410fd8250e73152cc6f2438082b6c0208dc24ee7c13fc4.css" rel="stylesheet">
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.css" integrity="sha256-7TyXnr2YU040zfSP+rEcz29ggW4j56/ujTPwjMzyqFY=" crossorigin="anonymous">
-
-
-<meta property="og:title" content="SpringBoot操作Redis" />
-<meta property="og:description" content="Redis介绍 Redis是一个开源的、高性能key-value数据结构存储，可以用来作为 数据库、缓存和消息队列。 以下是Redis的特点： Re" />
-<meta property="og:type" content="article" />
-<meta property="og:url" content="https://p1n93r.github.io/post/spring/springboot%E6%93%8D%E4%BD%9Credis/" /><meta property="article:section" content="post" />
-<meta property="article:published_time" content="2020-09-08T17:50:36+08:00" />
-<meta property="article:modified_time" content="2020-09-08T17:50:36+08:00" />
-
-<meta itemprop="name" content="SpringBoot操作Redis">
-<meta itemprop="description" content="Redis介绍 Redis是一个开源的、高性能key-value数据结构存储，可以用来作为 数据库、缓存和消息队列。 以下是Redis的特点： Re"><meta itemprop="datePublished" content="2020-09-08T17:50:36+08:00" />
-<meta itemprop="dateModified" content="2020-09-08T17:50:36+08:00" />
-<meta itemprop="wordCount" content="1970">
-<meta itemprop="keywords" content="" /><meta name="twitter:card" content="summary"/>
-<meta name="twitter:title" content="SpringBoot操作Redis"/>
-<meta name="twitter:description" content="Redis介绍 Redis是一个开源的、高性能key-value数据结构存储，可以用来作为 数据库、缓存和消息队列。 以下是Redis的特点： Re"/>
-
-<!--[if lte IE 9]>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
-<![endif]-->
-
-<!--[if lt IE 9]>
-  <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
-<![endif]-->
-
-</head>
-<body>
-  <div id="mobile-navbar" class="mobile-navbar">
-  <div class="mobile-header-logo">
-    <a href="/" class="logo">P1n93r</a>
-  </div>
-  <div class="mobile-navbar-icon">
-    <span></span>
-    <span></span>
-    <span></span>
-  </div>
-</div>
-<nav id="mobile-menu" class="mobile-menu slideout-menu">
-  <ul class="mobile-menu-list">
-    <a href="/">
-        <li class="mobile-menu-item">Home</li>
-      </a><a href="/post/">
-        <li class="mobile-menu-item">Archives</li>
-      </a><a href="/tags/">
-        <li class="mobile-menu-item">Tags</li>
-      </a><a href="/categories/">
-        <li class="mobile-menu-item">Categories</li>
-      </a><a href="/about/">
-        <li class="mobile-menu-item">About</li>
-      </a>
-  </ul>
-
-  
-
-
-</nav>
-
-  <div class="container" id="mobile-panel">
-    <header id="header" class="header">
-        <div class="logo-wrapper">
-  <a href="/" class="logo">P1n93r</a>
-</div>
-
-
-
-
-
-<nav class="site-navbar">
-  <ul id="menu" class="menu">
-    <li class="menu-item">
-        <a class="menu-item-link" href="/">Home</a>
-      </li><li class="menu-item">
-        <a class="menu-item-link" href="/post/">Archives</a>
-      </li><li class="menu-item">
-        <a class="menu-item-link" href="/tags/">Tags</a>
-      </li><li class="menu-item">
-        <a class="menu-item-link" href="/categories/">Categories</a>
-      </li><li class="menu-item">
-        <a class="menu-item-link" href="/about/">About</a>
-      </li>
-  </ul>
-</nav>
-
-    </header>
-
-    <main id="main" class="main">
-      <div class="content-wrapper">
-        <div id="content" class="content">
-          <article class="post">
-    
-    <header class="post-header">
-      <h1 class="post-title">SpringBoot操作Redis</h1>
-
-      <div class="post-meta">
-        <span class="post-time"> 2020-09-08 </span>
-        <div class="post-category">
-            <a href="/categories/spring/"> Spring </a>
-            </div>
-          <span class="more-meta"> 约 1970 字 </span>
-          <span class="more-meta"> 预计阅读 4 分钟 </span>
-        <span id="busuanzi_container_page_pv" class="more-meta"> <span id="busuanzi_value_page_pv"><img src="/img/spinner.svg" alt="spinner.svg"/></span> 次阅读 </span>
-      </div>
-    </header>
-
-    <div class="post-toc" id="post-toc">
-  <h2 class="post-toc-title">文章目录</h2>
-  <div class="post-toc-content always-active">
-    <nav id="TableOfContents">
-  <ul>
-    <li>
-      <ul>
-        <li><a href="#redis介绍">Redis介绍</a></li>
-        <li><a href="#springboot整合redis">SpringBoot整合Redis</a>
-          <ul>
-            <li><a href="#添加依赖">添加依赖</a></li>
-            <li><a href="#编写配置文件">编写配置文件</a></li>
-            <li><a href="#使用redis">使用Redis</a></li>
-          </ul>
-        </li>
-      </ul>
-    </li>
-  </ul>
-</nav>
-  </div>
-</div>
-    <div class="post-content">
-      <h2 id="redis介绍">Redis介绍</h2>
-<p>Redis是一个开源的、高性能key-value数据结构存储，可以用来作为 <strong>数据库、缓存和消息队列。</strong> 以下是Redis的特点：</p>
-<ol>
-<li>Redis支持数据的持久化，可以将内存中的数据保存在磁盘中，重启的时候可以再次加载到内存使用。</li>
-<li>Redis不仅支持简单的key-value类型的数据，同时还提供list，set，zset，hash等数据结构的存储。</li>
-<li>Redis支持主从复制，即master-slave模式的数据备份。</li>
-<li>Redis将所有数据集存储在内存中，可以在入门级Linux机器中每秒写（SET）11万次，读（GET）8.1万次。Redis支持Pipelining命令，可一次发送多条命令来提高吞吐率，减少通信延迟。</li>
-</ol>
-<p>windows下安装Redis的教程：<a href="https://www.redis.com.cn/redis-installation">windows安装Redis</a></p>
-<h2 id="springboot整合redis">SpringBoot整合Redis</h2>
-<h3 id="添加依赖">添加依赖</h3>
-<p>在模块的pom文件中添加如下依赖：</p>
-<pre><code>&lt;!--引入redis，不使用其默认客户端--&gt;
+<!doctype html><html lang=zh-cn><head><meta charset=utf-8><meta http-equiv=x-ua-compatible content="IE=edge,chrome=1"><title>SpringBoot操作Redis - P1n93r - 博学而精一</title><meta name=renderer content="webkit"><meta name=viewport content="width=device-width,initial-scale=1,maximum-scale=1"><meta http-equiv=cache-control content="no-transform"><meta http-equiv=cache-control content="no-siteapp"><meta name=theme-color content="#f8f5ec"><meta name=msapplication-navbutton-color content="#f8f5ec"><meta name=apple-mobile-web-app-capable content="yes"><meta name=apple-mobile-web-app-status-bar-style content="#f8f5ec"><meta name=author content="P1n93r"><meta name=description content="Redis介绍 Redis是一个开源的、高性能key-value数据结构存储，可以用来作为 数据库、缓存和消息队列。 以下是Redis的特点： Re"><meta name=keywords content="Security,Java,Web,Android"><meta name=generator content="Hugo 0.97.3 with theme even"><link rel=canonical href=https://p1n93r.github.io/post/spring/springboot%E6%93%8D%E4%BD%9Credis/><link rel=apple-touch-icon sizes=180x180 href=/apple-touch-icon.png><link rel=icon type=image/png sizes=32x32 href=/favicon-32x32.png><link rel=icon type=image/png sizes=16x16 href=/favicon-16x16.png><link rel=manifest href=/manifest.json><link rel=mask-icon href=/safari-pinned-tab.svg color=#5bbad5><script async src=//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js></script>
+<link href=/sass/main.min.f92fd13721ddf72129410fd8250e73152cc6f2438082b6c0208dc24ee7c13fc4.css rel=stylesheet><link rel=stylesheet href=https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.css integrity="sha256-7TyXnr2YU040zfSP+rEcz29ggW4j56/ujTPwjMzyqFY=" crossorigin=anonymous><meta property="og:title" content="SpringBoot操作Redis"><meta property="og:description" content="Redis介绍 Redis是一个开源的、高性能key-value数据结构存储，可以用来作为 数据库、缓存和消息队列。 以下是Redis的特点： Re"><meta property="og:type" content="article"><meta property="og:url" content="https://p1n93r.github.io/post/spring/springboot%E6%93%8D%E4%BD%9Credis/"><meta property="article:section" content="post"><meta property="article:published_time" content="2020-09-08T17:50:36+08:00"><meta property="article:modified_time" content="2020-09-08T17:50:36+08:00"><meta itemprop=name content="SpringBoot操作Redis"><meta itemprop=description content="Redis介绍 Redis是一个开源的、高性能key-value数据结构存储，可以用来作为 数据库、缓存和消息队列。 以下是Redis的特点： Re"><meta itemprop=datePublished content="2020-09-08T17:50:36+08:00"><meta itemprop=dateModified content="2020-09-08T17:50:36+08:00"><meta itemprop=wordCount content="1970"><meta itemprop=keywords content><meta name=twitter:card content="summary"><meta name=twitter:title content="SpringBoot操作Redis"><meta name=twitter:description content="Redis介绍 Redis是一个开源的、高性能key-value数据结构存储，可以用来作为 数据库、缓存和消息队列。 以下是Redis的特点： Re"><!--[if lte IE 9]><script src=https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js></script><![endif]--><!--[if lt IE 9]><script src=https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js></script>
+<script src=https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js></script><![endif]--></head><body><div id=mobile-navbar class=mobile-navbar><div class=mobile-header-logo><a href=/ class=logo>P1n93r</a></div><div class=mobile-navbar-icon><span></span>
+<span></span>
+<span></span></div></div><nav id=mobile-menu class="mobile-menu slideout-menu"><ul class=mobile-menu-list><a href=/><li class=mobile-menu-item>Home</li></a><a href=/post/><li class=mobile-menu-item>Archives</li></a><a href=/tags/><li class=mobile-menu-item>Tags</li></a><a href=/categories/><li class=mobile-menu-item>Categories</li></a><a href=/about/><li class=mobile-menu-item>About</li></a></ul></nav><div class=container id=mobile-panel><header id=header class=header><div class=logo-wrapper><a href=/ class=logo>P1n93r</a></div><nav class=site-navbar><ul id=menu class=menu><li class=menu-item><a class=menu-item-link href=/>Home</a></li><li class=menu-item><a class=menu-item-link href=/post/>Archives</a></li><li class=menu-item><a class=menu-item-link href=/tags/>Tags</a></li><li class=menu-item><a class=menu-item-link href=/categories/>Categories</a></li><li class=menu-item><a class=menu-item-link href=/about/>About</a></li></ul></nav></header><main id=main class=main><div class=content-wrapper><div id=content class=content><article class=post><header class=post-header><h1 class=post-title>SpringBoot操作Redis</h1><div class=post-meta><span class=post-time>2020-09-08</span><div class=post-category><a href=/categories/spring/>Spring</a></div><span class=more-meta>约 1970 字</span>
+<span class=more-meta>预计阅读 4 分钟</span>
+<span id=busuanzi_container_page_pv class=more-meta><span id=busuanzi_value_page_pv><img src=/img/spinner.svg alt=spinner.svg></span> 次阅读</span></div></header><div class=post-toc id=post-toc><h2 class=post-toc-title>文章目录</h2><div class="post-toc-content always-active"><nav id=TableOfContents><ul><li><ul><li><a href=#redis介绍>Redis介绍</a></li><li><a href=#springboot整合redis>SpringBoot整合Redis</a><ul><li><a href=#添加依赖>添加依赖</a></li><li><a href=#编写配置文件>编写配置文件</a></li><li><a href=#使用redis>使用Redis</a></li></ul></li></ul></li></ul></nav></div></div><div class=post-content><h2 id=redis介绍>Redis介绍</h2><p>Redis是一个开源的、高性能key-value数据结构存储，可以用来作为 <strong>数据库、缓存和消息队列。</strong> 以下是Redis的特点：</p><ol><li>Redis支持数据的持久化，可以将内存中的数据保存在磁盘中，重启的时候可以再次加载到内存使用。</li><li>Redis不仅支持简单的key-value类型的数据，同时还提供list，set，zset，hash等数据结构的存储。</li><li>Redis支持主从复制，即master-slave模式的数据备份。</li><li>Redis将所有数据集存储在内存中，可以在入门级Linux机器中每秒写（SET）11万次，读（GET）8.1万次。Redis支持Pipelining命令，可一次发送多条命令来提高吞吐率，减少通信延迟。</li></ol><p>windows下安装Redis的教程：<a href=https://www.redis.com.cn/redis-installation>windows安装Redis</a></p><h2 id=springboot整合redis>SpringBoot整合Redis</h2><h3 id=添加依赖>添加依赖</h3><p>在模块的pom文件中添加如下依赖：</p><pre><code>&lt;!--引入redis，不使用其默认客户端--&gt;
 &lt;dependency&gt;
     &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;
     &lt;artifactId&gt;spring-boot-starter-data-redis&lt;/artifactId&gt;
@@ -193,10 +21,7 @@
     &lt;groupId&gt;redis.clients&lt;/groupId&gt;
     &lt;artifactId&gt;jedis&lt;/artifactId&gt;
 &lt;/dependency&gt;
-</code></pre>
-<h3 id="编写配置文件">编写配置文件</h3>
-<p>在模块下的application.properties文件(或者其他的能够加载的配置文件)中编写如下配置文件（我修改了Redis的默认端口为33578）：</p>
-<pre><code>#***********************************Redis配置************************************
+</code></pre><h3 id=编写配置文件>编写配置文件</h3><p>在模块下的application.properties文件(或者其他的能够加载的配置文件)中编写如下配置文件（我修改了Redis的默认端口为33578）：</p><pre><code>#***********************************Redis配置************************************
 spring.redis.host=127.0.0.1
 spring.redis.port=33578
 # Redis 数据库索引（默认为 0）
@@ -221,11 +46,7 @@ spring.cache.redis.cache-null-values=false
 spring.cache.redis.key-prefix=
 spring.cache.redis.use-key-prefix=true
 spring.cache.redis.time-to-live=0ms
-</code></pre>
-<h3 id="使用redis">使用Redis</h3>
-<h4 id="使用redis的发布与订阅">使用Redis的发布与订阅</h4>
-<p>主要创建Redis的监听容器以及消息监听器，然后在容器中添加消息监听，代码如下：</p>
-<pre><code>@Order(-1)
+</code></pre><h3 id=使用redis>使用Redis</h3><h4 id=使用redis的发布与订阅>使用Redis的发布与订阅</h4><p>主要创建Redis的监听容器以及消息监听器，然后在容器中添加消息监听，代码如下：</p><pre><code>@Order(-1)
 @Configuration
 public class RedisConfig {
 
@@ -275,9 +96,7 @@ public class RedisConfig {
         return container;
     }
 }
-</code></pre>
-<p>消息监听器代码如下：</p>
-<pre><code>@Order(-2)
+</code></pre><p>消息监听器代码如下：</p><pre><code>@Order(-2)
 @Component
 public class RedisMsgListener implements MessageListener {
     @Override
@@ -289,11 +108,7 @@ public class RedisMsgListener implements MessageListener {
         System.out.println(&quot;bytes:&quot;+new String(bytes));
     }
 }
-</code></pre>
-<p>测试结果如下：</p>
-<p><img src="/media/20200908-1.png" alt="Redis的发布与订阅"></p>
-<p>测试10万条消息发布与订阅的耗时，测试代码如下：</p>
-<pre><code>@Test
+</code></pre><p>测试结果如下：</p><p><img src=/media/20200908-1.png alt=Redis的发布与订阅></p><p>测试10万条消息发布与订阅的耗时，测试代码如下：</p><pre><code>@Test
 public void test5(){
     long start = System.currentTimeMillis();
     for(int i=0;i&lt;100000;i++){
@@ -302,12 +117,7 @@ public void test5(){
     long end = System.currentTimeMillis();
     System.out.println(&quot;耗时：&quot;+(end-start));
 }
-</code></pre>
-<p>测试结果如下：</p>
-<p><img src="/media/20200908-2.png" alt="10万条消息耗时"></p>
-<h4 id="自定义redistemplate的序列化器">自定义RedisTemplate的序列化器</h4>
-<p>在RedisConfig配置类中编写如下代码：</p>
-<pre><code>@PostConstruct
+</code></pre><p>测试结果如下：</p><p><img src=/media/20200908-2.png alt=10万条消息耗时></p><h4 id=自定义redistemplate的序列化器>自定义RedisTemplate的序列化器</h4><p>在RedisConfig配置类中编写如下代码：</p><pre><code>@PostConstruct
 private void init(){
     initRedisTemplate();
 }
@@ -320,10 +130,7 @@ private void initRedisTemplate() {
     redisTemplate.setKeySerializer(stringSerializer);
     redisTemplate.setHashKeySerializer(stringSerializer);
 }
-</code></pre>
-<h4 id="使用redis读写数据">使用Redis读写数据</h4>
-<p>测试代码如下：</p>
-<pre><code>@Test
+</code></pre><h4 id=使用redis读写数据>使用Redis读写数据</h4><p>测试代码如下：</p><pre><code>@Test
 public void test4(){
     long start = System.currentTimeMillis();
     List list =(List) template.executePipelined(new SessionCallback&lt;String&gt;() {
@@ -341,19 +148,7 @@ public void test4(){
     long end = System.currentTimeMillis();
     System.out.println(&quot;耗时：&quot;+(end-start));
 }
-</code></pre>
-<p>测试结果如下（10万条数据耗时不到2秒）：</p>
-<p><img src="/media/20200908-3.png" alt="Redis读写数据"></p>
-<p><em><strong>Notice:</strong></em> 测试结果中显示查询的值都是null，是因为使用了流水线，所有的命令都只是进入了队列而没有执行，所以执行的命令返回值为空。</p>
-<h4 id="使用spring缓存注解">使用Spring缓存注解</h4>
-<p>Spring的缓存注解如下：</p>
-<ul>
-<li>@Cacheable：先从缓存中通过定义的键查询，如果可以查询到数据，则返回，否则执行该方法，返回数据并将结果保存到缓存中。</li>
-<li>@CachePut：将方法结果返回存放到缓存当中。</li>
-<li>@CacheEvict：通过定义的键移除缓存，有一个配置项：beforeInvocation，表示是否在方法之前移除缓存，true表示是的，反之亦反。</li>
-</ul>
-<p>一个代码示例如下：</p>
-<pre><code>@Service
+</code></pre><p>测试结果如下（10万条数据耗时不到2秒）：</p><p><img src=/media/20200908-3.png alt=Redis读写数据></p><p><em><strong>Notice:</strong></em> 测试结果中显示查询的值都是null，是因为使用了流水线，所有的命令都只是进入了队列而没有执行，所以执行的命令返回值为空。</p><h4 id=使用spring缓存注解>使用Spring缓存注解</h4><p>Spring的缓存注解如下：</p><ul><li>@Cacheable：先从缓存中通过定义的键查询，如果可以查询到数据，则返回，否则执行该方法，返回数据并将结果保存到缓存中。</li><li>@CachePut：将方法结果返回存放到缓存当中。</li><li>@CacheEvict：通过定义的键移除缓存，有一个配置项：beforeInvocation，表示是否在方法之前移除缓存，true表示是的，反之亦反。</li></ul><p>一个代码示例如下：</p><pre><code>@Service
 public class UserServiceImpl extends ServiceImpl&lt;UserMapper, User&gt; implements IUserService {
     
     /**
@@ -388,116 +183,23 @@ public class UserServiceImpl extends ServiceImpl&lt;UserMapper, User&gt; impleme
         return this.baseMapper.deleteById(id);
     }
 }
-</code></pre>
-<p><em><strong>Notice:</strong></em> 如果类内方法相互调用，则会导致方法不走AOP代理，会使得@Transaction和@Cacheable等注解失效。此外 <code>@Cacheable(value=&quot;redisCache&quot;,condition=&quot;#result==null&quot;,key = &quot;'user_id_'+#id&quot;)</code> 中的condition表示从缓存中查询的result为空时才启用缓存。</p>
-
-    </div>
-
-    <div class="post-copyright">
-  <p class="copyright-item">
-    <span class="item-title">文章作者</span>
-    <span class="item-content">P1n93r</span>
-  </p>
-  <p class="copyright-item">
-    <span class="item-title">上次更新</span>
-    <span class="item-content">
-        2020-09-08
-        
-    </span>
-  </p>
-  
-  
-</div>
-<footer class="post-footer">
-      
-      <nav class="post-nav">
-        <a class="prev" href="/post/data_tructure/%E6%8E%92%E5%BA%8F/">
-            <i class="iconfont icon-left"></i>
-            <span class="prev-text nav-default">排序</span>
-            <span class="prev-text nav-mobile">上一篇</span>
-          </a>
-        <a class="next" href="/post/java/lambda/">
-            <span class="next-text nav-default">Lambda表达式</span>
-            <span class="next-text nav-mobile">下一篇</span>
-            <i class="iconfont icon-right"></i>
-          </a>
-      </nav>
-    </footer>
-  </article>
-        </div>
-        <div id="disqus_thread"></div>
-    <script type="text/javascript">
-    (function() {
-      
-      
-      if (window.location.hostname === 'localhost') return;
-
-      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
-      var disqus_shortname = 'p1n93r';
-      dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
-      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
-    })();
-    </script>
-    <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
-
-  
-
-  
-
-      </div>
-    </main>
-
-    <footer id="footer" class="footer">
-      <div class="social-links">
-      <a href="mailto:pin83r@gmail.com" class="iconfont icon-email" title="email"></a>
-      <a href="https://github.com/p1n93r" class="iconfont icon-github" title="github"></a>
-  <a href="https://p1n93r.github.io/index.xml" type="application/rss+xml" class="iconfont icon-rss" title="rss"></a>
-</div>
-
-<div class="copyright">
-  <span class="power-by">
-    由 <a class="hexo-link" href="https://gohugo.io">Hugo</a> 强力驱动
-  </span>
-  <span class="division">|</span>
-  <span class="theme-info">
-    主题 - 
-    <a class="theme-link" href="https://github.com/olOwOlo/hugo-theme-even">Even</a>
-  </span>
-
-  <div class="busuanzi-footer">
-    <span id="busuanzi_container_site_pv"> 本站总访问量 <span id="busuanzi_value_site_pv"><img src="/img/spinner.svg" alt="spinner.svg"/></span> 次 </span>
-      <span class="division">|</span>
-    <span id="busuanzi_container_site_uv"> 本站总访客数 <span id="busuanzi_value_site_uv"><img src="/img/spinner.svg" alt="spinner.svg"/></span> 人 </span>
-  </div>
-
-  <span class="copyright-year">
-    &copy; 
-    2019 - 
-    2022<span class="heart"><i class="iconfont icon-heart"></i></span><span>P1n93r</span>
-  </span>
-</div>
-
-    </footer>
-
-    <div class="back-to-top" id="back-to-top">
-      <i class="iconfont icon-up"></i>
-    </div>
-  </div>
-  
-  <script src="https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
-  <script src="https://cdn.jsdelivr.net/npm/slideout@1.0.1/dist/slideout.min.js" integrity="sha256-t+zJ/g8/KXIJMjSVQdnibt4dlaDxc9zXr/9oNPeWqdg=" crossorigin="anonymous"></script>
-  <script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.js" integrity="sha256-XVLffZaxoWfGUEbdzuLi7pwaUJv1cecsQJQqGLe7axY=" crossorigin="anonymous"></script>
-
-
-
-<script type="text/javascript" src="/js/main.min.64437849d125a2d603b3e71d6de5225d641a32d17168a58106e0b61852079683.js"></script>
-
-
-
-
-
-
-
-
-</body>
-</html>
+</code></pre><p><em><strong>Notice:</strong></em> 如果类内方法相互调用，则会导致方法不走AOP代理，会使得@Transaction和@Cacheable等注解失效。此外 <code>@Cacheable(value="redisCache",condition="#result==null",key = "'user_id_'+#id")</code> 中的condition表示从缓存中查询的result为空时才启用缓存。</p></div><div class=post-copyright><p class=copyright-item><span class=item-title>文章作者</span>
+<span class=item-content>P1n93r</span></p><p class=copyright-item><span class=item-title>上次更新</span>
+<span class=item-content>2020-09-08</span></p></div><footer class=post-footer><nav class=post-nav><a class=prev href=/post/data_tructure/%E6%8E%92%E5%BA%8F/><i class="iconfont icon-left"></i>
+<span class="prev-text nav-default">排序</span>
+<span class="prev-text nav-mobile">上一篇</span></a>
+<a class=next href=/post/java/lambda/><span class="next-text nav-default">Lambda表达式</span>
+<span class="next-text nav-mobile">下一篇</span>
+<i class="iconfont icon-right"></i></a></nav></footer></article></div><div id=disqus_thread></div><script type=text/javascript>(function(){if(window.location.hostname==="localhost")return;var t,e=document.createElement("script");e.type="text/javascript",e.async=!0,t="p1n93r",e.src="//"+t+".disqus.com/embed.js",(document.getElementsByTagName("head")[0]||document.getElementsByTagName("body")[0]).appendChild(e)})()</script><noscript>Please enable JavaScript to view the <a href=http://disqus.com/?ref_noscript>comments powered by Disqus.</a></noscript></div></main><footer id=footer class=footer><div class=social-links><a href=mailto:pin83r@gmail.com class="iconfont icon-email" title=email></a>
+<a href=https://github.com/p1n93r class="iconfont icon-github" title=github></a>
+<a href=https://p1n93r.github.io/index.xml type=application/rss+xml class="iconfont icon-rss" title=rss></a></div><div class=copyright><span class=power-by>由 <a class=hexo-link href=https://gohugo.io>Hugo</a> 强力驱动</span>
+<span class=division>|</span>
+<span class=theme-info>主题 -
+<a class=theme-link href=https://github.com/olOwOlo/hugo-theme-even>Even</a></span><div class=busuanzi-footer><span id=busuanzi_container_site_pv>本站总访问量 <span id=busuanzi_value_site_pv><img src=/img/spinner.svg alt=spinner.svg></span> 次</span>
+<span class=division>|</span>
+<span id=busuanzi_container_site_uv>本站总访客数 <span id=busuanzi_value_site_uv><img src=/img/spinner.svg alt=spinner.svg></span> 人</span></div><span class=copyright-year>&copy;
+2019 -
+2022<span class=heart><i class="iconfont icon-heart"></i></span><span>P1n93r</span></span></div></footer><div class=back-to-top id=back-to-top><i class="iconfont icon-up"></i></div></div><script src=https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin=anonymous></script>
+<script src=https://cdn.jsdelivr.net/npm/slideout@1.0.1/dist/slideout.min.js integrity="sha256-t+zJ/g8/KXIJMjSVQdnibt4dlaDxc9zXr/9oNPeWqdg=" crossorigin=anonymous></script>
+<script src=https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.js integrity="sha256-XVLffZaxoWfGUEbdzuLi7pwaUJv1cecsQJQqGLe7axY=" crossorigin=anonymous></script>
+<script type=text/javascript src=/js/main.min.64437849d125a2d603b3e71d6de5225d641a32d17168a58106e0b61852079683.js></script></body></html>

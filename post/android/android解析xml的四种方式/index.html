@@ -1,178 +1,10 @@
-<!DOCTYPE html>
-<html lang="zh-cn">
-<head>
-  <meta charset="utf-8">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-  <title>Android解析XML的四种方式 - P1n93r - 博学而精一</title>
-  <meta name="renderer" content="webkit" />
-<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
-
-<meta http-equiv="Cache-Control" content="no-transform" />
-<meta http-equiv="Cache-Control" content="no-siteapp" />
-
-<meta name="theme-color" content="#f8f5ec" />
-<meta name="msapplication-navbutton-color" content="#f8f5ec">
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
-
-
-<meta name="author" content="P1n93r" /><meta name="description" content="DOM方式解析XML DOM方式解析XML是将XML先全部加载到内存当中，所以 适用于较小的XML文件，可随机访问，可读可写 。DOM方式解析逻辑" /><meta name="keywords" content="Security, Java, Web, Android" />
-
-
-
-
-
-
-<meta name="generator" content="Hugo 0.96.0 with theme even" />
-
-
-<link rel="canonical" href="https://p1n93r.github.io/post/android/android%E8%A7%A3%E6%9E%90xml%E7%9A%84%E5%9B%9B%E7%A7%8D%E6%96%B9%E5%BC%8F/" />
-<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
-<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
-<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
-<link rel="manifest" href="/manifest.json">
-<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
-
-<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
-
-<link href="/sass/main.min.f92fd13721ddf72129410fd8250e73152cc6f2438082b6c0208dc24ee7c13fc4.css" rel="stylesheet">
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.css" integrity="sha256-7TyXnr2YU040zfSP+rEcz29ggW4j56/ujTPwjMzyqFY=" crossorigin="anonymous">
-
-
-<meta property="og:title" content="Android解析XML的四种方式" />
-<meta property="og:description" content="DOM方式解析XML DOM方式解析XML是将XML先全部加载到内存当中，所以 适用于较小的XML文件，可随机访问，可读可写 。DOM方式解析逻辑" />
-<meta property="og:type" content="article" />
-<meta property="og:url" content="https://p1n93r.github.io/post/android/android%E8%A7%A3%E6%9E%90xml%E7%9A%84%E5%9B%9B%E7%A7%8D%E6%96%B9%E5%BC%8F/" /><meta property="article:section" content="post" />
-<meta property="article:published_time" content="2019-09-26T20:14:36+08:00" />
-<meta property="article:modified_time" content="2019-09-28T21:28:36+08:00" />
-
-<meta itemprop="name" content="Android解析XML的四种方式">
-<meta itemprop="description" content="DOM方式解析XML DOM方式解析XML是将XML先全部加载到内存当中，所以 适用于较小的XML文件，可随机访问，可读可写 。DOM方式解析逻辑"><meta itemprop="datePublished" content="2019-09-26T20:14:36+08:00" />
-<meta itemprop="dateModified" content="2019-09-28T21:28:36+08:00" />
-<meta itemprop="wordCount" content="3461">
-<meta itemprop="keywords" content="java解析XML," /><meta name="twitter:card" content="summary"/>
-<meta name="twitter:title" content="Android解析XML的四种方式"/>
-<meta name="twitter:description" content="DOM方式解析XML DOM方式解析XML是将XML先全部加载到内存当中，所以 适用于较小的XML文件，可随机访问，可读可写 。DOM方式解析逻辑"/>
-
-<!--[if lte IE 9]>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
-<![endif]-->
-
-<!--[if lt IE 9]>
-  <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
-<![endif]-->
-
-</head>
-<body>
-  <div id="mobile-navbar" class="mobile-navbar">
-  <div class="mobile-header-logo">
-    <a href="/" class="logo">P1n93r</a>
-  </div>
-  <div class="mobile-navbar-icon">
-    <span></span>
-    <span></span>
-    <span></span>
-  </div>
-</div>
-<nav id="mobile-menu" class="mobile-menu slideout-menu">
-  <ul class="mobile-menu-list">
-    <a href="/">
-        <li class="mobile-menu-item">Home</li>
-      </a><a href="/post/">
-        <li class="mobile-menu-item">Archives</li>
-      </a><a href="/tags/">
-        <li class="mobile-menu-item">Tags</li>
-      </a><a href="/categories/">
-        <li class="mobile-menu-item">Categories</li>
-      </a><a href="/about/">
-        <li class="mobile-menu-item">About</li>
-      </a>
-  </ul>
-
-  
-
-
-</nav>
-
-  <div class="container" id="mobile-panel">
-    <header id="header" class="header">
-        <div class="logo-wrapper">
-  <a href="/" class="logo">P1n93r</a>
-</div>
-
-
-
-
-
-<nav class="site-navbar">
-  <ul id="menu" class="menu">
-    <li class="menu-item">
-        <a class="menu-item-link" href="/">Home</a>
-      </li><li class="menu-item">
-        <a class="menu-item-link" href="/post/">Archives</a>
-      </li><li class="menu-item">
-        <a class="menu-item-link" href="/tags/">Tags</a>
-      </li><li class="menu-item">
-        <a class="menu-item-link" href="/categories/">Categories</a>
-      </li><li class="menu-item">
-        <a class="menu-item-link" href="/about/">About</a>
-      </li>
-  </ul>
-</nav>
-
-    </header>
-
-    <main id="main" class="main">
-      <div class="content-wrapper">
-        <div id="content" class="content">
-          <article class="post">
-    
-    <header class="post-header">
-      <h1 class="post-title">Android解析XML的四种方式</h1>
-
-      <div class="post-meta">
-        <span class="post-time"> 2019-09-26 </span>
-        <div class="post-category">
-            <a href="/categories/android/"> Android </a>
-            </div>
-          <span class="more-meta"> 约 3461 字 </span>
-          <span class="more-meta"> 预计阅读 7 分钟 </span>
-        <span id="busuanzi_container_page_pv" class="more-meta"> <span id="busuanzi_value_page_pv"><img src="/img/spinner.svg" alt="spinner.svg"/></span> 次阅读 </span>
-      </div>
-    </header>
-
-    <div class="post-toc" id="post-toc">
-  <h2 class="post-toc-title">文章目录</h2>
-  <div class="post-toc-content always-active">
-    <nav id="TableOfContents">
-  <ul>
-    <li>
-      <ul>
-        <li><a href="#dom方式解析xml">DOM方式解析XML</a></li>
-        <li><a href="#sax方式解析xml">SAX方式解析XML</a></li>
-        <li><a href="#pull方式解析xml">PULL方式解析XML</a></li>
-        <li><a href="#dom4j方式解析xml">DOM4J方式解析XML</a></li>
-        <li><a href="#结言">结言</a></li>
-      </ul>
-    </li>
-  </ul>
-</nav>
-  </div>
-</div>
-    <div class="post-content">
-      <h2 id="dom方式解析xml">DOM方式解析XML</h2>
-<p>DOM方式解析XML是将XML先全部加载到内存当中，所以 <strong>适用于较小的XML文件，可随机访问，可读可写</strong> 。DOM方式解析逻辑如下：</p>
-<ol>
-<li>利用DOM对象树解析器工厂（ <strong>DocumentBuilderFactory</strong> ）生成DOM对象树解析器（ <strong>DocumentBuilder</strong> ）。</li>
-<li>利用DOM对象树解析器将给定的 <strong>文件或输入流</strong> 解析成XML文档，并返回一个 <strong>Document</strong> 对象。</li>
-<li>通过Document对象的 <code>getDocumentElement()</code> 方法获取XML文档的文档元素（每个XML文档有且仅有一个文档元素）。</li>
-<li>通过文档元素获取元素下的子节点集合，调用文档元素的 <code>getElementsByTagName()</code> 方法。</li>
-<li>遍历子节点集合。</li>
-</ol>
-<p>一个案例如下：</p>
-<p>①XML文档如下：</p>
-<pre><code>&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;
+<!doctype html><html lang=zh-cn><head><meta charset=utf-8><meta http-equiv=x-ua-compatible content="IE=edge,chrome=1"><title>Android解析XML的四种方式 - P1n93r - 博学而精一</title><meta name=renderer content="webkit"><meta name=viewport content="width=device-width,initial-scale=1,maximum-scale=1"><meta http-equiv=cache-control content="no-transform"><meta http-equiv=cache-control content="no-siteapp"><meta name=theme-color content="#f8f5ec"><meta name=msapplication-navbutton-color content="#f8f5ec"><meta name=apple-mobile-web-app-capable content="yes"><meta name=apple-mobile-web-app-status-bar-style content="#f8f5ec"><meta name=author content="P1n93r"><meta name=description content="DOM方式解析XML DOM方式解析XML是将XML先全部加载到内存当中，所以 适用于较小的XML文件，可随机访问，可读可写 。DOM方式解析逻辑"><meta name=keywords content="Security,Java,Web,Android"><meta name=generator content="Hugo 0.97.3 with theme even"><link rel=canonical href=https://p1n93r.github.io/post/android/android%E8%A7%A3%E6%9E%90xml%E7%9A%84%E5%9B%9B%E7%A7%8D%E6%96%B9%E5%BC%8F/><link rel=apple-touch-icon sizes=180x180 href=/apple-touch-icon.png><link rel=icon type=image/png sizes=32x32 href=/favicon-32x32.png><link rel=icon type=image/png sizes=16x16 href=/favicon-16x16.png><link rel=manifest href=/manifest.json><link rel=mask-icon href=/safari-pinned-tab.svg color=#5bbad5><script async src=//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js></script>
+<link href=/sass/main.min.f92fd13721ddf72129410fd8250e73152cc6f2438082b6c0208dc24ee7c13fc4.css rel=stylesheet><link rel=stylesheet href=https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.css integrity="sha256-7TyXnr2YU040zfSP+rEcz29ggW4j56/ujTPwjMzyqFY=" crossorigin=anonymous><meta property="og:title" content="Android解析XML的四种方式"><meta property="og:description" content="DOM方式解析XML DOM方式解析XML是将XML先全部加载到内存当中，所以 适用于较小的XML文件，可随机访问，可读可写 。DOM方式解析逻辑"><meta property="og:type" content="article"><meta property="og:url" content="https://p1n93r.github.io/post/android/android%E8%A7%A3%E6%9E%90xml%E7%9A%84%E5%9B%9B%E7%A7%8D%E6%96%B9%E5%BC%8F/"><meta property="article:section" content="post"><meta property="article:published_time" content="2019-09-26T20:14:36+08:00"><meta property="article:modified_time" content="2019-09-28T21:28:36+08:00"><meta itemprop=name content="Android解析XML的四种方式"><meta itemprop=description content="DOM方式解析XML DOM方式解析XML是将XML先全部加载到内存当中，所以 适用于较小的XML文件，可随机访问，可读可写 。DOM方式解析逻辑"><meta itemprop=datePublished content="2019-09-26T20:14:36+08:00"><meta itemprop=dateModified content="2019-09-28T21:28:36+08:00"><meta itemprop=wordCount content="3461"><meta itemprop=keywords content="java解析XML,"><meta name=twitter:card content="summary"><meta name=twitter:title content="Android解析XML的四种方式"><meta name=twitter:description content="DOM方式解析XML DOM方式解析XML是将XML先全部加载到内存当中，所以 适用于较小的XML文件，可随机访问，可读可写 。DOM方式解析逻辑"><!--[if lte IE 9]><script src=https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js></script><![endif]--><!--[if lt IE 9]><script src=https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js></script>
+<script src=https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js></script><![endif]--></head><body><div id=mobile-navbar class=mobile-navbar><div class=mobile-header-logo><a href=/ class=logo>P1n93r</a></div><div class=mobile-navbar-icon><span></span>
+<span></span>
+<span></span></div></div><nav id=mobile-menu class="mobile-menu slideout-menu"><ul class=mobile-menu-list><a href=/><li class=mobile-menu-item>Home</li></a><a href=/post/><li class=mobile-menu-item>Archives</li></a><a href=/tags/><li class=mobile-menu-item>Tags</li></a><a href=/categories/><li class=mobile-menu-item>Categories</li></a><a href=/about/><li class=mobile-menu-item>About</li></a></ul></nav><div class=container id=mobile-panel><header id=header class=header><div class=logo-wrapper><a href=/ class=logo>P1n93r</a></div><nav class=site-navbar><ul id=menu class=menu><li class=menu-item><a class=menu-item-link href=/>Home</a></li><li class=menu-item><a class=menu-item-link href=/post/>Archives</a></li><li class=menu-item><a class=menu-item-link href=/tags/>Tags</a></li><li class=menu-item><a class=menu-item-link href=/categories/>Categories</a></li><li class=menu-item><a class=menu-item-link href=/about/>About</a></li></ul></nav></header><main id=main class=main><div class=content-wrapper><div id=content class=content><article class=post><header class=post-header><h1 class=post-title>Android解析XML的四种方式</h1><div class=post-meta><span class=post-time>2019-09-26</span><div class=post-category><a href=/categories/android/>Android</a></div><span class=more-meta>约 3461 字</span>
+<span class=more-meta>预计阅读 7 分钟</span>
+<span id=busuanzi_container_page_pv class=more-meta><span id=busuanzi_value_page_pv><img src=/img/spinner.svg alt=spinner.svg></span> 次阅读</span></div></header><div class=post-toc id=post-toc><h2 class=post-toc-title>文章目录</h2><div class="post-toc-content always-active"><nav id=TableOfContents><ul><li><ul><li><a href=#dom方式解析xml>DOM方式解析XML</a></li><li><a href=#sax方式解析xml>SAX方式解析XML</a></li><li><a href=#pull方式解析xml>PULL方式解析XML</a></li><li><a href=#dom4j方式解析xml>DOM4J方式解析XML</a></li><li><a href=#结言>结言</a></li></ul></li></ul></nav></div></div><div class=post-content><h2 id=dom方式解析xml>DOM方式解析XML</h2><p>DOM方式解析XML是将XML先全部加载到内存当中，所以 <strong>适用于较小的XML文件，可随机访问，可读可写</strong> 。DOM方式解析逻辑如下：</p><ol><li>利用DOM对象树解析器工厂（ <strong>DocumentBuilderFactory</strong> ）生成DOM对象树解析器（ <strong>DocumentBuilder</strong> ）。</li><li>利用DOM对象树解析器将给定的 <strong>文件或输入流</strong> 解析成XML文档，并返回一个 <strong>Document</strong> 对象。</li><li>通过Document对象的 <code>getDocumentElement()</code> 方法获取XML文档的文档元素（每个XML文档有且仅有一个文档元素）。</li><li>通过文档元素获取元素下的子节点集合，调用文档元素的 <code>getElementsByTagName()</code> 方法。</li><li>遍历子节点集合。</li></ol><p>一个案例如下：</p><p>①XML文档如下：</p><pre><code>&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;
 &lt;students&gt;
     &lt;student id=&quot;1&quot;&gt;
         &lt;name&gt;pinger&lt;/name&gt;
@@ -187,9 +19,7 @@
         &lt;age&gt;20&lt;/age&gt;
     &lt;/student&gt;
 &lt;/students&gt;
-</code></pre>
-<p>②解析代码如下(此代码写在一个Activity里，获取的是res/raw下的xml文件)：</p>
-<pre><code>InputStream inputStream =(InputStream)getResources().openRawResource(R.raw.students);
+</code></pre><p>②解析代码如下(此代码写在一个Activity里，获取的是res/raw下的xml文件)：</p><pre><code>InputStream inputStream =(InputStream)getResources().openRawResource(R.raw.students);
 DocumentBuilderFactory factory=DocumentBuilderFactory.newInstance();
 DocumentBuilder builder=factory.newDocumentBuilder();
 Document document=builder.parse(inputStream);
@@ -207,26 +37,7 @@ for(int i=0;i&lt;studentNodeList.getLength();i++){
     int age=Integer.parseInt(ageNode.getTextContent());
     System.out.println(&quot;id:&quot;+id+&quot;,name:&quot;+name+&quot;,age:&quot;+age);
 }
-</code></pre>
-<p>③解析效果如下：</p>
-<p><img src="/media/20190928-1.png" alt="DOM方式解析结果"></p>
-<h2 id="sax方式解析xml">SAX方式解析XML</h2>
-<p>SAX的全称是： <strong>Simple API for XML</strong> ,属于 <strong>事件驱动</strong> 型解析，消耗资源少，适合解析较大的XML文件， <strong>只能读不能写，顺序访问，不能随机访问</strong> 。对于事件源，就是给定的XML文档，事件处理器需要自己写。此方法的一般步骤为：</p>
-<ol>
-<li>通过继承org.xml.sax.helpers.DefaultHandler编写自己的事件处理器。</li>
-<li>重写自己写的事件处理器的四个方法（看下面的代码便知）。</li>
-<li>实例化一个SAX解析器工厂（SAXParserFactory.newInstance()方式）。</li>
-<li>通过解析器工厂获取SAX解析器（SAXParser）。</li>
-<li>实例化自己写的事件处理器（Handler）对象。</li>
-<li>通过SAX解析器获取事件源以及设置事件处理器。</li>
-<li>事件处理器自动获取事件，执行事件处理逻辑。</li>
-<li>通过事件处理器对象的某些方法（自己写）获取处理逻辑的结果。</li>
-</ol>
-<p>一个简单的案例（就事件处理器编写以及一些注意事项而言）如下：</p>
-<p>①XML文档如下：</p>
-<p><img src="/media/20190928-3.png" alt="XML文档说明"></p>
-<p>②StudentHandler的代码如下：</p>
-<pre><code>public class StudentHandler extends DefaultHandler {
+</code></pre><p>③解析效果如下：</p><p><img src=/media/20190928-1.png alt=DOM方式解析结果></p><h2 id=sax方式解析xml>SAX方式解析XML</h2><p>SAX的全称是： <strong>Simple API for XML</strong> ,属于 <strong>事件驱动</strong> 型解析，消耗资源少，适合解析较大的XML文件， <strong>只能读不能写，顺序访问，不能随机访问</strong> 。对于事件源，就是给定的XML文档，事件处理器需要自己写。此方法的一般步骤为：</p><ol><li>通过继承org.xml.sax.helpers.DefaultHandler编写自己的事件处理器。</li><li>重写自己写的事件处理器的四个方法（看下面的代码便知）。</li><li>实例化一个SAX解析器工厂（SAXParserFactory.newInstance()方式）。</li><li>通过解析器工厂获取SAX解析器（SAXParser）。</li><li>实例化自己写的事件处理器（Handler）对象。</li><li>通过SAX解析器获取事件源以及设置事件处理器。</li><li>事件处理器自动获取事件，执行事件处理逻辑。</li><li>通过事件处理器对象的某些方法（自己写）获取处理逻辑的结果。</li></ol><p>一个简单的案例（就事件处理器编写以及一些注意事项而言）如下：</p><p>①XML文档如下：</p><p><img src=/media/20190928-3.png alt=XML文档说明></p><p>②StudentHandler的代码如下：</p><pre><code>public class StudentHandler extends DefaultHandler {
     @Override
     public void startDocument() throws SAXException {
         //这个不是开始加载文档元素，而是开始加载XML的第一行
@@ -258,9 +69,7 @@ for(int i=0;i&lt;studentNodeList.getLength();i++){
         System.out.println(&quot;扫描文本节点：&quot;+new String(ch,start,length));
     }
 }
-</code></pre>
-<p>③加载事件源以及设置事件处理器的关键代码如下：</p>
-<pre><code>//通过SAX方式读取XML
+</code></pre><p>③加载事件源以及设置事件处理器的关键代码如下：</p><pre><code>//通过SAX方式读取XML
 SAXParserFactory factory=SAXParserFactory.newInstance();
 //获取SAX解析器
 SAXParser parser=factory.newSAXParser();
@@ -268,11 +77,7 @@ SAXParser parser=factory.newSAXParser();
 StudentHandler handler=new StudentHandler();
 //加载数据源和设置事件处理器
 parser.parse(getResources().openRawResource(R.raw.students),handler);
-</code></pre>
-<p>④部分运行结果如下：</p>
-<p><img src="/media/20190928-2.png" alt="SAX方式解析结果1"></p>
-<p>⑤一个完整的解析XML数据到Student实体的StudentHandler代码如下：</p>
-<pre><code>public class StudentHandler extends DefaultHandler {
+</code></pre><p>④部分运行结果如下：</p><p><img src=/media/20190928-2.png alt=SAX方式解析结果1></p><p>⑤一个完整的解析XML数据到Student实体的StudentHandler代码如下：</p><pre><code>public class StudentHandler extends DefaultHandler {
     private List&lt;Student&gt; students;
     private Student student;
     private String prevTag;
@@ -333,9 +138,7 @@ parser.parse(getResources().openRawResource(R.raw.students),handler);
         return this.students;
     }
 }
-</code></pre>
-<p>⑥测试StudentHandler的代码如下：</p>
-<pre><code>//读取res/xml下的xml文件
+</code></pre><p>⑥测试StudentHandler的代码如下：</p><pre><code>//读取res/xml下的xml文件
 try{
     //通过SAX方式读取XML
     SAXParserFactory factory=SAXParserFactory.newInstance();
@@ -348,18 +151,7 @@ try{
     for(Student v:handler.getStudents()){
         System.out.println(v);
     }
-</code></pre>
-<p>⑦测试结果如下：</p>
-<p><img src="/media/20190928-4.png" alt="SAX解析XML结果2"></p>
-<h2 id="pull方式解析xml">PULL方式解析XML</h2>
-<p>PULL方式解析XML在Android用的比较多，而且此方式被继承到了Android。此种解析方式也是基于 <strong>事件驱动</strong> ，与SAX方式相似，但是不是自动提取事件，而是需要自己主动提取事件，并根据提取的事件类型进行相应的事件处理逻辑。此方法的一般步骤如下：</p>
-<ol>
-<li>通过Resource类对象的getXml()方法返回一个XmlResourceParser对象。</li>
-<li>通过XmlResourceParser对象的事件状态进行对应的事件处理逻辑。</li>
-</ol>
-<p>一个案例如下：</p>
-<p>①XML文档如下：</p>
-<pre><code>&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;
+</code></pre><p>⑦测试结果如下：</p><p><img src=/media/20190928-4.png alt=SAX解析XML结果2></p><h2 id=pull方式解析xml>PULL方式解析XML</h2><p>PULL方式解析XML在Android用的比较多，而且此方式被继承到了Android。此种解析方式也是基于 <strong>事件驱动</strong> ，与SAX方式相似，但是不是自动提取事件，而是需要自己主动提取事件，并根据提取的事件类型进行相应的事件处理逻辑。此方法的一般步骤如下：</p><ol><li>通过Resource类对象的getXml()方法返回一个XmlResourceParser对象。</li><li>通过XmlResourceParser对象的事件状态进行对应的事件处理逻辑。</li></ol><p>一个案例如下：</p><p>①XML文档如下：</p><pre><code>&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;
 &lt;students&gt;
     &lt;student id=&quot;1&quot;&gt;
         &lt;name&gt;P1n93r&lt;/name&gt;
@@ -374,9 +166,7 @@ try{
         &lt;age&gt;18&lt;/age&gt;
     &lt;/student&gt;
 &lt;/students&gt;
-</code></pre>
-<p>①工具类XmlParserForStudent代码如下：</p>
-<pre><code>public class XmlParserForStudent {
+</code></pre><p>①工具类XmlParserForStudent代码如下：</p><pre><code>public class XmlParserForStudent {
     public static List&lt;Student&gt; getStudents(XmlResourceParser parser) throws XmlPullParserException, IOException {
         List&lt;Student&gt; students =null;
         Student student=null;
@@ -434,20 +224,7 @@ try{
         return students;
     }
 }
-</code></pre>
-<p>②解析结果如下图所示：</p>
-<p><img src="/media/20190928-5.png" alt="PULL方式解析XML结果1"></p>
-<h2 id="dom4j方式解析xml">DOM4J方式解析XML</h2>
-<p>此种解析方式性能优异，推荐使用此种方式进行XML解析。一般的操作步骤如下：</p>
-<ol>
-<li>通过SAXReader或者DomReader构建DOM4J树对象。</li>
-<li>获取XML文档的根节点（通过DOM4J树对象的getRootElement()方法实现）。</li>
-<li>获取根节点的子节点或字节点集合（org.dom4j.Element对象的element()或者elements()方法）。</li>
-<li>获取子节点的属性或者其文本（org.dom4j.Element对象的attribute()方法获得属性对象，getText()方法获得其文本内容）。</li>
-</ol>
-<p>一个案例如下：</p>
-<p>①XML文档如下：</p>
-<pre><code>&lt;students&gt;
+</code></pre><p>②解析结果如下图所示：</p><p><img src=/media/20190928-5.png alt=PULL方式解析XML结果1></p><h2 id=dom4j方式解析xml>DOM4J方式解析XML</h2><p>此种解析方式性能优异，推荐使用此种方式进行XML解析。一般的操作步骤如下：</p><ol><li>通过SAXReader或者DomReader构建DOM4J树对象。</li><li>获取XML文档的根节点（通过DOM4J树对象的getRootElement()方法实现）。</li><li>获取根节点的子节点或字节点集合（org.dom4j.Element对象的element()或者elements()方法）。</li><li>获取子节点的属性或者其文本（org.dom4j.Element对象的attribute()方法获得属性对象，getText()方法获得其文本内容）。</li></ol><p>一个案例如下：</p><p>①XML文档如下：</p><pre><code>&lt;students&gt;
     &lt;student id=&quot;1&quot;&gt;
         &lt;name&gt;pinger&lt;/name&gt;
         &lt;age&gt;3&lt;/age&gt;
@@ -461,9 +238,7 @@ try{
         &lt;age&gt;3&lt;/age&gt;
     &lt;/student&gt;
 &lt;/students&gt;
-</code></pre>
-<p>②DOM4J方式解析XML关键代码如下：</p>
-<pre><code>//DomReader方式获取dom4j树
+</code></pre><p>②DOM4J方式解析XML关键代码如下：</p><pre><code>//DomReader方式获取dom4j树
 //此种方式只能将一个现有的w3c DOM树构建成dom4j树
 DocumentBuilderFactory factory=DocumentBuilderFactory.newInstance();
 DocumentBuilder builder=factory.newDocumentBuilder();
@@ -482,121 +257,23 @@ for(Element v:studentNodes){
     int age=Integer.parseInt(v.element(&quot;age&quot;).getText());
     System.out.println(name+&quot;，&quot;+age);
 }
-</code></pre>
-<p>③解析结果如下图所示：</p>
-<p><img src="/media/20190928-6.png" alt="DOM4J方式解析XML结果"></p>
-<h2 id="结言">结言</h2>
-<p>DOM方式只适合解析较小的XML文件；SAX和PULL方式使用方法类似，但是由于不能随机访问，且只读不可写。 <strong>DOM4J方式性能很好，又灵活简单，最推荐使用</strong> 。</p>
-
-    </div>
-
-    <div class="post-copyright">
-  <p class="copyright-item">
-    <span class="item-title">文章作者</span>
-    <span class="item-content">P1n93r</span>
-  </p>
-  <p class="copyright-item">
-    <span class="item-title">上次更新</span>
-    <span class="item-content">
-        2019-09-28
-        
-    </span>
-  </p>
-  
-  
-</div>
-<footer class="post-footer">
-      <div class="post-tags">
-          <a href="/tags/java%E8%A7%A3%E6%9E%90xml/">java解析XML</a>
-          </div>
-      <nav class="post-nav">
-        <a class="prev" href="/post/java/%E9%9D%A2%E5%90%91%E5%AF%B9%E8%B1%A1%E4%BA%8C/">
-            <i class="iconfont icon-left"></i>
-            <span class="prev-text nav-default">面向对象(二)</span>
-            <span class="prev-text nav-mobile">上一篇</span>
-          </a>
-        <a class="next" href="/post/java/%E9%9D%A2%E5%90%91%E5%AF%B9%E8%B1%A1%E4%B8%80/">
-            <span class="next-text nav-default">面向对象(一)</span>
-            <span class="next-text nav-mobile">下一篇</span>
-            <i class="iconfont icon-right"></i>
-          </a>
-      </nav>
-    </footer>
-  </article>
-        </div>
-        <div id="disqus_thread"></div>
-    <script type="text/javascript">
-    (function() {
-      
-      
-      if (window.location.hostname === 'localhost') return;
-
-      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
-      var disqus_shortname = 'p1n93r';
-      dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
-      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
-    })();
-    </script>
-    <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
-
-  
-
-  
-
-      </div>
-    </main>
-
-    <footer id="footer" class="footer">
-      <div class="social-links">
-      <a href="mailto:pin83r@gmail.com" class="iconfont icon-email" title="email"></a>
-      <a href="https://github.com/p1n93r" class="iconfont icon-github" title="github"></a>
-  <a href="https://p1n93r.github.io/index.xml" type="application/rss+xml" class="iconfont icon-rss" title="rss"></a>
-</div>
-
-<div class="copyright">
-  <span class="power-by">
-    由 <a class="hexo-link" href="https://gohugo.io">Hugo</a> 强力驱动
-  </span>
-  <span class="division">|</span>
-  <span class="theme-info">
-    主题 - 
-    <a class="theme-link" href="https://github.com/olOwOlo/hugo-theme-even">Even</a>
-  </span>
-
-  <div class="busuanzi-footer">
-    <span id="busuanzi_container_site_pv"> 本站总访问量 <span id="busuanzi_value_site_pv"><img src="/img/spinner.svg" alt="spinner.svg"/></span> 次 </span>
-      <span class="division">|</span>
-    <span id="busuanzi_container_site_uv"> 本站总访客数 <span id="busuanzi_value_site_uv"><img src="/img/spinner.svg" alt="spinner.svg"/></span> 人 </span>
-  </div>
-
-  <span class="copyright-year">
-    &copy; 
-    2019 - 
-    2022<span class="heart"><i class="iconfont icon-heart"></i></span><span>P1n93r</span>
-  </span>
-</div>
-
-    </footer>
-
-    <div class="back-to-top" id="back-to-top">
-      <i class="iconfont icon-up"></i>
-    </div>
-  </div>
-  
-  <script src="https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
-  <script src="https://cdn.jsdelivr.net/npm/slideout@1.0.1/dist/slideout.min.js" integrity="sha256-t+zJ/g8/KXIJMjSVQdnibt4dlaDxc9zXr/9oNPeWqdg=" crossorigin="anonymous"></script>
-  <script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.js" integrity="sha256-XVLffZaxoWfGUEbdzuLi7pwaUJv1cecsQJQqGLe7axY=" crossorigin="anonymous"></script>
-
-
-
-<script type="text/javascript" src="/js/main.min.64437849d125a2d603b3e71d6de5225d641a32d17168a58106e0b61852079683.js"></script>
-
-
-
-
-
-
-
-
-</body>
-</html>
+</code></pre><p>③解析结果如下图所示：</p><p><img src=/media/20190928-6.png alt=DOM4J方式解析XML结果></p><h2 id=结言>结言</h2><p>DOM方式只适合解析较小的XML文件；SAX和PULL方式使用方法类似，但是由于不能随机访问，且只读不可写。 <strong>DOM4J方式性能很好，又灵活简单，最推荐使用</strong> 。</p></div><div class=post-copyright><p class=copyright-item><span class=item-title>文章作者</span>
+<span class=item-content>P1n93r</span></p><p class=copyright-item><span class=item-title>上次更新</span>
+<span class=item-content>2019-09-28</span></p></div><footer class=post-footer><div class=post-tags><a href=/tags/java%E8%A7%A3%E6%9E%90xml/>java解析XML</a></div><nav class=post-nav><a class=prev href=/post/java/%E9%9D%A2%E5%90%91%E5%AF%B9%E8%B1%A1%E4%BA%8C/><i class="iconfont icon-left"></i>
+<span class="prev-text nav-default">面向对象(二)</span>
+<span class="prev-text nav-mobile">上一篇</span></a>
+<a class=next href=/post/java/%E9%9D%A2%E5%90%91%E5%AF%B9%E8%B1%A1%E4%B8%80/><span class="next-text nav-default">面向对象(一)</span>
+<span class="next-text nav-mobile">下一篇</span>
+<i class="iconfont icon-right"></i></a></nav></footer></article></div><div id=disqus_thread></div><script type=text/javascript>(function(){if(window.location.hostname==="localhost")return;var t,e=document.createElement("script");e.type="text/javascript",e.async=!0,t="p1n93r",e.src="//"+t+".disqus.com/embed.js",(document.getElementsByTagName("head")[0]||document.getElementsByTagName("body")[0]).appendChild(e)})()</script><noscript>Please enable JavaScript to view the <a href=http://disqus.com/?ref_noscript>comments powered by Disqus.</a></noscript></div></main><footer id=footer class=footer><div class=social-links><a href=mailto:pin83r@gmail.com class="iconfont icon-email" title=email></a>
+<a href=https://github.com/p1n93r class="iconfont icon-github" title=github></a>
+<a href=https://p1n93r.github.io/index.xml type=application/rss+xml class="iconfont icon-rss" title=rss></a></div><div class=copyright><span class=power-by>由 <a class=hexo-link href=https://gohugo.io>Hugo</a> 强力驱动</span>
+<span class=division>|</span>
+<span class=theme-info>主题 -
+<a class=theme-link href=https://github.com/olOwOlo/hugo-theme-even>Even</a></span><div class=busuanzi-footer><span id=busuanzi_container_site_pv>本站总访问量 <span id=busuanzi_value_site_pv><img src=/img/spinner.svg alt=spinner.svg></span> 次</span>
+<span class=division>|</span>
+<span id=busuanzi_container_site_uv>本站总访客数 <span id=busuanzi_value_site_uv><img src=/img/spinner.svg alt=spinner.svg></span> 人</span></div><span class=copyright-year>&copy;
+2019 -
+2022<span class=heart><i class="iconfont icon-heart"></i></span><span>P1n93r</span></span></div></footer><div class=back-to-top id=back-to-top><i class="iconfont icon-up"></i></div></div><script src=https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin=anonymous></script>
+<script src=https://cdn.jsdelivr.net/npm/slideout@1.0.1/dist/slideout.min.js integrity="sha256-t+zJ/g8/KXIJMjSVQdnibt4dlaDxc9zXr/9oNPeWqdg=" crossorigin=anonymous></script>
+<script src=https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.js integrity="sha256-XVLffZaxoWfGUEbdzuLi7pwaUJv1cecsQJQqGLe7axY=" crossorigin=anonymous></script>
+<script type=text/javascript src=/js/main.min.64437849d125a2d603b3e71d6de5225d641a32d17168a58106e0b61852079683.js></script></body></html>

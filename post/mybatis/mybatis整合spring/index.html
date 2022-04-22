@@ -1,184 +1,10 @@
-<!DOCTYPE html>
-<html lang="zh-cn">
-<head>
-  <meta charset="utf-8">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-  <title>Mybatis整合Spring - P1n93r - 博学而精一</title>
-  <meta name="renderer" content="webkit" />
-<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
-
-<meta http-equiv="Cache-Control" content="no-transform" />
-<meta http-equiv="Cache-Control" content="no-siteapp" />
-
-<meta name="theme-color" content="#f8f5ec" />
-<meta name="msapplication-navbutton-color" content="#f8f5ec">
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
-
-
-<meta name="author" content="P1n93r" /><meta name="description" content="介绍 Mybatis是一款持久层的框架，使用Mybatis我们无需自己编写繁琐的JDBC代码，也无需为sql注入等安全问题烦恼。没用过Hibe" /><meta name="keywords" content="Security, Java, Web, Android" />
-
-
-
-
-
-
-<meta name="generator" content="Hugo 0.96.0 with theme even" />
-
-
-<link rel="canonical" href="https://p1n93r.github.io/post/mybatis/mybatis%E6%95%B4%E5%90%88spring/" />
-<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
-<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
-<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
-<link rel="manifest" href="/manifest.json">
-<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
-
-<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
-
-<link href="/sass/main.min.f92fd13721ddf72129410fd8250e73152cc6f2438082b6c0208dc24ee7c13fc4.css" rel="stylesheet">
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.css" integrity="sha256-7TyXnr2YU040zfSP+rEcz29ggW4j56/ujTPwjMzyqFY=" crossorigin="anonymous">
-
-
-<meta property="og:title" content="Mybatis整合Spring" />
-<meta property="og:description" content="介绍 Mybatis是一款持久层的框架，使用Mybatis我们无需自己编写繁琐的JDBC代码，也无需为sql注入等安全问题烦恼。没用过Hibe" />
-<meta property="og:type" content="article" />
-<meta property="og:url" content="https://p1n93r.github.io/post/mybatis/mybatis%E6%95%B4%E5%90%88spring/" /><meta property="article:section" content="post" />
-<meta property="article:published_time" content="2019-07-10T17:48:36+08:00" />
-<meta property="article:modified_time" content="2019-07-10T17:48:36+08:00" />
-
-<meta itemprop="name" content="Mybatis整合Spring">
-<meta itemprop="description" content="介绍 Mybatis是一款持久层的框架，使用Mybatis我们无需自己编写繁琐的JDBC代码，也无需为sql注入等安全问题烦恼。没用过Hibe"><meta itemprop="datePublished" content="2019-07-10T17:48:36+08:00" />
-<meta itemprop="dateModified" content="2019-07-10T17:48:36+08:00" />
-<meta itemprop="wordCount" content="3181">
-<meta itemprop="keywords" content="" /><meta name="twitter:card" content="summary"/>
-<meta name="twitter:title" content="Mybatis整合Spring"/>
-<meta name="twitter:description" content="介绍 Mybatis是一款持久层的框架，使用Mybatis我们无需自己编写繁琐的JDBC代码，也无需为sql注入等安全问题烦恼。没用过Hibe"/>
-
-<!--[if lte IE 9]>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
-<![endif]-->
-
-<!--[if lt IE 9]>
-  <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
-<![endif]-->
-
-</head>
-<body>
-  <div id="mobile-navbar" class="mobile-navbar">
-  <div class="mobile-header-logo">
-    <a href="/" class="logo">P1n93r</a>
-  </div>
-  <div class="mobile-navbar-icon">
-    <span></span>
-    <span></span>
-    <span></span>
-  </div>
-</div>
-<nav id="mobile-menu" class="mobile-menu slideout-menu">
-  <ul class="mobile-menu-list">
-    <a href="/">
-        <li class="mobile-menu-item">Home</li>
-      </a><a href="/post/">
-        <li class="mobile-menu-item">Archives</li>
-      </a><a href="/tags/">
-        <li class="mobile-menu-item">Tags</li>
-      </a><a href="/categories/">
-        <li class="mobile-menu-item">Categories</li>
-      </a><a href="/about/">
-        <li class="mobile-menu-item">About</li>
-      </a>
-  </ul>
-
-  
-
-
-</nav>
-
-  <div class="container" id="mobile-panel">
-    <header id="header" class="header">
-        <div class="logo-wrapper">
-  <a href="/" class="logo">P1n93r</a>
-</div>
-
-
-
-
-
-<nav class="site-navbar">
-  <ul id="menu" class="menu">
-    <li class="menu-item">
-        <a class="menu-item-link" href="/">Home</a>
-      </li><li class="menu-item">
-        <a class="menu-item-link" href="/post/">Archives</a>
-      </li><li class="menu-item">
-        <a class="menu-item-link" href="/tags/">Tags</a>
-      </li><li class="menu-item">
-        <a class="menu-item-link" href="/categories/">Categories</a>
-      </li><li class="menu-item">
-        <a class="menu-item-link" href="/about/">About</a>
-      </li>
-  </ul>
-</nav>
-
-    </header>
-
-    <main id="main" class="main">
-      <div class="content-wrapper">
-        <div id="content" class="content">
-          <article class="post">
-    
-    <header class="post-header">
-      <h1 class="post-title">Mybatis整合Spring</h1>
-
-      <div class="post-meta">
-        <span class="post-time"> 2019-07-10 </span>
-        <div class="post-category">
-            <a href="/categories/mybatis/"> Mybatis </a>
-            </div>
-          <span class="more-meta"> 约 3181 字 </span>
-          <span class="more-meta"> 预计阅读 7 分钟 </span>
-        <span id="busuanzi_container_page_pv" class="more-meta"> <span id="busuanzi_value_page_pv"><img src="/img/spinner.svg" alt="spinner.svg"/></span> 次阅读 </span>
-      </div>
-    </header>
-
-    <div class="post-toc" id="post-toc">
-  <h2 class="post-toc-title">文章目录</h2>
-  <div class="post-toc-content always-active">
-    <nav id="TableOfContents">
-  <ul>
-    <li>
-      <ul>
-        <li><a href="#介绍">介绍</a></li>
-        <li><a href="#开发环境">开发环境</a></li>
-        <li><a href="#项目依赖">项目依赖</a></li>
-        <li><a href="#过程">过程</a>
-          <ul>
-            <li><a href="#配置webxml">配置web.xml</a></li>
-            <li><a href="#配置spring管理的mybatis">配置Spring管理的Mybatis</a></li>
-          </ul>
-        </li>
-        <li><a href="#测试">测试</a></li>
-      </ul>
-    </li>
-  </ul>
-</nav>
-  </div>
-</div>
-    <div class="post-content">
-      <h2 id="介绍">介绍</h2>
-<p>  Mybatis是一款持久层的框架，使用Mybatis我们无需自己编写繁琐的JDBC代码，也无需为sql注入等安全问题烦恼。没用过Hibernate哈哈哈，无法做比较。好像现在市面上都是用Mybatis了叭=-=</p>
-<p>  然后为了方便之后写一些Mybatis相关的demo，首先需要搭建好能够运行Mybatis的环境，接下来就是结合Spring来搭建Mybatis的过程。</p>
-<h2 id="开发环境">开发环境</h2>
-<ul>
-<li>IDEA下的Maven项目</li>
-<li>JDK 1.8_0211</li>
-<li>Tomcat 8.5.38</li>
-<li>Mybatis 1.3.2</li>
-</ul>
-<h2 id="项目依赖">项目依赖</h2>
-<p>  下面的Maven的依赖配置是一个完整的ssm依赖配置。包括了之后会用得到的Gjson和log4j等。此外，注意我的pom.xml在build里配置了一个<strong>resources</strong> ，代表我的src/main/java路径下的xml文件也会被认作项目的资源文件（<strong>否则利用Mybatis的扫描方式配置的mapper将不起作用</strong> ），pom.xml配置如下：</p>
-<pre><code>&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;
+<!doctype html><html lang=zh-cn><head><meta charset=utf-8><meta http-equiv=x-ua-compatible content="IE=edge,chrome=1"><title>Mybatis整合Spring - P1n93r - 博学而精一</title><meta name=renderer content="webkit"><meta name=viewport content="width=device-width,initial-scale=1,maximum-scale=1"><meta http-equiv=cache-control content="no-transform"><meta http-equiv=cache-control content="no-siteapp"><meta name=theme-color content="#f8f5ec"><meta name=msapplication-navbutton-color content="#f8f5ec"><meta name=apple-mobile-web-app-capable content="yes"><meta name=apple-mobile-web-app-status-bar-style content="#f8f5ec"><meta name=author content="P1n93r"><meta name=description content="介绍 Mybatis是一款持久层的框架，使用Mybatis我们无需自己编写繁琐的JDBC代码，也无需为sql注入等安全问题烦恼。没用过Hibe"><meta name=keywords content="Security,Java,Web,Android"><meta name=generator content="Hugo 0.97.3 with theme even"><link rel=canonical href=https://p1n93r.github.io/post/mybatis/mybatis%E6%95%B4%E5%90%88spring/><link rel=apple-touch-icon sizes=180x180 href=/apple-touch-icon.png><link rel=icon type=image/png sizes=32x32 href=/favicon-32x32.png><link rel=icon type=image/png sizes=16x16 href=/favicon-16x16.png><link rel=manifest href=/manifest.json><link rel=mask-icon href=/safari-pinned-tab.svg color=#5bbad5><script async src=//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js></script>
+<link href=/sass/main.min.f92fd13721ddf72129410fd8250e73152cc6f2438082b6c0208dc24ee7c13fc4.css rel=stylesheet><link rel=stylesheet href=https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.css integrity="sha256-7TyXnr2YU040zfSP+rEcz29ggW4j56/ujTPwjMzyqFY=" crossorigin=anonymous><meta property="og:title" content="Mybatis整合Spring"><meta property="og:description" content="介绍 Mybatis是一款持久层的框架，使用Mybatis我们无需自己编写繁琐的JDBC代码，也无需为sql注入等安全问题烦恼。没用过Hibe"><meta property="og:type" content="article"><meta property="og:url" content="https://p1n93r.github.io/post/mybatis/mybatis%E6%95%B4%E5%90%88spring/"><meta property="article:section" content="post"><meta property="article:published_time" content="2019-07-10T17:48:36+08:00"><meta property="article:modified_time" content="2019-07-10T17:48:36+08:00"><meta itemprop=name content="Mybatis整合Spring"><meta itemprop=description content="介绍 Mybatis是一款持久层的框架，使用Mybatis我们无需自己编写繁琐的JDBC代码，也无需为sql注入等安全问题烦恼。没用过Hibe"><meta itemprop=datePublished content="2019-07-10T17:48:36+08:00"><meta itemprop=dateModified content="2019-07-10T17:48:36+08:00"><meta itemprop=wordCount content="3181"><meta itemprop=keywords content><meta name=twitter:card content="summary"><meta name=twitter:title content="Mybatis整合Spring"><meta name=twitter:description content="介绍 Mybatis是一款持久层的框架，使用Mybatis我们无需自己编写繁琐的JDBC代码，也无需为sql注入等安全问题烦恼。没用过Hibe"><!--[if lte IE 9]><script src=https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js></script><![endif]--><!--[if lt IE 9]><script src=https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js></script>
+<script src=https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js></script><![endif]--></head><body><div id=mobile-navbar class=mobile-navbar><div class=mobile-header-logo><a href=/ class=logo>P1n93r</a></div><div class=mobile-navbar-icon><span></span>
+<span></span>
+<span></span></div></div><nav id=mobile-menu class="mobile-menu slideout-menu"><ul class=mobile-menu-list><a href=/><li class=mobile-menu-item>Home</li></a><a href=/post/><li class=mobile-menu-item>Archives</li></a><a href=/tags/><li class=mobile-menu-item>Tags</li></a><a href=/categories/><li class=mobile-menu-item>Categories</li></a><a href=/about/><li class=mobile-menu-item>About</li></a></ul></nav><div class=container id=mobile-panel><header id=header class=header><div class=logo-wrapper><a href=/ class=logo>P1n93r</a></div><nav class=site-navbar><ul id=menu class=menu><li class=menu-item><a class=menu-item-link href=/>Home</a></li><li class=menu-item><a class=menu-item-link href=/post/>Archives</a></li><li class=menu-item><a class=menu-item-link href=/tags/>Tags</a></li><li class=menu-item><a class=menu-item-link href=/categories/>Categories</a></li><li class=menu-item><a class=menu-item-link href=/about/>About</a></li></ul></nav></header><main id=main class=main><div class=content-wrapper><div id=content class=content><article class=post><header class=post-header><h1 class=post-title>Mybatis整合Spring</h1><div class=post-meta><span class=post-time>2019-07-10</span><div class=post-category><a href=/categories/mybatis/>Mybatis</a></div><span class=more-meta>约 3181 字</span>
+<span class=more-meta>预计阅读 7 分钟</span>
+<span id=busuanzi_container_page_pv class=more-meta><span id=busuanzi_value_page_pv><img src=/img/spinner.svg alt=spinner.svg></span> 次阅读</span></div></header><div class=post-toc id=post-toc><h2 class=post-toc-title>文章目录</h2><div class="post-toc-content always-active"><nav id=TableOfContents><ul><li><ul><li><a href=#介绍>介绍</a></li><li><a href=#开发环境>开发环境</a></li><li><a href=#项目依赖>项目依赖</a></li><li><a href=#过程>过程</a><ul><li><a href=#配置webxml>配置web.xml</a></li><li><a href=#配置spring管理的mybatis>配置Spring管理的Mybatis</a></li></ul></li><li><a href=#测试>测试</a></li></ul></li></ul></nav></div></div><div class=post-content><h2 id=介绍>介绍</h2><p>  Mybatis是一款持久层的框架，使用Mybatis我们无需自己编写繁琐的JDBC代码，也无需为sql注入等安全问题烦恼。没用过Hibernate哈哈哈，无法做比较。好像现在市面上都是用Mybatis了叭=-=</p><p>  然后为了方便之后写一些Mybatis相关的demo，首先需要搭建好能够运行Mybatis的环境，接下来就是结合Spring来搭建Mybatis的过程。</p><h2 id=开发环境>开发环境</h2><ul><li>IDEA下的Maven项目</li><li>JDK 1.8_0211</li><li>Tomcat 8.5.38</li><li>Mybatis 1.3.2</li></ul><h2 id=项目依赖>项目依赖</h2><p>  下面的Maven的依赖配置是一个完整的ssm依赖配置。包括了之后会用得到的Gjson和log4j等。此外，注意我的pom.xml在build里配置了一个<strong>resources</strong> ，代表我的src/main/java路径下的xml文件也会被认作项目的资源文件（<strong>否则利用Mybatis的扫描方式配置的mapper将不起作用</strong> ），pom.xml配置如下：</p><pre><code>&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;
 
 &lt;project xmlns=&quot;http://maven.apache.org/POM/4.0.0&quot; xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot;
   xsi:schemaLocation=&quot;http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd&quot;&gt;
@@ -399,11 +225,7 @@
   &lt;/build&gt;
 
 &lt;/project&gt;
-</code></pre>
-<h2 id="过程">过程</h2>
-<h3 id="配置webxml">配置web.xml</h3>
-<p>  在web.xml里配置Spring的配置文件路径，这里使用了通配符*，意思是加载所有以applicationContext开头的xml文件，配置如下：</p>
-<pre><code>	&lt;!-- 加载spring容器 --&gt;
+</code></pre><h2 id=过程>过程</h2><h3 id=配置webxml>配置web.xml</h3><p>  在web.xml里配置Spring的配置文件路径，这里使用了通配符*，意思是加载所有以applicationContext开头的xml文件，配置如下：</p><pre><code>	&lt;!-- 加载spring容器 --&gt;
 	&lt;context-param&gt;
 		&lt;param-name&gt;contextConfigLocation&lt;/param-name&gt;
 		&lt;param-value&gt;classpath:spring/applicationContext*.xml&lt;/param-value&gt;
@@ -411,10 +233,7 @@
 	&lt;listener&gt;
 		&lt;listener-class&gt;org.springframework.web.context.ContextLoaderListener&lt;/listener-class&gt;
 	&lt;/listener&gt;
-</code></pre>
-<h3 id="配置spring管理的mybatis">配置Spring管理的Mybatis</h3>
-<p>  前面配置了Spring的xml的加载路径，现在就是创建一个Spring的xml，叫做applicationContextDao.xml，位于资源路径下的spring路径下。配置如下：</p>
-<pre><code>&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;
+</code></pre><h3 id=配置spring管理的mybatis>配置Spring管理的Mybatis</h3><p>  前面配置了Spring的xml的加载路径，现在就是创建一个Spring的xml，叫做applicationContextDao.xml，位于资源路径下的spring路径下。配置如下：</p><pre><code>&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;
 &lt;beans xmlns=&quot;http://www.springframework.org/schema/beans&quot;
        xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot;
        xmlns:context=&quot;http://www.springframework.org/schema/context&quot;
@@ -498,9 +317,7 @@
 &lt;!--    &lt;context:component-scan base-package=&quot;com.test.ssm&quot;/&gt;--&gt;
 
 &lt;/beans&gt;
-</code></pre>
-<p><em><strong>Notice:</strong></em> 我使用的数据库连接池为阿里的DRUID，日志框架为log4j，数据库连接池的配置文件位于资源路径下的properties/db.properties，配置的mybatis的全局配置文件位于资源路径下的mybatis/sqlMapConfig.xml。然后我使用的是mybatis的扫描方式配置mapper，扫描的包是com.test.ssm.mapper。<strong>此外的两个坑：如果不配置Spring的组件扫描，将不能再Controller里自动注入标注了@Service的组件；mysql8需要指定数据库驱动为com.mysql.cj.jdbc.Driver，并且需要设定时区</strong> 关于db.properties的配置，就是需要注意mysql高版本需要配置driverClassName。sqlMapConfig.xml我暂时还没写具体的配置。db.properties配置如下：</p>
-<pre><code># database configure
+</code></pre><p><em><strong>Notice:</strong></em> 我使用的数据库连接池为阿里的DRUID，日志框架为log4j，数据库连接池的配置文件位于资源路径下的properties/db.properties，配置的mybatis的全局配置文件位于资源路径下的mybatis/sqlMapConfig.xml。然后我使用的是mybatis的扫描方式配置mapper，扫描的包是com.test.ssm.mapper。<strong>此外的两个坑：如果不配置Spring的组件扫描，将不能再Controller里自动注入标注了@Service的组件；mysql8需要指定数据库驱动为com.mysql.cj.jdbc.Driver，并且需要设定时区</strong> 关于db.properties的配置，就是需要注意mysql高版本需要配置driverClassName。sqlMapConfig.xml我暂时还没写具体的配置。db.properties配置如下：</p><pre><code># database configure
 jdbc.driverClassName=com.mysql.cj.jdbc.Driver
 jdbc.url=jdbc:mysql://localhost:3306/ssm?useUnicode=true&amp;characterEncoding=utf8&amp;useSSL=false&amp;serverTimezone=Hongkong
 jdbc.username=root
@@ -520,19 +337,7 @@ druid.testOnReturn=false
 druid.poolPreparedStatements=false
 druid.maxPoolPreparedStatementPerConnectionSize=20
 druid.filters=wall,stat
-</code></pre>
-<h2 id="测试">测试</h2>
-<ol>
-<li>在包com.test.ssm.pojo里创建一个实体类User(properties:String name,int age,int id)</li>
-<li>在包com.test.ssm.mapper里创建一个mapper，叫UserMapper.java</li>
-<li>在包com.test.ssm.mapper里创建mapper.xml，叫UserMapper.xml</li>
-<li>在包com.test.ssm.service里创建一个UserService.java</li>
-<li>在包com.test.ssm.service.implement里创建一个UserServiceImpl.java</li>
-<li>在包com.test.ssm.web.controller里创建一个控制器，叫TestController.java</li>
-</ol>
-<p><em><strong>Notice:</strong></em> 我的数据库ssm里有一个叫user的表，其列和User实体的属性对应。然后就是我配置了Spring的组件扫描，扫描整个com.test.ssm。我配置在其他的文件中，没有贴出来，applicationContextDao.xml里最后的<code>&lt;context:component-scan base-package=&quot;com.test.ssm&quot;/&gt;</code>就是组件扫描，只不过我配置在了其他地方所以注释了此行。</p>
-<p>步骤1的代码：</p>
-<pre><code>package com.test.ssm.pojo;
+</code></pre><h2 id=测试>测试</h2><ol><li>在包com.test.ssm.pojo里创建一个实体类User(properties:String name,int age,int id)</li><li>在包com.test.ssm.mapper里创建一个mapper，叫UserMapper.java</li><li>在包com.test.ssm.mapper里创建mapper.xml，叫UserMapper.xml</li><li>在包com.test.ssm.service里创建一个UserService.java</li><li>在包com.test.ssm.service.implement里创建一个UserServiceImpl.java</li><li>在包com.test.ssm.web.controller里创建一个控制器，叫TestController.java</li></ol><p><em><strong>Notice:</strong></em> 我的数据库ssm里有一个叫user的表，其列和User实体的属性对应。然后就是我配置了Spring的组件扫描，扫描整个com.test.ssm。我配置在其他的文件中，没有贴出来，applicationContextDao.xml里最后的<code>&lt;context:component-scan base-package="com.test.ssm"/></code>就是组件扫描，只不过我配置在了其他地方所以注释了此行。</p><p>步骤1的代码：</p><pre><code>package com.test.ssm.pojo;
 public class User {
     private String name;
     private int age;
@@ -560,16 +365,12 @@ public class User {
     }
 
 }
-</code></pre>
-<p>步骤2的代码：</p>
-<pre><code>package com.test.ssm.mapper;
+</code></pre><p>步骤2的代码：</p><pre><code>package com.test.ssm.mapper;
 import com.test.ssm.pojo.User;
 public interface UserMapper {
     public User findUserById(int id) throws Exception;
 }
-</code></pre>
-<p>步骤3的代码：</p>
-<pre><code>&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot; ?&gt;
+</code></pre><p>步骤3的代码：</p><pre><code>&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot; ?&gt;
 &lt;!DOCTYPE mapper
         PUBLIC &quot;-//mybatis.org//DTD Mapper 3.0//EN&quot;
         &quot;http://mybatis.org/dtd/mybatis-3-mapper.dtd&quot;&gt;
@@ -581,16 +382,12 @@ public interface UserMapper {
     &lt;/select&gt;
 
 &lt;/mapper&gt;
-</code></pre>
-<p>步骤4的代码：</p>
-<pre><code>package com.test.ssm.service;
+</code></pre><p>步骤4的代码：</p><pre><code>package com.test.ssm.service;
 import com.test.ssm.pojo.User;
 public interface UserService {
     public User findUserById(int id) throws Exception;
 }
-</code></pre>
-<p>步骤5的代码：</p>
-<pre><code>package com.test.ssm.service.implement;
+</code></pre><p>步骤5的代码：</p><pre><code>package com.test.ssm.service.implement;
 import com.test.ssm.mapper.UserMapper;
 import com.test.ssm.pojo.User;
 import com.test.ssm.service.UserService;
@@ -607,9 +404,7 @@ public class UserServiceImpl implements UserService {
         return userMapper.findUserById(id);
     }
 }
-</code></pre>
-<p>步骤6的代码：</p>
-<pre><code>package com.test.ssm.web.controller;
+</code></pre><p>步骤6的代码：</p><pre><code>package com.test.ssm.web.controller;
 import com.test.ssm.pojo.User;
 import com.test.ssm.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -633,9 +428,7 @@ public class TestController{
         return &quot;hello&quot;;
     }
 }
-</code></pre>
-<p>hello视图的代码：</p>
-<pre><code>&lt;%@ page contentType=&quot;text/html;charset=UTF-8&quot; language=&quot;java&quot; %&gt;
+</code></pre><p>hello视图的代码：</p><pre><code>&lt;%@ page contentType=&quot;text/html;charset=UTF-8&quot; language=&quot;java&quot; %&gt;
 &lt;%@ taglib uri=&quot;http://java.sun.com/jsp/jstl/core&quot; prefix=&quot;c&quot;%&gt;
 &lt;%@ page isELIgnored=&quot;false&quot;%&gt;
 &lt;html&gt;
@@ -651,113 +444,20 @@ public class TestController{
 &lt;/center&gt;
 &lt;/body&gt;
 &lt;/html&gt;
-</code></pre>
-<p>访问测试结果：</p>
-<p><img src="/media/20190811-1.png" alt="结果1"></p>
-
-    </div>
-
-    <div class="post-copyright">
-  <p class="copyright-item">
-    <span class="item-title">文章作者</span>
-    <span class="item-content">P1n93r</span>
-  </p>
-  <p class="copyright-item">
-    <span class="item-title">上次更新</span>
-    <span class="item-content">
-        2019-07-10
-        
-    </span>
-  </p>
-  
-  
-</div>
-<footer class="post-footer">
-      
-      <nav class="post-nav">
-        <a class="prev" href="/post/android/android%E7%95%8C%E9%9D%A2%E5%B8%83%E5%B1%80/">
-            <i class="iconfont icon-left"></i>
-            <span class="prev-text nav-default">Android页面布局</span>
-            <span class="prev-text nav-mobile">上一篇</span>
-          </a>
-        
-      </nav>
-    </footer>
-  </article>
-        </div>
-        <div id="disqus_thread"></div>
-    <script type="text/javascript">
-    (function() {
-      
-      
-      if (window.location.hostname === 'localhost') return;
-
-      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
-      var disqus_shortname = 'p1n93r';
-      dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
-      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
-    })();
-    </script>
-    <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
-
-  
-
-  
-
-      </div>
-    </main>
-
-    <footer id="footer" class="footer">
-      <div class="social-links">
-      <a href="mailto:pin83r@gmail.com" class="iconfont icon-email" title="email"></a>
-      <a href="https://github.com/p1n93r" class="iconfont icon-github" title="github"></a>
-  <a href="https://p1n93r.github.io/index.xml" type="application/rss+xml" class="iconfont icon-rss" title="rss"></a>
-</div>
-
-<div class="copyright">
-  <span class="power-by">
-    由 <a class="hexo-link" href="https://gohugo.io">Hugo</a> 强力驱动
-  </span>
-  <span class="division">|</span>
-  <span class="theme-info">
-    主题 - 
-    <a class="theme-link" href="https://github.com/olOwOlo/hugo-theme-even">Even</a>
-  </span>
-
-  <div class="busuanzi-footer">
-    <span id="busuanzi_container_site_pv"> 本站总访问量 <span id="busuanzi_value_site_pv"><img src="/img/spinner.svg" alt="spinner.svg"/></span> 次 </span>
-      <span class="division">|</span>
-    <span id="busuanzi_container_site_uv"> 本站总访客数 <span id="busuanzi_value_site_uv"><img src="/img/spinner.svg" alt="spinner.svg"/></span> 人 </span>
-  </div>
-
-  <span class="copyright-year">
-    &copy; 
-    2019 - 
-    2022<span class="heart"><i class="iconfont icon-heart"></i></span><span>P1n93r</span>
-  </span>
-</div>
-
-    </footer>
-
-    <div class="back-to-top" id="back-to-top">
-      <i class="iconfont icon-up"></i>
-    </div>
-  </div>
-  
-  <script src="https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
-  <script src="https://cdn.jsdelivr.net/npm/slideout@1.0.1/dist/slideout.min.js" integrity="sha256-t+zJ/g8/KXIJMjSVQdnibt4dlaDxc9zXr/9oNPeWqdg=" crossorigin="anonymous"></script>
-  <script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.js" integrity="sha256-XVLffZaxoWfGUEbdzuLi7pwaUJv1cecsQJQqGLe7axY=" crossorigin="anonymous"></script>
-
-
-
-<script type="text/javascript" src="/js/main.min.64437849d125a2d603b3e71d6de5225d641a32d17168a58106e0b61852079683.js"></script>
-
-
-
-
-
-
-
-
-</body>
-</html>
+</code></pre><p>访问测试结果：</p><p><img src=/media/20190811-1.png alt=结果1></p></div><div class=post-copyright><p class=copyright-item><span class=item-title>文章作者</span>
+<span class=item-content>P1n93r</span></p><p class=copyright-item><span class=item-title>上次更新</span>
+<span class=item-content>2019-07-10</span></p></div><footer class=post-footer><nav class=post-nav><a class=prev href=/post/android/android%E7%95%8C%E9%9D%A2%E5%B8%83%E5%B1%80/><i class="iconfont icon-left"></i>
+<span class="prev-text nav-default">Android页面布局</span>
+<span class="prev-text nav-mobile">上一篇</span></a></nav></footer></article></div><div id=disqus_thread></div><script type=text/javascript>(function(){if(window.location.hostname==="localhost")return;var t,e=document.createElement("script");e.type="text/javascript",e.async=!0,t="p1n93r",e.src="//"+t+".disqus.com/embed.js",(document.getElementsByTagName("head")[0]||document.getElementsByTagName("body")[0]).appendChild(e)})()</script><noscript>Please enable JavaScript to view the <a href=http://disqus.com/?ref_noscript>comments powered by Disqus.</a></noscript></div></main><footer id=footer class=footer><div class=social-links><a href=mailto:pin83r@gmail.com class="iconfont icon-email" title=email></a>
+<a href=https://github.com/p1n93r class="iconfont icon-github" title=github></a>
+<a href=https://p1n93r.github.io/index.xml type=application/rss+xml class="iconfont icon-rss" title=rss></a></div><div class=copyright><span class=power-by>由 <a class=hexo-link href=https://gohugo.io>Hugo</a> 强力驱动</span>
+<span class=division>|</span>
+<span class=theme-info>主题 -
+<a class=theme-link href=https://github.com/olOwOlo/hugo-theme-even>Even</a></span><div class=busuanzi-footer><span id=busuanzi_container_site_pv>本站总访问量 <span id=busuanzi_value_site_pv><img src=/img/spinner.svg alt=spinner.svg></span> 次</span>
+<span class=division>|</span>
+<span id=busuanzi_container_site_uv>本站总访客数 <span id=busuanzi_value_site_uv><img src=/img/spinner.svg alt=spinner.svg></span> 人</span></div><span class=copyright-year>&copy;
+2019 -
+2022<span class=heart><i class="iconfont icon-heart"></i></span><span>P1n93r</span></span></div></footer><div class=back-to-top id=back-to-top><i class="iconfont icon-up"></i></div></div><script src=https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin=anonymous></script>
+<script src=https://cdn.jsdelivr.net/npm/slideout@1.0.1/dist/slideout.min.js integrity="sha256-t+zJ/g8/KXIJMjSVQdnibt4dlaDxc9zXr/9oNPeWqdg=" crossorigin=anonymous></script>
+<script src=https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.js integrity="sha256-XVLffZaxoWfGUEbdzuLi7pwaUJv1cecsQJQqGLe7axY=" crossorigin=anonymous></script>
+<script type=text/javascript src=/js/main.min.64437849d125a2d603b3e71d6de5225d641a32d17168a58106e0b61852079683.js></script></body></html>

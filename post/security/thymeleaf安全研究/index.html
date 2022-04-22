@@ -1,488 +1,134 @@
-<!DOCTYPE html>
-<html lang="zh-cn">
-<head>
-  <meta charset="utf-8">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-  <title>Thymeleaf安全研究 - P1n93r - 博学而精一</title>
-  <meta name="renderer" content="webkit" />
-<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
-
-<meta http-equiv="Cache-Control" content="no-transform" />
-<meta http-equiv="Cache-Control" content="no-siteapp" />
-
-<meta name="theme-color" content="#f8f5ec" />
-<meta name="msapplication-navbutton-color" content="#f8f5ec">
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
-
-
-<meta name="author" content="P1n93r" /><meta name="description" content="简介 Thymeleaf 是一个类似Velocity、FreeMarker 的Java模板引擎，而且Spring Boot推荐使用Thymeleaf引擎。它支持 HTML 原" /><meta name="keywords" content="Security, Java, Web, Android" />
-
-
-
-
-
-
-<meta name="generator" content="Hugo 0.96.0 with theme even" />
-
-
-<link rel="canonical" href="https://p1n93r.github.io/post/security/thymeleaf%E5%AE%89%E5%85%A8%E7%A0%94%E7%A9%B6/" />
-<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
-<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
-<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
-<link rel="manifest" href="/manifest.json">
-<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
-
-<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
-
-<link href="/sass/main.min.f92fd13721ddf72129410fd8250e73152cc6f2438082b6c0208dc24ee7c13fc4.css" rel="stylesheet">
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.css" integrity="sha256-7TyXnr2YU040zfSP+rEcz29ggW4j56/ujTPwjMzyqFY=" crossorigin="anonymous">
-
-
-<meta property="og:title" content="Thymeleaf安全研究" />
-<meta property="og:description" content="简介 Thymeleaf 是一个类似Velocity、FreeMarker 的Java模板引擎，而且Spring Boot推荐使用Thymeleaf引擎。它支持 HTML 原" />
-<meta property="og:type" content="article" />
-<meta property="og:url" content="https://p1n93r.github.io/post/security/thymeleaf%E5%AE%89%E5%85%A8%E7%A0%94%E7%A9%B6/" /><meta property="article:section" content="post" />
-<meta property="article:published_time" content="2021-06-15T17:07:36+08:00" />
-<meta property="article:modified_time" content="2021-06-15T17:07:36+08:00" />
-
-<meta itemprop="name" content="Thymeleaf安全研究">
-<meta itemprop="description" content="简介 Thymeleaf 是一个类似Velocity、FreeMarker 的Java模板引擎，而且Spring Boot推荐使用Thymeleaf引擎。它支持 HTML 原"><meta itemprop="datePublished" content="2021-06-15T17:07:36+08:00" />
-<meta itemprop="dateModified" content="2021-06-15T17:07:36+08:00" />
-<meta itemprop="wordCount" content="1282">
-<meta itemprop="keywords" content="" /><meta name="twitter:card" content="summary"/>
-<meta name="twitter:title" content="Thymeleaf安全研究"/>
-<meta name="twitter:description" content="简介 Thymeleaf 是一个类似Velocity、FreeMarker 的Java模板引擎，而且Spring Boot推荐使用Thymeleaf引擎。它支持 HTML 原"/>
-
-<!--[if lte IE 9]>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
-<![endif]-->
-
-<!--[if lt IE 9]>
-  <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
-<![endif]-->
-
-</head>
-<body>
-  <div id="mobile-navbar" class="mobile-navbar">
-  <div class="mobile-header-logo">
-    <a href="/" class="logo">P1n93r</a>
-  </div>
-  <div class="mobile-navbar-icon">
-    <span></span>
-    <span></span>
-    <span></span>
-  </div>
-</div>
-<nav id="mobile-menu" class="mobile-menu slideout-menu">
-  <ul class="mobile-menu-list">
-    <a href="/">
-        <li class="mobile-menu-item">Home</li>
-      </a><a href="/post/">
-        <li class="mobile-menu-item">Archives</li>
-      </a><a href="/tags/">
-        <li class="mobile-menu-item">Tags</li>
-      </a><a href="/categories/">
-        <li class="mobile-menu-item">Categories</li>
-      </a><a href="/about/">
-        <li class="mobile-menu-item">About</li>
-      </a>
-  </ul>
-
-  
-
-
-</nav>
-
-  <div class="container" id="mobile-panel">
-    <header id="header" class="header">
-        <div class="logo-wrapper">
-  <a href="/" class="logo">P1n93r</a>
-</div>
-
-
-
-
-
-<nav class="site-navbar">
-  <ul id="menu" class="menu">
-    <li class="menu-item">
-        <a class="menu-item-link" href="/">Home</a>
-      </li><li class="menu-item">
-        <a class="menu-item-link" href="/post/">Archives</a>
-      </li><li class="menu-item">
-        <a class="menu-item-link" href="/tags/">Tags</a>
-      </li><li class="menu-item">
-        <a class="menu-item-link" href="/categories/">Categories</a>
-      </li><li class="menu-item">
-        <a class="menu-item-link" href="/about/">About</a>
-      </li>
-  </ul>
-</nav>
-
-    </header>
-
-    <main id="main" class="main">
-      <div class="content-wrapper">
-        <div id="content" class="content">
-          <article class="post">
-    
-    <header class="post-header">
-      <h1 class="post-title">Thymeleaf安全研究</h1>
-
-      <div class="post-meta">
-        <span class="post-time"> 2021-06-15 </span>
-        <div class="post-category">
-            <a href="/categories/security/"> security </a>
-            </div>
-          <span class="more-meta"> 约 1282 字 </span>
-          <span class="more-meta"> 预计阅读 3 分钟 </span>
-        <span id="busuanzi_container_page_pv" class="more-meta"> <span id="busuanzi_value_page_pv"><img src="/img/spinner.svg" alt="spinner.svg"/></span> 次阅读 </span>
-      </div>
-    </header>
-
-    <div class="post-toc" id="post-toc">
-  <h2 class="post-toc-title">文章目录</h2>
-  <div class="post-toc-content always-active">
-    <nav id="TableOfContents">
-  <ul>
-    <li>
-      <ul>
-        <li><a href="#简介">简介</a></li>
-        <li><a href="#基本使用">基本使用</a></li>
-        <li><a href="#漏洞演示">漏洞演示</a></li>
-        <li><a href="#预防方法">预防方法</a></li>
-        <li><a href="#漏洞分析">漏洞分析</a></li>
-        <li><a href="#总结">总结</a></li>
-        <li><a href="#参考">参考</a></li>
-      </ul>
-    </li>
-  </ul>
-</nav>
-  </div>
-</div>
-    <div class="post-content">
-      <h2 id="简介">简介</h2>
-<p>Thymeleaf 是一个类似Velocity、FreeMarker 的Java模板引擎，而且Spring Boot推荐使用Thymeleaf引擎。它支持 HTML 原型，在 HTML 标签中增加额外的属性来达到模板 + 数据的展示方式。</p>
-<p>SpringBoot 提供了 Thymeleaf 的默认配置，并且为 Thymeleaf 设置了视图解析器，我们可以像以前操作 jsp 一样来操作 Thymeleaf。</p>
-<h2 id="基本使用">基本使用</h2>
-<p>需要在 <code>pom.xml</code> 中引入Thymeleaf 依赖：</p>
-<div class="highlight"><div class="chroma">
-<table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt">1
-</span><span class="lnt">2
-</span><span class="lnt">3
-</span><span class="lnt">4
-</span></code></pre></td>
-<td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-xml" data-lang="xml"><span class="line"><span class="cl"><span class="nt">&lt;dependency&gt;</span>
-</span></span><span class="line"><span class="cl">    <span class="nt">&lt;groupId&gt;</span>org.springframework.boot<span class="nt">&lt;/groupId&gt;</span>
-</span></span><span class="line"><span class="cl">    <span class="nt">&lt;artifactId&gt;</span>spring-boot-starter-thymeleaf<span class="nt">&lt;/artifactId&gt;</span>
-</span></span><span class="line"><span class="cl"><span class="nt">&lt;/dependency&gt;</span>
-</span></span></code></pre></td></tr></table>
-</div>
-</div><p>创建模板文件 <code>templates\welcome.html</code> ：</p>
-<div class="highlight"><div class="chroma">
-<table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt">1
-</span><span class="lnt">2
-</span><span class="lnt">3
-</span><span class="lnt">4
-</span><span class="lnt">5
-</span><span class="lnt">6
-</span><span class="lnt">7
-</span><span class="lnt">8
-</span><span class="lnt">9
-</span></code></pre></td>
-<td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-html" data-lang="html"><span class="line"><span class="cl"><span class="cp">&lt;!DOCTYPE HTML&gt;</span>
-</span></span><span class="line"><span class="cl"><span class="p">&lt;</span><span class="nt">html</span> <span class="na">lang</span><span class="o">=</span><span class="s">&#34;en&#34;</span> <span class="na">xmlns:th</span><span class="o">=</span><span class="s">&#34;http://www.thymeleaf.org&#34;</span><span class="p">&gt;</span>
-</span></span><span class="line"><span class="cl"><span class="p">&lt;</span><span class="nt">div</span> <span class="na">th:fragment</span><span class="o">=</span><span class="s">&#34;header&#34;</span><span class="p">&gt;</span>
-</span></span><span class="line"><span class="cl">    <span class="p">&lt;</span><span class="nt">h3</span><span class="p">&gt;</span>Spring Boot Web Thymeleaf Example<span class="p">&lt;/</span><span class="nt">h3</span><span class="p">&gt;</span>
-</span></span><span class="line"><span class="cl"><span class="p">&lt;/</span><span class="nt">div</span><span class="p">&gt;</span>
-</span></span><span class="line"><span class="cl"><span class="p">&lt;</span><span class="nt">div</span> <span class="na">th:fragment</span><span class="o">=</span><span class="s">&#34;main&#34;</span><span class="p">&gt;</span>
-</span></span><span class="line"><span class="cl">    <span class="p">&lt;</span><span class="nt">span</span> <span class="na">th:text</span><span class="o">=</span><span class="s">&#34;&#39;Hello, &#39; + ${message}&#34;</span><span class="p">&gt;&lt;/</span><span class="nt">span</span><span class="p">&gt;</span>
-</span></span><span class="line"><span class="cl"><span class="p">&lt;/</span><span class="nt">div</span><span class="p">&gt;</span>
-</span></span><span class="line"><span class="cl"><span class="p">&lt;/</span><span class="nt">html</span><span class="p">&gt;</span>
-</span></span></code></pre></td></tr></table>
-</div>
-</div><p>创建控制器：</p>
-<div class="highlight"><div class="chroma">
-<table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt">1
-</span><span class="lnt">2
-</span><span class="lnt">3
-</span><span class="lnt">4
-</span><span class="lnt">5
-</span></code></pre></td>
-<td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="line"><span class="cl"><span class="nd">@GetMapping</span><span class="o">(</span><span class="s">&#34;/&#34;</span><span class="o">)</span>
-</span></span><span class="line"><span class="cl"><span class="kd">public</span> <span class="n">String</span> <span class="nf">index</span><span class="o">(</span><span class="n">Model</span> <span class="n">model</span><span class="o">,</span><span class="n">String</span> <span class="n">msg</span><span class="o">)</span> <span class="o">{</span>
-</span></span><span class="line"><span class="cl">    <span class="n">model</span><span class="o">.</span><span class="na">addAttribute</span><span class="o">(</span><span class="s">&#34;message&#34;</span><span class="o">,</span> <span class="n">msg</span><span class="o">);</span>
-</span></span><span class="line"><span class="cl">    <span class="k">return</span> <span class="s">&#34;welcome&#34;</span><span class="o">;</span>
-</span></span><span class="line"><span class="cl"><span class="o">}</span>
-</span></span></code></pre></td></tr></table>
-</div>
-</div><p>当我们访问 <code>http://127.0.0.1:8090/?msg=p1n93r</code> ，将渲染模板给用户展示：</p>
-<p><img src="/media/image-20210811165225943.png" alt="image-20210811165225943"></p>
-<h2 id="漏洞演示">漏洞演示</h2>
-<p>漏洞环境：<a href="https://github.com/hex0wn/learn-java-bug/tree/master/thymeleaf-ssti">https://github.com/hex0wn/learn-java-bug/tree/master/thymeleaf-ssti</a></p>
-<p>简而言之，Thymeleaf SSTI一般发生在攻击者可以控制视图名的位置，例如如下场景：</p>
-<div class="highlight"><div class="chroma">
-<table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
-</span><span class="lnt"> 2
-</span><span class="lnt"> 3
-</span><span class="lnt"> 4
-</span><span class="lnt"> 5
-</span><span class="lnt"> 6
-</span><span class="lnt"> 7
-</span><span class="lnt"> 8
-</span><span class="lnt"> 9
-</span><span class="lnt">10
-</span><span class="lnt">11
-</span><span class="lnt">12
-</span><span class="lnt">13
-</span><span class="lnt">14
-</span><span class="lnt">15
-</span><span class="lnt">16
-</span><span class="lnt">17
-</span><span class="lnt">18
-</span><span class="lnt">19
-</span></code></pre></td>
-<td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="line"><span class="cl"><span class="nd">@GetMapping</span><span class="o">(</span><span class="s">&#34;/path&#34;</span><span class="o">)</span>
-</span></span><span class="line"><span class="cl"><span class="kd">public</span> <span class="n">String</span> <span class="nf">path</span><span class="o">(</span><span class="nd">@RequestParam</span> <span class="n">String</span> <span class="n">lang</span><span class="o">)</span> <span class="o">{</span>
-</span></span><span class="line"><span class="cl">    <span class="c1">//template path is tainted
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="k">return</span> <span class="s">&#34;user/&#34;</span> <span class="o">+</span> <span class="n">lang</span> <span class="o">+</span> <span class="s">&#34;/welcome&#34;</span><span class="o">;</span> 
-</span></span><span class="line"><span class="cl"><span class="o">}</span>
-</span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl"><span class="nd">@GetMapping</span><span class="o">(</span><span class="s">&#34;/fragment&#34;</span><span class="o">)</span>
-</span></span><span class="line"><span class="cl"><span class="kd">public</span> <span class="n">String</span> <span class="nf">fragment</span><span class="o">(</span><span class="nd">@RequestParam</span> <span class="n">String</span> <span class="n">section</span><span class="o">)</span> <span class="o">{</span>
-</span></span><span class="line"><span class="cl">    <span class="c1">//fragment is tainted
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="k">return</span> <span class="s">&#34;welcome :: &#34;</span> <span class="o">+</span> <span class="n">section</span><span class="o">;</span> 
-</span></span><span class="line"><span class="cl"><span class="o">}</span>
-</span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl"><span class="c1">// 返回值为空，则视图名就取决于URI的值
-</span></span></span><span class="line"><span class="cl"><span class="c1">// 所以这里视图名间接的被攻击者控制
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="nd">@GetMapping</span><span class="o">(</span><span class="s">&#34;/doc/{document}&#34;</span><span class="o">)</span>
-</span></span><span class="line"><span class="cl"><span class="kd">public</span> <span class="kt">void</span> <span class="nf">getDocument</span><span class="o">(</span><span class="nd">@PathVariable</span> <span class="n">String</span> <span class="n">document</span><span class="o">)</span> <span class="o">{</span>
-</span></span><span class="line"><span class="cl">    <span class="c1">//returns void, so view name is taken from URI
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="n">log</span><span class="o">.</span><span class="na">info</span><span class="o">(</span><span class="s">&#34;Retrieving &#34;</span> <span class="o">+</span> <span class="n">document</span><span class="o">);</span>
-</span></span><span class="line"><span class="cl"><span class="o">}</span>
-</span></span></code></pre></td></tr></table>
-</div>
-</div><p>例如如下所示，利用Thymeleaf SSTI成功RCE：</p>
-<p><img src="/media/image-20210811171130339.png" alt="image-20210811171130339"></p>
-<h2 id="预防方法">预防方法</h2>
-<p>主要存在以下几种方式：</p>
-<ol>
-<li>使用 <code>@ResponseBody</code> 注解；</li>
-<li>模板名称由 <code>redirect:</code> 或 <code>forward:</code> 开始（于此不会被ThymeleafView渲染）；</li>
-<li>控制器方法的形参中有<code>HttpServletResponse</code>，<code>response</code>已经被处理；</li>
-</ol>
-<h2 id="漏洞分析">漏洞分析</h2>
-<p>首先贴出POC：</p>
-<div class="highlight"><div class="chroma">
-<table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt">1
-</span></code></pre></td>
-<td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="line"><span class="cl"><span class="n">__$</span><span class="o">%</span><span class="n">7bnew</span><span class="o">%</span><span class="n">20java</span><span class="o">.</span><span class="na">util</span><span class="o">.</span><span class="na">Scanner</span><span class="o">(</span><span class="n">T</span><span class="o">(</span><span class="n">java</span><span class="o">.</span><span class="na">lang</span><span class="o">.</span><span class="na">Runtime</span><span class="o">).</span><span class="na">getRuntime</span><span class="o">().</span><span class="na">exec</span><span class="o">(%</span><span class="n">22calc</span><span class="o">%</span><span class="n">22</span><span class="o">).</span><span class="na">getInputStream</span><span class="o">()).</span><span class="na">next</span><span class="o">()%</span><span class="n">7d__</span><span class="o">::.</span><span class="na">x</span>
-</span></span></code></pre></td></tr></table>
-</div>
-</div><p>使用thymeleaf进行模板渲染，首先会调用 <code>org.thymeleaf.spring5.view.ThymeleafView#renderFragment()</code> ，看到里面的代码片段及解释：</p>
-<p><img src="/media/image-20210811175151930.png" alt="image-20210811175151930"></p>
-<p>所以这也就解释了为什么POC中会存在 <code>::</code> 符号。继续跟进，一直到 <code>org.thymeleaf.standard.expression.StandardExpressionPreprocessor#preprocess()</code> ，这个操作叫做 <strong>预处理</strong> ，也就是预处理 <code>__(.*?)__</code> 中的表达式，代码的说明和解释如下：</p>
-<p><img src="/media/image-20210811180600898.png" alt="image-20210811180600898"></p>
-<p>继续跟进，发现底层其实是使用SpEL Evaluator进行执行，于是其实最终是形成一个SpEL表达式注入：</p>
-<p><img src="/media/image-20210811180834058.png" alt="image-20210811180834058"></p>
-<p>小结一下， <strong>Thymeleaf的SSTI其实出现在表达式的预处理</strong> 位置，除了前面的场景，预处理是否可以应用在模板中呢？根据官方文档：<a href="https://waylau.gitbooks.io/thymeleaf-tutorial/content/docs/standard-expression-syntax.html">https://waylau.gitbooks.io/thymeleaf-tutorial/content/docs/standard-expression-syntax.html</a></p>
-<p><img src="/media/image-20210811181646914.png" alt="image-20210811181646914"></p>
-<p>可知，模板中也是支持预处理的。我们实验一下：</p>
-<p>首先清楚，thymeleaf支持以下几种表达式：</p>
-<ul>
-<li>${…}: 变量表达式</li>
-<li>*{…}: 选择表达式</li>
-<li>#{…}: 消息表达式</li>
-<li>@{…}: 链接表达式</li>
-<li>~{…}: 片段表达式</li>
-</ul>
-<p>我们可以在上面任意一种表达式内使用表达式预处理，例如下面所示（ <code>@{__${link}__}</code> ）：</p>
-<div class="highlight"><div class="chroma">
-<table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
-</span><span class="lnt"> 2
-</span><span class="lnt"> 3
-</span><span class="lnt"> 4
-</span><span class="lnt"> 5
-</span><span class="lnt"> 6
-</span><span class="lnt"> 7
-</span><span class="lnt"> 8
-</span><span class="lnt"> 9
-</span><span class="lnt">10
-</span></code></pre></td>
-<td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-html" data-lang="html"><span class="line"><span class="cl"><span class="cp">&lt;!DOCTYPE HTML&gt;</span>
-</span></span><span class="line"><span class="cl"><span class="p">&lt;</span><span class="nt">html</span> <span class="na">lang</span><span class="o">=</span><span class="s">&#34;en&#34;</span> <span class="na">xmlns:th</span><span class="o">=</span><span class="s">&#34;http://www.thymeleaf.org&#34;</span><span class="p">&gt;</span>
-</span></span><span class="line"><span class="cl"><span class="p">&lt;</span><span class="nt">div</span> <span class="na">th:fragment</span><span class="o">=</span><span class="s">&#34;header&#34;</span><span class="p">&gt;</span>
-</span></span><span class="line"><span class="cl">    <span class="p">&lt;</span><span class="nt">h3</span><span class="p">&gt;</span>Spring Boot Web Thymeleaf Example<span class="p">&lt;/</span><span class="nt">h3</span><span class="p">&gt;</span>
-</span></span><span class="line"><span class="cl"><span class="p">&lt;/</span><span class="nt">div</span><span class="p">&gt;</span>
-</span></span><span class="line"><span class="cl"><span class="p">&lt;</span><span class="nt">div</span> <span class="na">th:fragment</span><span class="o">=</span><span class="s">&#34;main&#34;</span><span class="p">&gt;</span>
-</span></span><span class="line"><span class="cl">    <span class="p">&lt;</span><span class="nt">span</span> <span class="na">th:text</span><span class="o">=</span><span class="s">&#34;&#39;Hello, &#39; + ${message}&#34;</span><span class="p">&gt;&lt;/</span><span class="nt">span</span><span class="p">&gt;</span>
-</span></span><span class="line"><span class="cl">    <span class="p">&lt;</span><span class="nt">a</span> <span class="na">th:href</span><span class="o">=</span><span class="s">&#34;@{__${link}__}&#34;</span><span class="p">&gt;</span>test<span class="p">&lt;/</span><span class="nt">a</span><span class="p">&gt;</span>
-</span></span><span class="line"><span class="cl"><span class="p">&lt;/</span><span class="nt">div</span><span class="p">&gt;</span>
-</span></span><span class="line"><span class="cl"><span class="p">&lt;/</span><span class="nt">html</span><span class="p">&gt;</span>
-</span></span></code></pre></td></tr></table>
-</div>
-</div><p>且表达式 <code>@{__${link}__}</code> 中的 <code>link</code> 可以被攻击者控制：</p>
-<div class="highlight"><div class="chroma">
-<table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt">1
-</span><span class="lnt">2
-</span><span class="lnt">3
-</span><span class="lnt">4
-</span><span class="lnt">5
-</span><span class="lnt">6
-</span></code></pre></td>
-<td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="line"><span class="cl"><span class="nd">@GetMapping</span><span class="o">(</span><span class="s">&#34;/&#34;</span><span class="o">)</span>
-</span></span><span class="line"><span class="cl"><span class="kd">public</span> <span class="n">String</span> <span class="nf">index</span><span class="o">(</span><span class="n">Model</span> <span class="n">model</span><span class="o">,</span><span class="n">String</span> <span class="n">msg</span><span class="o">,</span><span class="n">String</span> <span class="n">returnUrl</span><span class="o">)</span> <span class="o">{</span>
-</span></span><span class="line"><span class="cl">    <span class="n">model</span><span class="o">.</span><span class="na">addAttribute</span><span class="o">(</span><span class="s">&#34;message&#34;</span><span class="o">,</span> <span class="n">msg</span><span class="o">);</span>
-</span></span><span class="line"><span class="cl">    <span class="n">model</span><span class="o">.</span><span class="na">addAttribute</span><span class="o">(</span><span class="s">&#34;link&#34;</span><span class="o">,</span> <span class="n">returnUrl</span><span class="o">);</span>
-</span></span><span class="line"><span class="cl">    <span class="k">return</span> <span class="s">&#34;welcome&#34;</span><span class="o">;</span>
-</span></span><span class="line"><span class="cl"><span class="o">}</span>
-</span></span></code></pre></td></tr></table>
-</div>
-</div><p>可以和前面分析的一样，造成RCE：</p>
-<p><img src="/media/image-20210811183008247.png" alt="image-20210811183008247"></p>
-<p>这条链中，最终使用 <code>EngineEventUtils.computeAttributeExpression(context, tag, attributeName, attributeValue)</code> 来计算属性表达式：</p>
-<p><img src="/media/image-20210811190150871.png" alt="image-20210811190150871"></p>
-<p>最终会执行链接表达式内的变量表达式：</p>
-<p><img src="/media/image-20210811190459948.png" alt="image-20210811190459948"></p>
-<h2 id="总结">总结</h2>
-<p>使用Thymeleaf进行SSTI，需要关注以下几个地方：</p>
-<ul>
-<li>可控的视图名。（不能使用 <code>@ResponseBody</code> 、 <code>HttpServletResponse</code> 以及 <code>redirect:</code> 和 <code>forward:</code> ）;</li>
-<li>模板内可控的预处理变量，例如上面例子中的 <code>@{__${link}__}</code> ;</li>
-</ul>
-<h2 id="参考">参考</h2>
-<ul>
-<li><a href="https://waylau.gitbooks.io/thymeleaf-tutorial/content/docs/standard-expression-syntax.html">https://waylau.gitbooks.io/thymeleaf-tutorial/content/docs/standard-expression-syntax.html</a></li>
-<li><a href="https://github.com/veracode-research/spring-view-manipulation/">https://github.com/veracode-research/spring-view-manipulation/</a></li>
-<li><a href="https://www.veracode.com/blog/secure-development/spring-view-manipulation-vulnerability">https://www.veracode.com/blog/secure-development/spring-view-manipulation-vulnerability</a></li>
-<li><a href="https://www.acunetix.com/blog/web-security-zone/exploiting-ssti-in-thymeleaf/">https://www.acunetix.com/blog/web-security-zone/exploiting-ssti-in-thymeleaf/</a></li>
-<li><a href="https://paper.seebug.org/1332/">https://paper.seebug.org/1332/</a></li>
-</ul>
-
-    </div>
-
-    <div class="post-copyright">
-  <p class="copyright-item">
-    <span class="item-title">文章作者</span>
-    <span class="item-content">P1n93r</span>
-  </p>
-  <p class="copyright-item">
-    <span class="item-title">上次更新</span>
-    <span class="item-content">
-        2021-06-15
-        
-    </span>
-  </p>
-  
-  
-</div>
-<footer class="post-footer">
-      
-      <nav class="post-nav">
-        <a class="prev" href="/post/security/struts2%E5%8E%86%E5%8F%B2%E6%BC%8F%E6%B4%9E%E5%88%86%E6%9E%90/">
-            <i class="iconfont icon-left"></i>
-            <span class="prev-text nav-default">Struts2历史漏洞分析</span>
-            <span class="prev-text nav-mobile">上一篇</span>
-          </a>
-        <a class="next" href="/post/security/%E5%AD%97%E8%8A%82%E7%A0%81%E6%8F%92%E6%A1%A9%E6%8A%80%E6%9C%AF%E5%9C%A8%E5%86%85%E5%AD%98%E9%A9%AC%E4%B8%AD%E7%9A%84%E5%BA%94%E7%94%A8/">
-            <span class="next-text nav-default">字节码插桩技术在内存马中的应用</span>
-            <span class="next-text nav-mobile">下一篇</span>
-            <i class="iconfont icon-right"></i>
-          </a>
-      </nav>
-    </footer>
-  </article>
-        </div>
-        <div id="disqus_thread"></div>
-    <script type="text/javascript">
-    (function() {
-      
-      
-      if (window.location.hostname === 'localhost') return;
-
-      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
-      var disqus_shortname = 'p1n93r';
-      dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
-      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
-    })();
-    </script>
-    <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
-
-  
-
-  
-
-      </div>
-    </main>
-
-    <footer id="footer" class="footer">
-      <div class="social-links">
-      <a href="mailto:pin83r@gmail.com" class="iconfont icon-email" title="email"></a>
-      <a href="https://github.com/p1n93r" class="iconfont icon-github" title="github"></a>
-  <a href="https://p1n93r.github.io/index.xml" type="application/rss+xml" class="iconfont icon-rss" title="rss"></a>
-</div>
-
-<div class="copyright">
-  <span class="power-by">
-    由 <a class="hexo-link" href="https://gohugo.io">Hugo</a> 强力驱动
-  </span>
-  <span class="division">|</span>
-  <span class="theme-info">
-    主题 - 
-    <a class="theme-link" href="https://github.com/olOwOlo/hugo-theme-even">Even</a>
-  </span>
-
-  <div class="busuanzi-footer">
-    <span id="busuanzi_container_site_pv"> 本站总访问量 <span id="busuanzi_value_site_pv"><img src="/img/spinner.svg" alt="spinner.svg"/></span> 次 </span>
-      <span class="division">|</span>
-    <span id="busuanzi_container_site_uv"> 本站总访客数 <span id="busuanzi_value_site_uv"><img src="/img/spinner.svg" alt="spinner.svg"/></span> 人 </span>
-  </div>
-
-  <span class="copyright-year">
-    &copy; 
-    2019 - 
-    2022<span class="heart"><i class="iconfont icon-heart"></i></span><span>P1n93r</span>
-  </span>
-</div>
-
-    </footer>
-
-    <div class="back-to-top" id="back-to-top">
-      <i class="iconfont icon-up"></i>
-    </div>
-  </div>
-  
-  <script src="https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
-  <script src="https://cdn.jsdelivr.net/npm/slideout@1.0.1/dist/slideout.min.js" integrity="sha256-t+zJ/g8/KXIJMjSVQdnibt4dlaDxc9zXr/9oNPeWqdg=" crossorigin="anonymous"></script>
-  <script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.js" integrity="sha256-XVLffZaxoWfGUEbdzuLi7pwaUJv1cecsQJQqGLe7axY=" crossorigin="anonymous"></script>
-
-
-
-<script type="text/javascript" src="/js/main.min.64437849d125a2d603b3e71d6de5225d641a32d17168a58106e0b61852079683.js"></script>
-
-
-
-
-
-
-
-
-</body>
-</html>
+<!doctype html><html lang=zh-cn><head><meta charset=utf-8><meta http-equiv=x-ua-compatible content="IE=edge,chrome=1"><title>Thymeleaf安全研究 - P1n93r - 博学而精一</title><meta name=renderer content="webkit"><meta name=viewport content="width=device-width,initial-scale=1,maximum-scale=1"><meta http-equiv=cache-control content="no-transform"><meta http-equiv=cache-control content="no-siteapp"><meta name=theme-color content="#f8f5ec"><meta name=msapplication-navbutton-color content="#f8f5ec"><meta name=apple-mobile-web-app-capable content="yes"><meta name=apple-mobile-web-app-status-bar-style content="#f8f5ec"><meta name=author content="P1n93r"><meta name=description content="简介 Thymeleaf 是一个类似Velocity、FreeMarker 的Java模板引擎，而且Spring Boot推荐使用Thymeleaf引擎。它支持 HTML 原"><meta name=keywords content="Security,Java,Web,Android"><meta name=generator content="Hugo 0.97.3 with theme even"><link rel=canonical href=https://p1n93r.github.io/post/security/thymeleaf%E5%AE%89%E5%85%A8%E7%A0%94%E7%A9%B6/><link rel=apple-touch-icon sizes=180x180 href=/apple-touch-icon.png><link rel=icon type=image/png sizes=32x32 href=/favicon-32x32.png><link rel=icon type=image/png sizes=16x16 href=/favicon-16x16.png><link rel=manifest href=/manifest.json><link rel=mask-icon href=/safari-pinned-tab.svg color=#5bbad5><script async src=//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js></script>
+<link href=/sass/main.min.f92fd13721ddf72129410fd8250e73152cc6f2438082b6c0208dc24ee7c13fc4.css rel=stylesheet><link rel=stylesheet href=https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.css integrity="sha256-7TyXnr2YU040zfSP+rEcz29ggW4j56/ujTPwjMzyqFY=" crossorigin=anonymous><meta property="og:title" content="Thymeleaf安全研究"><meta property="og:description" content="简介 Thymeleaf 是一个类似Velocity、FreeMarker 的Java模板引擎，而且Spring Boot推荐使用Thymeleaf引擎。它支持 HTML 原"><meta property="og:type" content="article"><meta property="og:url" content="https://p1n93r.github.io/post/security/thymeleaf%E5%AE%89%E5%85%A8%E7%A0%94%E7%A9%B6/"><meta property="article:section" content="post"><meta property="article:published_time" content="2021-06-15T17:07:36+08:00"><meta property="article:modified_time" content="2021-06-15T17:07:36+08:00"><meta itemprop=name content="Thymeleaf安全研究"><meta itemprop=description content="简介 Thymeleaf 是一个类似Velocity、FreeMarker 的Java模板引擎，而且Spring Boot推荐使用Thymeleaf引擎。它支持 HTML 原"><meta itemprop=datePublished content="2021-06-15T17:07:36+08:00"><meta itemprop=dateModified content="2021-06-15T17:07:36+08:00"><meta itemprop=wordCount content="1282"><meta itemprop=keywords content><meta name=twitter:card content="summary"><meta name=twitter:title content="Thymeleaf安全研究"><meta name=twitter:description content="简介 Thymeleaf 是一个类似Velocity、FreeMarker 的Java模板引擎，而且Spring Boot推荐使用Thymeleaf引擎。它支持 HTML 原"><!--[if lte IE 9]><script src=https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js></script><![endif]--><!--[if lt IE 9]><script src=https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js></script>
+<script src=https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js></script><![endif]--></head><body><div id=mobile-navbar class=mobile-navbar><div class=mobile-header-logo><a href=/ class=logo>P1n93r</a></div><div class=mobile-navbar-icon><span></span>
+<span></span>
+<span></span></div></div><nav id=mobile-menu class="mobile-menu slideout-menu"><ul class=mobile-menu-list><a href=/><li class=mobile-menu-item>Home</li></a><a href=/post/><li class=mobile-menu-item>Archives</li></a><a href=/tags/><li class=mobile-menu-item>Tags</li></a><a href=/categories/><li class=mobile-menu-item>Categories</li></a><a href=/about/><li class=mobile-menu-item>About</li></a></ul></nav><div class=container id=mobile-panel><header id=header class=header><div class=logo-wrapper><a href=/ class=logo>P1n93r</a></div><nav class=site-navbar><ul id=menu class=menu><li class=menu-item><a class=menu-item-link href=/>Home</a></li><li class=menu-item><a class=menu-item-link href=/post/>Archives</a></li><li class=menu-item><a class=menu-item-link href=/tags/>Tags</a></li><li class=menu-item><a class=menu-item-link href=/categories/>Categories</a></li><li class=menu-item><a class=menu-item-link href=/about/>About</a></li></ul></nav></header><main id=main class=main><div class=content-wrapper><div id=content class=content><article class=post><header class=post-header><h1 class=post-title>Thymeleaf安全研究</h1><div class=post-meta><span class=post-time>2021-06-15</span><div class=post-category><a href=/categories/security/>security</a></div><span class=more-meta>约 1282 字</span>
+<span class=more-meta>预计阅读 3 分钟</span>
+<span id=busuanzi_container_page_pv class=more-meta><span id=busuanzi_value_page_pv><img src=/img/spinner.svg alt=spinner.svg></span> 次阅读</span></div></header><div class=post-toc id=post-toc><h2 class=post-toc-title>文章目录</h2><div class="post-toc-content always-active"><nav id=TableOfContents><ul><li><ul><li><a href=#简介>简介</a></li><li><a href=#基本使用>基本使用</a></li><li><a href=#漏洞演示>漏洞演示</a></li><li><a href=#预防方法>预防方法</a></li><li><a href=#漏洞分析>漏洞分析</a></li><li><a href=#总结>总结</a></li><li><a href=#参考>参考</a></li></ul></li></ul></nav></div></div><div class=post-content><h2 id=简介>简介</h2><p>Thymeleaf 是一个类似Velocity、FreeMarker 的Java模板引擎，而且Spring Boot推荐使用Thymeleaf引擎。它支持 HTML 原型，在 HTML 标签中增加额外的属性来达到模板 + 数据的展示方式。</p><p>SpringBoot 提供了 Thymeleaf 的默认配置，并且为 Thymeleaf 设置了视图解析器，我们可以像以前操作 jsp 一样来操作 Thymeleaf。</p><h2 id=基本使用>基本使用</h2><p>需要在 <code>pom.xml</code> 中引入Thymeleaf 依赖：</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span><span class=lnt>4
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-xml data-lang=xml><span class=line><span class=cl><span class=nt>&lt;dependency&gt;</span>
+</span></span><span class=line><span class=cl>    <span class=nt>&lt;groupId&gt;</span>org.springframework.boot<span class=nt>&lt;/groupId&gt;</span>
+</span></span><span class=line><span class=cl>    <span class=nt>&lt;artifactId&gt;</span>spring-boot-starter-thymeleaf<span class=nt>&lt;/artifactId&gt;</span>
+</span></span><span class=line><span class=cl><span class=nt>&lt;/dependency&gt;</span>
+</span></span></code></pre></td></tr></table></div></div><p>创建模板文件 <code>templates\welcome.html</code> ：</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span><span class=lnt>4
+</span><span class=lnt>5
+</span><span class=lnt>6
+</span><span class=lnt>7
+</span><span class=lnt>8
+</span><span class=lnt>9
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-html data-lang=html><span class=line><span class=cl><span class=cp>&lt;!DOCTYPE HTML&gt;</span>
+</span></span><span class=line><span class=cl><span class=p>&lt;</span><span class=nt>html</span> <span class=na>lang</span><span class=o>=</span><span class=s>&#34;en&#34;</span> <span class=na>xmlns:th</span><span class=o>=</span><span class=s>&#34;http://www.thymeleaf.org&#34;</span><span class=p>&gt;</span>
+</span></span><span class=line><span class=cl><span class=p>&lt;</span><span class=nt>div</span> <span class=na>th:fragment</span><span class=o>=</span><span class=s>&#34;header&#34;</span><span class=p>&gt;</span>
+</span></span><span class=line><span class=cl>    <span class=p>&lt;</span><span class=nt>h3</span><span class=p>&gt;</span>Spring Boot Web Thymeleaf Example<span class=p>&lt;/</span><span class=nt>h3</span><span class=p>&gt;</span>
+</span></span><span class=line><span class=cl><span class=p>&lt;/</span><span class=nt>div</span><span class=p>&gt;</span>
+</span></span><span class=line><span class=cl><span class=p>&lt;</span><span class=nt>div</span> <span class=na>th:fragment</span><span class=o>=</span><span class=s>&#34;main&#34;</span><span class=p>&gt;</span>
+</span></span><span class=line><span class=cl>    <span class=p>&lt;</span><span class=nt>span</span> <span class=na>th:text</span><span class=o>=</span><span class=s>&#34;&#39;Hello, &#39; + ${message}&#34;</span><span class=p>&gt;&lt;/</span><span class=nt>span</span><span class=p>&gt;</span>
+</span></span><span class=line><span class=cl><span class=p>&lt;/</span><span class=nt>div</span><span class=p>&gt;</span>
+</span></span><span class=line><span class=cl><span class=p>&lt;/</span><span class=nt>html</span><span class=p>&gt;</span>
+</span></span></code></pre></td></tr></table></div></div><p>创建控制器：</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span><span class=lnt>4
+</span><span class=lnt>5
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-java data-lang=java><span class=line><span class=cl><span class=nd>@GetMapping</span><span class=o>(</span><span class=s>&#34;/&#34;</span><span class=o>)</span>
+</span></span><span class=line><span class=cl><span class=kd>public</span> <span class=n>String</span> <span class=nf>index</span><span class=o>(</span><span class=n>Model</span> <span class=n>model</span><span class=o>,</span><span class=n>String</span> <span class=n>msg</span><span class=o>)</span> <span class=o>{</span>
+</span></span><span class=line><span class=cl>    <span class=n>model</span><span class=o>.</span><span class=na>addAttribute</span><span class=o>(</span><span class=s>&#34;message&#34;</span><span class=o>,</span> <span class=n>msg</span><span class=o>);</span>
+</span></span><span class=line><span class=cl>    <span class=k>return</span> <span class=s>&#34;welcome&#34;</span><span class=o>;</span>
+</span></span><span class=line><span class=cl><span class=o>}</span>
+</span></span></code></pre></td></tr></table></div></div><p>当我们访问 <code>http://127.0.0.1:8090/?msg=p1n93r</code> ，将渲染模板给用户展示：</p><p><img src=/media/image-20210811165225943.png alt=image-20210811165225943></p><h2 id=漏洞演示>漏洞演示</h2><p>漏洞环境：<a href=https://github.com/hex0wn/learn-java-bug/tree/master/thymeleaf-ssti>https://github.com/hex0wn/learn-java-bug/tree/master/thymeleaf-ssti</a></p><p>简而言之，Thymeleaf SSTI一般发生在攻击者可以控制视图名的位置，例如如下场景：</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span><span class=lnt>17
+</span><span class=lnt>18
+</span><span class=lnt>19
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-java data-lang=java><span class=line><span class=cl><span class=nd>@GetMapping</span><span class=o>(</span><span class=s>&#34;/path&#34;</span><span class=o>)</span>
+</span></span><span class=line><span class=cl><span class=kd>public</span> <span class=n>String</span> <span class=nf>path</span><span class=o>(</span><span class=nd>@RequestParam</span> <span class=n>String</span> <span class=n>lang</span><span class=o>)</span> <span class=o>{</span>
+</span></span><span class=line><span class=cl>    <span class=c1>//template path is tainted
+</span></span></span><span class=line><span class=cl><span class=c1></span>    <span class=k>return</span> <span class=s>&#34;user/&#34;</span> <span class=o>+</span> <span class=n>lang</span> <span class=o>+</span> <span class=s>&#34;/welcome&#34;</span><span class=o>;</span> 
+</span></span><span class=line><span class=cl><span class=o>}</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=nd>@GetMapping</span><span class=o>(</span><span class=s>&#34;/fragment&#34;</span><span class=o>)</span>
+</span></span><span class=line><span class=cl><span class=kd>public</span> <span class=n>String</span> <span class=nf>fragment</span><span class=o>(</span><span class=nd>@RequestParam</span> <span class=n>String</span> <span class=n>section</span><span class=o>)</span> <span class=o>{</span>
+</span></span><span class=line><span class=cl>    <span class=c1>//fragment is tainted
+</span></span></span><span class=line><span class=cl><span class=c1></span>    <span class=k>return</span> <span class=s>&#34;welcome :: &#34;</span> <span class=o>+</span> <span class=n>section</span><span class=o>;</span> 
+</span></span><span class=line><span class=cl><span class=o>}</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=c1>// 返回值为空，则视图名就取决于URI的值
+</span></span></span><span class=line><span class=cl><span class=c1>// 所以这里视图名间接的被攻击者控制
+</span></span></span><span class=line><span class=cl><span class=c1></span><span class=nd>@GetMapping</span><span class=o>(</span><span class=s>&#34;/doc/{document}&#34;</span><span class=o>)</span>
+</span></span><span class=line><span class=cl><span class=kd>public</span> <span class=kt>void</span> <span class=nf>getDocument</span><span class=o>(</span><span class=nd>@PathVariable</span> <span class=n>String</span> <span class=n>document</span><span class=o>)</span> <span class=o>{</span>
+</span></span><span class=line><span class=cl>    <span class=c1>//returns void, so view name is taken from URI
+</span></span></span><span class=line><span class=cl><span class=c1></span>    <span class=n>log</span><span class=o>.</span><span class=na>info</span><span class=o>(</span><span class=s>&#34;Retrieving &#34;</span> <span class=o>+</span> <span class=n>document</span><span class=o>);</span>
+</span></span><span class=line><span class=cl><span class=o>}</span>
+</span></span></code></pre></td></tr></table></div></div><p>例如如下所示，利用Thymeleaf SSTI成功RCE：</p><p><img src=/media/image-20210811171130339.png alt=image-20210811171130339></p><h2 id=预防方法>预防方法</h2><p>主要存在以下几种方式：</p><ol><li>使用 <code>@ResponseBody</code> 注解；</li><li>模板名称由 <code>redirect:</code> 或 <code>forward:</code> 开始（于此不会被ThymeleafView渲染）；</li><li>控制器方法的形参中有<code>HttpServletResponse</code>，<code>response</code>已经被处理；</li></ol><h2 id=漏洞分析>漏洞分析</h2><p>首先贴出POC：</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-java data-lang=java><span class=line><span class=cl><span class=n>__$</span><span class=o>%</span><span class=n>7bnew</span><span class=o>%</span><span class=n>20java</span><span class=o>.</span><span class=na>util</span><span class=o>.</span><span class=na>Scanner</span><span class=o>(</span><span class=n>T</span><span class=o>(</span><span class=n>java</span><span class=o>.</span><span class=na>lang</span><span class=o>.</span><span class=na>Runtime</span><span class=o>).</span><span class=na>getRuntime</span><span class=o>().</span><span class=na>exec</span><span class=o>(%</span><span class=n>22calc</span><span class=o>%</span><span class=n>22</span><span class=o>).</span><span class=na>getInputStream</span><span class=o>()).</span><span class=na>next</span><span class=o>()%</span><span class=n>7d__</span><span class=o>::.</span><span class=na>x</span>
+</span></span></code></pre></td></tr></table></div></div><p>使用thymeleaf进行模板渲染，首先会调用 <code>org.thymeleaf.spring5.view.ThymeleafView#renderFragment()</code> ，看到里面的代码片段及解释：</p><p><img src=/media/image-20210811175151930.png alt=image-20210811175151930></p><p>所以这也就解释了为什么POC中会存在 <code>::</code> 符号。继续跟进，一直到 <code>org.thymeleaf.standard.expression.StandardExpressionPreprocessor#preprocess()</code> ，这个操作叫做 <strong>预处理</strong> ，也就是预处理 <code>__(.*?)__</code> 中的表达式，代码的说明和解释如下：</p><p><img src=/media/image-20210811180600898.png alt=image-20210811180600898></p><p>继续跟进，发现底层其实是使用SpEL Evaluator进行执行，于是其实最终是形成一个SpEL表达式注入：</p><p><img src=/media/image-20210811180834058.png alt=image-20210811180834058></p><p>小结一下， <strong>Thymeleaf的SSTI其实出现在表达式的预处理</strong> 位置，除了前面的场景，预处理是否可以应用在模板中呢？根据官方文档：<a href=https://waylau.gitbooks.io/thymeleaf-tutorial/content/docs/standard-expression-syntax.html>https://waylau.gitbooks.io/thymeleaf-tutorial/content/docs/standard-expression-syntax.html</a></p><p><img src=/media/image-20210811181646914.png alt=image-20210811181646914></p><p>可知，模板中也是支持预处理的。我们实验一下：</p><p>首先清楚，thymeleaf支持以下几种表达式：</p><ul><li>${…}: 变量表达式</li><li>*{…}: 选择表达式</li><li>#{…}: 消息表达式</li><li>@{…}: 链接表达式</li><li>~{…}: 片段表达式</li></ul><p>我们可以在上面任意一种表达式内使用表达式预处理，例如下面所示（ <code>@{__${link}__}</code> ）：</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-html data-lang=html><span class=line><span class=cl><span class=cp>&lt;!DOCTYPE HTML&gt;</span>
+</span></span><span class=line><span class=cl><span class=p>&lt;</span><span class=nt>html</span> <span class=na>lang</span><span class=o>=</span><span class=s>&#34;en&#34;</span> <span class=na>xmlns:th</span><span class=o>=</span><span class=s>&#34;http://www.thymeleaf.org&#34;</span><span class=p>&gt;</span>
+</span></span><span class=line><span class=cl><span class=p>&lt;</span><span class=nt>div</span> <span class=na>th:fragment</span><span class=o>=</span><span class=s>&#34;header&#34;</span><span class=p>&gt;</span>
+</span></span><span class=line><span class=cl>    <span class=p>&lt;</span><span class=nt>h3</span><span class=p>&gt;</span>Spring Boot Web Thymeleaf Example<span class=p>&lt;/</span><span class=nt>h3</span><span class=p>&gt;</span>
+</span></span><span class=line><span class=cl><span class=p>&lt;/</span><span class=nt>div</span><span class=p>&gt;</span>
+</span></span><span class=line><span class=cl><span class=p>&lt;</span><span class=nt>div</span> <span class=na>th:fragment</span><span class=o>=</span><span class=s>&#34;main&#34;</span><span class=p>&gt;</span>
+</span></span><span class=line><span class=cl>    <span class=p>&lt;</span><span class=nt>span</span> <span class=na>th:text</span><span class=o>=</span><span class=s>&#34;&#39;Hello, &#39; + ${message}&#34;</span><span class=p>&gt;&lt;/</span><span class=nt>span</span><span class=p>&gt;</span>
+</span></span><span class=line><span class=cl>    <span class=p>&lt;</span><span class=nt>a</span> <span class=na>th:href</span><span class=o>=</span><span class=s>&#34;@{__${link}__}&#34;</span><span class=p>&gt;</span>test<span class=p>&lt;/</span><span class=nt>a</span><span class=p>&gt;</span>
+</span></span><span class=line><span class=cl><span class=p>&lt;/</span><span class=nt>div</span><span class=p>&gt;</span>
+</span></span><span class=line><span class=cl><span class=p>&lt;/</span><span class=nt>html</span><span class=p>&gt;</span>
+</span></span></code></pre></td></tr></table></div></div><p>且表达式 <code>@{__${link}__}</code> 中的 <code>link</code> 可以被攻击者控制：</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span><span class=lnt>4
+</span><span class=lnt>5
+</span><span class=lnt>6
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-java data-lang=java><span class=line><span class=cl><span class=nd>@GetMapping</span><span class=o>(</span><span class=s>&#34;/&#34;</span><span class=o>)</span>
+</span></span><span class=line><span class=cl><span class=kd>public</span> <span class=n>String</span> <span class=nf>index</span><span class=o>(</span><span class=n>Model</span> <span class=n>model</span><span class=o>,</span><span class=n>String</span> <span class=n>msg</span><span class=o>,</span><span class=n>String</span> <span class=n>returnUrl</span><span class=o>)</span> <span class=o>{</span>
+</span></span><span class=line><span class=cl>    <span class=n>model</span><span class=o>.</span><span class=na>addAttribute</span><span class=o>(</span><span class=s>&#34;message&#34;</span><span class=o>,</span> <span class=n>msg</span><span class=o>);</span>
+</span></span><span class=line><span class=cl>    <span class=n>model</span><span class=o>.</span><span class=na>addAttribute</span><span class=o>(</span><span class=s>&#34;link&#34;</span><span class=o>,</span> <span class=n>returnUrl</span><span class=o>);</span>
+</span></span><span class=line><span class=cl>    <span class=k>return</span> <span class=s>&#34;welcome&#34;</span><span class=o>;</span>
+</span></span><span class=line><span class=cl><span class=o>}</span>
+</span></span></code></pre></td></tr></table></div></div><p>可以和前面分析的一样，造成RCE：</p><p><img src=/media/image-20210811183008247.png alt=image-20210811183008247></p><p>这条链中，最终使用 <code>EngineEventUtils.computeAttributeExpression(context, tag, attributeName, attributeValue)</code> 来计算属性表达式：</p><p><img src=/media/image-20210811190150871.png alt=image-20210811190150871></p><p>最终会执行链接表达式内的变量表达式：</p><p><img src=/media/image-20210811190459948.png alt=image-20210811190459948></p><h2 id=总结>总结</h2><p>使用Thymeleaf进行SSTI，需要关注以下几个地方：</p><ul><li>可控的视图名。（不能使用 <code>@ResponseBody</code> 、 <code>HttpServletResponse</code> 以及 <code>redirect:</code> 和 <code>forward:</code> ）;</li><li>模板内可控的预处理变量，例如上面例子中的 <code>@{__${link}__}</code> ;</li></ul><h2 id=参考>参考</h2><ul><li><a href=https://waylau.gitbooks.io/thymeleaf-tutorial/content/docs/standard-expression-syntax.html>https://waylau.gitbooks.io/thymeleaf-tutorial/content/docs/standard-expression-syntax.html</a></li><li><a href=https://github.com/veracode-research/spring-view-manipulation/>https://github.com/veracode-research/spring-view-manipulation/</a></li><li><a href=https://www.veracode.com/blog/secure-development/spring-view-manipulation-vulnerability>https://www.veracode.com/blog/secure-development/spring-view-manipulation-vulnerability</a></li><li><a href=https://www.acunetix.com/blog/web-security-zone/exploiting-ssti-in-thymeleaf/>https://www.acunetix.com/blog/web-security-zone/exploiting-ssti-in-thymeleaf/</a></li><li><a href=https://paper.seebug.org/1332/>https://paper.seebug.org/1332/</a></li></ul></div><div class=post-copyright><p class=copyright-item><span class=item-title>文章作者</span>
+<span class=item-content>P1n93r</span></p><p class=copyright-item><span class=item-title>上次更新</span>
+<span class=item-content>2021-06-15</span></p></div><footer class=post-footer><nav class=post-nav><a class=prev href=/post/security/struts2%E5%8E%86%E5%8F%B2%E6%BC%8F%E6%B4%9E%E5%88%86%E6%9E%90/><i class="iconfont icon-left"></i>
+<span class="prev-text nav-default">Struts2历史漏洞分析</span>
+<span class="prev-text nav-mobile">上一篇</span></a>
+<a class=next href=/post/security/%E5%AD%97%E8%8A%82%E7%A0%81%E6%8F%92%E6%A1%A9%E6%8A%80%E6%9C%AF%E5%9C%A8%E5%86%85%E5%AD%98%E9%A9%AC%E4%B8%AD%E7%9A%84%E5%BA%94%E7%94%A8/><span class="next-text nav-default">字节码插桩技术在内存马中的应用</span>
+<span class="next-text nav-mobile">下一篇</span>
+<i class="iconfont icon-right"></i></a></nav></footer></article></div><div id=disqus_thread></div><script type=text/javascript>(function(){if(window.location.hostname==="localhost")return;var t,e=document.createElement("script");e.type="text/javascript",e.async=!0,t="p1n93r",e.src="//"+t+".disqus.com/embed.js",(document.getElementsByTagName("head")[0]||document.getElementsByTagName("body")[0]).appendChild(e)})()</script><noscript>Please enable JavaScript to view the <a href=http://disqus.com/?ref_noscript>comments powered by Disqus.</a></noscript></div></main><footer id=footer class=footer><div class=social-links><a href=mailto:pin83r@gmail.com class="iconfont icon-email" title=email></a>
+<a href=https://github.com/p1n93r class="iconfont icon-github" title=github></a>
+<a href=https://p1n93r.github.io/index.xml type=application/rss+xml class="iconfont icon-rss" title=rss></a></div><div class=copyright><span class=power-by>由 <a class=hexo-link href=https://gohugo.io>Hugo</a> 强力驱动</span>
+<span class=division>|</span>
+<span class=theme-info>主题 -
+<a class=theme-link href=https://github.com/olOwOlo/hugo-theme-even>Even</a></span><div class=busuanzi-footer><span id=busuanzi_container_site_pv>本站总访问量 <span id=busuanzi_value_site_pv><img src=/img/spinner.svg alt=spinner.svg></span> 次</span>
+<span class=division>|</span>
+<span id=busuanzi_container_site_uv>本站总访客数 <span id=busuanzi_value_site_uv><img src=/img/spinner.svg alt=spinner.svg></span> 人</span></div><span class=copyright-year>&copy;
+2019 -
+2022<span class=heart><i class="iconfont icon-heart"></i></span><span>P1n93r</span></span></div></footer><div class=back-to-top id=back-to-top><i class="iconfont icon-up"></i></div></div><script src=https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin=anonymous></script>
+<script src=https://cdn.jsdelivr.net/npm/slideout@1.0.1/dist/slideout.min.js integrity="sha256-t+zJ/g8/KXIJMjSVQdnibt4dlaDxc9zXr/9oNPeWqdg=" crossorigin=anonymous></script>
+<script src=https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.js integrity="sha256-XVLffZaxoWfGUEbdzuLi7pwaUJv1cecsQJQqGLe7axY=" crossorigin=anonymous></script>
+<script type=text/javascript src=/js/main.min.64437849d125a2d603b3e71d6de5225d641a32d17168a58106e0b61852079683.js></script></body></html>
