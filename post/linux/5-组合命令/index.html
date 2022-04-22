@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>5-组合命令 - P1n93r - 博学而精一</title>
+  <meta name="renderer" content="webkit" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+<meta name="author" content="P1n93r" /><meta name="description" content="连续运行多个命令 可以使用符号 ; 分隔多个连续运行的命令。例如下面： Notice ：使用此种方式连续运行多个命令的时候，需要特别小心—— 即使前面的命令运行失" /><meta name="keywords" content="Security, Java, Web, Android" />
+
+
+
+
+
+
+<meta name="generator" content="Hugo 0.96.0 with theme even" />
+
+
+<link rel="canonical" href="https://p1n93r.github.io/post/linux/5-%E7%BB%84%E5%90%88%E5%91%BD%E4%BB%A4/" />
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/manifest.json">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+<link href="/sass/main.min.f92fd13721ddf72129410fd8250e73152cc6f2438082b6c0208dc24ee7c13fc4.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.css" integrity="sha256-7TyXnr2YU040zfSP+rEcz29ggW4j56/ujTPwjMzyqFY=" crossorigin="anonymous">
+
+
+<meta property="og:title" content="5-组合命令" />
+<meta property="og:description" content="连续运行多个命令 可以使用符号 ; 分隔多个连续运行的命令。例如下面： Notice ：使用此种方式连续运行多个命令的时候，需要特别小心—— 即使前面的命令运行失" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://p1n93r.github.io/post/linux/5-%E7%BB%84%E5%90%88%E5%91%BD%E4%BB%A4/" /><meta property="article:section" content="post" />
+<meta property="article:published_time" content="2019-11-25T20:40:36+08:00" />
+<meta property="article:modified_time" content="2019-11-25T20:40:36+08:00" />
+
+<meta itemprop="name" content="5-组合命令">
+<meta itemprop="description" content="连续运行多个命令 可以使用符号 ; 分隔多个连续运行的命令。例如下面： Notice ：使用此种方式连续运行多个命令的时候，需要特别小心—— 即使前面的命令运行失"><meta itemprop="datePublished" content="2019-11-25T20:40:36+08:00" />
+<meta itemprop="dateModified" content="2019-11-25T20:40:36+08:00" />
+<meta itemprop="wordCount" content="904">
+<meta itemprop="keywords" content="" /><meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="5-组合命令"/>
+<meta name="twitter:description" content="连续运行多个命令 可以使用符号 ; 分隔多个连续运行的命令。例如下面： Notice ：使用此种方式连续运行多个命令的时候，需要特别小心—— 即使前面的命令运行失"/>
+
+<!--[if lte IE 9]>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
+<![endif]-->
+
+<!--[if lt IE 9]>
+  <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+<![endif]-->
+
+</head>
+<body>
+  <div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/" class="logo">P1n93r</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    <a href="/">
+        <li class="mobile-menu-item">Home</li>
+      </a><a href="/post/">
+        <li class="mobile-menu-item">Archives</li>
+      </a><a href="/tags/">
+        <li class="mobile-menu-item">Tags</li>
+      </a><a href="/categories/">
+        <li class="mobile-menu-item">Categories</li>
+      </a><a href="/about/">
+        <li class="mobile-menu-item">About</li>
+      </a>
+  </ul>
+
+  
+
+
+</nav>
+
+  <div class="container" id="mobile-panel">
+    <header id="header" class="header">
+        <div class="logo-wrapper">
+  <a href="/" class="logo">P1n93r</a>
+</div>
+
+
+
+
+
+<nav class="site-navbar">
+  <ul id="menu" class="menu">
+    <li class="menu-item">
+        <a class="menu-item-link" href="/">Home</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/">Archives</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/tags/">Tags</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/categories/">Categories</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/about/">About</a>
+      </li>
+  </ul>
+</nav>
+
+    </header>
+
+    <main id="main" class="main">
+      <div class="content-wrapper">
+        <div id="content" class="content">
+          <article class="post">
+    
+    <header class="post-header">
+      <h1 class="post-title">5-组合命令</h1>
+
+      <div class="post-meta">
+        <span class="post-time"> 2019-11-25 </span>
+        <div class="post-category">
+            <a href="/categories/linux/"> Linux </a>
+            </div>
+          <span class="more-meta"> 约 904 字 </span>
+          <span class="more-meta"> 预计阅读 2 分钟 </span>
+        <span id="busuanzi_container_page_pv" class="more-meta"> <span id="busuanzi_value_page_pv"><img src="/img/spinner.svg" alt="spinner.svg"/></span> 次阅读 </span>
+      </div>
+    </header>
+
+    <div class="post-toc" id="post-toc">
+  <h2 class="post-toc-title">文章目录</h2>
+  <div class="post-toc-content always-active">
+    <nav id="TableOfContents">
+  <ul>
+    <li>
+      <ul>
+        <li><a href="#连续运行多个命令">连续运行多个命令</a></li>
+        <li><a href="#仅在前面的命令运行成功时才运行下一条命令">仅在前面的命令运行成功时才运行下一条命令</a></li>
+        <li><a href="#仅在前面的命令运行失败时才运行下一条命令">仅在前面的命令运行失败时才运行下一条命令</a></li>
+        <li><a href="#将一条命令的输出插入另一条命令">将一条命令的输出插入另一条命令</a></li>
+        <li><a href="#将一条命令的输出做为另一条命令的输入">将一条命令的输出做为另一条命令的输入</a></li>
+        <li><a href="#将命令的输出重定向到文件">将命令的输出重定向到文件</a></li>
+        <li><a href="#防止重定向时覆盖文件">防止重定向时覆盖文件</a></li>
+        <li><a href="#将命令的输出追加到文件">将命令的输出追加到文件</a></li>
+        <li><a href="#将文件用作命令的输入">将文件用作命令的输入</a></li>
+        <li><a href="#结合使用输入和输出重定向">结合使用输入和输出重定向</a></li>
+        <li><a href="#将输出同时发送到文件和stdout">将输出同时发送到文件和stdout</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+  </div>
+</div>
+    <div class="post-content">
+      <h2 id="连续运行多个命令">连续运行多个命令</h2>
+<p>可以使用符号 <code>;</code> 分隔多个连续运行的命令。例如下面：</p>
+<p><img src="/media/20191125-1.png" alt=";分隔命令"></p>
+<p><em><strong>Notice</strong></em> ：使用此种方式连续运行多个命令的时候，需要特别小心—— <strong>即使前面的命令运行失败，后面的命令也会按顺序执行</strong> 。</p>
+<h2 id="仅在前面的命令运行成功时才运行下一条命令">仅在前面的命令运行成功时才运行下一条命令</h2>
+<p>如果使用 <code>;</code> 分隔多个顺序执行的命令，不管前面的命令是否执行失败，后面的命令都会得到执行，这会造成一些不好的影响，所以更好的分隔办法是使用 <code>&amp;&amp;</code> 来对多个命令进行分隔。如此，只有前面的命令成功执行，后面的命令才会得到执行。例子如下：</p>
+<p><img src="/media/20191125-2.png" alt="&amp;&amp;分隔命令"></p>
+<h2 id="仅在前面的命令运行失败时才运行下一条命令">仅在前面的命令运行失败时才运行下一条命令</h2>
+<p>使用 <code>||</code> 分隔多个连续的命令，只有当前面的命令运行失败时后面的命令才会运行。常常用此方式实现方法执行失败发送警告。一个综合对比的例子如下：</p>
+<p><img src="/media/20191125-3.png" alt="||分隔"></p>
+<h2 id="将一条命令的输出插入另一条命令">将一条命令的输出插入另一条命令</h2>
+<p>可以使用符号 <code>$()</code> 将括号内的命令输出作为另一条命令的组成，如下：</p>
+<p><img src="/media/20191125-4.png" alt="$()的使用"></p>
+<h2 id="将一条命令的输出做为另一条命令的输入">将一条命令的输出做为另一条命令的输入</h2>
+<p>要想实现这个目的，可以使用管道 <code>|</code> ，它位于两个命令之间，将第一个命令的输出作为第二个命令的输入，换句话说，管道将stdout重定向到第二条命令的stdin。一个例子如下：</p>
+<p><img src="/media/20191125-5.png" alt="管道|"></p>
+<h2 id="将命令的输出重定向到文件">将命令的输出重定向到文件</h2>
+<p>使用符号 <code>&gt;</code> 可以将标准输出重定向到文件（此文件可以不必存在，会自定创建。 <strong>但是如果存在的话，会覆盖该文件的内容</strong> ）。一个例子如下：</p>
+<p><img src="/media/20191125-6.png" alt="重定向到文件"></p>
+<h2 id="防止重定向时覆盖文件">防止重定向时覆盖文件</h2>
+<p>上面使用 <code>&gt;</code> 重定向到文件输出时，如果文件原本存在内容，则会覆盖原文件，所以为了防止被覆盖，可以使用命令 <code>set -o noclobber</code> 来设置bash不允许重定向覆盖已经存在的文件，如果要关闭，则将 <code>-o</code> 改为 <code>+o</code> 。当开启时，如果还想重定向覆盖源文件，则需要使用 <code>&gt;|</code> 代替 <code>&gt;</code> 。一个例子如下：</p>
+<p><img src="/media/20191125-7.png" alt="set -o noclobber"></p>
+<h2 id="将命令的输出追加到文件">将命令的输出追加到文件</h2>
+<p>使用 <code>&gt;</code> 重定向到文件会默认覆盖文件，但是使用 <code>&gt;&gt;</code> 重定向到文件，可以不覆盖而是追加到文件末尾。一个例子如下：</p>
+<p><img src="/media/20191125-8.png" alt="&amp;raquo;的使用"></p>
+<h2 id="将文件用作命令的输入">将文件用作命令的输入</h2>
+<p>使用符号 <code>&lt;</code> 可以重定向stdin，一个例子如下：</p>
+<p><img src="/media/20191125-9.png" alt="&lt;的使用"></p>
+<h2 id="结合使用输入和输出重定向">结合使用输入和输出重定向</h2>
+<p>符号 <code>&lt;</code> 和 <code>&gt;</code>（或者 <code>&gt;&gt;</code> ） 可以结合使用，一个例子如下：</p>
+<p><img src="/media/20191125-10.png" alt="结合使用输入和输出重定向"></p>
+<h2 id="将输出同时发送到文件和stdout">将输出同时发送到文件和stdout</h2>
+<p>可以使用 <code>tee</code> 命令将输出拆分为两个流：①stdout ②文件。 <strong>如果写入的文件已经存在，则系统将使用tee提供的新数据覆盖该文件，此时可以使用其 <code>-a</code> 选项将数据追加到文件而不是覆盖</strong> 。一个简单的例子如下：</p>
+<p><img src="/media/20191125-11.png" alt="tee的使用"></p>
+
+    </div>
+
+    <div class="post-copyright">
+  <p class="copyright-item">
+    <span class="item-title">文章作者</span>
+    <span class="item-content">P1n93r</span>
+  </p>
+  <p class="copyright-item">
+    <span class="item-title">上次更新</span>
+    <span class="item-content">
+        2019-11-25
+        
+    </span>
+  </p>
+  
+  
+</div>
+<footer class="post-footer">
+      
+      <nav class="post-nav">
+        <a class="prev" href="/post/linux/6-%E6%9F%A5%E7%9C%8B%E6%96%87%E4%BB%B6/">
+            <i class="iconfont icon-left"></i>
+            <span class="prev-text nav-default">6-查看文件</span>
+            <span class="prev-text nav-mobile">上一篇</span>
+          </a>
+        <a class="next" href="/post/spring/spring-bean/">
+            <span class="next-text nav-default">Spring Bean</span>
+            <span class="next-text nav-mobile">下一篇</span>
+            <i class="iconfont icon-right"></i>
+          </a>
+      </nav>
+    </footer>
+  </article>
+        </div>
+        <div id="disqus_thread"></div>
+    <script type="text/javascript">
+    (function() {
+      
+      
+      if (window.location.hostname === 'localhost') return;
+
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      var disqus_shortname = 'p1n93r';
+      dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+    </script>
+    <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+
+  
+
+  
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="social-links">
+      <a href="mailto:pin83r@gmail.com" class="iconfont icon-email" title="email"></a>
+      <a href="https://github.com/p1n93r" class="iconfont icon-github" title="github"></a>
+  <a href="https://p1n93r.github.io/index.xml" type="application/rss+xml" class="iconfont icon-rss" title="rss"></a>
+</div>
+
+<div class="copyright">
+  <span class="power-by">
+    由 <a class="hexo-link" href="https://gohugo.io">Hugo</a> 强力驱动
+  </span>
+  <span class="division">|</span>
+  <span class="theme-info">
+    主题 - 
+    <a class="theme-link" href="https://github.com/olOwOlo/hugo-theme-even">Even</a>
+  </span>
+
+  <div class="busuanzi-footer">
+    <span id="busuanzi_container_site_pv"> 本站总访问量 <span id="busuanzi_value_site_pv"><img src="/img/spinner.svg" alt="spinner.svg"/></span> 次 </span>
+      <span class="division">|</span>
+    <span id="busuanzi_container_site_uv"> 本站总访客数 <span id="busuanzi_value_site_uv"><img src="/img/spinner.svg" alt="spinner.svg"/></span> 人 </span>
+  </div>
+
+  <span class="copyright-year">
+    &copy; 
+    2019 - 
+    2022<span class="heart"><i class="iconfont icon-heart"></i></span><span>P1n93r</span>
+  </span>
+</div>
+
+    </footer>
+
+    <div class="back-to-top" id="back-to-top">
+      <i class="iconfont icon-up"></i>
+    </div>
+  </div>
+  
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/slideout@1.0.1/dist/slideout.min.js" integrity="sha256-t+zJ/g8/KXIJMjSVQdnibt4dlaDxc9zXr/9oNPeWqdg=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.js" integrity="sha256-XVLffZaxoWfGUEbdzuLi7pwaUJv1cecsQJQqGLe7axY=" crossorigin="anonymous"></script>
+
+
+
+<script type="text/javascript" src="/js/main.min.64437849d125a2d603b3e71d6de5225d641a32d17168a58106e0b61852079683.js"></script>
+
+
+
+
+
+
+
+
+</body>
+</html>

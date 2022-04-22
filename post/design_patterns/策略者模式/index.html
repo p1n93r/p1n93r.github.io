@@ -1,0 +1,482 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>策略者模式 - P1n93r - 博学而精一</title>
+  <meta name="renderer" content="webkit" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+<meta name="author" content="P1n93r" /><meta name="description" content="原理 在策略模式中，我们创建表示各种策略的对象和一个行为随着策略对象改变而改变的 context/service 对象。策略对象改变 context/service 对象的执行算法。 具体案例 项目结构如下： A" /><meta name="keywords" content="Security, Java, Web, Android" />
+
+
+
+
+
+
+<meta name="generator" content="Hugo 0.96.0 with theme even" />
+
+
+<link rel="canonical" href="https://p1n93r.github.io/post/design_patterns/%E7%AD%96%E7%95%A5%E8%80%85%E6%A8%A1%E5%BC%8F/" />
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/manifest.json">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+<link href="/sass/main.min.f92fd13721ddf72129410fd8250e73152cc6f2438082b6c0208dc24ee7c13fc4.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.css" integrity="sha256-7TyXnr2YU040zfSP+rEcz29ggW4j56/ujTPwjMzyqFY=" crossorigin="anonymous">
+
+
+<meta property="og:title" content="策略者模式" />
+<meta property="og:description" content="原理 在策略模式中，我们创建表示各种策略的对象和一个行为随着策略对象改变而改变的 context/service 对象。策略对象改变 context/service 对象的执行算法。 具体案例 项目结构如下： A" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://p1n93r.github.io/post/design_patterns/%E7%AD%96%E7%95%A5%E8%80%85%E6%A8%A1%E5%BC%8F/" /><meta property="article:section" content="post" />
+<meta property="article:published_time" content="2020-08-30T22:47:36+08:00" />
+<meta property="article:modified_time" content="2020-08-30T22:47:36+08:00" />
+
+<meta itemprop="name" content="策略者模式">
+<meta itemprop="description" content="原理 在策略模式中，我们创建表示各种策略的对象和一个行为随着策略对象改变而改变的 context/service 对象。策略对象改变 context/service 对象的执行算法。 具体案例 项目结构如下： A"><meta itemprop="datePublished" content="2020-08-30T22:47:36+08:00" />
+<meta itemprop="dateModified" content="2020-08-30T22:47:36+08:00" />
+<meta itemprop="wordCount" content="1108">
+<meta itemprop="keywords" content="" /><meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="策略者模式"/>
+<meta name="twitter:description" content="原理 在策略模式中，我们创建表示各种策略的对象和一个行为随着策略对象改变而改变的 context/service 对象。策略对象改变 context/service 对象的执行算法。 具体案例 项目结构如下： A"/>
+
+<!--[if lte IE 9]>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
+<![endif]-->
+
+<!--[if lt IE 9]>
+  <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+<![endif]-->
+
+</head>
+<body>
+  <div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/" class="logo">P1n93r</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    <a href="/">
+        <li class="mobile-menu-item">Home</li>
+      </a><a href="/post/">
+        <li class="mobile-menu-item">Archives</li>
+      </a><a href="/tags/">
+        <li class="mobile-menu-item">Tags</li>
+      </a><a href="/categories/">
+        <li class="mobile-menu-item">Categories</li>
+      </a><a href="/about/">
+        <li class="mobile-menu-item">About</li>
+      </a>
+  </ul>
+
+  
+
+
+</nav>
+
+  <div class="container" id="mobile-panel">
+    <header id="header" class="header">
+        <div class="logo-wrapper">
+  <a href="/" class="logo">P1n93r</a>
+</div>
+
+
+
+
+
+<nav class="site-navbar">
+  <ul id="menu" class="menu">
+    <li class="menu-item">
+        <a class="menu-item-link" href="/">Home</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/">Archives</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/tags/">Tags</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/categories/">Categories</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/about/">About</a>
+      </li>
+  </ul>
+</nav>
+
+    </header>
+
+    <main id="main" class="main">
+      <div class="content-wrapper">
+        <div id="content" class="content">
+          <article class="post">
+    
+    <header class="post-header">
+      <h1 class="post-title">策略者模式</h1>
+
+      <div class="post-meta">
+        <span class="post-time"> 2020-08-30 </span>
+        <div class="post-category">
+            <a href="/categories/design_patterns/"> design_patterns </a>
+            </div>
+          <span class="more-meta"> 约 1108 字 </span>
+          <span class="more-meta"> 预计阅读 3 分钟 </span>
+        <span id="busuanzi_container_page_pv" class="more-meta"> <span id="busuanzi_value_page_pv"><img src="/img/spinner.svg" alt="spinner.svg"/></span> 次阅读 </span>
+      </div>
+    </header>
+
+    <div class="post-toc" id="post-toc">
+  <h2 class="post-toc-title">文章目录</h2>
+  <div class="post-toc-content always-active">
+    <nav id="TableOfContents">
+  <ul>
+    <li>
+      <ul>
+        <li><a href="#原理">原理</a></li>
+        <li><a href="#具体案例">具体案例</a></li>
+        <li><a href="#总结">总结</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+  </div>
+</div>
+    <div class="post-content">
+      <h2 id="原理">原理</h2>
+<p>在策略模式中，我们创建表示各种策略的对象和一个行为随着策略对象改变而改变的 context/service 对象。策略对象改变 context/service 对象的执行算法。</p>
+<h2 id="具体案例">具体案例</h2>
+<p>项目结构如下：</p>
+<p><img src="/media/2020-09-01-1.png" alt="策略模式例子项目结构"></p>
+<ul>
+<li>AbstractHandler是所有策略的父类，定义了策略的执行抽象方法。</li>
+<li>EventEnum是事件枚举。</li>
+<li>HandlerParma是执行service传入的参数，封装了事件类型和待解析的参数。</li>
+<li>HandlerRes是策略的执行结果。</li>
+<li>LoginHandler是一个具体的策略实现类。</li>
+<li>HandlerService是一个服务类，用来根据HandlerParam调用不同的Handler。</li>
+</ul>
+<p>AbstractHandler代码如下：</p>
+<pre><code>public abstract class AbstractHandler {
+    
+    /**
+     * 执行策略
+     */
+    public abstract HandlerRes executeStrategy(HandlerParam param);
+    
+    /**
+     * 本策略可以解决的事件类型
+     */
+    public abstract List&lt;EventEnum&gt; getEventTypes();
+    
+}
+</code></pre>
+<p>EventEnum代码如下：</p>
+<pre><code>public enum  EventEnum {
+
+    /**
+     * 登录事件类型
+     */
+    LOGIN(&quot;login&quot;,&quot;登录&quot;),
+
+    /**
+     * 登出时间类型
+     */
+    LOGOUT(&quot;logout&quot;,&quot;登出&quot;);
+
+    /**
+     * @param value: 枚举value
+     * @param desc: 描述
+     */
+    private String value,desc;
+
+    public String getValue() {
+        return value;
+    }
+
+    public String getDesc() {
+        return desc;
+    }
+
+
+    EventEnum(String value, String desc) {
+        this.value=value;
+        this.desc=desc;
+    }
+
+    /**
+     * 通过字符串获取对应的枚举
+     */
+    public EventEnum getEvent(String value){
+        EventEnum[] values = EventEnum.values();
+        for(EventEnum v:values){
+            if(v.getValue().equals(value)){
+                return v;
+            }
+        }
+        return null;
+    }
+}
+</code></pre>
+<p>HandlerParam代码如下：</p>
+<pre><code>public class HandlerParam&lt;T&gt; {
+    private EventEnum eventEnum;
+    private T param;
+
+    public HandlerParam(EventEnum eventEnum){
+        this.eventEnum=eventEnum;
+    }
+
+    public HandlerParam(EventEnum eventEnum,T param){
+        this.eventEnum=eventEnum;
+        this.param=param;
+    }
+
+
+    public EventEnum getEventEnum() {
+        return eventEnum;
+    }
+
+    public void setEventEnum(EventEnum eventEnum) {
+        this.eventEnum = eventEnum;
+    }
+
+    public T getParam() {
+        return param;
+    }
+
+    public void setParam(T param) {
+        this.param = param;
+    }
+
+    @Override
+    public String toString() {
+        return &quot;HandlerParam{&quot; +
+                &quot;eventEnum=&quot; + eventEnum +
+                &quot;, param=&quot; + param +
+                '}';
+    }
+}
+</code></pre>
+<p>HandlerRes代码如下：</p>
+<pre><code>public class HandlerRes&lt;T&gt; {
+    private T res;
+
+    public HandlerRes(){}
+
+    public HandlerRes(T res){
+        this.res=res;
+    }
+
+    public T getRes() {
+        return res;
+    }
+
+    public void setRes(T res) {
+        this.res = res;
+    }
+
+    @Override
+    public String toString() {
+        return &quot;HandlerRes{&quot; +
+                &quot;res=&quot; + res +
+                '}';
+    }
+}
+</code></pre>
+<p>LoginHandler代码如下：</p>
+<pre><code>@Component
+public class LoginHandler extends AbstractHandler {
+    @Override
+    public HandlerRes executeStrategy(HandlerParam param) {
+        Object v = param.getParam();
+        System.out.println(&quot;执行了LoginHandler，传入参数为：&quot;+v);
+        return new HandlerRes&lt;&gt;(&quot;执行成功&quot;);
+    }
+
+    /**
+     * 此策略支持：登录、登出两种事件
+     */
+    @Override
+    public List&lt;EventEnum&gt; getEventTypes() {
+        return Arrays.asList(EventEnum.LOGIN, EventEnum.LOGOUT);
+    }
+}
+</code></pre>
+<p>HandlerService代码如下：</p>
+<pre><code>@Service
+public class HandlerService implements ApplicationContextAware {
+    private ApplicationContext context;
+
+    private Map&lt;EventEnum, AbstractHandler&gt; handlerMap=new HashMap&lt;&gt;();
+
+    @Override
+    public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
+        this.context=applicationContext;
+    }
+
+    /**
+     * 将handler策略装载到map中，map的key为事件类型，value为事件对应的策略
+     */
+    @PostConstruct
+    public void init(){
+        Map&lt;String, AbstractHandler&gt; beansOfType = context.getBeansOfType(AbstractHandler.class);
+        for(Map.Entry&lt;String,AbstractHandler&gt; v:beansOfType.entrySet()){
+            AbstractHandler handler = v.getValue();
+            System.out.println(&quot;当前offType的String：&quot;+v.getKey());
+            List&lt;EventEnum&gt; eventTypes = handler.getEventTypes();
+            if(eventTypes==null){
+                continue;
+            }
+            for(EventEnum val:eventTypes){
+                handlerMap.put(val,handler);
+            }
+
+        }
+    }
+
+    public HandlerRes strategy(HandlerParam param){
+        AbstractHandler handler = handlerMap.get(param.getEventEnum());
+        return handler.executeStrategy(param);
+    }
+}
+</code></pre>
+<p>测试代码如下：</p>
+<pre><code>@Test
+void contextLoads() {
+    HandlerParam&lt;Integer&gt; param = new HandlerParam&lt;&gt;(EventEnum.LOGOUT, 8454);
+    HandlerRes strategy = service.strategy(param);
+    System.out.println(strategy);
+}
+</code></pre>
+<p>结果如下：</p>
+<p><img src="/media/2020-09-01-2.png" alt="测试结果"></p>
+<h2 id="总结">总结</h2>
+<p>分离了变化的部分，让行为算法的变化独立于算法的使用者。可以减少if&hellip;else语句。需要不同的策略，只需实现不同的策略即可。</p>
+
+    </div>
+
+    <div class="post-copyright">
+  <p class="copyright-item">
+    <span class="item-title">文章作者</span>
+    <span class="item-content">P1n93r</span>
+  </p>
+  <p class="copyright-item">
+    <span class="item-title">上次更新</span>
+    <span class="item-content">
+        2020-08-30
+        
+    </span>
+  </p>
+  
+  
+</div>
+<footer class="post-footer">
+      
+      <nav class="post-nav">
+        <a class="prev" href="/post/spring/%E5%85%A8%E6%B3%A8%E8%A7%A3%E4%B8%8B%E7%9A%84spring-ioc/">
+            <i class="iconfont icon-left"></i>
+            <span class="prev-text nav-default">全注解下的Spring IoC</span>
+            <span class="prev-text nav-mobile">上一篇</span>
+          </a>
+        <a class="next" href="/post/vue/mpvue%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/">
+            <span class="next-text nav-default">mpvue学习笔记</span>
+            <span class="next-text nav-mobile">下一篇</span>
+            <i class="iconfont icon-right"></i>
+          </a>
+      </nav>
+    </footer>
+  </article>
+        </div>
+        <div id="disqus_thread"></div>
+    <script type="text/javascript">
+    (function() {
+      
+      
+      if (window.location.hostname === 'localhost') return;
+
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      var disqus_shortname = 'p1n93r';
+      dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+    </script>
+    <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+
+  
+
+  
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="social-links">
+      <a href="mailto:pin83r@gmail.com" class="iconfont icon-email" title="email"></a>
+      <a href="https://github.com/p1n93r" class="iconfont icon-github" title="github"></a>
+  <a href="https://p1n93r.github.io/index.xml" type="application/rss+xml" class="iconfont icon-rss" title="rss"></a>
+</div>
+
+<div class="copyright">
+  <span class="power-by">
+    由 <a class="hexo-link" href="https://gohugo.io">Hugo</a> 强力驱动
+  </span>
+  <span class="division">|</span>
+  <span class="theme-info">
+    主题 - 
+    <a class="theme-link" href="https://github.com/olOwOlo/hugo-theme-even">Even</a>
+  </span>
+
+  <div class="busuanzi-footer">
+    <span id="busuanzi_container_site_pv"> 本站总访问量 <span id="busuanzi_value_site_pv"><img src="/img/spinner.svg" alt="spinner.svg"/></span> 次 </span>
+      <span class="division">|</span>
+    <span id="busuanzi_container_site_uv"> 本站总访客数 <span id="busuanzi_value_site_uv"><img src="/img/spinner.svg" alt="spinner.svg"/></span> 人 </span>
+  </div>
+
+  <span class="copyright-year">
+    &copy; 
+    2019 - 
+    2022<span class="heart"><i class="iconfont icon-heart"></i></span><span>P1n93r</span>
+  </span>
+</div>
+
+    </footer>
+
+    <div class="back-to-top" id="back-to-top">
+      <i class="iconfont icon-up"></i>
+    </div>
+  </div>
+  
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/slideout@1.0.1/dist/slideout.min.js" integrity="sha256-t+zJ/g8/KXIJMjSVQdnibt4dlaDxc9zXr/9oNPeWqdg=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.js" integrity="sha256-XVLffZaxoWfGUEbdzuLi7pwaUJv1cecsQJQqGLe7axY=" crossorigin="anonymous"></script>
+
+
+
+<script type="text/javascript" src="/js/main.min.64437849d125a2d603b3e71d6de5225d641a32d17168a58106e0b61852079683.js"></script>
+
+
+
+
+
+
+
+
+</body>
+</html>

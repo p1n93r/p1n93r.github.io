@@ -1,0 +1,422 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>Tomcat架构原理 - P1n93r - 博学而精一</title>
+  <meta name="renderer" content="webkit" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+<meta name="author" content="Pinger" /><meta name="description" content="Tomcat整体架构 Tomcat的启动流程如下： startup.sh -&amp;gt; catalina.sh start -&amp;gt; java -jar org.apache.catalina.startup.Bootstrap.main() Tomcat需要实现的2个核心功能： 处理socket连接，负责网络字节流与R" /><meta name="keywords" content="Security, Java, Web, Android" />
+
+
+
+
+
+
+<meta name="generator" content="Hugo 0.96.0 with theme even" />
+
+
+<link rel="canonical" href="https://p1n93r.github.io/post/java/tomcat%E6%9E%B6%E6%9E%84%E5%8E%9F%E7%90%86/" />
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/manifest.json">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+<link href="/sass/main.min.f92fd13721ddf72129410fd8250e73152cc6f2438082b6c0208dc24ee7c13fc4.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.css" integrity="sha256-7TyXnr2YU040zfSP+rEcz29ggW4j56/ujTPwjMzyqFY=" crossorigin="anonymous">
+
+
+<meta property="og:title" content="Tomcat架构原理" />
+<meta property="og:description" content="Tomcat整体架构 Tomcat的启动流程如下： startup.sh -&gt; catalina.sh start -&gt; java -jar org.apache.catalina.startup.Bootstrap.main() Tomcat需要实现的2个核心功能： 处理socket连接，负责网络字节流与R" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://p1n93r.github.io/post/java/tomcat%E6%9E%B6%E6%9E%84%E5%8E%9F%E7%90%86/" /><meta property="article:section" content="post" />
+<meta property="article:published_time" content="2021-05-29T10:21:36+08:00" />
+<meta property="article:modified_time" content="2020-05-12T10:21:36+08:00" />
+
+<meta itemprop="name" content="Tomcat架构原理">
+<meta itemprop="description" content="Tomcat整体架构 Tomcat的启动流程如下： startup.sh -&gt; catalina.sh start -&gt; java -jar org.apache.catalina.startup.Bootstrap.main() Tomcat需要实现的2个核心功能： 处理socket连接，负责网络字节流与R"><meta itemprop="datePublished" content="2021-05-29T10:21:36+08:00" />
+<meta itemprop="dateModified" content="2020-05-12T10:21:36+08:00" />
+<meta itemprop="wordCount" content="3719">
+<meta itemprop="keywords" content="" /><meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="Tomcat架构原理"/>
+<meta name="twitter:description" content="Tomcat整体架构 Tomcat的启动流程如下： startup.sh -&gt; catalina.sh start -&gt; java -jar org.apache.catalina.startup.Bootstrap.main() Tomcat需要实现的2个核心功能： 处理socket连接，负责网络字节流与R"/>
+
+<!--[if lte IE 9]>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
+<![endif]-->
+
+<!--[if lt IE 9]>
+  <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+<![endif]-->
+
+</head>
+<body>
+  <div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/" class="logo">P1n93r</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    <a href="/">
+        <li class="mobile-menu-item">Home</li>
+      </a><a href="/post/">
+        <li class="mobile-menu-item">Archives</li>
+      </a><a href="/tags/">
+        <li class="mobile-menu-item">Tags</li>
+      </a><a href="/categories/">
+        <li class="mobile-menu-item">Categories</li>
+      </a><a href="/about/">
+        <li class="mobile-menu-item">About</li>
+      </a>
+  </ul>
+
+  
+
+
+</nav>
+
+  <div class="container" id="mobile-panel">
+    <header id="header" class="header">
+        <div class="logo-wrapper">
+  <a href="/" class="logo">P1n93r</a>
+</div>
+
+
+
+
+
+<nav class="site-navbar">
+  <ul id="menu" class="menu">
+    <li class="menu-item">
+        <a class="menu-item-link" href="/">Home</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/">Archives</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/tags/">Tags</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/categories/">Categories</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/about/">About</a>
+      </li>
+  </ul>
+</nav>
+
+    </header>
+
+    <main id="main" class="main">
+      <div class="content-wrapper">
+        <div id="content" class="content">
+          <article class="post">
+    
+    <header class="post-header">
+      <h1 class="post-title">Tomcat架构原理</h1>
+
+      <div class="post-meta">
+        <span class="post-time"> 2021-05-29 </span>
+        <div class="post-category">
+            <a href="/categories/java/"> Java </a>
+            </div>
+          <span class="more-meta"> 约 3719 字 </span>
+          <span class="more-meta"> 预计阅读 8 分钟 </span>
+        <span id="busuanzi_container_page_pv" class="more-meta"> <span id="busuanzi_value_page_pv"><img src="/img/spinner.svg" alt="spinner.svg"/></span> 次阅读 </span>
+      </div>
+    </header>
+
+    <div class="post-toc" id="post-toc">
+  <h2 class="post-toc-title">文章目录</h2>
+  <div class="post-toc-content always-active">
+    <nav id="TableOfContents">
+  <ul>
+    <li>
+      <ul>
+        <li><a href="#tomcat整体架构">Tomcat整体架构</a></li>
+        <li><a href="#connecter">Connecter</a>
+          <ul>
+            <li><a href="#protocolhandler组件">ProtocolHandler组件</a></li>
+          </ul>
+        </li>
+        <li><a href="#container">Container</a></li>
+        <li><a href="#请求定位servlet的过程">请求定位Servlet的过程</a></li>
+        <li><a href="#tomcat类加载器">Tomcat类加载器</a></li>
+        <li><a href="#总结">总结</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+  </div>
+</div>
+    <div class="post-content">
+      <h2 id="tomcat整体架构">Tomcat整体架构</h2>
+<p>Tomcat的启动流程如下：</p>
+<p>startup.sh -&gt; catalina.sh start -&gt; java -jar org.apache.catalina.startup.Bootstrap.main()</p>
+<p>Tomcat需要实现的2个核心功能：</p>
+<ul>
+<li>处理socket连接，负责网络字节流与Request和Response对象的转化；</li>
+<li>加载并管理Servlet，以及处理具体的Request请求；</li>
+</ul>
+<p>为此，Tomcat设计了两个核心组件： <strong>连接器（Connector）和容器（Container）</strong> ，连接器负责对外交流，容器负责内部处理；同时，tomcat为了实现支持多种IO模型和应用层协议， <strong>一个容器可能对接多个连接器</strong> ，好比一个房间有多个们。</p>
+<p>Tomcat的整体架构图如下图所示：</p>
+<p><img src="/media/2021-05-29-1.png" alt="Tomcat整体架构图"></p>
+<ul>
+<li>Server对应就是一个Tomcat实例；</li>
+<li>Service <strong>默认</strong> 只有一个，也就是一个Tomcat实例默认一个Service；</li>
+<li>Connector：一个Service可能多个连接器，接收不同的连接协议；</li>
+<li>Container：多个连接器对应一个容器，顶层容器其实就是Engine；</li>
+</ul>
+<p>每个组件都有对应的生命周期，需要启动的话，还需要启动自己内部的子组件，比如一个Tomcat实例包含一个Service，一个Service包含多个连接器和一个容器。而一个容器又包含多个Host，Host内部可能有多个Context容器，而一个Context也会包含多个Servlet。整体是一个俄罗斯套娃。</p>
+<h2 id="connecter">Connecter</h2>
+<p>Tomcat支持的IO模型有：</p>
+<ul>
+<li>NIO：非阻塞IO，采用Java NIO类库实现；</li>
+<li>NIO2：异步IO，采用JDK7最新的的NIO2类库实现；</li>
+<li>APR：采用Apache可移植运行库实现，是C/C++编写的本地库；</li>
+</ul>
+<p>Tomcat支持的应用层协议有：</p>
+<ul>
+<li>HTTP/1.1：绝大部分WEB应用采用的访问协议；</li>
+<li>AJP：用于和WEB服务器集成；</li>
+<li>HTTP/2：HTTP 2.0大幅度提升了WEB性能；</li>
+</ul>
+<p>所以一个容器可能对接多个连接器，连接器对Servlet容器屏蔽了网络协议和IO模型的区别，无论是HTTP还是AJP，在容器中获取到的都是一个标准的ServletRequest对象；</p>
+<p>细化连接器的功能就是：</p>
+<ul>
+<li>监听网络端口；</li>
+<li>接收网络连接请求；</li>
+<li>读取请求网络字节流；</li>
+<li>根据具体的应用层协议解析字节流，生成统一的Tomcat Request对象；</li>
+<li>将Tomcat Request对象转换成标准的ServletRequest对象；</li>
+<li>调用Servlet容器，得到ServletResponse对象；</li>
+<li>将ServletResponse转成Tomcat Response对象；</li>
+<li>将Tomcat Response转成网络字节流；</li>
+<li>将响应字节流写回给浏览器；</li>
+</ul>
+<p>其中，Tomcat设计了三个组件，其负责功能如下：</p>
+<ul>
+<li>EndPoint：负责网络通信，将字节流传递给Processor；</li>
+<li>Processor：负责处理字节流生成Tomcat Request对象，将Tomcat Request对象传递给Adapter；</li>
+<li>Adapter：负责将Tomcat Request对象转成ServletRequest对象，传递给容器；</li>
+</ul>
+<p>再细化一下连接器，得到如下架构图：</p>
+<p><img src="/media/2021-05-29-2.png" alt="连接器架构图细化"></p>
+<h3 id="protocolhandler组件">ProtocolHandler组件</h3>
+<p>Endpoint和Processor放在一起抽象成了ProtocolHandler组件，主要负责处理： <strong>网络连接和应层协议</strong> 。</p>
+<h4 id="endpoint组件">Endpoint组件</h4>
+<p>Endpoint是通信端点，是具体的Socket接收和发送处理器，是对传输层的抽象。因此Endpoint是用TCP/IP协议来进行数据读写的，本质是调用Socket接口；</p>
+<p>简而言之，Endpoint接收到Socket连接后，生成一个SocketProcessor任务提交到线程池进行处理，SocketProcessor的run方法将调用Processor组件进行应用层协议的解析，Processor解析后生成Tomcat Request对象，然后会调用Adapter的Service方法，方法内部通过如下代码将Request请求传递到容器中：</p>
+<pre><code>// Calling the container
+connector.getService().getContainer().getPipeline().getFirst().invoke(request, response);
+</code></pre>
+<p>如下图所示：</p>
+<p><img src="/media/2021-05-29-3.png" alt="endpoint组件图"></p>
+<h4 id="adapter组件">Adapter组件</h4>
+<p>由于协议的不同，Tomcat定义了自己的Request类来存放请求信息，但是这个不是标准的ServletRequest。于是需要使用Adapter将Tomcat Request对象转成ServletRequest对象，然后就可以调用容器的service方法了；</p>
+<h2 id="container">Container</h2>
+<p>Connector连接器负责外部交流，Container容器负责内部处理。也就是： <strong>连接器处理Socket通信和应用层协议的解析，得到ServletRequest，而容器则负责处理ServletRequest</strong> 。</p>
+<p>容器顾名思义，就是用来装东西的，Tomcat容器就是用来装载Servlet的；</p>
+<p>Tomcat设计了4种容器：Engine、Host、Context和Wrapper。这四种容器是父子关系，如下图所示：</p>
+<p><img src="/media/2021-05-29-4.png" alt="Container"></p>
+<ul>
+<li>一个Host多个Context，一个Context包含多个Servlet；</li>
+<li>Wrapper表示一个Servlet，Context表示一个WEB应用程序，而一个WEB应用可以有多个Servlet；</li>
+<li>Host表示一个虚拟机，或者说一个站点，一个Tomcat可以配置多个站点；</li>
+<li>一个站点可以部署多个WEB应用；</li>
+<li>Engine代表引擎，用于管理多个站点（Host），一个Service只能有一个Engine；</li>
+</ul>
+<p>下面是Tomcat的配置文件，可以反应这些层次关系：</p>
+<pre><code>&lt;Server port=&quot;8005&quot; shutdown=&quot;SHUTDOWN&quot;&gt; // 顶层组件，可包含多个 Service，代表一个 Tomcat 实例
+
+  &lt;Service name=&quot;Catalina&quot;&gt;  // 顶层组件，包含一个 Engine ，多个连接器
+    &lt;Connector port=&quot;8080&quot; protocol=&quot;HTTP/1.1&quot;
+               connectionTimeout=&quot;20000&quot;
+               redirectPort=&quot;8443&quot; /&gt;
+
+    &lt;!-- Define an AJP 1.3 Connector on port 8009 --&gt;
+    &lt;Connector port=&quot;8009&quot; protocol=&quot;AJP/1.3&quot; redirectPort=&quot;8443&quot; /&gt;  // 连接器
+
+    // 容器组件：一个 Engine 处理 Service 所有请求，包含多个 Host
+    &lt;Engine name=&quot;Catalina&quot; defaultHost=&quot;localhost&quot;&gt;
+      // 容器组件：处理指定Host下的客户端请求， 可包含多个 Context
+      &lt;Host name=&quot;localhost&quot;  appBase=&quot;webapps&quot;
+            unpackWARs=&quot;true&quot; autoDeploy=&quot;true&quot;&gt;
+            // 容器组件：处理特定 Context Web应用的所有客户端请求
+            &lt;Context&gt;&lt;/Context&gt;
+      &lt;/Host&gt;
+    &lt;/Engine&gt;
+  &lt;/Service&gt;
+&lt;/Server&gt;
+</code></pre>
+<h2 id="请求定位servlet的过程">请求定位Servlet的过程</h2>
+<p>Tomcat使用Mapper组件来完成请求到Wrapper中Servlet的定位的；Mapper组件的功能就是将用户请求的URL定位到一个Servlet，它的工作原理是： <strong>Mapper组件里保存了WEB应用的配置信息，也就是容器组件与访问路径的映射关系</strong> 。比如Host容器里配置的域名、Context容器里的WEB应用路径以及Wrapper容器里Servlet映射的路径。这是一个多层次的Map；</p>
+<p>当一个请求过来，Mapper组件通过解析请求URL里的域名和路径，再到自己保存的Map里去找，就能定位到一个Servlet。 <strong>最终，一个请求URL只会定位到一个Wrapper容器，也就是一个Servlet</strong> 。</p>
+<p>示例图如下所示：</p>
+<p><img src="/media/2021-05-29-5.png" alt="Servlet定位图"></p>
+<p>连接器中的Adapter会调用容器的service方法来执行Servlet，最先拿到请求的是Engine容器，Engine容器对请求做一些处理后，会把请求传给自己的子容器Host继续处理，以此类推，最终这个请求会传给Wrapper容器，Wrapper容器会调用最终的Servlet来处理。 <strong>整个调用过程是通过Pipeline-Valve管道进行的</strong> 。</p>
+<p>Pipeline-Valve是责任链模式，责任链模式是指：<strong>在一个请求处理的过程中，有很多处理者一次对请求进行处理，每个处理者负责做自己相应的处理，处理完之后再调用下一个处理者继续处理</strong> 。Valve表示一个处理点（也就是一个处理阀门），Valve中的invoke方法就是来处理请求的。</p>
+<p>Valve的数据结构如下：</p>
+<pre><code>public interface Valve {
+  public Valve getNext();
+  public void setNext(Valve valve);
+  public void invoke(Request request, Response response)
+}
+</code></pre>
+<p>Pipeline的数据结构如下：</p>
+<pre><code>public interface Pipeline {
+  public void addValve(Valve valve);
+  public Valve getBasic();
+  public void setBasic(Valve valve);
+  public Valve getFirst();
+}
+</code></pre>
+<p>Pipeline中有addValve方法，维护了Valve链表，Valve可以插入到Pipeline中，对请求做某些处理。Pipeline中是没有invoke方法的，因为整个调用链的触发是Valve来完成的，Valve完成自己的处理后，调用getNext().invoke()来触发下一个Valve调用。</p>
+<p>每个容器都有一个Pipeline对象，只要触发了这个Pipeline的第一个Valve，这个容器里的Pipeline中的Valve都会被调用到。</p>
+<p>其中，Pipeline中的getBasic方法获取的Valve处于Valve链的末端，它是Pipeline中必不可少的一个Valve， <strong>负责调用下层容器的Pipeline里的第一个Valve</strong> 。</p>
+<p>演示图如下图所示：</p>
+<p><img src="/media/2021-05-29-6.png" alt="Pipeline-Valve模式"></p>
+<p>而整个过程是通过连接器CoyoteAdapter中的service方法触发的，它会调用Engine的第一个Valve，如下所示：</p>
+<pre><code>@Override
+public void service(org.apache.coyote.Request req, org.apache.coyote.Response res) {
+    // 省略其他代码
+    // Calling the container
+    connector.getService().getContainer().getPipeline().getFirst().invoke(
+        request, response);
+    ...
+}
+</code></pre>
+<p><strong>Wrapper容器的最后一个Valve会创建一个Filter链，并调用doFileter方法，最终会调到Servlet的service方法。</strong></p>
+<h2 id="tomcat类加载器">Tomcat类加载器</h2>
+<p>Tomcat自定义的类加载器WebAppClassloader为了隔离WEB应用打破了双亲委托机制，它首先尝试自己加载某个类，如果找不到再交给父类加载器，其目的是优先加载WEB应用自己定义的类。</p>
+<p>同时，为了防止WEB应用自己的类覆盖JRE的核心类，在本地WEB应用目录下查找之前，先使用ExtClassLoader（使用双亲委托机制）去加载，这样既打破了双亲委托，同时也能安全加载类；</p>
+<h2 id="总结">总结</h2>
+<p>最终得到总体的请求流程图，如下图所示：</p>
+<p><img src="/media/2021-05-29-7.png" alt="整体的请求流程图"></p>
+
+    </div>
+
+    <div class="post-copyright">
+  <p class="copyright-item">
+    <span class="item-title">文章作者</span>
+    <span class="item-content">Pinger</span>
+  </p>
+  <p class="copyright-item">
+    <span class="item-title">上次更新</span>
+    <span class="item-content">
+        2020-05-12
+        
+    </span>
+  </p>
+  
+  
+</div>
+<footer class="post-footer">
+      
+      <nav class="post-nav">
+        <a class="prev" href="/post/security/tomcat%E4%B9%8Bfilter%E5%86%85%E5%AD%98%E9%A9%AC/">
+            <i class="iconfont icon-left"></i>
+            <span class="prev-text nav-default">Tomcat之Filter内存马</span>
+            <span class="prev-text nav-mobile">上一篇</span>
+          </a>
+        <a class="next" href="/post/security/vulnstack1%E7%AC%94%E8%AE%B0/">
+            <span class="next-text nav-default">vulnstack1笔记</span>
+            <span class="next-text nav-mobile">下一篇</span>
+            <i class="iconfont icon-right"></i>
+          </a>
+      </nav>
+    </footer>
+  </article>
+        </div>
+        <div id="disqus_thread"></div>
+    <script type="text/javascript">
+    (function() {
+      
+      
+      if (window.location.hostname === 'localhost') return;
+
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      var disqus_shortname = 'p1n93r';
+      dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+    </script>
+    <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+
+  
+
+  
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="social-links">
+      <a href="mailto:pin83r@gmail.com" class="iconfont icon-email" title="email"></a>
+      <a href="https://github.com/p1n93r" class="iconfont icon-github" title="github"></a>
+  <a href="https://p1n93r.github.io/index.xml" type="application/rss+xml" class="iconfont icon-rss" title="rss"></a>
+</div>
+
+<div class="copyright">
+  <span class="power-by">
+    由 <a class="hexo-link" href="https://gohugo.io">Hugo</a> 强力驱动
+  </span>
+  <span class="division">|</span>
+  <span class="theme-info">
+    主题 - 
+    <a class="theme-link" href="https://github.com/olOwOlo/hugo-theme-even">Even</a>
+  </span>
+
+  <div class="busuanzi-footer">
+    <span id="busuanzi_container_site_pv"> 本站总访问量 <span id="busuanzi_value_site_pv"><img src="/img/spinner.svg" alt="spinner.svg"/></span> 次 </span>
+      <span class="division">|</span>
+    <span id="busuanzi_container_site_uv"> 本站总访客数 <span id="busuanzi_value_site_uv"><img src="/img/spinner.svg" alt="spinner.svg"/></span> 人 </span>
+  </div>
+
+  <span class="copyright-year">
+    &copy; 
+    2019 - 
+    2022<span class="heart"><i class="iconfont icon-heart"></i></span><span>P1n93r</span>
+  </span>
+</div>
+
+    </footer>
+
+    <div class="back-to-top" id="back-to-top">
+      <i class="iconfont icon-up"></i>
+    </div>
+  </div>
+  
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/slideout@1.0.1/dist/slideout.min.js" integrity="sha256-t+zJ/g8/KXIJMjSVQdnibt4dlaDxc9zXr/9oNPeWqdg=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.js" integrity="sha256-XVLffZaxoWfGUEbdzuLi7pwaUJv1cecsQJQqGLe7axY=" crossorigin="anonymous"></script>
+
+
+
+<script type="text/javascript" src="/js/main.min.64437849d125a2d603b3e71d6de5225d641a32d17168a58106e0b61852079683.js"></script>
+
+
+
+
+
+
+
+
+</body>
+</html>

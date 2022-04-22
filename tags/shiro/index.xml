@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>shiro on P1n93r - 博学而精一</title>
+    <link>https://p1n93r.github.io/tags/shiro/</link>
+    <description>Recent content in shiro on P1n93r - 博学而精一</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en</language>
+    <lastBuildDate>Fri, 06 Nov 2020 18:35:36 +0800</lastBuildDate><atom:link href="https://p1n93r.github.io/tags/shiro/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>低于1.5.0版本shiro身份绕过漏洞分析</title>
+      <link>https://p1n93r.github.io/post/security/%E4%BD%8E%E4%BA%8E1.5.0%E7%89%88%E6%9C%ACshiro%E8%BA%AB%E4%BB%BD%E7%BB%95%E8%BF%87%E6%BC%8F%E6%B4%9E%E5%88%86%E6%9E%90/</link>
+      <pubDate>Fri, 06 Nov 2020 18:35:36 +0800</pubDate>
+      
+      <guid>https://p1n93r.github.io/post/security/%E4%BD%8E%E4%BA%8E1.5.0%E7%89%88%E6%9C%ACshiro%E8%BA%AB%E4%BB%BD%E7%BB%95%E8%BF%87%E6%BC%8F%E6%B4%9E%E5%88%86%E6%9E%90/</guid>
+      <description>测试环境 shiro 1.4.0 springboot shiro过滤器配置如下： @Bean public ShiroFilterFactoryBean shiroFilterFactoryBean(@Qualifier(&amp;quot;defaultWebSecurityManager&amp;quot;) DefaultWebSecurityManager defaultWebSecurityManager) { ShiroFilterFactoryBean shiroFilterFactoryBean = new ShiroFilterFactoryBean(); //设置安全管理器 shiroFilterFactoryBean.setSecurityManager(defaultWebSecurityManager); //设置未认证(登录)时，访问需要认证的资源时跳转的页面</description>
+    </item>
+    
+  </channel>
+</rss>

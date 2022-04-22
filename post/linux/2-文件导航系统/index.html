@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>2-文件导航系统 - P1n93r - 博学而精一</title>
+  <meta name="renderer" content="webkit" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+<meta name="author" content="P1n93r" /><meta name="description" content="列出文件和文件夹 在操作和使用目录中的文件之前，首先得直到该目录中有哪些文件，所以我们需要列出目录中得文件和子目录，此命令便是 ls 。输入 ls 会列出" /><meta name="keywords" content="Security, Java, Web, Android" />
+
+
+
+
+
+
+<meta name="generator" content="Hugo 0.96.0 with theme even" />
+
+
+<link rel="canonical" href="https://p1n93r.github.io/post/linux/2-%E6%96%87%E4%BB%B6%E5%AF%BC%E8%88%AA%E7%B3%BB%E7%BB%9F/" />
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/manifest.json">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+<link href="/sass/main.min.f92fd13721ddf72129410fd8250e73152cc6f2438082b6c0208dc24ee7c13fc4.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.css" integrity="sha256-7TyXnr2YU040zfSP+rEcz29ggW4j56/ujTPwjMzyqFY=" crossorigin="anonymous">
+
+
+<meta property="og:title" content="2-文件导航系统" />
+<meta property="og:description" content="列出文件和文件夹 在操作和使用目录中的文件之前，首先得直到该目录中有哪些文件，所以我们需要列出目录中得文件和子目录，此命令便是 ls 。输入 ls 会列出" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://p1n93r.github.io/post/linux/2-%E6%96%87%E4%BB%B6%E5%AF%BC%E8%88%AA%E7%B3%BB%E7%BB%9F/" /><meta property="article:section" content="post" />
+<meta property="article:published_time" content="2019-11-15T19:05:36+08:00" />
+<meta property="article:modified_time" content="2019-11-15T19:05:36+08:00" />
+
+<meta itemprop="name" content="2-文件导航系统">
+<meta itemprop="description" content="列出文件和文件夹 在操作和使用目录中的文件之前，首先得直到该目录中有哪些文件，所以我们需要列出目录中得文件和子目录，此命令便是 ls 。输入 ls 会列出"><meta itemprop="datePublished" content="2019-11-15T19:05:36+08:00" />
+<meta itemprop="dateModified" content="2019-11-15T19:05:36+08:00" />
+<meta itemprop="wordCount" content="1733">
+<meta itemprop="keywords" content="" /><meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="2-文件导航系统"/>
+<meta name="twitter:description" content="列出文件和文件夹 在操作和使用目录中的文件之前，首先得直到该目录中有哪些文件，所以我们需要列出目录中得文件和子目录，此命令便是 ls 。输入 ls 会列出"/>
+
+<!--[if lte IE 9]>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
+<![endif]-->
+
+<!--[if lt IE 9]>
+  <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+<![endif]-->
+
+</head>
+<body>
+  <div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/" class="logo">P1n93r</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    <a href="/">
+        <li class="mobile-menu-item">Home</li>
+      </a><a href="/post/">
+        <li class="mobile-menu-item">Archives</li>
+      </a><a href="/tags/">
+        <li class="mobile-menu-item">Tags</li>
+      </a><a href="/categories/">
+        <li class="mobile-menu-item">Categories</li>
+      </a><a href="/about/">
+        <li class="mobile-menu-item">About</li>
+      </a>
+  </ul>
+
+  
+
+
+</nav>
+
+  <div class="container" id="mobile-panel">
+    <header id="header" class="header">
+        <div class="logo-wrapper">
+  <a href="/" class="logo">P1n93r</a>
+</div>
+
+
+
+
+
+<nav class="site-navbar">
+  <ul id="menu" class="menu">
+    <li class="menu-item">
+        <a class="menu-item-link" href="/">Home</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/">Archives</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/tags/">Tags</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/categories/">Categories</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/about/">About</a>
+      </li>
+  </ul>
+</nav>
+
+    </header>
+
+    <main id="main" class="main">
+      <div class="content-wrapper">
+        <div id="content" class="content">
+          <article class="post">
+    
+    <header class="post-header">
+      <h1 class="post-title">2-文件导航系统</h1>
+
+      <div class="post-meta">
+        <span class="post-time"> 2019-11-15 </span>
+        <div class="post-category">
+            <a href="/categories/linux/"> Linux </a>
+            </div>
+          <span class="more-meta"> 约 1733 字 </span>
+          <span class="more-meta"> 预计阅读 4 分钟 </span>
+        <span id="busuanzi_container_page_pv" class="more-meta"> <span id="busuanzi_value_page_pv"><img src="/img/spinner.svg" alt="spinner.svg"/></span> 次阅读 </span>
+      </div>
+    </header>
+
+    <div class="post-toc" id="post-toc">
+  <h2 class="post-toc-title">文章目录</h2>
+  <div class="post-toc-content always-active">
+    <nav id="TableOfContents">
+  <ul>
+    <li>
+      <ul>
+        <li><a href="#列出文件和文件夹">列出文件和文件夹</a></li>
+        <li><a href="#列出其他文件夹的内容">列出其他文件夹的内容</a></li>
+        <li><a href="#使用通配符列出文件夹的内容">使用通配符列出文件夹的内容</a></li>
+        <li><a href="#查看子文件加中的文件列表">查看子文件加中的文件列表</a></li>
+        <li><a href="#以逗号分隔列表显示内容">以逗号分隔列表显示内容</a></li>
+        <li><a href="#以单独一列显示内容列表">以单独一列显示内容列表</a></li>
+        <li><a href="#查看隐藏文件和文件夹">查看隐藏文件和文件夹</a></li>
+        <li><a href="#直观显示文件的类型">直观显示文件的类型</a></li>
+        <li><a href="#列出权限所有者以及其他信息">列出权限、所有者以及其他信息</a></li>
+        <li><a href="#以倒序列出文件内容">以倒序列出文件内容</a></li>
+        <li><a href="#按日期和时间排序内容">按日期和时间排序内容</a></li>
+        <li><a href="#按照文件大小排序内容">按照文件大小排序内容</a></li>
+        <li><a href="#用km和g表示文件的大小">用K、M和G表示文件的大小</a></li>
+        <li><a href="#显示当前目录的路径">显示当前目录的路径</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+  </div>
+</div>
+    <div class="post-content">
+      <h2 id="列出文件和文件夹">列出文件和文件夹</h2>
+<p>在操作和使用目录中的文件之前，首先得直到该目录中有哪些文件，所以我们需要列出目录中得文件和子目录，此命令便是 <code>ls</code> 。输入 <code>ls</code> 会列出当前目录得内容，如下图：</p>
+<p><img src="/media/20191115-1.png" alt="ls"></p>
+<h2 id="列出其他文件夹的内容">列出其他文件夹的内容</h2>
+<p>有时候我们不必进入到某个文件夹也可以查看那个文件夹的内容，假设现在我位于/home/pi目录中，但是要查看Documents目录的内容，可以输入下面的命令：</p>
+<p><img src="/media/20191115-2.png" alt="ls 其他文件夹"></p>
+<p>上面的例子中的 <code>pwd</code> 命令是查看当前目录的逻辑位置（相当于 <code>pwd -L</code> ）， <code>ls</code> 命令后跟了一个基于相对路径的目录，所以显示的就是当前目录下的Documents目录下的内容。此外，也可以使用绝对路径，如下：</p>
+<p><img src="/media/20191115-3.png" alt="ls 其他文件夹"></p>
+<p>此外，Linux下的 <code>~</code> 代表当前用户的主目录，例如我当前登录的是pi用户，我的主目录是/home/pi,所以此时 <code>~</code> 相当于这个目录。如下：</p>
+<p><img src="/media/20191115-4.png" alt="~目录"></p>
+<h2 id="使用通配符列出文件夹的内容">使用通配符列出文件夹的内容</h2>
+<p>使用 <code>ls</code> 命令时可以配合通配符来使用，下面是一个实例，其中使用 <code>-d</code> 选项是为了避免显示匹配的目录中的内容：</p>
+<p><img src="/media/20191115-5.png" alt="ls通配符"></p>
+<h2 id="查看子文件加中的文件列表">查看子文件加中的文件列表</h2>
+<p>使用 <code>ls</code> 命令的 <code>-R</code> 选项可以递归的显示目录中的子目录中的内容，如下所示，当前目录中有个tmp目录，tmp目录中又有一个tmp目录，全部都递归的显示出来了：</p>
+<p><img src="/media/20191115-6.png" alt="ls递归"></p>
+<h2 id="以逗号分隔列表显示内容">以逗号分隔列表显示内容</h2>
+<p><code>ls</code> 的标准显示方式就是内容之间以多个空格分隔，如果不喜欢此种方式，可以使用 <code>-m</code> 选项来用逗号实现内容的分隔：</p>
+<p><img src="/media/20191115-7.png" alt="ls逗号分隔"></p>
+<h2 id="以单独一列显示内容列表">以单独一列显示内容列表</h2>
+<p><code>ls</code> 命令默认以字母顺序列出目录中的内容，每个内容之间以若干空格分隔，如果想以一列来显示目录中的内容，可以使用 <code>-1</code> 选项（数字1），如下：</p>
+<p><img src="/media/20191115-11.png" alt="一列显示内容"></p>
+<h2 id="查看隐藏文件和文件夹">查看隐藏文件和文件夹</h2>
+<p>以圆点 <code>.</code> 开头的文件或者文件夹属于隐藏文件或文件夹，如果想显示它们，可以配合 <code>ls</code> 命令的 <code>-a</code> 选项，此外，每个目录都始终有两个子目录： <code>.</code> 和 <code>..</code> ，前者代表当前目录，后者代表当前目录的父目录，这两个目录不可以删除。测试如下：</p>
+<p><img src="/media/20191115-8.png" alt="隐藏文件"></p>
+<p>如果不想显示 <code>.</code> 和 <code>..</code> 两个目录，可以使用 <code>-A</code> 选项，如下：</p>
+<p><img src="/media/20191115-9.png" alt="隐藏文件"></p>
+<h2 id="直观显示文件的类型">直观显示文件的类型</h2>
+<p>前面利用 <code>ls</code> 显示目录中的内容，除了bash自带的颜色显示区分内容是文件还是文件夹外，此外没有任何提示，为了更好的区分各个文件的内容，可以给 <code>ls</code> 命令加上 <code>-F</code> 选项，如下：</p>
+<p><img src="/media/20191115-10.png" alt="直观显示文件"></p>
+<p>可以看到，文件夹的结尾会有 <code>/</code> 符号，可执行文件结尾会有 <code>*</code> 符号，普通文件结尾会没有任何符号。一些结尾附加符号的含义如下表：</p>
+<table>
+<thead>
+<tr>
+<th>符号</th>
+<th>含义</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>*</td>
+<td>可执行文件</td>
+</tr>
+<tr>
+<td>/</td>
+<td>目录</td>
+</tr>
+<tr>
+<td>@</td>
+<td>符号链接文件</td>
+</tr>
+<tr>
+<td>|</td>
+<td>FIFO（命名管道）</td>
+</tr>
+<tr>
+<td>=</td>
+<td>套接字</td>
+</tr>
+</tbody>
+</table>
+<h2 id="列出权限所有者以及其他信息">列出权限、所有者以及其他信息</h2>
+<p>为了获取文件或者文件夹的详细信息，可以使用 <code>ls</code> 命令的 <code>-l</code> 选项（小写的字母l），如下：</p>
+<p><img src="/media/20191115-12.png" alt="列出全信息"></p>
+<p>上面的每一行都是一个文件（文件夹也是一个文件），从左边开始分别是：文件的类型和权限、文件的硬链接数或者子目录数、文件所有者、文件所属用户组、文件大小（单位byte）、文件最后修改月份、文件最后修改日期，文件最后修改时间。其中最左边的那项的第一个字符的解释如下表：</p>
+<table>
+<thead>
+<tr>
+<th>字符</th>
+<th>含义</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>-</td>
+<td>普通文件或者可执行文件</td>
+</tr>
+<tr>
+<td>d</td>
+<td>目录</td>
+</tr>
+<tr>
+<td>l</td>
+<td>符号链接</td>
+</tr>
+<tr>
+<td>s</td>
+<td>套接字</td>
+</tr>
+<tr>
+<td>b</td>
+<td>块设备</td>
+</tr>
+<tr>
+<td>c</td>
+<td>字符设备</td>
+</tr>
+<tr>
+<td>p</td>
+<td>命令管道（AKA FIFO）</td>
+</tr>
+</tbody>
+</table>
+<p>此外，关于目录的权限的一些常见问题如下：</p>
+<ul>
+<li>一个目录如果没有x权限，则不能cd进入该目录，也不能执行该目录下的文件，不能查看该目录下的文件的内容。</li>
+<li>一个目录如果没有r权限，则不能列出该目录下的各个文件名。</li>
+<li>一个目录至少要有x和w权限才能在目录中创建文件。</li>
+<li>对于目录内而言，涉及到文件内容的，都需要x权限。</li>
+</ul>
+<h2 id="以倒序列出文件内容">以倒序列出文件内容</h2>
+<p><code>ls</code> 命令默认按照字母的顺序显示目录的内容，此时可以加上 <code>-r</code> 选项来倒序显示（选项 <code>-R</code> 是递归显示），如下：</p>
+<p><img src="/media/20191115-13.png" alt="倒序显示"></p>
+<h2 id="按日期和时间排序内容">按日期和时间排序内容</h2>
+<p><code>ls</code> 命令默认按照字母的顺序显示内容，如果想按照日期和时间对目录的内容进行排序，则可以使用 <code>-t</code> 选项，组合 <code>-r</code> 可以时间倒序显示，如下：</p>
+<p><img src="/media/20191115-14.png" alt="按照时间排序"></p>
+<h2 id="按照文件大小排序内容">按照文件大小排序内容</h2>
+<p>使用 <code>ls</code> 命令的 <code>-S</code> 选项可以按照文件的大小对内容进行排序，如下：</p>
+<p><img src="/media/20191115-15.png" alt="按照文件大小排序"></p>
+<h2 id="用km和g表示文件的大小">用K、M和G表示文件的大小</h2>
+<p>平常我们使用 <code>ls</code> 命令的 <code>-l</code> 选项时，显示的文件的大小是以字节为单位的很长一串数字，不易于人们阅读，所以可以使用 <code>-h</code> 选项来格式化大小，使其带单位显示（如果仍然没有单位则表示单位为字节），如下：</p>
+<p><img src="/media/20191115-16.png" alt="格式化大小"></p>
+<h2 id="显示当前目录的路径">显示当前目录的路径</h2>
+<p>前面已经提到过了，输入命令 <code>pwd</code> 就可以显示当前路径的逻辑位置，等同于输入 <code>pwd -L</code> ,而如果想显示当前目录的物理位置，则需要输入 <code>pwd -P</code> ，如下：</p>
+<p><img src="/media/20191115-17.png" alt="pwd"></p>
+<p>可以看到，进入软链接file后，输入 <code>pwd</code> 显示的是一个逻辑位置（并不是这个软链接指向的真实物理位置），所以可以输入 <code>pwd -P</code> 显示真实的物理位置。</p>
+
+    </div>
+
+    <div class="post-copyright">
+  <p class="copyright-item">
+    <span class="item-title">文章作者</span>
+    <span class="item-content">P1n93r</span>
+  </p>
+  <p class="copyright-item">
+    <span class="item-title">上次更新</span>
+    <span class="item-content">
+        2019-11-15
+        
+    </span>
+  </p>
+  
+  
+</div>
+<footer class="post-footer">
+      
+      <nav class="post-nav">
+        <a class="prev" href="/post/linux/3-%E5%88%9B%E5%BB%BA%E5%92%8C%E9%94%80%E6%AF%81/">
+            <i class="iconfont icon-left"></i>
+            <span class="prev-text nav-default">3-创建和销毁</span>
+            <span class="prev-text nav-mobile">上一篇</span>
+          </a>
+        <a class="next" href="/post/linux/1-%E9%9C%80%E8%A6%81%E4%BA%86%E8%A7%A3%E7%9A%84%E5%91%BD%E4%BB%A4%E8%A1%8C%E7%9B%B8%E5%85%B3%E4%BA%8B%E9%A1%B9/">
+            <span class="next-text nav-default">1-需要了解的命令行相关事项</span>
+            <span class="next-text nav-mobile">下一篇</span>
+            <i class="iconfont icon-right"></i>
+          </a>
+      </nav>
+    </footer>
+  </article>
+        </div>
+        <div id="disqus_thread"></div>
+    <script type="text/javascript">
+    (function() {
+      
+      
+      if (window.location.hostname === 'localhost') return;
+
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      var disqus_shortname = 'p1n93r';
+      dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+    </script>
+    <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+
+  
+
+  
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="social-links">
+      <a href="mailto:pin83r@gmail.com" class="iconfont icon-email" title="email"></a>
+      <a href="https://github.com/p1n93r" class="iconfont icon-github" title="github"></a>
+  <a href="https://p1n93r.github.io/index.xml" type="application/rss+xml" class="iconfont icon-rss" title="rss"></a>
+</div>
+
+<div class="copyright">
+  <span class="power-by">
+    由 <a class="hexo-link" href="https://gohugo.io">Hugo</a> 强力驱动
+  </span>
+  <span class="division">|</span>
+  <span class="theme-info">
+    主题 - 
+    <a class="theme-link" href="https://github.com/olOwOlo/hugo-theme-even">Even</a>
+  </span>
+
+  <div class="busuanzi-footer">
+    <span id="busuanzi_container_site_pv"> 本站总访问量 <span id="busuanzi_value_site_pv"><img src="/img/spinner.svg" alt="spinner.svg"/></span> 次 </span>
+      <span class="division">|</span>
+    <span id="busuanzi_container_site_uv"> 本站总访客数 <span id="busuanzi_value_site_uv"><img src="/img/spinner.svg" alt="spinner.svg"/></span> 人 </span>
+  </div>
+
+  <span class="copyright-year">
+    &copy; 
+    2019 - 
+    2022<span class="heart"><i class="iconfont icon-heart"></i></span><span>P1n93r</span>
+  </span>
+</div>
+
+    </footer>
+
+    <div class="back-to-top" id="back-to-top">
+      <i class="iconfont icon-up"></i>
+    </div>
+  </div>
+  
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/slideout@1.0.1/dist/slideout.min.js" integrity="sha256-t+zJ/g8/KXIJMjSVQdnibt4dlaDxc9zXr/9oNPeWqdg=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.js" integrity="sha256-XVLffZaxoWfGUEbdzuLi7pwaUJv1cecsQJQqGLe7axY=" crossorigin="anonymous"></script>
+
+
+
+<script type="text/javascript" src="/js/main.min.64437849d125a2d603b3e71d6de5225d641a32d17168a58106e0b61852079683.js"></script>
+
+
+
+
+
+
+
+
+</body>
+</html>

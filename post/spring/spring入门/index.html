@@ -1,0 +1,415 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>Spring入门 - P1n93r - 博学而精一</title>
+  <meta name="renderer" content="webkit" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+<meta name="author" content="P1n93r" /><meta name="description" content="Spring简介 Spring是一个轻量级的Java开发框架， 目的是为了解决企业级应用开发的业务逻辑层和其他各层的耦合问题。 Spring体系结" /><meta name="keywords" content="Security, Java, Web, Android" />
+
+
+
+
+
+
+<meta name="generator" content="Hugo 0.96.0 with theme even" />
+
+
+<link rel="canonical" href="https://p1n93r.github.io/post/spring/spring%E5%85%A5%E9%97%A8/" />
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/manifest.json">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+<link href="/sass/main.min.f92fd13721ddf72129410fd8250e73152cc6f2438082b6c0208dc24ee7c13fc4.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.css" integrity="sha256-7TyXnr2YU040zfSP+rEcz29ggW4j56/ujTPwjMzyqFY=" crossorigin="anonymous">
+
+
+<meta property="og:title" content="Spring入门" />
+<meta property="og:description" content="Spring简介 Spring是一个轻量级的Java开发框架， 目的是为了解决企业级应用开发的业务逻辑层和其他各层的耦合问题。 Spring体系结" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://p1n93r.github.io/post/spring/spring%E5%85%A5%E9%97%A8/" /><meta property="article:section" content="post" />
+<meta property="article:published_time" content="2019-11-05T08:28:36+08:00" />
+<meta property="article:modified_time" content="2019-11-05T08:28:36+08:00" />
+
+<meta itemprop="name" content="Spring入门">
+<meta itemprop="description" content="Spring简介 Spring是一个轻量级的Java开发框架， 目的是为了解决企业级应用开发的业务逻辑层和其他各层的耦合问题。 Spring体系结"><meta itemprop="datePublished" content="2019-11-05T08:28:36+08:00" />
+<meta itemprop="dateModified" content="2019-11-05T08:28:36+08:00" />
+<meta itemprop="wordCount" content="2290">
+<meta itemprop="keywords" content="Spring体系结构," /><meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="Spring入门"/>
+<meta name="twitter:description" content="Spring简介 Spring是一个轻量级的Java开发框架， 目的是为了解决企业级应用开发的业务逻辑层和其他各层的耦合问题。 Spring体系结"/>
+
+<!--[if lte IE 9]>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
+<![endif]-->
+
+<!--[if lt IE 9]>
+  <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+<![endif]-->
+
+</head>
+<body>
+  <div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/" class="logo">P1n93r</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    <a href="/">
+        <li class="mobile-menu-item">Home</li>
+      </a><a href="/post/">
+        <li class="mobile-menu-item">Archives</li>
+      </a><a href="/tags/">
+        <li class="mobile-menu-item">Tags</li>
+      </a><a href="/categories/">
+        <li class="mobile-menu-item">Categories</li>
+      </a><a href="/about/">
+        <li class="mobile-menu-item">About</li>
+      </a>
+  </ul>
+
+  
+
+
+</nav>
+
+  <div class="container" id="mobile-panel">
+    <header id="header" class="header">
+        <div class="logo-wrapper">
+  <a href="/" class="logo">P1n93r</a>
+</div>
+
+
+
+
+
+<nav class="site-navbar">
+  <ul id="menu" class="menu">
+    <li class="menu-item">
+        <a class="menu-item-link" href="/">Home</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/">Archives</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/tags/">Tags</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/categories/">Categories</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/about/">About</a>
+      </li>
+  </ul>
+</nav>
+
+    </header>
+
+    <main id="main" class="main">
+      <div class="content-wrapper">
+        <div id="content" class="content">
+          <article class="post">
+    
+    <header class="post-header">
+      <h1 class="post-title">Spring入门</h1>
+
+      <div class="post-meta">
+        <span class="post-time"> 2019-11-05 </span>
+        <div class="post-category">
+            <a href="/categories/spring/"> Spring </a>
+            </div>
+          <span class="more-meta"> 约 2290 字 </span>
+          <span class="more-meta"> 预计阅读 5 分钟 </span>
+        <span id="busuanzi_container_page_pv" class="more-meta"> <span id="busuanzi_value_page_pv"><img src="/img/spinner.svg" alt="spinner.svg"/></span> 次阅读 </span>
+      </div>
+    </header>
+
+    <div class="post-toc" id="post-toc">
+  <h2 class="post-toc-title">文章目录</h2>
+  <div class="post-toc-content always-active">
+    <nav id="TableOfContents">
+  <ul>
+    <li>
+      <ul>
+        <li><a href="#spring简介">Spring简介</a></li>
+        <li><a href="#spring体系结构">Spring体系结构</a>
+          <ul>
+            <li><a href="#core-container">Core Container</a></li>
+            <li><a href="#test">Test</a></li>
+            <li><a href="#aopaspectsinstrumentation和messaging">AOP、Aspects、Instrumentation和Messaging</a></li>
+            <li><a href="#data-accessintegration">Data Access/Integration</a></li>
+            <li><a href="#web">Web</a></li>
+          </ul>
+        </li>
+        <li><a href="#spring目录结构">Spring目录结构</a></li>
+        <li><a href="#spring入门程序">Spring入门程序</a>
+          <ul>
+            <li><a href="#编码">编码</a></li>
+            <li><a href="#测试">测试</a></li>
+          </ul>
+        </li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+  </div>
+</div>
+    <div class="post-content">
+      <h2 id="spring简介">Spring简介</h2>
+<p>Spring是一个轻量级的Java开发框架， <strong>目的是为了解决企业级应用开发的业务逻辑层和其他各层的耦合问题。</strong></p>
+<h2 id="spring体系结构">Spring体系结构</h2>
+<p>Spring的体系结构图如下：</p>
+<p><img src="/media/20191105-1.png" alt="Spring体系结构"></p>
+<h3 id="core-container">Core Container</h3>
+<ul>
+<li>Core模块：提供框架的基本组成部分，包括控制反转（Inversion of Control，IoC）和依赖注入（Denpendency Injection，DI）。</li>
+<li>Beans：提供了BeanFactory，是工厂模式的典型实现， <strong>Spring将管理对象称为Bean。</strong></li>
+<li>Context：建立在Core和Beans的基础上，提供一个 <strong>框架式的对象访问方式，是访问定义和配置的任何对象的媒介。</strong> 常用接口为ApplicationContext。</li>
+<li>SpEl： <strong>提供强大的表达式语言去支持运行时查询和操作对象图。</strong></li>
+</ul>
+<h3 id="test">Test</h3>
+<p>此模支持使用 <strong>JUnit或TestNG</strong> 对Spring组件进行单元测试和集成测试。</p>
+<h3 id="aopaspectsinstrumentation和messaging">AOP、Aspects、Instrumentation和Messaging</h3>
+<ul>
+<li>AOP： <strong>提供了一个符合AOP要求的面向切面的编程实现，允许定义方法拦截器和切入点，将代码按照功能进行分离，以便干净的解构。</strong></li>
+<li>Aspects：提供了与AspectJ的集成功能，AspectJ是一个功能强大且成熟的AOP框架。</li>
+<li>Instrumentation：提供了类植入（Instrumentation）支持和类加载器的实现，可以在特定的应用服务器中使用。</li>
+<li>Messaging：此模块是Spring 4.0以后新增的，提供了对消息传递体系结构和协议的支持。</li>
+</ul>
+<h3 id="data-accessintegration">Data Access/Integration</h3>
+<ul>
+<li>JDBC：提供了一个JDBC的抽象层，消除了繁琐的JDBC编码和数据库厂商特有的错误代码解析。</li>
+<li>ORM：为流行的 <strong>对象关系映射（Object Relational Mapping）API提供集成层。</strong>
+此模块可以将O/R映射框架与Spring提供的所有其他功能结合使用，例如声明式事务管理功能。</li>
+<li>OXM：提供了一个支持对象/XML映射的抽象层实现，例如：JAXB、Castor等。</li>
+<li>JMS：指JAVA消息传递服务（Java Message Server），包含用于生产和使用消息的功能。</li>
+<li>Transactions：支持用于实现特殊接口和所有POJO类的编程和声明式事务管理。</li>
+</ul>
+<h3 id="web">Web</h3>
+<ul>
+<li>WebSocket：Spring 4.0以后新增的模块，提供了WebSocket和SockJS的实现。</li>
+<li>Servlet：也成为webmvc模块，包含用于Web应用程序的SpringMVC和REST Web Services实现。Spring MVC框架提供了领域模型代码和Web表单之间的清晰分离，并与Spring FrameWork的所有其他功能集成。</li>
+<li>Web：提供了基本的Web开发集成功能，例如：文件上传、使用一个Servlet监听器初始化一个IoC容器以及Web应用上下文。</li>
+<li>Portlet：类似于Servlet模块的功能，提供了Portlet环境下的MVC的实现。</li>
+</ul>
+<h2 id="spring目录结构">Spring目录结构</h2>
+<p>下载Spring Framework解压后，得到如下图所示的目录结构：</p>
+<p><img src="/media/20191105-2.png" alt="Spring目录结构"></p>
+<p>其中，docs目录是Spring的API文档和开发规范；libs是Spring应用所需要的JAR包和源代码；schema是Spring应用所需要的schema文件，这些schema文件定义了Spring相关配置文件的约束。其中， <strong>libs下有三类JAR文件：以RELEASE.jar结尾的是开发时所需要的JAR包；以RELEASE-source.jar结尾的时源文件的压缩包；以RELEASE-javadoc.jar结尾的是API文档的压缩包。</strong></p>
+<p><em><strong>Notice：</strong></em> Spring框架依赖于Apache Commons Logging组件，需要配合commons-logging的JAR包才能使用。</p>
+<h2 id="spring入门程序">Spring入门程序</h2>
+<ol>
+<li>首先项目导入Spring的四个基本的依赖包：Core,Beans,Context,SpEL。以及Spring所依赖的commons-logging包。</li>
+<li>创建一个POJO：Student。</li>
+<li>创建Spring的配置文件applicationContext.xml，在此文件中配置Student交给Spring管理。</li>
+</ol>
+<h3 id="编码">编码</h3>
+<p>项目导入Spring基础包和commons-logging包、创建POJO、创建Spring配置文件后的结构图如下：</p>
+<p><img src="/media/20191105-3.png" alt="入门程序结构"></p>
+<p>Student的代码如下：</p>
+<pre><code>public class Student {
+    private Integer id,number;
+    private String name,sex;
+
+    public Student() {
+        System.out.println(&quot;哈哈哈，我被实例化辽~&quot;);
+    }
+
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
+    public Integer getNumber() {
+        return number;
+    }
+
+    public void setNumber(Integer number) {
+        this.number = number;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getSex() {
+        return sex;
+    }
+
+    public void setSex(String sex) {
+        this.sex = sex;
+    }
+
+    @Override
+    public String toString() {
+        return &quot;Student{&quot; +
+                &quot;id=&quot; + id +
+                &quot;, number=&quot; + number +
+                &quot;, name='&quot; + name + '\'' +
+                &quot;, sex='&quot; + sex + '\'' +
+                '}';
+    }
+}
+</code></pre>
+<p>applicationContext.xml的内容如下：</p>
+<pre><code>&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;
+&lt;beans xmlns=&quot;http://www.springframework.org/schema/beans&quot;
+       xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot;
+       xsi:schemaLocation=&quot;http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd&quot;&gt;
+    &lt;!--将Student交给Spring管理--&gt;
+    &lt;bean class=&quot;pojo.Student&quot; id=&quot;student&quot; /&gt;
+&lt;/beans&gt;
+</code></pre>
+<h3 id="测试">测试</h3>
+<p>Main类中写了一个测试方法，如下：</p>
+<pre><code>public static void main(String[] args) {
+    System.out.println(&quot;-------创建Spring容器开始-------&quot;);
+    ClassPathXmlApplicationContext applicationContext = new ClassPathXmlApplicationContext(&quot;spring/applicationContext.xml&quot;);
+    System.out.println(&quot;-------创建Spring容器结束-------&quot;);
+    Student student0=(Student)applicationContext.getBean(&quot;student&quot;);
+    Student student1=(Student)applicationContext.getBean(&quot;student&quot;);
+    student0.setName(&quot;GIAO！&quot;);
+    System.out.println(student1);
+}
+</code></pre>
+<p>输出如下：</p>
+<p><img src="/media/20191105-4.png" alt="测试结果"></p>
+<p>可以看到，当创建Spring容器的时候，Spring会自动实例化配置了的bean，并且此时利用容器得到的bean都是同一个实例（student0调用setName()后影响到了student1的name，从而得出student0和student1是同一个对象）。</p>
+
+    </div>
+
+    <div class="post-copyright">
+  <p class="copyright-item">
+    <span class="item-title">文章作者</span>
+    <span class="item-content">P1n93r</span>
+  </p>
+  <p class="copyright-item">
+    <span class="item-title">上次更新</span>
+    <span class="item-content">
+        2019-11-05
+        
+    </span>
+  </p>
+  
+  
+</div>
+<footer class="post-footer">
+      <div class="post-tags">
+          <a href="/tags/spring%E4%BD%93%E7%B3%BB%E7%BB%93%E6%9E%84/">Spring体系结构</a>
+          </div>
+      <nav class="post-nav">
+        <a class="prev" href="/post/spring/spring-ioc/">
+            <i class="iconfont icon-left"></i>
+            <span class="prev-text nav-default">Spring IoC</span>
+            <span class="prev-text nav-mobile">上一篇</span>
+          </a>
+        <a class="next" href="/post/java/%E6%B3%9B%E5%9E%8B/">
+            <span class="next-text nav-default">泛型</span>
+            <span class="next-text nav-mobile">下一篇</span>
+            <i class="iconfont icon-right"></i>
+          </a>
+      </nav>
+    </footer>
+  </article>
+        </div>
+        <div id="disqus_thread"></div>
+    <script type="text/javascript">
+    (function() {
+      
+      
+      if (window.location.hostname === 'localhost') return;
+
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      var disqus_shortname = 'p1n93r';
+      dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+    </script>
+    <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+
+  
+
+  
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="social-links">
+      <a href="mailto:pin83r@gmail.com" class="iconfont icon-email" title="email"></a>
+      <a href="https://github.com/p1n93r" class="iconfont icon-github" title="github"></a>
+  <a href="https://p1n93r.github.io/index.xml" type="application/rss+xml" class="iconfont icon-rss" title="rss"></a>
+</div>
+
+<div class="copyright">
+  <span class="power-by">
+    由 <a class="hexo-link" href="https://gohugo.io">Hugo</a> 强力驱动
+  </span>
+  <span class="division">|</span>
+  <span class="theme-info">
+    主题 - 
+    <a class="theme-link" href="https://github.com/olOwOlo/hugo-theme-even">Even</a>
+  </span>
+
+  <div class="busuanzi-footer">
+    <span id="busuanzi_container_site_pv"> 本站总访问量 <span id="busuanzi_value_site_pv"><img src="/img/spinner.svg" alt="spinner.svg"/></span> 次 </span>
+      <span class="division">|</span>
+    <span id="busuanzi_container_site_uv"> 本站总访客数 <span id="busuanzi_value_site_uv"><img src="/img/spinner.svg" alt="spinner.svg"/></span> 人 </span>
+  </div>
+
+  <span class="copyright-year">
+    &copy; 
+    2019 - 
+    2022<span class="heart"><i class="iconfont icon-heart"></i></span><span>P1n93r</span>
+  </span>
+</div>
+
+    </footer>
+
+    <div class="back-to-top" id="back-to-top">
+      <i class="iconfont icon-up"></i>
+    </div>
+  </div>
+  
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/slideout@1.0.1/dist/slideout.min.js" integrity="sha256-t+zJ/g8/KXIJMjSVQdnibt4dlaDxc9zXr/9oNPeWqdg=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.js" integrity="sha256-XVLffZaxoWfGUEbdzuLi7pwaUJv1cecsQJQqGLe7axY=" crossorigin="anonymous"></script>
+
+
+
+<script type="text/javascript" src="/js/main.min.64437849d125a2d603b3e71d6de5225d641a32d17168a58106e0b61852079683.js"></script>
+
+
+
+
+
+
+
+
+</body>
+</html>

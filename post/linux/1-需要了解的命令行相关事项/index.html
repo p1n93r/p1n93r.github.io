@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>1-需要了解的命令行相关事项 - P1n93r - 博学而精一</title>
+  <meta name="renderer" content="webkit" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+<meta name="author" content="P1n93r" /><meta name="description" content="一切皆文件 在Linux系统中，一切皆文件 。除了我们常识中认识的文件外， 目录也是文件，不过是特殊类型的文件，包含有关其他文件的信息。磁盘驱动器" /><meta name="keywords" content="Security, Java, Web, Android" />
+
+
+
+
+
+
+<meta name="generator" content="Hugo 0.96.0 with theme even" />
+
+
+<link rel="canonical" href="https://p1n93r.github.io/post/linux/1-%E9%9C%80%E8%A6%81%E4%BA%86%E8%A7%A3%E7%9A%84%E5%91%BD%E4%BB%A4%E8%A1%8C%E7%9B%B8%E5%85%B3%E4%BA%8B%E9%A1%B9/" />
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/manifest.json">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+<link href="/sass/main.min.f92fd13721ddf72129410fd8250e73152cc6f2438082b6c0208dc24ee7c13fc4.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.css" integrity="sha256-7TyXnr2YU040zfSP+rEcz29ggW4j56/ujTPwjMzyqFY=" crossorigin="anonymous">
+
+
+<meta property="og:title" content="1-需要了解的命令行相关事项" />
+<meta property="og:description" content="一切皆文件 在Linux系统中，一切皆文件 。除了我们常识中认识的文件外， 目录也是文件，不过是特殊类型的文件，包含有关其他文件的信息。磁盘驱动器" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://p1n93r.github.io/post/linux/1-%E9%9C%80%E8%A6%81%E4%BA%86%E8%A7%A3%E7%9A%84%E5%91%BD%E4%BB%A4%E8%A1%8C%E7%9B%B8%E5%85%B3%E4%BA%8B%E9%A1%B9/" /><meta property="article:section" content="post" />
+<meta property="article:published_time" content="2019-11-13T21:36:36+08:00" />
+<meta property="article:modified_time" content="2019-11-13T21:36:36+08:00" />
+
+<meta itemprop="name" content="1-需要了解的命令行相关事项">
+<meta itemprop="description" content="一切皆文件 在Linux系统中，一切皆文件 。除了我们常识中认识的文件外， 目录也是文件，不过是特殊类型的文件，包含有关其他文件的信息。磁盘驱动器"><meta itemprop="datePublished" content="2019-11-13T21:36:36+08:00" />
+<meta itemprop="dateModified" content="2019-11-13T21:36:36+08:00" />
+<meta itemprop="wordCount" content="734">
+<meta itemprop="keywords" content="" /><meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="1-需要了解的命令行相关事项"/>
+<meta name="twitter:description" content="一切皆文件 在Linux系统中，一切皆文件 。除了我们常识中认识的文件外， 目录也是文件，不过是特殊类型的文件，包含有关其他文件的信息。磁盘驱动器"/>
+
+<!--[if lte IE 9]>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
+<![endif]-->
+
+<!--[if lt IE 9]>
+  <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+<![endif]-->
+
+</head>
+<body>
+  <div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/" class="logo">P1n93r</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    <a href="/">
+        <li class="mobile-menu-item">Home</li>
+      </a><a href="/post/">
+        <li class="mobile-menu-item">Archives</li>
+      </a><a href="/tags/">
+        <li class="mobile-menu-item">Tags</li>
+      </a><a href="/categories/">
+        <li class="mobile-menu-item">Categories</li>
+      </a><a href="/about/">
+        <li class="mobile-menu-item">About</li>
+      </a>
+  </ul>
+
+  
+
+
+</nav>
+
+  <div class="container" id="mobile-panel">
+    <header id="header" class="header">
+        <div class="logo-wrapper">
+  <a href="/" class="logo">P1n93r</a>
+</div>
+
+
+
+
+
+<nav class="site-navbar">
+  <ul id="menu" class="menu">
+    <li class="menu-item">
+        <a class="menu-item-link" href="/">Home</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/">Archives</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/tags/">Tags</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/categories/">Categories</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/about/">About</a>
+      </li>
+  </ul>
+</nav>
+
+    </header>
+
+    <main id="main" class="main">
+      <div class="content-wrapper">
+        <div id="content" class="content">
+          <article class="post">
+    
+    <header class="post-header">
+      <h1 class="post-title">1-需要了解的命令行相关事项</h1>
+
+      <div class="post-meta">
+        <span class="post-time"> 2019-11-13 </span>
+        <div class="post-category">
+            <a href="/categories/linux/"> Linux </a>
+            </div>
+          <span class="more-meta"> 约 734 字 </span>
+          <span class="more-meta"> 预计阅读 2 分钟 </span>
+        <span id="busuanzi_container_page_pv" class="more-meta"> <span id="busuanzi_value_page_pv"><img src="/img/spinner.svg" alt="spinner.svg"/></span> 次阅读 </span>
+      </div>
+    </header>
+
+    <div class="post-toc" id="post-toc">
+  <h2 class="post-toc-title">文章目录</h2>
+  <div class="post-toc-content always-active">
+    <nav id="TableOfContents">
+  <ul>
+    <li>
+      <ul>
+        <li><a href="#一切皆文件">一切皆文件</a></li>
+        <li><a href="#文件名最大长度">文件名最大长度</a></li>
+        <li><a href="#文件名区分大小写">文件名区分大小写</a></li>
+        <li><a href="#名称中应该避免使用特殊字符">名称中应该避免使用特殊字符</a></li>
+        <li><a href="#通配符及其含义">通配符及其含义</a></li>
+        <li><a href="#充值重置屏幕内容">充值重置屏幕内容</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+  </div>
+</div>
+    <div class="post-content">
+      <h2 id="一切皆文件">一切皆文件</h2>
+<p><strong>在Linux系统中，一切皆文件</strong> 。除了我们常识中认识的文件外， <strong>目录也是文件，不过是特殊类型的文件，包含有关其他文件的信息。磁盘驱动器也是文件，是一个庞大的文件。网络连接和硬盘设备都是文件，甚至运行中的进程也是文件，它们都是以文件的形式表示出来的。</strong></p>
+<h2 id="文件名最大长度">文件名最大长度</h2>
+<p>Linux/UNIX的文件名的长度最多可以为255个字符，但是建议将文件名控制在少于80个字符的长度，因为显示终端的平均长度就是80个字符，文件名可以在一行内完整显示，而不必换行。</p>
+<h2 id="文件名区分大小写">文件名区分大小写</h2>
+<p><strong>Linux系统在处理文件名时时区分大小写的</strong> ，区分大小写也意味着必须准确无误的输入命令和文件名。</p>
+<h2 id="名称中应该避免使用特殊字符">名称中应该避免使用特殊字符</h2>
+<p>在命名文件和目录时，每种操作系统都会有明确禁止使用的字符。下面为Linux始终可安全使用的字符：</p>
+<ul>
+<li>数字</li>
+<li>大小写字母</li>
+<li>下划线</li>
+<li>圆点（第一个字符就是圆点的常常被隐藏）</li>
+</ul>
+<p>然后 <strong>/字符绝对不能使用，因为Linux的目录分分隔符就是/</strong> ，下表是一些常见字符的注意事项:</p>
+<table>
+<thead>
+<tr>
+<th>字符</th>
+<th>建议</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>/</td>
+<td>绝不使用，不能转义</td>
+</tr>
+<tr>
+<td>|必须转义，避免使用</td>
+<td></td>
+</tr>
+<tr>
+<td>-</td>
+<td>绝对不能作为文件或者目录的第一个字符</td>
+</tr>
+<tr>
+<td>[]</td>
+<td>必须转义，避免使用</td>
+</tr>
+<tr>
+<td>{}</td>
+<td>必须转义，避免使用</td>
+</tr>
+<tr>
+<td>*</td>
+<td>必须转义，避免使用</td>
+</tr>
+<tr>
+<td>?</td>
+<td>必须转义，避免使用</td>
+</tr>
+<tr>
+<td>'</td>
+<td>必须转义，避免使用</td>
+</tr>
+<tr>
+<td>&quot;</td>
+<td>必须转义，避免使用</td>
+</tr>
+<tr>
+<td>空格</td>
+<td>必须转义，避免使用</td>
+</tr>
+</tbody>
+</table>
+<h2 id="通配符及其含义">通配符及其含义</h2>
+<p>允许通过通配符一次指定多个文件，有四种通配符：</p>
+<ul>
+<li>星号：*，匹配 <strong>0或多个</strong> 任意字符。</li>
+<li>问号：?，匹配 <strong>单个字符</strong> 。</li>
+<li>方括号：[]，匹配 <strong>一组单个字符，或用连字符分隔的一定范围内的字符</strong> 。</li>
+<li>大括号：{}，匹配 <strong>字符串列表和范围</strong> 。</li>
+</ul>
+<p>下面是一些测试案例：</p>
+<p><img src="/media/20191114-1.png" alt="通配符测试"></p>
+<p><em><strong>Notice</strong></em> ：方括号匹配的是单个字符，而大括号匹配的是字符串，同时单个字符也是一个字符串。</p>
+<h2 id="充值重置屏幕内容">充值重置屏幕内容</h2>
+<p>使用clear命令或者ctr+L能够清除屏幕显示，但是此命令 <strong>不会影响历时记录</strong> 。</p>
+
+    </div>
+
+    <div class="post-copyright">
+  <p class="copyright-item">
+    <span class="item-title">文章作者</span>
+    <span class="item-content">P1n93r</span>
+  </p>
+  <p class="copyright-item">
+    <span class="item-title">上次更新</span>
+    <span class="item-content">
+        2019-11-13
+        
+    </span>
+  </p>
+  
+  
+</div>
+<footer class="post-footer">
+      
+      <nav class="post-nav">
+        <a class="prev" href="/post/linux/2-%E6%96%87%E4%BB%B6%E5%AF%BC%E8%88%AA%E7%B3%BB%E7%BB%9F/">
+            <i class="iconfont icon-left"></i>
+            <span class="prev-text nav-default">2-文件导航系统</span>
+            <span class="prev-text nav-mobile">上一篇</span>
+          </a>
+        <a class="next" href="/post/java/io/">
+            <span class="next-text nav-default">IO</span>
+            <span class="next-text nav-mobile">下一篇</span>
+            <i class="iconfont icon-right"></i>
+          </a>
+      </nav>
+    </footer>
+  </article>
+        </div>
+        <div id="disqus_thread"></div>
+    <script type="text/javascript">
+    (function() {
+      
+      
+      if (window.location.hostname === 'localhost') return;
+
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      var disqus_shortname = 'p1n93r';
+      dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+    </script>
+    <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+
+  
+
+  
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="social-links">
+      <a href="mailto:pin83r@gmail.com" class="iconfont icon-email" title="email"></a>
+      <a href="https://github.com/p1n93r" class="iconfont icon-github" title="github"></a>
+  <a href="https://p1n93r.github.io/index.xml" type="application/rss+xml" class="iconfont icon-rss" title="rss"></a>
+</div>
+
+<div class="copyright">
+  <span class="power-by">
+    由 <a class="hexo-link" href="https://gohugo.io">Hugo</a> 强力驱动
+  </span>
+  <span class="division">|</span>
+  <span class="theme-info">
+    主题 - 
+    <a class="theme-link" href="https://github.com/olOwOlo/hugo-theme-even">Even</a>
+  </span>
+
+  <div class="busuanzi-footer">
+    <span id="busuanzi_container_site_pv"> 本站总访问量 <span id="busuanzi_value_site_pv"><img src="/img/spinner.svg" alt="spinner.svg"/></span> 次 </span>
+      <span class="division">|</span>
+    <span id="busuanzi_container_site_uv"> 本站总访客数 <span id="busuanzi_value_site_uv"><img src="/img/spinner.svg" alt="spinner.svg"/></span> 人 </span>
+  </div>
+
+  <span class="copyright-year">
+    &copy; 
+    2019 - 
+    2022<span class="heart"><i class="iconfont icon-heart"></i></span><span>P1n93r</span>
+  </span>
+</div>
+
+    </footer>
+
+    <div class="back-to-top" id="back-to-top">
+      <i class="iconfont icon-up"></i>
+    </div>
+  </div>
+  
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/slideout@1.0.1/dist/slideout.min.js" integrity="sha256-t+zJ/g8/KXIJMjSVQdnibt4dlaDxc9zXr/9oNPeWqdg=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.js" integrity="sha256-XVLffZaxoWfGUEbdzuLi7pwaUJv1cecsQJQqGLe7axY=" crossorigin="anonymous"></script>
+
+
+
+<script type="text/javascript" src="/js/main.min.64437849d125a2d603b3e71d6de5225d641a32d17168a58106e0b61852079683.js"></script>
+
+
+
+
+
+
+
+
+</body>
+</html>

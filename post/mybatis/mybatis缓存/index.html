@@ -1,0 +1,482 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>Mybatis缓存 - P1n93r - 博学而精一</title>
+  <meta name="renderer" content="webkit" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+<meta name="author" content="P1n93r" /><meta name="description" content="概述 Mybatis主要有一级缓存和二级缓存，mybatis默认开启一级缓存，需要手动开启二级缓存。两者特性如下： 一级缓存：是相对于同一个Sq" /><meta name="keywords" content="Security, Java, Web, Android" />
+
+
+
+
+
+
+<meta name="generator" content="Hugo 0.96.0 with theme even" />
+
+
+<link rel="canonical" href="https://p1n93r.github.io/post/mybatis/mybatis%E7%BC%93%E5%AD%98/" />
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/manifest.json">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+<link href="/sass/main.min.f92fd13721ddf72129410fd8250e73152cc6f2438082b6c0208dc24ee7c13fc4.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.css" integrity="sha256-7TyXnr2YU040zfSP+rEcz29ggW4j56/ujTPwjMzyqFY=" crossorigin="anonymous">
+
+
+<meta property="og:title" content="Mybatis缓存" />
+<meta property="og:description" content="概述 Mybatis主要有一级缓存和二级缓存，mybatis默认开启一级缓存，需要手动开启二级缓存。两者特性如下： 一级缓存：是相对于同一个Sq" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://p1n93r.github.io/post/mybatis/mybatis%E7%BC%93%E5%AD%98/" /><meta property="article:section" content="post" />
+<meta property="article:published_time" content="2019-10-26T16:24:36+08:00" />
+<meta property="article:modified_time" content="2019-10-26T16:24:36+08:00" />
+
+<meta itemprop="name" content="Mybatis缓存">
+<meta itemprop="description" content="概述 Mybatis主要有一级缓存和二级缓存，mybatis默认开启一级缓存，需要手动开启二级缓存。两者特性如下： 一级缓存：是相对于同一个Sq"><meta itemprop="datePublished" content="2019-10-26T16:24:36+08:00" />
+<meta itemprop="dateModified" content="2019-10-26T16:24:36+08:00" />
+<meta itemprop="wordCount" content="2758">
+<meta itemprop="keywords" content="" /><meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="Mybatis缓存"/>
+<meta name="twitter:description" content="概述 Mybatis主要有一级缓存和二级缓存，mybatis默认开启一级缓存，需要手动开启二级缓存。两者特性如下： 一级缓存：是相对于同一个Sq"/>
+
+<!--[if lte IE 9]>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
+<![endif]-->
+
+<!--[if lt IE 9]>
+  <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+<![endif]-->
+
+</head>
+<body>
+  <div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/" class="logo">P1n93r</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    <a href="/">
+        <li class="mobile-menu-item">Home</li>
+      </a><a href="/post/">
+        <li class="mobile-menu-item">Archives</li>
+      </a><a href="/tags/">
+        <li class="mobile-menu-item">Tags</li>
+      </a><a href="/categories/">
+        <li class="mobile-menu-item">Categories</li>
+      </a><a href="/about/">
+        <li class="mobile-menu-item">About</li>
+      </a>
+  </ul>
+
+  
+
+
+</nav>
+
+  <div class="container" id="mobile-panel">
+    <header id="header" class="header">
+        <div class="logo-wrapper">
+  <a href="/" class="logo">P1n93r</a>
+</div>
+
+
+
+
+
+<nav class="site-navbar">
+  <ul id="menu" class="menu">
+    <li class="menu-item">
+        <a class="menu-item-link" href="/">Home</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/">Archives</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/tags/">Tags</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/categories/">Categories</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/about/">About</a>
+      </li>
+  </ul>
+</nav>
+
+    </header>
+
+    <main id="main" class="main">
+      <div class="content-wrapper">
+        <div id="content" class="content">
+          <article class="post">
+    
+    <header class="post-header">
+      <h1 class="post-title">Mybatis缓存</h1>
+
+      <div class="post-meta">
+        <span class="post-time"> 2019-10-26 </span>
+        <div class="post-category">
+            <a href="/categories/mybatis/"> Mybatis </a>
+            </div>
+          <span class="more-meta"> 约 2758 字 </span>
+          <span class="more-meta"> 预计阅读 6 分钟 </span>
+        <span id="busuanzi_container_page_pv" class="more-meta"> <span id="busuanzi_value_page_pv"><img src="/img/spinner.svg" alt="spinner.svg"/></span> 次阅读 </span>
+      </div>
+    </header>
+
+    <div class="post-toc" id="post-toc">
+  <h2 class="post-toc-title">文章目录</h2>
+  <div class="post-toc-content always-active">
+    <nav id="TableOfContents">
+  <ul>
+    <li>
+      <ul>
+        <li><a href="#概述">概述</a></li>
+        <li><a href="#一级缓存">一级缓存</a></li>
+        <li><a href="#二级缓存">二级缓存</a>
+          <ul>
+            <li><a href="#测试分析">测试分析</a></li>
+          </ul>
+        </li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+  </div>
+</div>
+    <div class="post-content">
+      <h2 id="概述">概述</h2>
+<p>Mybatis主要有一级缓存和二级缓存，mybatis默认开启一级缓存，需要手动开启二级缓存。两者特性如下：</p>
+<ol>
+<li>一级缓存：是相对于同一个SqlSession而言；缓存存储介质为内存；<strong>一级缓存刷新的标志是SqlSession执行commit。</strong></li>
+<li>二级缓存：是相对于同一个namespace的mapper而言；存储介质可以为磁盘，所以要缓存的实体需要实现Serializable接口；<strong>SqlSession提交或者关闭后，二级缓存才会生效，二级缓存刷新的标志不是SqlSession执行commit。</strong></li>
+</ol>
+<h2 id="一级缓存">一级缓存</h2>
+<p>mybatis默认就是开启并使用的一级缓存，同一个SqlSession而言，执行多次查询，只会执行一次sql语句，并将结果存储到缓存中，后面的查询都是从缓存中拿取。一个测试方法例子如下：</p>
+<pre><code>@Test
+public void test1(){
+    SqlSession sqlSession = factory.openSession();
+    SellMapper mapper = sqlSession.getMapper(SellMapper.class);
+    System.out.println(mapper.selectAll(&quot;asc&quot;).size());
+	//mapper.deleteById(2);
+    //sqlSession.commit();
+    System.out.println(mapper.selectAll(&quot;asc&quot;).size());
+}
+</code></pre>
+<p>查看执行日志如下：</p>
+<pre><code>DEBUG [main] - Opening JDBC Connection
+DEBUG [main] - Created connection 2147046752.
+DEBUG [main] - Setting autocommit to false on JDBC Connection [com.mysql.cj.jdbc.ConnectionImpl@7ff95560]
+DEBUG [main] - ==&gt;  Preparing: select id,place,spring,summer,autumn,winter,(spring+summer+autumn+winter) as total from sell order by total asc 
+DEBUG [main] - ==&gt; Parameters: 
+DEBUG [main] - &lt;==      Total: 24
+24
+24
+</code></pre>
+<p>可以看到，第二次执行查询操作，没有再次执行sql语句了，总共只执行了一次sql语句，第二次的取值是从缓存中拿到的。那么两次查询之间执行一次commit操作呢（虽然没有真正的对数据库做出修改）？将上面测试方法中的<code>sqlSession.commit();</code>的注释去掉，再次执行得到结果如下：</p>
+<pre><code>DEBUG [main] - Opening JDBC Connection
+DEBUG [main] - Created connection 2147046752.
+DEBUG [main] - Setting autocommit to false on JDBC Connection [com.mysql.cj.jdbc.ConnectionImpl@7ff95560]
+DEBUG [main] - ==&gt;  Preparing: select id,place,spring,summer,autumn,winter,(spring+summer+autumn+winter) as total from sell order by total asc 
+DEBUG [main] - ==&gt; Parameters: 
+DEBUG [main] - &lt;==      Total: 24
+24
+DEBUG [main] - ==&gt;  Preparing: select id,place,spring,summer,autumn,winter,(spring+summer+autumn+winter) as total from sell order by total asc 
+DEBUG [main] - ==&gt; Parameters: 
+DEBUG [main] - &lt;==      Total: 24
+24
+</code></pre>
+<p>可以看到，**虽然此时没有对数据库做出任何修改，但是只要执行了commit操作，就会刷新缓存，**执行了两次sql语句。那么我们在两次查询之间做出对数据库的更改的操作，但是不commit呢？将上面测试方法中的<code>mapper.deleteById(2);</code>的注释去掉，再次执行得到结果如下：</p>
+<pre><code>DEBUG [main] - Opening JDBC Connection
+DEBUG [main] - Created connection 2147046752.
+DEBUG [main] - Setting autocommit to false on JDBC Connection [com.mysql.cj.jdbc.ConnectionImpl@7ff95560]
+DEBUG [main] - ==&gt;  Preparing: select id,place,spring,summer,autumn,winter,(spring+summer+autumn+winter) as total from sell order by total asc 
+DEBUG [main] - ==&gt; Parameters: 
+DEBUG [main] - &lt;==      Total: 24
+24
+DEBUG [main] - ==&gt;  Preparing: delete from sell where id=? 
+DEBUG [main] - ==&gt; Parameters: 2(Integer)
+DEBUG [main] - &lt;==    Updates: 0
+DEBUG [main] - ==&gt;  Preparing: select id,place,spring,summer,autumn,winter,(spring+summer+autumn+winter) as total from sell order by total asc 
+DEBUG [main] - ==&gt; Parameters: 
+DEBUG [main] - &lt;==      Total: 24
+24
+</code></pre>
+<p>可以看到，还是执行了两次sql语句，缓存被刷新，<strong>所以虽然没有执行commit操作，但是执行的是对数据库进行更新的操作，都会刷新缓存（因为这些操作的元素默认启用了属性：flushCache=true）。</strong></p>
+<h2 id="二级缓存">二级缓存</h2>
+<p>二级缓存需要我们手动开启，它是相对于namespace相同的mapper而言，被缓存的实体需要实现serializable接口，因为缓存存储介质可能是磁盘。开启二级缓存的步骤如下：</p>
+<ol>
+<li>在mybatis的全局配置文件中设置：<code>&lt;setting name=&quot;cacheEnabled&quot; value=&quot;true&quot; /&gt;</code> （默认为true，可以不配置）。</li>
+<li>在需要启动二级缓存的映射文件中添加元素：<code>&lt;cache/&gt;</code> 。</li>
+<li>在映射文件的select元素中添加属性：<code>useCache=true</code> （默认为true，可以不配置）。</li>
+<li>在映射文件的insert、update、delete元素中添加属性：<code>flushCache=true</code> （默认为true，可以不配置）。</li>
+</ol>
+<p><em><strong>注意：</strong></em> 二级缓存是在SqlSession提交或者关闭后才会生效，未提交之前，如果使用同一个SqlSession再次进行查询，使用的是一级缓存，提交之后，虽然用的是同一个SqlSession，但是用的是二级缓存。</p>
+<p>步骤2中的cache元素有如下表所示属性：</p>
+<table>
+<thead>
+<tr>
+<th>属性</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>eviction</td>
+<td>清除缓存的策略，取值有LRU，FIFO ，SOFT，WEAK</td>
+</tr>
+<tr>
+<td>flushInterval</td>
+<td>刷新缓存的时间间隔，单位为毫秒。 默认情况是不设置，也就是没有刷新间隔，缓存仅仅会在调用语句时刷新。</td>
+</tr>
+<tr>
+<td>readOnly</td>
+<td>返回对象是否只可读，取值可以为true或者false。</td>
+</tr>
+<tr>
+<td>size</td>
+<td>存储结果对象或列表的引用大小，默认值是 1024。</td>
+</tr>
+</tbody>
+</table>
+<p>其中的eviction的取值说明如下表：</p>
+<table>
+<thead>
+<tr>
+<th>eviction取值</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>LRU</td>
+<td>最近最少使用：移除最长时间不被使用的对象。</td>
+</tr>
+<tr>
+<td>FIFO</td>
+<td>先进先出：按对象进入缓存的顺序来移除它们。</td>
+</tr>
+<tr>
+<td>SOFT</td>
+<td>软引用：基于垃圾回收器状态和软引用规则移除对象。</td>
+</tr>
+<tr>
+<td>WEAK</td>
+<td>弱引用：更积极地基于垃圾收集器状态和弱引用规则移除对象。</td>
+</tr>
+</tbody>
+</table>
+<h3 id="测试分析">测试分析</h3>
+<p>一个测试代码如下：</p>
+<pre><code>@Test
+public void test2() throws FileNotFoundException {
+    SqlSession sqlSession = factory.openSession();
+    SellMapper mapper = sqlSession.getMapper(SellMapper.class);
+    System.out.println(mapper.selectAll(&quot;asc&quot;).size());
+    //sqlSession.commit();
+    System.out.println(mapper.selectAll(&quot;asc&quot;).size());
+    //mapper.deleteById(1);
+    //sqlSession.commit();
+    sqlSession.close();
+
+    //创建另一个sqlSession
+    SqlSession sqlSession1 = factory.openSession();
+    SellMapper mapper1 = sqlSession1.getMapper(SellMapper.class);
+    System.out.println(mapper1.selectAll(&quot;asc&quot;).size());
+    sqlSession1.close();
+}
+</code></pre>
+<p>其中的第一个SqlSession在提交之前进行了两次查询，因为二级缓存只有提交或者关闭后才能生效，所以在第一个SqlSession提交之前，二级缓存是没有生效的，所以第一个SqlSession的第二个查询使用的是一级缓存。第一个SqlSession提交后，二级缓存生效，所以第二个SqlSession的查询使用的是二级缓存。日志输出如下：</p>
+<pre><code>DEBUG [main] - Cache Hit Ratio [mapper.SellMapper]: 0.0
+DEBUG [main] - Opening JDBC Connection
+DEBUG [main] - Created connection 502800944.
+DEBUG [main] - Setting autocommit to false on JDBC Connection [com.mysql.cj.jdbc.ConnectionImpl@1df82230]
+DEBUG [main] - ==&gt;  Preparing: select id,place,spring,summer,autumn,winter,(spring+summer+autumn+winter) as total from sell order by total asc 
+DEBUG [main] - ==&gt; Parameters: 
+DEBUG [main] - &lt;==      Total: 24
+24
+DEBUG [main] - Cache Hit Ratio [mapper.SellMapper]: 0.0
+24
+DEBUG [main] - Resetting autocommit to true on JDBC Connection [com.mysql.cj.jdbc.ConnectionImpl@1df82230]
+DEBUG [main] - Closing JDBC Connection [com.mysql.cj.jdbc.ConnectionImpl@1df82230]
+DEBUG [main] - Returned connection 502800944 to pool.
+DEBUG [main] - Cache Hit Ratio [mapper.SellMapper]: 0.3333333333333333
+24
+</code></pre>
+<p>可以看到，第二次查询的Cache Hit Ratio为0，但是又没有执行sql语句，所以此时是用一级缓存中取的值。第三次的Cache Hit Ratio就为0.333，代表总共请求了3次缓存，有一次成功了（第一次没有缓存，第二次缓存没有生效，第三次成功取得缓存）。接下来仅将上面测试代码中的两次查询之间的commit语句的注释去掉再次执行，日志输出如下：</p>
+<pre><code>DEBUG [main] - Cache Hit Ratio [mapper.SellMapper]: 0.0
+DEBUG [main] - Opening JDBC Connection
+DEBUG [main] - Created connection 502800944.
+DEBUG [main] - Setting autocommit to false on JDBC Connection [com.mysql.cj.jdbc.ConnectionImpl@1df82230]
+DEBUG [main] - ==&gt;  Preparing: select id,place,spring,summer,autumn,winter,(spring+summer+autumn+winter) as total from sell order by total asc 
+DEBUG [main] - ==&gt; Parameters: 
+DEBUG [main] - &lt;==      Total: 24
+24
+DEBUG [main] - Cache Hit Ratio [mapper.SellMapper]: 0.5
+24
+DEBUG [main] - Resetting autocommit to true on JDBC Connection [com.mysql.cj.jdbc.ConnectionImpl@1df82230]
+DEBUG [main] - Closing JDBC Connection [com.mysql.cj.jdbc.ConnectionImpl@1df82230]
+DEBUG [main] - Returned connection 502800944 to pool.
+DEBUG [main] - Cache Hit Ratio [mapper.SellMapper]: 0.6666666666666666
+24
+</code></pre>
+<p>可以看到，第二次查询的缓存命中率（二级缓存）为0.5，所以第二次查询就已经获取到了二级缓存中的值。接下来仅将<code>mapper.deleteById(1)</code> 及紧接着它下面的 <code>sqlSession.commit()</code> 的注释去掉，得到如下日志输出：</p>
+<pre><code>DEBUG [main] - Cache Hit Ratio [mapper.SellMapper]: 0.0
+DEBUG [main] - Opening JDBC Connection
+DEBUG [main] - Created connection 502800944.
+DEBUG [main] - Setting autocommit to false on JDBC Connection [com.mysql.cj.jdbc.ConnectionImpl@1df82230]
+DEBUG [main] - ==&gt;  Preparing: select id,place,spring,summer,autumn,winter,(spring+summer+autumn+winter) as total from sell order by total asc 
+DEBUG [main] - ==&gt; Parameters: 
+DEBUG [main] - &lt;==      Total: 24
+24
+DEBUG [main] - Cache Hit Ratio [mapper.SellMapper]: 0.0
+24
+DEBUG [main] - ==&gt;  Preparing: delete from sell where id=? 
+DEBUG [main] - ==&gt; Parameters: 1(Integer)
+DEBUG [main] - &lt;==    Updates: 0
+DEBUG [main] - Committing JDBC Connection [com.mysql.cj.jdbc.ConnectionImpl@1df82230]
+DEBUG [main] - Resetting autocommit to true on JDBC Connection [com.mysql.cj.jdbc.ConnectionImpl@1df82230]
+DEBUG [main] - Closing JDBC Connection [com.mysql.cj.jdbc.ConnectionImpl@1df82230]
+DEBUG [main] - Returned connection 502800944 to pool.
+DEBUG [main] - Cache Hit Ratio [mapper.SellMapper]: 0.0
+DEBUG [main] - Opening JDBC Connection
+DEBUG [main] - Checked out connection 502800944 from pool.
+DEBUG [main] - Setting autocommit to false on JDBC Connection [com.mysql.cj.jdbc.ConnectionImpl@1df82230]
+DEBUG [main] - ==&gt;  Preparing: select id,place,spring,summer,autumn,winter,(spring+summer+autumn+winter) as total from sell order by total asc 
+DEBUG [main] - ==&gt; Parameters: 
+DEBUG [main] - &lt;==      Total: 24
+24
+DEBUG [main] - Resetting autocommit to true on JDBC Connection [com.mysql.cj.jdbc.ConnectionImpl@1df82230]
+DEBUG [main] - Closing JDBC Connection [com.mysql.cj.jdbc.ConnectionImpl@1df82230]
+DEBUG [main] - Returned connection 502800944 to pool.
+</code></pre>
+<p>可以看到，第二次查询的二级缓存命中率为0，但是从一级缓存中取到了值（此时二级缓存还未生效）。第三次查询时命中率还是为0，并且执行了一遍sql。因为所有开启了二级缓存的映射文件中的insert、delete、update元素默认开启了flushCache=true，所以执行了<code>mapper.deleteById(1)</code> 会刷新二级缓存，所以第三次查询只能再次执行一次sql。</p>
+
+    </div>
+
+    <div class="post-copyright">
+  <p class="copyright-item">
+    <span class="item-title">文章作者</span>
+    <span class="item-content">P1n93r</span>
+  </p>
+  <p class="copyright-item">
+    <span class="item-title">上次更新</span>
+    <span class="item-content">
+        2019-10-26
+        
+    </span>
+  </p>
+  
+  
+</div>
+<footer class="post-footer">
+      
+      <nav class="post-nav">
+        <a class="prev" href="/post/mybatis/mybatis%E4%BC%A0%E5%8F%82/">
+            <i class="iconfont icon-left"></i>
+            <span class="prev-text nav-default">Mybatis传参</span>
+            <span class="prev-text nav-mobile">上一篇</span>
+          </a>
+        <a class="next" href="/post/mybatis/mybatis%E6%87%92%E5%8A%A0%E8%BD%BD/">
+            <span class="next-text nav-default">Mybatis懒加载</span>
+            <span class="next-text nav-mobile">下一篇</span>
+            <i class="iconfont icon-right"></i>
+          </a>
+      </nav>
+    </footer>
+  </article>
+        </div>
+        <div id="disqus_thread"></div>
+    <script type="text/javascript">
+    (function() {
+      
+      
+      if (window.location.hostname === 'localhost') return;
+
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      var disqus_shortname = 'p1n93r';
+      dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+    </script>
+    <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+
+  
+
+  
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="social-links">
+      <a href="mailto:pin83r@gmail.com" class="iconfont icon-email" title="email"></a>
+      <a href="https://github.com/p1n93r" class="iconfont icon-github" title="github"></a>
+  <a href="https://p1n93r.github.io/index.xml" type="application/rss+xml" class="iconfont icon-rss" title="rss"></a>
+</div>
+
+<div class="copyright">
+  <span class="power-by">
+    由 <a class="hexo-link" href="https://gohugo.io">Hugo</a> 强力驱动
+  </span>
+  <span class="division">|</span>
+  <span class="theme-info">
+    主题 - 
+    <a class="theme-link" href="https://github.com/olOwOlo/hugo-theme-even">Even</a>
+  </span>
+
+  <div class="busuanzi-footer">
+    <span id="busuanzi_container_site_pv"> 本站总访问量 <span id="busuanzi_value_site_pv"><img src="/img/spinner.svg" alt="spinner.svg"/></span> 次 </span>
+      <span class="division">|</span>
+    <span id="busuanzi_container_site_uv"> 本站总访客数 <span id="busuanzi_value_site_uv"><img src="/img/spinner.svg" alt="spinner.svg"/></span> 人 </span>
+  </div>
+
+  <span class="copyright-year">
+    &copy; 
+    2019 - 
+    2022<span class="heart"><i class="iconfont icon-heart"></i></span><span>P1n93r</span>
+  </span>
+</div>
+
+    </footer>
+
+    <div class="back-to-top" id="back-to-top">
+      <i class="iconfont icon-up"></i>
+    </div>
+  </div>
+  
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/slideout@1.0.1/dist/slideout.min.js" integrity="sha256-t+zJ/g8/KXIJMjSVQdnibt4dlaDxc9zXr/9oNPeWqdg=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.js" integrity="sha256-XVLffZaxoWfGUEbdzuLi7pwaUJv1cecsQJQqGLe7axY=" crossorigin="anonymous"></script>
+
+
+
+<script type="text/javascript" src="/js/main.min.64437849d125a2d603b3e71d6de5225d641a32d17168a58106e0b61852079683.js"></script>
+
+
+
+
+
+
+
+
+</body>
+</html>

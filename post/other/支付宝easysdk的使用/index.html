@@ -1,0 +1,479 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>支付宝easySDK的使用 - P1n93r - 博学而精一</title>
+  <meta name="renderer" content="webkit" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+<meta name="author" content="P1n93r" /><meta name="description" content="前言 需要知道的是，alipayEasySDK支持alipaySDK所支持的所有功能，而且alipayEasySDK提供了很多精简后的api（" /><meta name="keywords" content="Security, Java, Web, Android" />
+
+
+
+
+
+
+<meta name="generator" content="Hugo 0.96.0 with theme even" />
+
+
+<link rel="canonical" href="https://p1n93r.github.io/post/other/%E6%94%AF%E4%BB%98%E5%AE%9Deasysdk%E7%9A%84%E4%BD%BF%E7%94%A8/" />
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/manifest.json">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+<link href="/sass/main.min.f92fd13721ddf72129410fd8250e73152cc6f2438082b6c0208dc24ee7c13fc4.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.css" integrity="sha256-7TyXnr2YU040zfSP+rEcz29ggW4j56/ujTPwjMzyqFY=" crossorigin="anonymous">
+
+
+<meta property="og:title" content="支付宝easySDK的使用" />
+<meta property="og:description" content="前言 需要知道的是，alipayEasySDK支持alipaySDK所支持的所有功能，而且alipayEasySDK提供了很多精简后的api（" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://p1n93r.github.io/post/other/%E6%94%AF%E4%BB%98%E5%AE%9Deasysdk%E7%9A%84%E4%BD%BF%E7%94%A8/" /><meta property="article:section" content="post" />
+<meta property="article:published_time" content="2020-05-11T08:04:36+08:00" />
+<meta property="article:modified_time" content="2020-05-11T08:04:36+08:00" />
+
+<meta itemprop="name" content="支付宝easySDK的使用">
+<meta itemprop="description" content="前言 需要知道的是，alipayEasySDK支持alipaySDK所支持的所有功能，而且alipayEasySDK提供了很多精简后的api（"><meta itemprop="datePublished" content="2020-05-11T08:04:36+08:00" />
+<meta itemprop="dateModified" content="2020-05-11T08:04:36+08:00" />
+<meta itemprop="wordCount" content="1248">
+<meta itemprop="keywords" content="支付宝," /><meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="支付宝easySDK的使用"/>
+<meta name="twitter:description" content="前言 需要知道的是，alipayEasySDK支持alipaySDK所支持的所有功能，而且alipayEasySDK提供了很多精简后的api（"/>
+
+<!--[if lte IE 9]>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
+<![endif]-->
+
+<!--[if lt IE 9]>
+  <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+<![endif]-->
+
+</head>
+<body>
+  <div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/" class="logo">P1n93r</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    <a href="/">
+        <li class="mobile-menu-item">Home</li>
+      </a><a href="/post/">
+        <li class="mobile-menu-item">Archives</li>
+      </a><a href="/tags/">
+        <li class="mobile-menu-item">Tags</li>
+      </a><a href="/categories/">
+        <li class="mobile-menu-item">Categories</li>
+      </a><a href="/about/">
+        <li class="mobile-menu-item">About</li>
+      </a>
+  </ul>
+
+  
+
+
+</nav>
+
+  <div class="container" id="mobile-panel">
+    <header id="header" class="header">
+        <div class="logo-wrapper">
+  <a href="/" class="logo">P1n93r</a>
+</div>
+
+
+
+
+
+<nav class="site-navbar">
+  <ul id="menu" class="menu">
+    <li class="menu-item">
+        <a class="menu-item-link" href="/">Home</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/">Archives</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/tags/">Tags</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/categories/">Categories</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/about/">About</a>
+      </li>
+  </ul>
+</nav>
+
+    </header>
+
+    <main id="main" class="main">
+      <div class="content-wrapper">
+        <div id="content" class="content">
+          <article class="post">
+    
+    <header class="post-header">
+      <h1 class="post-title">支付宝easySDK的使用</h1>
+
+      <div class="post-meta">
+        <span class="post-time"> 2020-05-11 </span>
+        <div class="post-category">
+            <a href="/categories/other/"> Other </a>
+            </div>
+          <span class="more-meta"> 约 1248 字 </span>
+          <span class="more-meta"> 预计阅读 3 分钟 </span>
+        <span id="busuanzi_container_page_pv" class="more-meta"> <span id="busuanzi_value_page_pv"><img src="/img/spinner.svg" alt="spinner.svg"/></span> 次阅读 </span>
+      </div>
+    </header>
+
+    <div class="post-toc" id="post-toc">
+  <h2 class="post-toc-title">文章目录</h2>
+  <div class="post-toc-content always-active">
+    <nav id="TableOfContents">
+  <ul>
+    <li>
+      <ul>
+        <li><a href="#前言">前言</a></li>
+        <li><a href="#简单上手">简单上手</a>
+          <ul>
+            <li><a href="#准备资源文件">准备资源文件</a></li>
+            <li><a href="#编写getconfig类">编写GetConfig类</a></li>
+            <li><a href="#编写工具类payonpc">编写工具类PayOnPC</a></li>
+          </ul>
+        </li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+  </div>
+</div>
+    <div class="post-content">
+      <h2 id="前言">前言</h2>
+<p>需要知道的是，alipayEasySDK支持alipaySDK所支持的所有功能，而且alipayEasySDK提供了很多精简后的api（而在alipaySDK中使用相同的功能的api需要设置很多繁琐的参数），如果存在暂时没有提供的api，可以使用其通用接口调用支付宝的api。官方文档如下：</p>
+<ol>
+<li><a href='https://github.com/alipay/alipay-easysdk/blob/master/APIDoc.md' target="_blank">alipayEasySDK文档</a></li>
+<li><a href='https://opendocs.alipay.com/apis/' target="_blank">alipayApi文档</a></li>
+</ol>
+<h2 id="简单上手">简单上手</h2>
+<h3 id="准备资源文件">准备资源文件</h3>
+<ol>
+<li>准备支付宝的几个证书文件。</li>
+<li>准备填写了支付宝一些配置的配置文件。</li>
+</ol>
+<p>我的支付宝配置aplipay.properties文件内容如下：</p>
+<pre><code>config.protocol = http
+config.gatewayHost = openapi.alipaydev.com
+config.signType = RSA2
+config.appId = 2016102400753062
+config.notifyUrl=http://313j23614b.zicp.vip/takeExpress_war_exploded/alipay/notify
+# 为避免私钥随源码泄露，推荐从文件中读取私钥字符串而不是写入源码中
+config.merchantPrivateKey = xxxxxxxxxxx
+</code></pre>
+<p>我的有关Alipay的资源文件列表如下：</p>
+<p><img src="/media/20200511-1.png" alt="Alipay的资源文件"></p>
+<h3 id="编写getconfig类">编写GetConfig类</h3>
+<p>GetConfig类的作用是返回一个加载了alipay.properties配置的Config实例，代码如下：</p>
+<pre><code>public class GetConfig {
+
+    private static Config config;
+
+    static{
+        Properties properties=new Properties();
+        //获取配置文件的path
+        String path = GetConfig.class.getClassLoader().getResource(&quot;api/alipay/alipay.properties&quot;).getPath();
+        try (FileInputStream inputStream=new FileInputStream(path);){
+            properties.load(inputStream);
+            Config configTmp = new Config();
+            configTmp.protocol=properties.getProperty(&quot;config.protocol&quot;);
+            configTmp.gatewayHost=properties.getProperty(&quot;config.gatewayHost&quot;);
+            configTmp.signType=properties.getProperty(&quot;config.signType&quot;);
+            configTmp.appId=properties.getProperty(&quot;config.appId&quot;);
+            configTmp.merchantPrivateKey=properties.getProperty(&quot;config.merchantPrivateKey&quot;);
+
+            //设置异步回调url,进行订单后续操作
+            configTmp.notifyUrl=properties.getProperty(&quot;config.notifyUrl&quot;);
+
+            //注：证书文件路径支持设置为文件系统中的路径或CLASS_PATH中的路径，优先从文件系统中加载，加载失败后会继续尝试从CLASS_PATH中加载
+            configTmp.merchantCertPath = GetConfig.class.getClassLoader().getResource(&quot;api/alipay/appCertPublicKey_2016102400753062.crt&quot;).getPath();
+            configTmp.alipayCertPath = GetConfig.class.getClassLoader().getResource(&quot;api/alipay/alipayCertPublicKey_RSA2.crt&quot;).getPath();
+            configTmp.alipayRootCertPath = GetConfig.class.getClassLoader().getResource(&quot;api/alipay/alipayRootCert.crt&quot;).getPath();
+            //注：如果采用非证书模式，则无需赋值上面的三个证书路径，改为赋值如下的支付宝公钥字符串即可
+            // config.alipayPublicKey = &quot;&lt;-- 请填写您的支付宝公钥，例如：MIIBIjANBg... --&gt;&quot;;
+            config=configTmp;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * @return 返回alipay的一个配置实例
+     */
+    public static Config get(){
+        return config;
+    }
+}
+</code></pre>
+<h3 id="编写工具类payonpc">编写工具类PayOnPC</h3>
+<p>此工具类主要用于PC网站支付，代码内容如下：</p>
+<pre><code>package com.express.utils.alipay;
+
+import com.alipay.easysdk.factory.Factory;
+import com.alipay.easysdk.payment.facetoface.models.AlipayTradePrecreateResponse;
+import com.alipay.easysdk.util.generic.models.AlipayOpenApiGenericResponse;
+import net.sf.json.JSONObject;
+import java.util.HashMap;
+import java.util.UUID;
+
+/**
+ * 基于网站的支付
+ * @author Cassie
+ */
+public class PayOnPc {
+
+    static {
+        // 1. 设置参数（全局只需设置一次）
+        Factory.setOptions(GetConfig.get());
+    }
+
+    /**
+     * @param subject 交易订单的主题，例如：苹果6plus
+     * @param num 交易订单的订单号，在全站中此订单号需要唯一
+     * @param money 交易金额
+     * @return 一个二维码链接
+     */
+    public static JSONObject pay(String subject,String num,String money){
+        JSONObject res = new JSONObject();
+        res.put(&quot;result&quot;,false);
+        try {
+            AlipayTradePrecreateResponse response = Factory.Payment.FaceToFace().preCreate(subject, num, money);
+            res.put(&quot;result&quot;,true);
+            res.put(&quot;num&quot;,num);
+            res.put(&quot;url&quot;,response.qrCode);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return res;
+    }
+
+
+    /**
+     * 提供查询支付状态的接口
+     * @param num 商家订单号
+     * @return 支付宝返回的结果
+     * @throws Exception 异常
+     */
+   public static JSONObject query(String num){
+       String body;
+       try {
+           body = Factory.Payment.Common().query(num).httpBody;
+       } catch (Exception e) {
+           JSONObject error = new JSONObject();
+           error.put(&quot;code&quot;,&quot;400&quot;);
+           error.put(&quot;msg&quot;,&quot;订单不存在&quot;);
+           return error;
+       }
+       return (JSONObject) JSONObject.fromObject(body).get(&quot;alipay_trade_query_response&quot;);
+   }
+
+
+    /**
+     * 取消未完成的订单，当主动查询发现为支付时，需要进行交易撤销
+     * @param num 订单号
+     * @return 是否撤销成功
+     */
+   public static Boolean cancelPay(String num){
+       try {
+           //alipay_trade_cancel_response
+           String body = Factory.Payment.Common().cancel(num).httpBody;
+           System.out.println(body);
+           JSONObject res = (JSONObject) JSONObject.fromObject(body).get(&quot;alipay_trade_cancel_response&quot;);
+           if(res.has(&quot;code&quot;)&amp;&amp;res.has(&quot;msg&quot;)){
+               String code = res.get(&quot;code&quot;).toString();
+               String msg = res.get(&quot;msg&quot;).toString();
+               return &quot;Success&quot;.equals(msg) &amp;&amp; &quot;10000&quot;.equals(code);
+           }
+       } catch (Exception e) {
+           e.printStackTrace();
+       }
+       return false;
+   }
+
+
+    /**
+     * 对订单进行退款，只能全额退款
+     * @param num 订单号
+     * @param money 退款金额
+     * @return 是否退款成功
+     */
+   public static Boolean refund(String num,String money){
+       try {
+           String body = Factory.Payment.Common().refund(num, money).httpBody;
+           JSONObject res = (JSONObject) JSONObject.fromObject(body).get(&quot;alipay_trade_refund_response&quot;);
+           System.out.println(res);
+           if(res.has(&quot;code&quot;)&amp;&amp;res.has(&quot;msg&quot;)){
+               String code = res.get(&quot;code&quot;).toString();
+               String msg = res.get(&quot;msg&quot;).toString();
+               return &quot;Success&quot;.equals(msg) &amp;&amp; &quot;10000&quot;.equals(code);
+           }
+       } catch (Exception e) {
+           e.printStackTrace();
+       }
+       return false;
+   }
+
+
+    /**
+     * 转账
+     * @param alipayLoginId 支付宝账号
+     * @param trueName 真实姓名
+     * @param money 金额
+     * @return 是否成功
+     * @throws Exception 异常
+     */
+   public static Boolean transfer(String alipayLoginId,String trueName,String money) throws Exception {
+       //构造请求参数
+       HashMap&lt;String, Object&gt; bizParams = new HashMap&lt;&gt;();
+       bizParams.put(&quot;out_biz_no&quot;,UUID.randomUUID().toString());
+       bizParams.put(&quot;trans_amount&quot;,money);
+       bizParams.put(&quot;biz_scene&quot;,&quot;DIRECT_TRANSFER&quot;);
+       bizParams.put(&quot;product_code&quot;,&quot;TRANS_ACCOUNT_NO_PWD&quot;);
+       JSONObject payeeInfo = new JSONObject();
+       payeeInfo.put(&quot;identity&quot;,alipayLoginId);
+       payeeInfo.put(&quot;identity_type&quot;,&quot;ALIPAY_LOGON_ID&quot;);
+       payeeInfo.put(&quot;name&quot;,trueName);
+       bizParams.put(&quot;payee_info&quot;,payeeInfo.toString());
+       bizParams.put(&quot;order_title&quot;,&quot;快递代取佣金&quot;);
+       AlipayOpenApiGenericResponse response = Factory.Util.Generic().execute(&quot;alipay.fund.trans.uni.transfer&quot;, null, bizParams);
+       return &quot;10000&quot;.equals(response.code)&amp;&amp;&quot;Success&quot;.equals(response.msg);
+   }
+}
+</code></pre>
+
+    </div>
+
+    <div class="post-copyright">
+  <p class="copyright-item">
+    <span class="item-title">文章作者</span>
+    <span class="item-content">P1n93r</span>
+  </p>
+  <p class="copyright-item">
+    <span class="item-title">上次更新</span>
+    <span class="item-content">
+        2020-05-11
+        
+    </span>
+  </p>
+  
+  
+</div>
+<footer class="post-footer">
+      <div class="post-tags">
+          <a href="/tags/%E6%94%AF%E4%BB%98%E5%AE%9D/">支付宝</a>
+          </div>
+      <nav class="post-nav">
+        <a class="prev" href="/post/java/java%E5%AE%B9%E5%99%A8/">
+            <i class="iconfont icon-left"></i>
+            <span class="prev-text nav-default">Java容器</span>
+            <span class="prev-text nav-mobile">上一篇</span>
+          </a>
+        <a class="next" href="/post/springmvc/springmvc%E4%BC%98%E9%9B%85%E7%9A%84%E5%8E%BB%E9%99%A4%E5%8F%82%E6%95%B0%E5%89%8D%E5%90%8E%E7%A9%BA%E6%A0%BC/">
+            <span class="next-text nav-default">SpringMVC优雅的去除参数的前后空格</span>
+            <span class="next-text nav-mobile">下一篇</span>
+            <i class="iconfont icon-right"></i>
+          </a>
+      </nav>
+    </footer>
+  </article>
+        </div>
+        <div id="disqus_thread"></div>
+    <script type="text/javascript">
+    (function() {
+      
+      
+      if (window.location.hostname === 'localhost') return;
+
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      var disqus_shortname = 'p1n93r';
+      dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+    </script>
+    <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+
+  
+
+  
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="social-links">
+      <a href="mailto:pin83r@gmail.com" class="iconfont icon-email" title="email"></a>
+      <a href="https://github.com/p1n93r" class="iconfont icon-github" title="github"></a>
+  <a href="https://p1n93r.github.io/index.xml" type="application/rss+xml" class="iconfont icon-rss" title="rss"></a>
+</div>
+
+<div class="copyright">
+  <span class="power-by">
+    由 <a class="hexo-link" href="https://gohugo.io">Hugo</a> 强力驱动
+  </span>
+  <span class="division">|</span>
+  <span class="theme-info">
+    主题 - 
+    <a class="theme-link" href="https://github.com/olOwOlo/hugo-theme-even">Even</a>
+  </span>
+
+  <div class="busuanzi-footer">
+    <span id="busuanzi_container_site_pv"> 本站总访问量 <span id="busuanzi_value_site_pv"><img src="/img/spinner.svg" alt="spinner.svg"/></span> 次 </span>
+      <span class="division">|</span>
+    <span id="busuanzi_container_site_uv"> 本站总访客数 <span id="busuanzi_value_site_uv"><img src="/img/spinner.svg" alt="spinner.svg"/></span> 人 </span>
+  </div>
+
+  <span class="copyright-year">
+    &copy; 
+    2019 - 
+    2022<span class="heart"><i class="iconfont icon-heart"></i></span><span>P1n93r</span>
+  </span>
+</div>
+
+    </footer>
+
+    <div class="back-to-top" id="back-to-top">
+      <i class="iconfont icon-up"></i>
+    </div>
+  </div>
+  
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/slideout@1.0.1/dist/slideout.min.js" integrity="sha256-t+zJ/g8/KXIJMjSVQdnibt4dlaDxc9zXr/9oNPeWqdg=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.js" integrity="sha256-XVLffZaxoWfGUEbdzuLi7pwaUJv1cecsQJQqGLe7axY=" crossorigin="anonymous"></script>
+
+
+
+<script type="text/javascript" src="/js/main.min.64437849d125a2d603b3e71d6de5225d641a32d17168a58106e0b61852079683.js"></script>
+
+
+
+
+
+
+
+
+</body>
+</html>

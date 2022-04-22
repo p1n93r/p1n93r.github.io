@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>note on P1n93r - 博学而精一</title>
+    <link>https://p1n93r.github.io/tags/note/</link>
+    <description>Recent content in note on P1n93r - 博学而精一</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en</language>
+    <lastBuildDate>Tue, 15 Jun 2021 00:28:36 +0800</lastBuildDate><atom:link href="https://p1n93r.github.io/tags/note/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>vulnstack2笔记</title>
+      <link>https://p1n93r.github.io/post/security/vulnstack2%E7%AC%94%E8%AE%B0/</link>
+      <pubDate>Tue, 15 Jun 2021 00:28:36 +0800</pubDate>
+      
+      <guid>https://p1n93r.github.io/post/security/vulnstack2%E7%AC%94%E8%AE%B0/</guid>
+      <description>主要知识点 绕杀毒软件； 使用TeamView绕过RDP登录限制； MS17-010； 还有本次打靶未体现的知识点，但是可以应用到本次靶场： MS14-068; 黄金票</description>
+    </item>
+    
+    <item>
+      <title>vulnstack1笔记</title>
+      <link>https://p1n93r.github.io/post/security/vulnstack1%E7%AC%94%E8%AE%B0/</link>
+      <pubDate>Wed, 26 May 2021 00:28:36 +0800</pubDate>
+      
+      <guid>https://p1n93r.github.io/post/security/vulnstack1%E7%AC%94%E8%AE%B0/</guid>
+      <description>网络环境 模拟黑盒环境，所以只知道内网win7的公网ip，拓扑图如下图所示： 边界打点 首先需要拿下对外开放服务的win7，已知其公网ip为192</description>
+    </item>
+    
+    <item>
+      <title>渗透笔记</title>
+      <link>https://p1n93r.github.io/post/security/%E6%B8%97%E9%80%8F%E7%AC%94%E8%AE%B0/</link>
+      <pubDate>Fri, 01 Jan 2021 21:28:36 +0800</pubDate>
+      
+      <guid>https://p1n93r.github.io/post/security/%E6%B8%97%E9%80%8F%E7%AC%94%E8%AE%B0/</guid>
+      <description>获取shell后 开启清屏： export TERM=screen # 赋值xterm也可以 查看sudo权限： sudo -l 尝试生成公钥文件到用户目录下的 .ssh 下： echo &amp;quot;xxxx&amp;quot; &amp;gt; /home/p1n93r/.ssh/authorized_keys ，然后就可以免密ssh</description>
+    </item>
+    
+  </channel>
+</rss>

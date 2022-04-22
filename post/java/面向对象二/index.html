@@ -1,0 +1,728 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>面向对象(二) - P1n93r - 博学而精一</title>
+  <meta name="renderer" content="webkit" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+<meta name="author" content="P1n93r" /><meta name="description" content="包装类 基本数据类型不具备“对象”的特性，它没有属性，没有方法。为了解决这个问题。Java提供了包装类为8种基本数据类型的分别定义了相应的引用" /><meta name="keywords" content="Security, Java, Web, Android" />
+
+
+
+
+
+
+<meta name="generator" content="Hugo 0.96.0 with theme even" />
+
+
+<link rel="canonical" href="https://p1n93r.github.io/post/java/%E9%9D%A2%E5%90%91%E5%AF%B9%E8%B1%A1%E4%BA%8C/" />
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/manifest.json">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+<link href="/sass/main.min.f92fd13721ddf72129410fd8250e73152cc6f2438082b6c0208dc24ee7c13fc4.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.css" integrity="sha256-7TyXnr2YU040zfSP+rEcz29ggW4j56/ujTPwjMzyqFY=" crossorigin="anonymous">
+
+
+<meta property="og:title" content="面向对象(二)" />
+<meta property="og:description" content="包装类 基本数据类型不具备“对象”的特性，它没有属性，没有方法。为了解决这个问题。Java提供了包装类为8种基本数据类型的分别定义了相应的引用" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://p1n93r.github.io/post/java/%E9%9D%A2%E5%90%91%E5%AF%B9%E8%B1%A1%E4%BA%8C/" /><meta property="article:section" content="post" />
+<meta property="article:published_time" content="2019-10-01T21:31:36+08:00" />
+<meta property="article:modified_time" content="2019-10-09T22:10:36+08:00" />
+
+<meta itemprop="name" content="面向对象(二)">
+<meta itemprop="description" content="包装类 基本数据类型不具备“对象”的特性，它没有属性，没有方法。为了解决这个问题。Java提供了包装类为8种基本数据类型的分别定义了相应的引用"><meta itemprop="datePublished" content="2019-10-01T21:31:36+08:00" />
+<meta itemprop="dateModified" content="2019-10-09T22:10:36+08:00" />
+<meta itemprop="wordCount" content="5915">
+<meta itemprop="keywords" content="" /><meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="面向对象(二)"/>
+<meta name="twitter:description" content="包装类 基本数据类型不具备“对象”的特性，它没有属性，没有方法。为了解决这个问题。Java提供了包装类为8种基本数据类型的分别定义了相应的引用"/>
+
+<!--[if lte IE 9]>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
+<![endif]-->
+
+<!--[if lt IE 9]>
+  <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+<![endif]-->
+
+</head>
+<body>
+  <div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/" class="logo">P1n93r</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    <a href="/">
+        <li class="mobile-menu-item">Home</li>
+      </a><a href="/post/">
+        <li class="mobile-menu-item">Archives</li>
+      </a><a href="/tags/">
+        <li class="mobile-menu-item">Tags</li>
+      </a><a href="/categories/">
+        <li class="mobile-menu-item">Categories</li>
+      </a><a href="/about/">
+        <li class="mobile-menu-item">About</li>
+      </a>
+  </ul>
+
+  
+
+
+</nav>
+
+  <div class="container" id="mobile-panel">
+    <header id="header" class="header">
+        <div class="logo-wrapper">
+  <a href="/" class="logo">P1n93r</a>
+</div>
+
+
+
+
+
+<nav class="site-navbar">
+  <ul id="menu" class="menu">
+    <li class="menu-item">
+        <a class="menu-item-link" href="/">Home</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/">Archives</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/tags/">Tags</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/categories/">Categories</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/about/">About</a>
+      </li>
+  </ul>
+</nav>
+
+    </header>
+
+    <main id="main" class="main">
+      <div class="content-wrapper">
+        <div id="content" class="content">
+          <article class="post">
+    
+    <header class="post-header">
+      <h1 class="post-title">面向对象(二)</h1>
+
+      <div class="post-meta">
+        <span class="post-time"> 2019-10-01 </span>
+        <div class="post-category">
+            <a href="/categories/java/"> Java </a>
+            </div>
+          <span class="more-meta"> 约 5915 字 </span>
+          <span class="more-meta"> 预计阅读 12 分钟 </span>
+        <span id="busuanzi_container_page_pv" class="more-meta"> <span id="busuanzi_value_page_pv"><img src="/img/spinner.svg" alt="spinner.svg"/></span> 次阅读 </span>
+      </div>
+    </header>
+
+    <div class="post-toc" id="post-toc">
+  <h2 class="post-toc-title">文章目录</h2>
+  <div class="post-toc-content always-active">
+    <nav id="TableOfContents">
+  <ul>
+    <li>
+      <ul>
+        <li><a href="#包装类">包装类</a>
+          <ul>
+            <li><a href="#包装类对象和基本数据类型变量之间的转换">包装类对象和基本数据类型变量之间的转换</a></li>
+            <li><a href="#包装类对象和字符串之间的转换">包装类对象和字符串之间的转换</a></li>
+            <li><a href="#包装类对象的比较">包装类对象的比较</a></li>
+          </ul>
+        </li>
+        <li><a href="#处理对象">处理对象</a>
+          <ul>
+            <li><a href="#打印对象">打印对象</a></li>
+            <li><a href="#比较对象">比较对象</a></li>
+          </ul>
+        </li>
+        <li><a href="#单例类">单例类</a></li>
+        <li><a href="#final修饰符">final修饰符</a>
+          <ul>
+            <li><a href="#final修饰成员变量">final修饰成员变量</a></li>
+            <li><a href="#final修饰局部变量">final修饰局部变量</a></li>
+            <li><a href="#宏变量">&ldquo;宏变量&rdquo;</a></li>
+            <li><a href="#final方法">final方法</a></li>
+            <li><a href="#final类">final类</a></li>
+            <li><a href="#不可变类">不可变类</a></li>
+          </ul>
+        </li>
+        <li><a href="#abstract修饰符">abstract修饰符</a>
+          <ul>
+            <li><a href="#抽象类">抽象类</a></li>
+            <li><a href="#抽象方法">抽象方法</a></li>
+          </ul>
+        </li>
+        <li><a href="#接口">接口</a>
+          <ul>
+            <li><a href="#接口的实现">接口的实现</a></li>
+          </ul>
+        </li>
+        <li><a href="#接口与抽象类的比较">接口与抽象类的比较</a></li>
+        <li><a href="#内部类">内部类</a>
+          <ul>
+            <li><a href="#非静态内部类">非静态内部类</a></li>
+            <li><a href="#静态内部类">静态内部类</a></li>
+            <li><a href="#布局内部类">布局内部类</a></li>
+            <li><a href="#匿名内部类">匿名内部类</a></li>
+            <li><a href="#使用内部类">使用内部类</a></li>
+          </ul>
+        </li>
+        <li><a href="#枚举类">枚举类</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+  </div>
+</div>
+    <div class="post-content">
+      <h2 id="包装类">包装类</h2>
+<p>基本数据类型不具备“对象”的特性，它没有属性，没有方法。为了解决这个问题。Java提供了包装类为8种基本数据类型的分别定义了相应的引用类型，并称之为基本数据类型的 <strong>包装类</strong> ，对应关系如下表：</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:center">基本数据类型</th>
+<th style="text-align:center">包装类</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center">byte</td>
+<td style="text-align:center">Byte</td>
+</tr>
+<tr>
+<td style="text-align:center">short</td>
+<td style="text-align:center">Short</td>
+</tr>
+<tr>
+<td style="text-align:center">int</td>
+<td style="text-align:center">Integer</td>
+</tr>
+<tr>
+<td style="text-align:center">long</td>
+<td style="text-align:center">Long</td>
+</tr>
+<tr>
+<td style="text-align:center">float</td>
+<td style="text-align:center">Float</td>
+</tr>
+<tr>
+<td style="text-align:center">double</td>
+<td style="text-align:center">Double</td>
+</tr>
+<tr>
+<td style="text-align:center">char</td>
+<td style="text-align:center">Character</td>
+</tr>
+<tr>
+<td style="text-align:center">boolean</td>
+<td style="text-align:center">Boolean</td>
+</tr>
+</tbody>
+</table>
+<h3 id="包装类对象和基本数据类型变量之间的转换">包装类对象和基本数据类型变量之间的转换</h3>
+<ul>
+<li>将基本类型变量转换为包装类对象：通过调用对应包装类的构造器来实现，此外，可以调用对应包装类的 <code>parse()</code> 方法来将一个字符串转换为相应包装类的对象。</li>
+<li>将包装类对象转换为基本类型变量：通过对应包装类的 <code>xxxValue()</code> 方法来实现。</li>
+<li><strong>通过自动装箱和自动拆箱来实现两者的互转：</strong> 自动装箱就是将一个基本类型变量直接赋值给对应的包装类变量；自动拆箱就是把一个包装类直接赋值给一个对应的基本数据类型。</li>
+</ul>
+<h3 id="包装类对象和字符串之间的转换">包装类对象和字符串之间的转换</h3>
+<ul>
+<li>将字符串转换为包装类对象：调用对应包装类的 <code>parseXxx()</code> 方法，传入的参数为可转换的字符串；调用对象包装类的构造器，传入可转换的字符串。</li>
+<li>将包装类对象转换为字符串：调用字符串的 <code>valueOf()</code> 方法，传入的参数为包装类对象；将包装类对象与 <code>&quot;&quot;</code> 相加。</li>
+</ul>
+<h3 id="包装类对象的比较">包装类对象的比较</h3>
+<ol>
+<li>可以将包装类对象直接与可以比较的基本数据变量进行比较。</li>
+<li>包装类对象直接的比较不能简单的认为其包装的值相等两者就相等（应为包装类利用了cache的机制，可能两个包装相同数值的包装类对象不是同一个对象），需要用包装类的 <code>compareTo()</code>方法。</li>
+</ol>
+<h2 id="处理对象">处理对象</h2>
+<h3 id="打印对象">打印对象</h3>
+<p>当我们通过 <code>System.out.println()</code> 来打印一个对象时，实际上我们打印的是对象调用其 <code>toString()</code> 方法后的字符串。但我们将一个对象与字符串相加时，其实也是对象调用其 <code>toString()</code> 方法后返回的字符串与被加的字符串相加。如果我们没有为一个类重写其 <code>toString()</code> 方法，那么默认继承自Object类的 <code>toString()</code> 会返回：类名+@+hashCode 形式的字符串。所以想要打印对象，需要重写其 <code>toString()</code> 方法。</p>
+<h3 id="比较对象">比较对象</h3>
+<ol>
+<li>&ldquo;==&ldquo;方式比较：这种方式对于基本数据类型，如果两者的数值相等，则返回true，反之亦反。如果的是对于引用类型变量而言，则需要两者的引用的对象是同一个对象才能返回true。</li>
+<li>&ldquo;对象的equals()方法&quot;方式比较：这种需要自己重写了类的 <code>equals()</code> 方法，将根据自己定义的比较规则进行比较，否则和 &ldquo;==&rdquo; 方式的比较是一样的。</li>
+</ol>
+<p>一个综合的例子如下：</p>
+<pre><code>package com.test;
+public class Student {
+    private String name;
+    private int age;
+
+    @Override
+    public boolean equals(Object obj){
+        if(obj==this){
+            return true;
+        }else{
+            if(obj!=null&amp;&amp;obj.getClass()==this.getClass()){
+                Student studentObj=(Student)obj;
+                //可以看到，类内的方法可以直接无限制的访问其属性
+                if (studentObj.getAge()==this.age&amp;&amp;studentObj.getName().equals(this.getName())){
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    @Override
+    public String toString(){
+        return &quot;Student{&quot;+
+                    &quot;name:&quot;+name+
+                    &quot;,age:&quot;+age
+                +&quot;}&quot;;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public int getAge() {
+        return age;
+    }
+
+    public void setAge(int age) {
+        this.age = age;
+    }
+    public static void main(String[] args){
+        Student a=new Student();
+        Student b=new Student();
+        a.setAge(18);
+        b.setAge(18);
+        a.setName(&quot;Pinger&quot;);
+        b.setName(&quot;Pinger&quot;);
+        System.out.println(&quot;a==b?&quot;+(a==b));
+        System.out.println(&quot;a.equalse(b)?&quot;+(a.equals(b)));
+        System.out.println(&quot;a:&quot;+a+&quot;,b:&quot;+b);
+    }
+
+}
+</code></pre>
+<p>运行的结果如下图所示：</p>
+<p><img src="/media/20191001-1.png" alt="结果0"></p>
+<h2 id="单例类">单例类</h2>
+<p>一个单例类的例子如下：</p>
+<pre><code>package com.test;
+public class SingeltonExample {
+    //懒汉模式
+    private static SingeltonExample cash=new SingeltonExample();
+    //构造器私有化
+    private SingeltonExample(){}
+    //提供一个静态的用于返回单例类对象的方法
+    public static SingeltonExample getInstance(){
+        return SingeltonExample.cash;
+    }
+
+    public static void main(String[] args){
+        //下面的语句能够通过编译并能正确执行
+        SingeltonExample a=SingeltonExample.getInstance();
+        System.out.println(a);
+    }
+
+}
+</code></pre>
+<h2 id="final修饰符">final修饰符</h2>
+<p>从语义上来讲，被final修饰的东西表示不能再被变化，不能再被修改。具体而言，被final修饰的类不能再被继承，被final修饰的变量的初始值不能再变化，被final修饰的形参不能再变化。</p>
+<p>final有一个常见的误区：被final修饰的引用类型变量，其引用变量的值其实是指向对象的地址，这个就是这个变量的初始值，不可改变，但是 <strong>引用的对象却是可以改变的</strong> 。</p>
+<h3 id="final修饰成员变量">final修饰成员变量</h3>
+<p>一般思维，如果类的成员变量没有初始值，那么系统会自动给其赋值，但是如果我们不给成员变量赋初始值，又给其final修饰符，那么这个成员变量如果被系统赋初始值，又不能被修改，那么这个成员变量还有什么意义呢？所以，系统不会对final修饰的成员变量进行隐式初始化， <strong>final修饰的成员变量必须程序员显示赋值</strong> ，赋值规则如下：</p>
+<ol>
+<li>类变量：在静态初始化块或这声明此变量时指定初始值。</li>
+<li>实例变量：在非静态初始化块、声明此此变量时或者构造器中为此变量指定初始值（可以构造器里利用形参给此变量指定初始值）。</li>
+</ol>
+<h3 id="final修饰局部变量">final修饰局部变量</h3>
+<p>一般思维，系统不会对局部变量进行隐式初始化，所以当我们定义final修饰的局部变量时， <strong>可以在定义该变量时给定初始值，也可以不指定默认值</strong> ，如果定义final修饰的局部变量没有给定初始值，那么可以在后面的代码中给该变量赋初始值，但是只能有一次。</p>
+<h3 id="宏变量">&ldquo;宏变量&rdquo;</h3>
+<p><strong>当final修饰变量（无论类变量，实例变量还是局部变量）在定义时就给定了初始值，并且编译期间就可以确定此初始值，那么此变量相当于一个直接量</strong> ，一个例子如下：</p>
+<pre><code>//下面两个fianl修饰的变量都是相当于直接量，所以两个直接量相加还是直接量
+//相加后的直接量指向字符串池中缓存的&quot;哀吾生之须臾，羡长江之无穷。&quot;;
+//c也是指向那个字符串，所以两者相等。
+final String a=&quot;哀吾生之须臾，&quot;;
+final String b=&quot;羡长江之无穷。&quot;;
+String c=&quot;哀吾生之须臾，羡长江之无穷。&quot;;
+//输出true
+System.out.println(a+b==c);
+</code></pre>
+<h3 id="final方法">final方法</h3>
+<p>当希望子类不要重写父类的某些方法时，可以把这些方法用final修饰。此外一个易错的点： <strong>父类用private final修饰的方法，子类虽然&quot;重写&quot;了此方法，但是不报错？原因是子类其实那不算重写，那算自己扩展的方法。</strong></p>
+<h3 id="final类">final类</h3>
+<p>为了让某些类不能被继承，可以用final修饰这个类。</p>
+<h3 id="不可变类">不可变类</h3>
+<p>不可变类就是此类的实例的属性不可改变，常见的java.lang.String类就是不可变类。一般思维，创建不可变类有如下几个步骤：</p>
+<ol>
+<li>用private final修饰类的属性。</li>
+<li>利用构造器给类的属性进行初始化。</li>
+<li>仅仅为类提供属性的getter方法，不提供setter方法。</li>
+<li>必要时重写类的equals和hashCode方法，使得equals返回true的两个对象的hashCode也相等。</li>
+</ol>
+<p>但是这样有一个致命的缺陷，如果类的属性是一个引用类型的变类，那么此引用变类的对象还是可以变化，就不算一个成功的不可变类，一个例子如下：</p>
+<p>类定义如下：</p>
+<pre><code>public class ImmutableClass {
+    private final Address addr;
+    public ImmutableClass(Address addr){
+        this.addr=addr;
+    }
+    public Address getAddr(){
+        return this.addr;
+    }
+}
+
+class Address{
+    private String province;
+    private String city;
+
+    public Address(String province, String city) {
+        this.province = province;
+        this.city = city;
+    }
+
+    public String getProvince() {
+        return province;
+    }
+
+    public void setProvince(String province) {
+        this.province = province;
+    }
+
+    public String getCity() {
+        return city;
+    }
+
+    public void setCity(String city) {
+        this.city = city;
+    }
+}
+</code></pre>
+<p>对以上的ImmutableClass类进行测试：</p>
+<pre><code>//讲address对象作为实参传给Address类构造器的形参addr
+//这个传递过程是一个严格的值传递，address传给addr的是对象的地址，所以两个都会指向同一个对象
+//所以address引用变量和addr引用变类都可以改变对象的值
+Address address=new Address(&quot;湖南&quot;,&quot;衡阳&quot;);
+ImmutableClass immutableClass=new ImmutableClass(address);
+//此时打印的是湖南
+System.out.println(immutableClass.getAddr().getProvince());
+//此时改变immutableClass对象的属性addr的province
+address.setProvince(&quot;贵州&quot;);
+//此时打印贵州，显然，此不可变类是失败的
+System.out.println(immutableClass.getAddr().getProvince());
+</code></pre>
+<p>改进后的不可变类如下：</p>
+<pre><code>public class ImmutableClass {
+    private final Address addr;
+    public ImmutableClass(Address addr){
+        this.addr=new Address(addr.getProvince(),addr.getCity());
+    }
+    public Address getAddr(){
+        return new Address(this.addr.getProvince(),this.addr.getCity());
+    }
+}
+</code></pre>
+<p>这样进行实例化时，传进去的引用对象的属性是啥样，传出来也是啥样，外界引用对象改变不影响类内的引用对象的属性。</p>
+<h2 id="abstract修饰符">abstract修饰符</h2>
+<h3 id="抽象类">抽象类</h3>
+<p>用abstract修饰的类为抽象类， <strong>抽象类不能被实例化，抽象类的构造器不是用来创建实例的，而是用于给子类调用的</strong> 。由于fianl修饰的类不能被继承，但是abstract修饰的类只能被用来继承，两者矛盾，所以fianl和abstract不能同时出现（修饰方法时也一样）。此外， <strong>一个类，如果有抽象方法，此类只能被定义成抽象类；如果一个类继承一个抽象类，但是没有完全实现其抽象方法，或者一个类实现了一个接口，但是没有完全实现其抽象方法，此类也只能被定义成抽象类</strong></p>
+<h3 id="抽象方法">抽象方法</h3>
+<p>用abstract修饰的方法为抽象方法，抽象方法有如下知识点：</p>
+<ol>
+<li>抽象类只有方法签名，没有方法实现，即没有方法体。</li>
+<li>static和abstract不能同时修饰一个方法（如果可以，那么将可以通过抽象类名调用一个没有方法体的方法）。</li>
+<li>abstract修饰的方法不能时private访问权限（抽象方法只能被继承，但是private无法被子类访问到）。</li>
+</ol>
+<h2 id="接口">接口</h2>
+<p>定义接口的基本语法如下：</p>
+<pre><code>[修饰符] interface 接口名 extends 接口0,接口1,...{
+            零到多个常量...
+            零到多个抽象方法...
+}
+</code></pre>
+<p>可以看到，一个接口可以有多个直接的父接口，但 <strong>接口只能继承接口，不能继承类</strong> ，此所谓Java的变相多继承 。此外，接口有三自动：</p>
+<ol>
+<li>自动为成员变类加上public static final,即接口内只能定义常量。</li>
+<li>自动为方法加上public abstract,即接口只能定义抽象方法。此外接口不能有构造器。</li>
+<li>自动为内部类，内部接口，内部枚举类加上public static。</li>
+</ol>
+<h3 id="接口的实现">接口的实现</h3>
+<p>实现接口用implements关键词。一个类可以同时继承一个父类，实现多个接口，但是implements放在extends后面，此时如果这个类没有实现接口的全部抽象方法或者抽象类的所有方法，此类只能被定义成一个抽象类。 <strong>实现接口时，必须使用public访问控制修饰符，因为接口的方法都是public权限的，而重写方法的访问权限只能更大</strong></p>
+<h2 id="接口与抽象类的比较">接口与抽象类的比较</h2>
+<ol>
+<li>接口中只能包含抽象方法，但是抽象类中可以包含普通方法。</li>
+<li>接口中不能定义静态方法，但是抽象类中可以定义静态方法（不是抽象静态方法）。</li>
+<li>接口中只能定义静态常量，不能定义普通变量，但是抽象类里没有限制。</li>
+<li>接口 <strong>不能有构造器</strong> ，但是抽象类有。</li>
+<li>接口不能定义初始化块，但抽象类可以包含初始化块。</li>
+</ol>
+<p>其实只要记住接口是一个纯粹的用于被实现的标准，就可以很好理解接口的一些特性：不能包含有实现了方法体的方法，只能有静态常量等等。</p>
+<h2 id="内部类">内部类</h2>
+<p>一般思维，把一个类的定义放在另一个类内，这个在内部的类就是 <strong>内部类</strong>，包含内部类的类称为 <strong>外部类</strong>。</p>
+<h3 id="非静态内部类">非静态内部类</h3>
+<p>首先理解成员内部类，成员内部类的和成员变量一样，定义在类内，方法之外。所以局部内部类和匿名内部类不是成员内部类。成员内部类分为两种：静态内部类和非静态内部类。使用static修饰的成员内部类为静态内部类，是类相关的；不适用static修饰的成员内部类是非静态内部类，是实例相关的， <strong>其存在依赖于外部类对象</strong> 。此外，非静态成员内部类可以直接调用外部类的实例变量。一个子例如下：</p>
+<p>代码如下：</p>
+<pre><code>public class Class_0 {
+    //外部类实例变量
+    private String name=&quot;pinger&quot;;
+    //定义一个非静态成员内部类
+    public class Inner_0{
+        public String name=&quot;P1n93r&quot;;
+        public void say(){
+            System.out.println(&quot;I'm &quot;+this.name);
+            //Class_0.this指代当前外部类对象
+            System.out.println(&quot;I'm also &quot;+Class_0.this.name);
+        }
+    }
+    //测试非静态成员内部类
+    public static void main(String[] args){
+        Class_0.Inner_0 inner=new Class_0().new Inner_0();
+        inner.say();
+    }
+}
+</code></pre>
+<p>执行结果如下图：</p>
+<p><img src="/media/20191009-1.png" alt="结果1"></p>
+<p>还有以下两个注意点：</p>
+<ol>
+<li>外部类不能直接访问内部类的成员。</li>
+<li>非静态内部类不能定义静态成员。</li>
+</ol>
+<h3 id="静态内部类">静态内部类</h3>
+<p>一般思维，静态内部类属于外部类本身，不属于某个实例，所以静态内部类也称为 <strong>类内部类</strong>。使用static修饰的成员内部类为静态内部类。 <strong>静态内部类只能访问外部类的类成员，不能访问其实例成员。</strong></p>
+<h3 id="布局内部类">布局内部类</h3>
+<p>局部内部类就是写在方法里的内部类，和局部变量一样，仅仅在方法里有效。 由于 <strong>所有的局部成员都不能有访问控制修饰符</strong> ，所以局部内部类也就不能用static和pulic等修饰。</p>
+<h3 id="匿名内部类">匿名内部类</h3>
+<p>一般思维，没有名称的内部类为匿名内部类。匿名内部类的一般使用场景是需要一次性使用的类时，可以创建匿名内部类。 <strong>创建匿名内部类的时候会立即创建一个该类的实例，这个类定义立即消失，匿名内部类不同重复使用。</strong> 匿名内部类的定义格式如下：</p>
+<pre><code>new 抽象父类(实参列表)|实现接口(){
+    //匿名内部类的实体部分
+}
+</code></pre>
+<p>可以看到，匿名内部类必须继承一个抽象父类或者实现一个接口，此外，不同同时继承抽象父类又实现接口。匿名内部类的其他常见知识点如下：</p>
+<ol>
+<li>匿名内部类不能有构造器，因为其没有类名称。</li>
+<li>匿名内部类必须实现抽象父类或者接口的所有抽象方法。</li>
+<li>匿名内部类可以重写抽象父类中的普通方法。</li>
+<li><strong>如果匿名内部类需要访问外部的局部变量，必须此变量必须使用final修饰</strong></li>
+</ol>
+<h3 id="使用内部类">使用内部类</h3>
+<p>通过上面非静态内部类的例子，可以看到，创建非静态内部类对象的时候，需要一个外部类对象，所以在外部类意外的地方创建内部类对象的语法格式为： <code>new OutterClass().InnerClass()</code> ，在外部类内的话，由于内部类可知，所以直接 <code>new InnerClass()</code> 就好。此外还有一个关于成员内部类的继承问题，一个继承的例子如下：</p>
+<p>包含一个内部类的外部类代码如下：</p>
+<pre><code>package com.test.InnerClass;
+public class Class_1 {
+    public class Inner_1{
+        {
+            System.out.println(&quot;我是非静态内部类父类~&quot;);
+        }
+    }
+	//此内部类的子类写在外部类内
+    public class InnerSon_1 extends Inner_1{
+        {
+            System.out.println(&quot;我是非静态内部类子类1&quot;);
+        }
+    }
+}
+</code></pre>
+<p>写在外部类外的一个内部类子类代码如下：</p>
+<pre><code>package com.test.InnerClass;
+class InnerSon extends Class_1.Inner_1{
+    //这个out对象就是外部类对象，通过外部类对象在构造器内调用super()方法，就是通过外部类对象调用父类构造器
+    public InnerSon(Class_1 out){
+        out.super();
+    }
+}
+</code></pre>
+<p>可以看到，成员非静态内部类的子类写在外部类的外面和里面是不一样的。写在外面，系统不会自动帮我们在构造器内调用父类构造器，所以需要我们手动用外部类对象调用父类构造器。</p>
+<h2 id="枚举类">枚举类</h2>
+<p>枚举类使用enum关键字声明，一个Java源文件最多只能定义一个public访问权限的枚举类，且该Java源文件的的文件名也必须和枚举类的类名相同。枚举类有如下特点：</p>
+<ol>
+<li>枚举类默认继承的不是java.lang.Object，而是java.lang.Enum，此类实现了java.lang.Serializable和java.lang.Comparable两个接口。</li>
+<li><strong>非抽象的枚举类会使用final修饰，所以不能派生子类。</strong></li>
+<li>枚举类的构造器只能是private访问权限，省略的话默认为private。</li>
+<li><strong>枚举类的所有实例必须在第一行显式列出</strong> ，否则这个枚举类永远不能产生实例。</li>
+</ol>
+<p>一个综合例子如下：</p>
+<pre><code>package com.test.enumerate;
+//定义一个接口
+interface Interface1{
+    String say();
+}
+//定义一个抽象枚举类
+public enum EnumOne implements Interface1 {
+    p1n93r(&quot;阿淦&quot;){
+        public String getName(){
+            return this.name()+&quot;实现抽象方法_1&quot;;
+        }
+        public String say(){
+            return &quot;I'm &quot;+this.name();
+        }
+    },pinger(&quot;皮皮GIAO&quot;){
+        public String getName(){
+            return this.name()+&quot;实现抽象方法_2&quot;;
+        }
+        public String say(){
+            return &quot;I'm &quot;+this.name();
+        }
+    },pin83r(&quot;淦皮&quot;){
+        public String getName(){
+            return this.name()+&quot;实现抽象方法_3&quot;;
+        }
+        public String say(){
+            return &quot;I'm &quot;+this.name();
+        }
+    };
+    private String name;
+    private EnumOne(String name){
+        this.name=name;
+    }
+    //一个抽象方法
+    public abstract String getName();
+    public static void main(String[] args){
+        EnumOne p1n93r=EnumOne.valueOf(EnumOne.class,&quot;p1n93r&quot;);
+        EnumOne pinger=EnumOne.valueOf(EnumOne.class,&quot;pinger&quot;);
+        EnumOne pin83r=EnumOne.valueOf(EnumOne.class,&quot;pin83r&quot;);
+        System.out.println(p1n93r.say()+&quot;\n&quot;+pinger.say()+&quot;\n&quot;+pin83r.say());
+        System.out.println(p1n93r.getName()+&quot;\n&quot;+pinger.getName()+&quot;\n&quot;+pin83r.getName());
+    }
+}
+</code></pre>
+<p>main方法运行结果如下图：</p>
+<p><img src="/media/20191009-2.png" alt="结果2"></p>
+<p>其实上面的枚举类是一个抽象类（定义了抽象方法），而类内首行的各个枚举值其实是创建各个本枚举类的匿名子类实例（定义匿名内部类的同时就会创建匿名对象）。所以需要实现本枚举类的抽象方法，也要实现枚举类实现的接口的方法。</p>
+
+    </div>
+
+    <div class="post-copyright">
+  <p class="copyright-item">
+    <span class="item-title">文章作者</span>
+    <span class="item-content">P1n93r</span>
+  </p>
+  <p class="copyright-item">
+    <span class="item-title">上次更新</span>
+    <span class="item-content">
+        2019-10-09
+        
+    </span>
+  </p>
+  
+  
+</div>
+<footer class="post-footer">
+      
+      <nav class="post-nav">
+        <a class="prev" href="/post/other/%E9%AB%98%E6%95%88%E5%88%9B%E5%BB%BAip%E4%BB%A3%E7%90%86%E6%B1%A0/">
+            <i class="iconfont icon-left"></i>
+            <span class="prev-text nav-default">高效创建ip代理池</span>
+            <span class="prev-text nav-mobile">上一篇</span>
+          </a>
+        <a class="next" href="/post/android/android%E8%A7%A3%E6%9E%90xml%E7%9A%84%E5%9B%9B%E7%A7%8D%E6%96%B9%E5%BC%8F/">
+            <span class="next-text nav-default">Android解析XML的四种方式</span>
+            <span class="next-text nav-mobile">下一篇</span>
+            <i class="iconfont icon-right"></i>
+          </a>
+      </nav>
+    </footer>
+  </article>
+        </div>
+        <div id="disqus_thread"></div>
+    <script type="text/javascript">
+    (function() {
+      
+      
+      if (window.location.hostname === 'localhost') return;
+
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      var disqus_shortname = 'p1n93r';
+      dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+    </script>
+    <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+
+  
+
+  
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="social-links">
+      <a href="mailto:pin83r@gmail.com" class="iconfont icon-email" title="email"></a>
+      <a href="https://github.com/p1n93r" class="iconfont icon-github" title="github"></a>
+  <a href="https://p1n93r.github.io/index.xml" type="application/rss+xml" class="iconfont icon-rss" title="rss"></a>
+</div>
+
+<div class="copyright">
+  <span class="power-by">
+    由 <a class="hexo-link" href="https://gohugo.io">Hugo</a> 强力驱动
+  </span>
+  <span class="division">|</span>
+  <span class="theme-info">
+    主题 - 
+    <a class="theme-link" href="https://github.com/olOwOlo/hugo-theme-even">Even</a>
+  </span>
+
+  <div class="busuanzi-footer">
+    <span id="busuanzi_container_site_pv"> 本站总访问量 <span id="busuanzi_value_site_pv"><img src="/img/spinner.svg" alt="spinner.svg"/></span> 次 </span>
+      <span class="division">|</span>
+    <span id="busuanzi_container_site_uv"> 本站总访客数 <span id="busuanzi_value_site_uv"><img src="/img/spinner.svg" alt="spinner.svg"/></span> 人 </span>
+  </div>
+
+  <span class="copyright-year">
+    &copy; 
+    2019 - 
+    2022<span class="heart"><i class="iconfont icon-heart"></i></span><span>P1n93r</span>
+  </span>
+</div>
+
+    </footer>
+
+    <div class="back-to-top" id="back-to-top">
+      <i class="iconfont icon-up"></i>
+    </div>
+  </div>
+  
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/slideout@1.0.1/dist/slideout.min.js" integrity="sha256-t+zJ/g8/KXIJMjSVQdnibt4dlaDxc9zXr/9oNPeWqdg=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.js" integrity="sha256-XVLffZaxoWfGUEbdzuLi7pwaUJv1cecsQJQqGLe7axY=" crossorigin="anonymous"></script>
+
+
+
+<script type="text/javascript" src="/js/main.min.64437849d125a2d603b3e71d6de5225d641a32d17168a58106e0b61852079683.js"></script>
+
+
+
+
+
+
+
+
+</body>
+</html>

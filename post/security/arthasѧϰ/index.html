@@ -1,0 +1,630 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>Arthas学习 - P1n93r - 博学而精一</title>
+  <meta name="renderer" content="webkit" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+<meta name="author" content="P1n93r" /><meta name="description" content="安装使用 （1）安装 1 2 curl -O https://arthas.aliyun.com/arthas-boot.jar java -jar arthas-boot.jar --telnet-port 9998 --http-port -1 （2）退出Arthas 直接运行 quit 或者 exit 命令。但是这不是退出 Arthas ，而是退出当前连接而已，下次还是可以继" /><meta name="keywords" content="Security, Java, Web, Android" />
+
+
+
+
+
+
+<meta name="generator" content="Hugo 0.96.0 with theme even" />
+
+
+<link rel="canonical" href="https://p1n93r.github.io/post/security/arthas%D1%A7%CF%B0/" />
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/manifest.json">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+<link href="/sass/main.min.f92fd13721ddf72129410fd8250e73152cc6f2438082b6c0208dc24ee7c13fc4.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.css" integrity="sha256-7TyXnr2YU040zfSP+rEcz29ggW4j56/ujTPwjMzyqFY=" crossorigin="anonymous">
+
+
+<meta property="og:title" content="Arthas学习" />
+<meta property="og:description" content="安装使用 （1）安装 1 2 curl -O https://arthas.aliyun.com/arthas-boot.jar java -jar arthas-boot.jar --telnet-port 9998 --http-port -1 （2）退出Arthas 直接运行 quit 或者 exit 命令。但是这不是退出 Arthas ，而是退出当前连接而已，下次还是可以继" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://p1n93r.github.io/post/security/arthas%D1%A7%CF%B0/" /><meta property="article:section" content="post" />
+<meta property="article:published_time" content="2021-06-15T17:07:36+08:00" />
+<meta property="article:modified_time" content="2021-06-15T17:07:36+08:00" />
+
+<meta itemprop="name" content="Arthas学习">
+<meta itemprop="description" content="安装使用 （1）安装 1 2 curl -O https://arthas.aliyun.com/arthas-boot.jar java -jar arthas-boot.jar --telnet-port 9998 --http-port -1 （2）退出Arthas 直接运行 quit 或者 exit 命令。但是这不是退出 Arthas ，而是退出当前连接而已，下次还是可以继"><meta itemprop="datePublished" content="2021-06-15T17:07:36+08:00" />
+<meta itemprop="dateModified" content="2021-06-15T17:07:36+08:00" />
+<meta itemprop="wordCount" content="1782">
+<meta itemprop="keywords" content="" /><meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="Arthas学习"/>
+<meta name="twitter:description" content="安装使用 （1）安装 1 2 curl -O https://arthas.aliyun.com/arthas-boot.jar java -jar arthas-boot.jar --telnet-port 9998 --http-port -1 （2）退出Arthas 直接运行 quit 或者 exit 命令。但是这不是退出 Arthas ，而是退出当前连接而已，下次还是可以继"/>
+
+<!--[if lte IE 9]>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
+<![endif]-->
+
+<!--[if lt IE 9]>
+  <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+<![endif]-->
+
+</head>
+<body>
+  <div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/" class="logo">P1n93r</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    <a href="/">
+        <li class="mobile-menu-item">Home</li>
+      </a><a href="/post/">
+        <li class="mobile-menu-item">Archives</li>
+      </a><a href="/tags/">
+        <li class="mobile-menu-item">Tags</li>
+      </a><a href="/categories/">
+        <li class="mobile-menu-item">Categories</li>
+      </a><a href="/about/">
+        <li class="mobile-menu-item">About</li>
+      </a>
+  </ul>
+
+  
+
+
+</nav>
+
+  <div class="container" id="mobile-panel">
+    <header id="header" class="header">
+        <div class="logo-wrapper">
+  <a href="/" class="logo">P1n93r</a>
+</div>
+
+
+
+
+
+<nav class="site-navbar">
+  <ul id="menu" class="menu">
+    <li class="menu-item">
+        <a class="menu-item-link" href="/">Home</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/">Archives</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/tags/">Tags</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/categories/">Categories</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/about/">About</a>
+      </li>
+  </ul>
+</nav>
+
+    </header>
+
+    <main id="main" class="main">
+      <div class="content-wrapper">
+        <div id="content" class="content">
+          <article class="post">
+    
+    <header class="post-header">
+      <h1 class="post-title">Arthas学习</h1>
+
+      <div class="post-meta">
+        <span class="post-time"> 2021-06-15 </span>
+        <div class="post-category">
+            <a href="/categories/security/"> security </a>
+            </div>
+          <span class="more-meta"> 约 1782 字 </span>
+          <span class="more-meta"> 预计阅读 4 分钟 </span>
+        <span id="busuanzi_container_page_pv" class="more-meta"> <span id="busuanzi_value_page_pv"><img src="/img/spinner.svg" alt="spinner.svg"/></span> 次阅读 </span>
+      </div>
+    </header>
+
+    <div class="post-toc" id="post-toc">
+  <h2 class="post-toc-title">文章目录</h2>
+  <div class="post-toc-content always-active">
+    <nav id="TableOfContents">
+  <ul>
+    <li>
+      <ul>
+        <li><a href="#安装使用">安装使用</a></li>
+        <li><a href="#常用命令">常用命令</a></li>
+        <li><a href="#注意事项">注意事项</a></li>
+        <li><a href="#参考">参考</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+  </div>
+</div>
+    <div class="post-content">
+      <h2 id="安装使用">安装使用</h2>
+<p><strong>（1）安装</strong></p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">curl -O https://arthas.aliyun.com/arthas-boot.jar
+</span></span><span class="line"><span class="cl">java -jar arthas-boot.jar --telnet-port 9998 --http-port -1
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p><img src="/media/image-20210928171455643.png" alt="image-20210928171455643"></p>
+<p><strong>（2）退出Arthas</strong></p>
+<p>直接运行 <code>quit</code> 或者 <code>exit</code> 命令。但是这不是退出 Arthas ，而是退出当前连接而已，下次还是可以继续连接 Arthas 。想完全退出 Arthas，需要使用 <code>stop</code> 或者 <code>shutdown</code> 命令；</p>
+<h2 id="常用命令">常用命令</h2>
+<p><strong>（1）查看仪表盘</strong></p>
+<p>直接运行 <code>dashboard</code> ，这个主要是帮助我们发现性能问题：</p>
+<p><img src="/media/image-20210928172024450.png" alt="image-20210928172024450"></p>
+<p><strong>（2）修改日志级别</strong></p>
+<p>直接输入 <code>logger</code> 命令即可查看logger信息，包括日志的位置，对于查看系统的日志位置非常方便：</p>
+<p><img src="/media/image-20210928173235967.png" alt="image-20210928173235967"></p>
+<p>此外， <code>logger</code> 命令还可以用于修改日志级别：</p>
+<table>
+<thead>
+<tr>
+<th>参数</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>-c</td>
+<td>指定 <code>classloader</code> 的 hash ，默认为 <code>SystemClassLoader</code> ，例如: <code>logger -c 1654a892</code></td>
+</tr>
+<tr>
+<td>-l</td>
+<td>设置日志级别，例如: <code>logger -n debug -c 1654a892 -l debug</code></td>
+</tr>
+<tr>
+<td>-n</td>
+<td>获取指定名称logger的信息，例如: <code>logger -n debug</code></td>
+</tr>
+</tbody>
+</table>
+<p><strong>（3）下载内存</strong></p>
+<p>可以使用 <code>heapdump</code> 命令下载程序的运行时内存，参数说明如下：</p>
+<table>
+<thead>
+<tr>
+<th>参数</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>-l</td>
+<td>只dump内存中的live对象，例如: <code>heapdump -l /tmp/dump.hprof </code></td>
+</tr>
+<tr>
+<td>[file]</td>
+<td>指定输出文件，例如: <code>heapdump /tmp/dump.hprof</code></td>
+</tr>
+</tbody>
+</table>
+<p><strong>（4）反编译</strong></p>
+<p>直接使用 <code>jad xxx.xxx.xxx.XXX</code> 来反编译某个类：</p>
+<p><img src="/media/image-20210928174846064.png" alt="image-20210928174846064"></p>
+<p><strong>（5）动态修改类</strong></p>
+<p>这个功能相关的命令为： <code>retransform</code> ，其限制如下：</p>
+<ul>
+<li>不允许新增加 <code>field</code> 或者 <code>method</code> ；</li>
+<li>正在跑的函数，没有退出不能生效；</li>
+</ul>
+<p>参数说明：</p>
+<table>
+<thead>
+<tr>
+<th>参数</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>-c</td>
+<td>指定classloader加载文件，例如: <code>retransform -c 327a647b /tmp/Test.class /tmp/Test\$Inner.class</code></td>
+</tr>
+<tr>
+<td>&ndash;classPattern [value]</td>
+<td>触发重新加载class文件，例如: <code>retransform --classPattern demo.*</code></td>
+</tr>
+<tr>
+<td>-d</td>
+<td>删除指定id替换的条目，例如: <code>retransform -d 1</code></td>
+</tr>
+<tr>
+<td>&ndash;deleteAll</td>
+<td>删除所有替换的条目，例如: <code>retransform --deleteAll</code></td>
+</tr>
+<tr>
+<td>-l</td>
+<td>列出所有替换的条目，例如: <code>retransform -l</code></td>
+</tr>
+<tr>
+<td>[classfilePaths]</td>
+<td>加载指定路径的class文件，例如: <code>retransform /tmp/Test.class</code></td>
+</tr>
+</tbody>
+</table>
+<p>如果需要还原修改后的类：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">retransform -d 1
+</span></span><span class="line"><span class="cl">retransform --classPattern xxx.xx.xx.XXX
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p><strong>（6）观察方法调用</strong></p>
+<p>这个功能相关的命令为： <code>watch</code> ；相关参数和介绍如下：</p>
+<table>
+<thead>
+<tr>
+<th>参数</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><em>class-pattern</em></td>
+<td>类名表达式匹配</td>
+</tr>
+<tr>
+<td><em>method-pattern</em></td>
+<td>方法名表达式匹配</td>
+</tr>
+<tr>
+<td><em>express</em></td>
+<td>观察表达式</td>
+</tr>
+<tr>
+<td><em>condition-express</em></td>
+<td>条件表达式</td>
+</tr>
+<tr>
+<td>[b]</td>
+<td>在<strong>方法调用之前</strong>观察</td>
+</tr>
+<tr>
+<td>[e]</td>
+<td>在<strong>方法异常之后</strong>观察</td>
+</tr>
+<tr>
+<td>[s]</td>
+<td>在<strong>方法返回之后</strong>观察</td>
+</tr>
+<tr>
+<td>[f]</td>
+<td>在<strong>方法结束之后</strong>(正常返回和异常返回)观察</td>
+</tr>
+<tr>
+<td>[E]</td>
+<td>开启正则表达式匹配，默认为通配符匹配</td>
+</tr>
+<tr>
+<td>[x:]</td>
+<td>指定输出结果的属性遍历深度，默认为 1</td>
+</tr>
+</tbody>
+</table>
+<p>注意点：</p>
+<ul>
+<li><code>watch</code> 命令定义了4个观察事件点，即 <code>-b</code> 方法调用前，<code>-e</code> 方法异常后，<code>-s</code> 方法返回后，<code>-f</code> 方法结束后；</li>
+<li>4个观察事件点 <code>-b</code>、<code>-e</code>、<code>-s</code> 默认关闭，<code>-f</code> 默认打开，当指定观察点被打开后，在相应事件点会对观察表达式进行求值并输出；</li>
+<li>这里要注意<code>方法入参</code>和<code>方法出参</code>的区别，有可能在中间被修改导致前后不一致，除了 <code>-b</code> 事件点 <code>params</code> 代表方法入参外，其余事件都代表方法出参；</li>
+<li>当使用 <code>-b</code> 时，由于观察事件点是在方法调用前，此时返回值或异常均不存在；</li>
+</ul>
+<p>例如使用如下命令观察方法入参和返回的参数：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">watch com.rebuild.web.commons.UrlSafe isTrusted &#34;{params,returnObj}&#34; -x 3
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p><img src="/media/image-20210930001103080.png" alt="image-20210930001103080"></p>
+<p>一些案例场景可以查看：https://github.com/alibaba/arthas/issues/71</p>
+<p>Arthas中Ognl默认支持的变量为如下：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">ClassLoader loader;
+</span></span><span class="line"><span class="cl">Class&lt;?&gt; clazz;
+</span></span><span class="line"><span class="cl">ArthasMethod method;
+</span></span><span class="line"><span class="cl">Object target;
+</span></span><span class="line"><span class="cl">Object[] params;
+</span></span><span class="line"><span class="cl">Object returnObj;
+</span></span><span class="line"><span class="cl">Throwable throwExp;
+</span></span><span class="line"><span class="cl">boolean isBefore;
+</span></span><span class="line"><span class="cl">boolean isThrow;
+</span></span><span class="line"><span class="cl">boolean isReturn;
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p><strong>（7）观察方法调用路径</strong></p>
+<p><code>trace</code> 命令能主动搜索 <code>class-pattern</code>／<code>method-pattern</code> 对应的方法调用路径，渲染和统计整个调用链路上的所有性能开销和追踪调用链路。</p>
+<p>参数说明如下：</p>
+<table>
+<thead>
+<tr>
+<th>参数名称</th>
+<th>参数说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><em>class-pattern</em></td>
+<td>类名表达式匹配</td>
+</tr>
+<tr>
+<td><em>method-pattern</em></td>
+<td>方法名表达式匹配</td>
+</tr>
+<tr>
+<td><em>condition-express</em></td>
+<td>条件表达式</td>
+</tr>
+<tr>
+<td>[E]</td>
+<td>开启正则表达式匹配，默认为通配符匹配</td>
+</tr>
+<tr>
+<td><code>[n:]</code></td>
+<td>命令执行次数</td>
+</tr>
+<tr>
+<td><code>#cost</code></td>
+<td>方法执行耗时</td>
+</tr>
+</tbody>
+</table>
+<p>注意：<code>watch</code> ， <code>stack</code> ， <code>trace</code> 这个三个命令都支持 <code>#cost</code> 。</p>
+<p>例如使用如下命令查看某个函数的调用路径，但是貌似只能查看目标函数的栈顶调用路径，不能看到栈低的调用路径，也就是说，不能查看是谁调用到了目标函数：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">trace *UrlSafe isTrusted -v
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p><img src="/media/image-20210930003032829.png" alt="image-20210930003032829"></p>
+<p><strong>（8）查看ClassLoader</strong></p>
+<p>使用 <code>classloader</code> 命令可以查看classloader的继承树，urls，类加载信息；例如使用如下命令查看classloader统计信息：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">classloader -l
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p><img src="/media/image-20210930004101314.png" alt="image-20210930004101314"></p>
+<p>查看classloader的继承树：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">classloader -t
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p><img src="/media/image-20210930004227581.png" alt="image-20210930004227581"></p>
+<p><strong>（9）内存编译</strong></p>
+<p>使用 <code>mc</code> 命令可以编译 <code>.java</code> 文件生成 <code>.class</code> ；可以使用 <code>-c</code> 选项指定classloader：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">mc -c 327a647b /tmp/Test.java
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>也可以通过<code>--classLoaderClass</code>参数指定ClassLoader：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">mc --classLoaderClass org.springframework.boot.loader.LaunchedURLClassLoader /tmp/UserController.java -d /tmp
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>编译生成 <code>.class</code> 文件之后，可以结合 <code>retransform</code> 命令实现热更新代码。</p>
+<p>注意：<code>mc</code> 命令有可能失败。如果编译失败可以在本地编译好 <code>.class</code> 文件，再上传到服务器。</p>
+<p><strong>（10）查看方法调用栈</strong></p>
+<p>前面说过可以通过 <code>trace</code> 命令查看方法调用路径，但是这样只能得到从当前方法往下执行的调用路径，如果想得到完整的方法调用栈，需要使用 <code>stack</code> 命令：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">stack *UrlSafe isTrusted
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p><img src="/media/image-20210930005256206.png" alt="image-20210930005256206"></p>
+<p>一些参数说明如下：</p>
+<table>
+<thead>
+<tr>
+<th>参数名称</th>
+<th>参数说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><em>class-pattern</em></td>
+<td>类名表达式匹配</td>
+</tr>
+<tr>
+<td><em>method-pattern</em></td>
+<td>方法名表达式匹配</td>
+</tr>
+<tr>
+<td><em>condition-express</em></td>
+<td>条件表达式</td>
+</tr>
+<tr>
+<td>[E]</td>
+<td>开启正则表达式匹配，默认为通配符匹配</td>
+</tr>
+<tr>
+<td><code>[n:]</code></td>
+<td>执行次数限制</td>
+</tr>
+</tbody>
+</table>
+<h2 id="注意事项">注意事项</h2>
+<ul>
+<li><code>JVM</code> 只能 attach 同样用户下的 java 进程，需要切换到目标 <code>JVM</code> 相同的用户下，才能使用，或者使用某个用户的身份执行命令： <code>java -jar arthas-boot.jar --telnet-port 9998 --http-port -1</code> ；</li>
+</ul>
+<h2 id="参考">参考</h2>
+<ul>
+<li><a href="https://arthas.aliyun.com/doc/commands.html">https://arthas.aliyun.com/doc/commands.html</a></li>
+</ul>
+
+    </div>
+
+    <div class="post-copyright">
+  <p class="copyright-item">
+    <span class="item-title">文章作者</span>
+    <span class="item-content">P1n93r</span>
+  </p>
+  <p class="copyright-item">
+    <span class="item-title">上次更新</span>
+    <span class="item-content">
+        2021-06-15
+        
+    </span>
+  </p>
+  
+  
+</div>
+<footer class="post-footer">
+      
+      <nav class="post-nav">
+        <a class="prev" href="/post/security/apache_dubbo_cve-2020-1948%E5%88%86%E6%9E%90/">
+            <i class="iconfont icon-left"></i>
+            <span class="prev-text nav-default">Apache_Dubbo_CVE-2020-1948分析</span>
+            <span class="prev-text nav-mobile">上一篇</span>
+          </a>
+        <a class="next" href="/post/security/mysql_jdbc%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96/">
+            <span class="next-text nav-default">MySQL_JDBC反序列化</span>
+            <span class="next-text nav-mobile">下一篇</span>
+            <i class="iconfont icon-right"></i>
+          </a>
+      </nav>
+    </footer>
+  </article>
+        </div>
+        <div id="disqus_thread"></div>
+    <script type="text/javascript">
+    (function() {
+      
+      
+      if (window.location.hostname === 'localhost') return;
+
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      var disqus_shortname = 'p1n93r';
+      dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+    </script>
+    <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+
+  
+
+  
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="social-links">
+      <a href="mailto:pin83r@gmail.com" class="iconfont icon-email" title="email"></a>
+      <a href="https://github.com/p1n93r" class="iconfont icon-github" title="github"></a>
+  <a href="https://p1n93r.github.io/index.xml" type="application/rss+xml" class="iconfont icon-rss" title="rss"></a>
+</div>
+
+<div class="copyright">
+  <span class="power-by">
+    由 <a class="hexo-link" href="https://gohugo.io">Hugo</a> 强力驱动
+  </span>
+  <span class="division">|</span>
+  <span class="theme-info">
+    主题 - 
+    <a class="theme-link" href="https://github.com/olOwOlo/hugo-theme-even">Even</a>
+  </span>
+
+  <div class="busuanzi-footer">
+    <span id="busuanzi_container_site_pv"> 本站总访问量 <span id="busuanzi_value_site_pv"><img src="/img/spinner.svg" alt="spinner.svg"/></span> 次 </span>
+      <span class="division">|</span>
+    <span id="busuanzi_container_site_uv"> 本站总访客数 <span id="busuanzi_value_site_uv"><img src="/img/spinner.svg" alt="spinner.svg"/></span> 人 </span>
+  </div>
+
+  <span class="copyright-year">
+    &copy; 
+    2019 - 
+    2022<span class="heart"><i class="iconfont icon-heart"></i></span><span>P1n93r</span>
+  </span>
+</div>
+
+    </footer>
+
+    <div class="back-to-top" id="back-to-top">
+      <i class="iconfont icon-up"></i>
+    </div>
+  </div>
+  
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/slideout@1.0.1/dist/slideout.min.js" integrity="sha256-t+zJ/g8/KXIJMjSVQdnibt4dlaDxc9zXr/9oNPeWqdg=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.js" integrity="sha256-XVLffZaxoWfGUEbdzuLi7pwaUJv1cecsQJQqGLe7axY=" crossorigin="anonymous"></script>
+
+
+
+<script type="text/javascript" src="/js/main.min.64437849d125a2d603b3e71d6de5225d641a32d17168a58106e0b61852079683.js"></script>
+
+
+
+
+
+
+
+
+</body>
+</html>

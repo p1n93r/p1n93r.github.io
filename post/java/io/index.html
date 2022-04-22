@@ -1,0 +1,475 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>IO - P1n93r - 博学而精一</title>
+  <meta name="renderer" content="webkit" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+<meta name="author" content="Pinger" /><meta name="description" content="概述 java的IO通过java.io包下的类和接口来支持，在java.io包下主要包括输入、输出两种IO流，每种输出输出流又可以分为 字节流和" /><meta name="keywords" content="Security, Java, Web, Android" />
+
+
+
+
+
+
+<meta name="generator" content="Hugo 0.96.0 with theme even" />
+
+
+<link rel="canonical" href="https://p1n93r.github.io/post/java/io/" />
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/manifest.json">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+<link href="/sass/main.min.f92fd13721ddf72129410fd8250e73152cc6f2438082b6c0208dc24ee7c13fc4.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.css" integrity="sha256-7TyXnr2YU040zfSP+rEcz29ggW4j56/ujTPwjMzyqFY=" crossorigin="anonymous">
+
+
+<meta property="og:title" content="IO" />
+<meta property="og:description" content="概述 java的IO通过java.io包下的类和接口来支持，在java.io包下主要包括输入、输出两种IO流，每种输出输出流又可以分为 字节流和" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://p1n93r.github.io/post/java/io/" /><meta property="article:section" content="post" />
+<meta property="article:published_time" content="2019-11-13T19:22:36+08:00" />
+<meta property="article:modified_time" content="2019-11-13T19:22:36+08:00" />
+
+<meta itemprop="name" content="IO">
+<meta itemprop="description" content="概述 java的IO通过java.io包下的类和接口来支持，在java.io包下主要包括输入、输出两种IO流，每种输出输出流又可以分为 字节流和"><meta itemprop="datePublished" content="2019-11-13T19:22:36+08:00" />
+<meta itemprop="dateModified" content="2019-11-13T19:22:36+08:00" />
+<meta itemprop="wordCount" content="3084">
+<meta itemprop="keywords" content="" /><meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="IO"/>
+<meta name="twitter:description" content="概述 java的IO通过java.io包下的类和接口来支持，在java.io包下主要包括输入、输出两种IO流，每种输出输出流又可以分为 字节流和"/>
+
+<!--[if lte IE 9]>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
+<![endif]-->
+
+<!--[if lt IE 9]>
+  <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+<![endif]-->
+
+</head>
+<body>
+  <div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/" class="logo">P1n93r</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    <a href="/">
+        <li class="mobile-menu-item">Home</li>
+      </a><a href="/post/">
+        <li class="mobile-menu-item">Archives</li>
+      </a><a href="/tags/">
+        <li class="mobile-menu-item">Tags</li>
+      </a><a href="/categories/">
+        <li class="mobile-menu-item">Categories</li>
+      </a><a href="/about/">
+        <li class="mobile-menu-item">About</li>
+      </a>
+  </ul>
+
+  
+
+
+</nav>
+
+  <div class="container" id="mobile-panel">
+    <header id="header" class="header">
+        <div class="logo-wrapper">
+  <a href="/" class="logo">P1n93r</a>
+</div>
+
+
+
+
+
+<nav class="site-navbar">
+  <ul id="menu" class="menu">
+    <li class="menu-item">
+        <a class="menu-item-link" href="/">Home</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/">Archives</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/tags/">Tags</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/categories/">Categories</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/about/">About</a>
+      </li>
+  </ul>
+</nav>
+
+    </header>
+
+    <main id="main" class="main">
+      <div class="content-wrapper">
+        <div id="content" class="content">
+          <article class="post">
+    
+    <header class="post-header">
+      <h1 class="post-title">IO</h1>
+
+      <div class="post-meta">
+        <span class="post-time"> 2019-11-13 </span>
+        <div class="post-category">
+            <a href="/categories/java/"> Java </a>
+            </div>
+          <span class="more-meta"> 约 3084 字 </span>
+          <span class="more-meta"> 预计阅读 7 分钟 </span>
+        <span id="busuanzi_container_page_pv" class="more-meta"> <span id="busuanzi_value_page_pv"><img src="/img/spinner.svg" alt="spinner.svg"/></span> 次阅读 </span>
+      </div>
+    </header>
+
+    <div class="post-toc" id="post-toc">
+  <h2 class="post-toc-title">文章目录</h2>
+  <div class="post-toc-content always-active">
+    <nav id="TableOfContents">
+  <ul>
+    <li>
+      <ul>
+        <li><a href="#概述">概述</a></li>
+        <li><a href="#file类">File类</a></li>
+        <li><a href="#java的io流">Java的IO流</a>
+          <ul>
+            <li><a href="#流的分类">流的分类</a></li>
+            <li><a href="#字节流和字符流">字节流和字符流</a></li>
+          </ul>
+        </li>
+        <li><a href="#输入输出流体系">输入/输出流体系</a>
+          <ul>
+            <li><a href="#处理流的用法">处理流的用法</a></li>
+            <li><a href="#转换流">转换流</a></li>
+            <li><a href="#重定向标准输入输出">重定向标准输入/输出</a></li>
+          </ul>
+        </li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+  </div>
+</div>
+    <div class="post-content">
+      <h2 id="概述">概述</h2>
+<p>java的IO通过java.io包下的类和接口来支持，在java.io包下主要包括输入、输出两种IO流，每种输出输出流又可以分为 <strong>字节流和字符流</strong> 两大类。除此之外，Java的IO流还使用了一种装饰器的设计模式，它将IO流分成 <strong>底层节点流和上层处理流</strong> ，其中节点流用于和底层物理存储节点直接关联，不同的物理节点获取节点流的方式可能存在一定差异，但程序可以把不同的物理节点包装成统一的处理流，从而允许程序使用统一的输入、输出代码来读取不同的物理存储节点的资源。此外，Java7在java.nio包及其子包下提供了一系列全新的API，对原有的新IO的升级，所以称为 <strong>NIO2</strong> 。</p>
+<h2 id="file类">File类</h2>
+<p>如果希望程序种操作文件和目录，都可以通过File类来完成， <strong>File能新建、删除、重命名文件和目录，File不同访问文件内容本身。</strong> 如果需要访问文件内容本身，可以通过输入、输出流来完成。File类主要包括以下的几种操作：</p>
+<ul>
+<li>访问文件名相关的方法。</li>
+<li>文件检测相关的方法。</li>
+<li>获取常规文件信息。</li>
+<li>文件操作相关的方法。</li>
+<li>目录操作相关的方法。</li>
+</ul>
+<p>具体的方法可以参考Java的API文档，此处一个简单的实例如下：</p>
+<pre><code>@Test
+public void test_0() throws IOException {
+    //以当前路径来创建一个File对象
+    File file = new File(&quot;.&quot;);
+    //输出当前路径的名称，但是由于是相对路径，所以输出的为一个点：.
+    System.out.println(file.getName());
+    //输出绝对路径
+    System.out.println(file.getAbsolutePath());
+    //打印当前路径下的所有子路径和文件名
+    System.out.println(Arrays.toString(file.list()));
+    //打印当前路径下的经过过滤后的文件名和目录
+    System.out.println(Arrays.toString(file.list(new FilenameFilter() {
+        @Override
+        public boolean accept(File dir, String name) {
+            //以s结尾
+            return name.endsWith(&quot;s&quot;);
+        }
+    })));
+    //打印系统的所有根路径
+    System.out.println(Arrays.toString(File.listRoots()));
+    //在当前文件夹下创建一个临时文件
+    File tmp=File.createTempFile(&quot;tmp-&quot;,&quot;.txt&quot;,file);
+    //指定退出JVM时删除文件
+    tmp.deleteOnExit();
+}
+</code></pre>
+<p>输出如下：</p>
+<p><img src="/media/20191113-1.png" alt="File操作"></p>
+<h2 id="java的io流">Java的IO流</h2>
+<h3 id="流的分类">流的分类</h3>
+<p>① 按照流的流向来划分，可以分为如下两种（输入、输出方向根据程序运行所在的内存的角度划分）：</p>
+<ol>
+<li>输入流：只能从中读取数据，不能从中写入数据。</li>
+<li>输出流：只能从中写入数据，不能从中读取数据。</li>
+</ol>
+<p>Java的输入流主要由InputStream和Reader作为基类，输出流主要由OutputStream和Writer作为基类。他们都是抽象类，无法直接创建实例。</p>
+<p>② 按照流的每次操作的字节数来划分，可以分为如下两种：</p>
+<ol>
+<li>字节流：每次操作的数据单元是8bit的字节。</li>
+<li>字符流：每次操作的数据单元是16bit的字符（1byte=8bit）。</li>
+</ol>
+<p>字节流主要由InputStream和OutputStream作为基类，而字符流主要由Reader和Writer作为基类。</p>
+<p>③ 按照流的角色划分，可以分为如下两种：</p>
+<ol>
+<li>节点流：也称为低级流，可以从/向一个特定的IO设备读/写数据的流。 <strong>使用节点流进行输入、输出时，程序直接连接到实际的数据源，和实际的输入、输出节点连接。</strong></li>
+<li>处理流：也称为高级流，对一个已存在的流进行连接或封装，通过封装后的流来实现数据的读写功能。 <strong>使用处理流进行输入、输出时，程序并不会直接连接到实际的数据源，没有和实际的输入、输出节点连接。</strong></li>
+</ol>
+<p>Java使用处理流来包装节点流是一种典型的 <strong>装饰器设计模式</strong> ，通过使用处理流来包装不同的节点流，可以消除不同的节点流的实现差异，也可以提供更加方便的方法来完成输入、输出功能。</p>
+<h3 id="字节流和字符流">字节流和字符流</h3>
+<h4 id="inputstream和reader">InputStream和Reader</h4>
+<p>InputStream和Reader是所有输入流的抽象基类，它们的常用实现类分别为FileInputStream和FileReader，它们都是节点流，与指定文件直接相关联。一个实例如下：</p>
+<pre><code>@Test
+public void test_1() throws IOException {
+    //利用try来实现自动管理IO资源
+    try(
+            FileInputStream in = new FileInputStream(&quot;res/xml/test.xml&quot;);
+            FileReader fileReader = new FileReader(&quot;res/xml/test.xml&quot;);
+        ){
+        byte[] buffer = new byte[10];
+        char[] charBuffer=new char[10];
+        int index=-1;
+        String res0=&quot;&quot;;
+        String res1=&quot;&quot;;
+        System.out.println(&quot;--------------------使用InputStream读取开始-----------------------&quot;);
+        while ((index=in.read(buffer))!=-1){
+            res0+=new String(buffer,0,index);
+        }
+        //buffer数组的大小比较小，不能一次读完整个文件
+        //当reade()方法不同读完一个中文字符（utf-8下，1中文字符=3字节）时，将导致乱码
+        System.out.println(res0);
+        System.out.println(&quot;--------------------使用InputStream读取结束-----------------------&quot;);
+        System.out.println(&quot;-----------------------使用Reader读取开始-------------------------&quot;);
+        while ((index=fileReader.read(charBuffer))!=-1){
+            res1+=new String(charBuffer,0,index);
+        }
+        System.out.println(res1);
+        System.out.println(&quot;-----------------------使用Reader读取结束-------------------------&quot;);
+    }
+}
+</code></pre>
+<p>输出结果如下：</p>
+<p><img src="/media/20191113-2.png" alt="输入流"></p>
+<h4 id="outputstream和writer">OutputStream和Writer</h4>
+<p>OutputStream和Writer是所有输出流的基类，它们的常用实现类分别为FileOutputStream和FileWriter，它们也是节点流。此外由于字符流以字符为操作单位，所以Writer可以用字符串来代替字符数组，即以String对象作为参数，一个实例如下：</p>
+<pre><code>@Test
+public void test_2(){
+    try(
+            FileOutputStream out = new FileOutputStream(&quot;test.md&quot;);
+            FileWriter out1=new FileWriter(&quot;test1.md&quot;);
+    ){
+        //往字节输出流输出内容
+        out.write(&quot;测试&quot;.getBytes());
+        //往字符输出流输出内容,可以直接用String对象作为参数
+        out1.write(&quot;**我喜欢你是寂静的，仿佛你消失了一样。**\t\t\n&quot;);
+        out1.write(&quot;**你从远处聆听我，我的声音却无法触及你。**\t\t\n&quot;);
+    } catch (IOException e) {
+        e.printStackTrace();
+    }
+}
+</code></pre>
+<p>我们将会看到程序会生成test.md和test0.md两个文件，里面都分别写了相应的内容。</p>
+<h2 id="输入输出流体系">输入/输出流体系</h2>
+<h3 id="处理流的用法">处理流的用法</h3>
+<p>只要构造器的参数 <strong>不是一个物理节点，而是一个已经存在的流</strong> ，那么这种流就一定是处理流。所有的节点流都是直接以物理IO节点作为构造器参数的。下面是一个使用PrintStream处理流的一个案例，如下：</p>
+<pre><code>@Test
+public void test_3(){
+    try(
+            FileOutputStream out=new FileOutputStream(&quot;test1.md&quot;)
+    ){
+        PrintStream printStream = new PrintStream(out);
+        printStream.println(&quot;我喜欢你是寂静的，仿佛你消失了一样。&quot;);
+        printStream.println(&quot;你从远处聆听我，我的声音却无法触及你。&quot;);
+    }catch (IOException e) {
+        e.printStackTrace();
+    }
+}
+</code></pre>
+<p>输出的test1.md的文件内容如下：</p>
+<p><img src="/media/20191115-1.png" alt="处理流"></p>
+<h3 id="转换流">转换流</h3>
+<p>输入/输出流体系提供了两个 <strong>转换流</strong> ，这两个转换流用于实现将字节流转换成字符流，其中InputStreamReader将字节输入流转换成字符输入流，OutputStreamWriter将字节输出流转换成字符输出流。一个例子如下：</p>
+<pre><code>@Test
+public void test_4(){
+    try(
+            FileInputStream in=new FileInputStream(&quot;test1.md&quot;);
+            //将字节流转换成字符流
+            InputStreamReader inChar=new InputStreamReader(in);
+            //在利用处理流包装一些
+            BufferedReader reader=new BufferedReader(inChar);
+    ){
+        //利用处理流来读取数据
+        String buffer=null;
+        while((buffer=reader.readLine())!=null){
+            System.out.println(buffer);
+        }
+    } catch (IOException e) {
+        e.printStackTrace();
+    }
+}
+</code></pre>
+<h3 id="重定向标准输入输出">重定向标准输入/输出</h3>
+<p>Java的标准输入/输出分别通过System.in和System.out来代表，在默认情况下它们分别代表键盘和屏幕。在System类里提供了三个重定向标准输入/输出的方法。如下：</p>
+<ul>
+<li>static void setErr(PrintStream err)：重定向标准错误输出流。</li>
+<li>static void setIn(InputStream in)：重定向标准输入流。</li>
+<li>static void setOut(PrintStream out)：重定向标准输出流。</li>
+</ul>
+<p>一个综合的例子如下：</p>
+<pre><code>@Test
+public void test_5(){
+    try(
+            PrintStream printStream=new PrintStream(new FileOutputStream(&quot;test.md&quot;));
+            FileInputStream in=new FileInputStream(&quot;test.md&quot;);
+            ){
+        //设置标准输出为printStream
+        System.setOut(printStream);
+        System.out.println(&quot;我喜欢你是寂静的，仿佛你消失了一样。&quot;);
+        System.out.println(&quot;你从远处聆听我，我的声音却无法触及你。&quot;);
+    } catch (IOException e) {
+        e.printStackTrace();
+    }
+}
+
+@Test
+public void test_6(){
+    try(
+            FileInputStream in=new FileInputStream(&quot;test.md&quot;);
+    ){
+        //设置标准输入流为in
+        System.setIn(in);
+        Scanner scanner = new Scanner(System.in);
+        while (scanner.hasNext()){
+            System.out.println(scanner.next());
+        }
+    } catch (IOException e) {
+        e.printStackTrace();
+    }
+}
+</code></pre>
+
+    </div>
+
+    <div class="post-copyright">
+  <p class="copyright-item">
+    <span class="item-title">文章作者</span>
+    <span class="item-content">Pinger</span>
+  </p>
+  <p class="copyright-item">
+    <span class="item-title">上次更新</span>
+    <span class="item-content">
+        2019-11-13
+        
+    </span>
+  </p>
+  
+  
+</div>
+<footer class="post-footer">
+      
+      <nav class="post-nav">
+        <a class="prev" href="/post/linux/1-%E9%9C%80%E8%A6%81%E4%BA%86%E8%A7%A3%E7%9A%84%E5%91%BD%E4%BB%A4%E8%A1%8C%E7%9B%B8%E5%85%B3%E4%BA%8B%E9%A1%B9/">
+            <i class="iconfont icon-left"></i>
+            <span class="prev-text nav-default">1-需要了解的命令行相关事项</span>
+            <span class="prev-text nav-mobile">上一篇</span>
+          </a>
+        <a class="next" href="/post/spring/spring-ioc/">
+            <span class="next-text nav-default">Spring IoC</span>
+            <span class="next-text nav-mobile">下一篇</span>
+            <i class="iconfont icon-right"></i>
+          </a>
+      </nav>
+    </footer>
+  </article>
+        </div>
+        <div id="disqus_thread"></div>
+    <script type="text/javascript">
+    (function() {
+      
+      
+      if (window.location.hostname === 'localhost') return;
+
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      var disqus_shortname = 'p1n93r';
+      dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+    </script>
+    <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+
+  
+
+  
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="social-links">
+      <a href="mailto:pin83r@gmail.com" class="iconfont icon-email" title="email"></a>
+      <a href="https://github.com/p1n93r" class="iconfont icon-github" title="github"></a>
+  <a href="https://p1n93r.github.io/index.xml" type="application/rss+xml" class="iconfont icon-rss" title="rss"></a>
+</div>
+
+<div class="copyright">
+  <span class="power-by">
+    由 <a class="hexo-link" href="https://gohugo.io">Hugo</a> 强力驱动
+  </span>
+  <span class="division">|</span>
+  <span class="theme-info">
+    主题 - 
+    <a class="theme-link" href="https://github.com/olOwOlo/hugo-theme-even">Even</a>
+  </span>
+
+  <div class="busuanzi-footer">
+    <span id="busuanzi_container_site_pv"> 本站总访问量 <span id="busuanzi_value_site_pv"><img src="/img/spinner.svg" alt="spinner.svg"/></span> 次 </span>
+      <span class="division">|</span>
+    <span id="busuanzi_container_site_uv"> 本站总访客数 <span id="busuanzi_value_site_uv"><img src="/img/spinner.svg" alt="spinner.svg"/></span> 人 </span>
+  </div>
+
+  <span class="copyright-year">
+    &copy; 
+    2019 - 
+    2022<span class="heart"><i class="iconfont icon-heart"></i></span><span>P1n93r</span>
+  </span>
+</div>
+
+    </footer>
+
+    <div class="back-to-top" id="back-to-top">
+      <i class="iconfont icon-up"></i>
+    </div>
+  </div>
+  
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/slideout@1.0.1/dist/slideout.min.js" integrity="sha256-t+zJ/g8/KXIJMjSVQdnibt4dlaDxc9zXr/9oNPeWqdg=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.js" integrity="sha256-XVLffZaxoWfGUEbdzuLi7pwaUJv1cecsQJQqGLe7axY=" crossorigin="anonymous"></script>
+
+
+
+<script type="text/javascript" src="/js/main.min.64437849d125a2d603b3e71d6de5225d641a32d17168a58106e0b61852079683.js"></script>
+
+
+
+
+
+
+
+
+</body>
+</html>

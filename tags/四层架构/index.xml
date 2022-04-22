@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>四层架构 on P1n93r - 博学而精一</title>
+    <link>https://p1n93r.github.io/tags/%E5%9B%9B%E5%B1%82%E6%9E%B6%E6%9E%84/</link>
+    <description>Recent content in 四层架构 on P1n93r - 博学而精一</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en</language>
+    <lastBuildDate>Tue, 23 Jul 2019 17:48:36 +0800</lastBuildDate><atom:link href="https://p1n93r.github.io/tags/%E5%9B%9B%E5%B1%82%E6%9E%B6%E6%9E%84/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>SpringMVC架构</title>
+      <link>https://p1n93r.github.io/post/springmvc/springmvc%E5%85%A5%E9%97%A8/</link>
+      <pubDate>Tue, 23 Jul 2019 17:48:36 +0800</pubDate>
+      
+      <guid>https://p1n93r.github.io/post/springmvc/springmvc%E5%85%A5%E9%97%A8/</guid>
+      <description>介绍 SpringMVC是Spring Framework的一个模块。 Spring和SpringMVC无需中间整合层。 SpringMVC是一个基</description>
+    </item>
+    
+  </channel>
+</rss>

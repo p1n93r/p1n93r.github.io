@@ -1,0 +1,438 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>泛型 - P1n93r - 博学而精一</title>
+  <meta name="renderer" content="webkit" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+<meta name="author" content="Pinger" /><meta name="description" content="前言 Java中的泛型支持是从JDK1.5开始的，目的是 让集合能够记住其元素的数据类型 。在没有泛型之前，将元素放在集合中，此元素会被当成Obj" /><meta name="keywords" content="Security, Java, Web, Android" />
+
+
+
+
+
+
+<meta name="generator" content="Hugo 0.96.0 with theme even" />
+
+
+<link rel="canonical" href="https://p1n93r.github.io/post/java/%E6%B3%9B%E5%9E%8B/" />
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/manifest.json">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+<link href="/sass/main.min.f92fd13721ddf72129410fd8250e73152cc6f2438082b6c0208dc24ee7c13fc4.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.css" integrity="sha256-7TyXnr2YU040zfSP+rEcz29ggW4j56/ujTPwjMzyqFY=" crossorigin="anonymous">
+
+
+<meta property="og:title" content="泛型" />
+<meta property="og:description" content="前言 Java中的泛型支持是从JDK1.5开始的，目的是 让集合能够记住其元素的数据类型 。在没有泛型之前，将元素放在集合中，此元素会被当成Obj" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://p1n93r.github.io/post/java/%E6%B3%9B%E5%9E%8B/" /><meta property="article:section" content="post" />
+<meta property="article:published_time" content="2019-11-01T19:33:36+08:00" />
+<meta property="article:modified_time" content="2019-11-01T19:33:36+08:00" />
+
+<meta itemprop="name" content="泛型">
+<meta itemprop="description" content="前言 Java中的泛型支持是从JDK1.5开始的，目的是 让集合能够记住其元素的数据类型 。在没有泛型之前，将元素放在集合中，此元素会被当成Obj"><meta itemprop="datePublished" content="2019-11-01T19:33:36+08:00" />
+<meta itemprop="dateModified" content="2019-11-01T19:33:36+08:00" />
+<meta itemprop="wordCount" content="2918">
+<meta itemprop="keywords" content="" /><meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="泛型"/>
+<meta name="twitter:description" content="前言 Java中的泛型支持是从JDK1.5开始的，目的是 让集合能够记住其元素的数据类型 。在没有泛型之前，将元素放在集合中，此元素会被当成Obj"/>
+
+<!--[if lte IE 9]>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
+<![endif]-->
+
+<!--[if lt IE 9]>
+  <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+<![endif]-->
+
+</head>
+<body>
+  <div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/" class="logo">P1n93r</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    <a href="/">
+        <li class="mobile-menu-item">Home</li>
+      </a><a href="/post/">
+        <li class="mobile-menu-item">Archives</li>
+      </a><a href="/tags/">
+        <li class="mobile-menu-item">Tags</li>
+      </a><a href="/categories/">
+        <li class="mobile-menu-item">Categories</li>
+      </a><a href="/about/">
+        <li class="mobile-menu-item">About</li>
+      </a>
+  </ul>
+
+  
+
+
+</nav>
+
+  <div class="container" id="mobile-panel">
+    <header id="header" class="header">
+        <div class="logo-wrapper">
+  <a href="/" class="logo">P1n93r</a>
+</div>
+
+
+
+
+
+<nav class="site-navbar">
+  <ul id="menu" class="menu">
+    <li class="menu-item">
+        <a class="menu-item-link" href="/">Home</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/">Archives</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/tags/">Tags</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/categories/">Categories</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/about/">About</a>
+      </li>
+  </ul>
+</nav>
+
+    </header>
+
+    <main id="main" class="main">
+      <div class="content-wrapper">
+        <div id="content" class="content">
+          <article class="post">
+    
+    <header class="post-header">
+      <h1 class="post-title">泛型</h1>
+
+      <div class="post-meta">
+        <span class="post-time"> 2019-11-01 </span>
+        <div class="post-category">
+            <a href="/categories/java/"> Java </a>
+            </div>
+          <span class="more-meta"> 约 2918 字 </span>
+          <span class="more-meta"> 预计阅读 6 分钟 </span>
+        <span id="busuanzi_container_page_pv" class="more-meta"> <span id="busuanzi_value_page_pv"><img src="/img/spinner.svg" alt="spinner.svg"/></span> 次阅读 </span>
+      </div>
+    </header>
+
+    <div class="post-toc" id="post-toc">
+  <h2 class="post-toc-title">文章目录</h2>
+  <div class="post-toc-content always-active">
+    <nav id="TableOfContents">
+  <ul>
+    <li>
+      <ul>
+        <li><a href="#前言">前言</a></li>
+        <li><a href="#初识泛型">初识泛型</a></li>
+        <li><a href="#java7支持的泛型菱形语法">Java7支持的泛型菱形语法</a></li>
+        <li><a href="#泛型接口泛型类和泛型方法">泛型接口、泛型类和泛型方法</a></li>
+        <li><a href="#泛型类派生子类">泛型类派生子类</a></li>
+        <li><a href="#类型通配符">类型通配符</a>
+          <ul>
+            <li><a href="#初始类型通配符">初始类型通配符</a></li>
+            <li><a href="#类型通配符的上限">类型通配符的上限</a></li>
+            <li><a href="#类型通配符的下限">类型通配符的下限</a></li>
+          </ul>
+        </li>
+        <li><a href="#泛型方法">泛型方法</a></li>
+        <li><a href="#擦除和转换">擦除和转换</a></li>
+        <li><a href="#泛型和数组">泛型和数组</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+  </div>
+</div>
+    <div class="post-content">
+      <h2 id="前言">前言</h2>
+<p>Java中的泛型支持是从JDK1.5开始的，目的是 <strong>让集合能够记住其元素的数据类型</strong> 。在没有泛型之前，将元素放在集合中，此元素会被当成Object类型来处理，但是用泛型可以让集合记住元素的数据类型（当然，此时集合只能存放同种类型的元素）。</p>
+<h2 id="初识泛型">初识泛型</h2>
+<p>一个使用泛型的例子如下：</p>
+<pre><code>@Test
+public void test11(){
+    //①不使用泛型时，集合中的元素都被当成Object类型的元素
+    ArrayList listOne = new ArrayList();
+    listOne.add(1);
+    //必须将Object类型的元素强转为Integer，编译才能通过
+    Integer a=(Integer)listOne.get(0);
+    //②使用泛型时，集合可以记住元素的类型
+    ArrayList&lt;Integer&gt; listTwo = new ArrayList&lt;&gt;();
+    listTwo.add(1);
+    //此时不需要进行强制类型转换，应为取出元素时，可以记住其元素类型：Integer
+    Integer b=listTwo.get(0);
+}
+</code></pre>
+<h2 id="java7支持的泛型菱形语法">Java7支持的泛型菱形语法</h2>
+<p>上一节的例子当中使用泛型时，调用构造器时给出了完整的泛型信息，其实我们声明变量便已经给了泛型信息了，此做法显得多余，所以构造器后的泛型信息可以省略。如：<code>List&lt;Integer&gt; a=new ArrayList&lt;&gt;();</code> ，这样的语法中，省略了构造器后的菱形中的泛型信息，此所谓泛型的菱形语法（仅支持Java7以上的版本）。</p>
+<h2 id="泛型接口泛型类和泛型方法">泛型接口、泛型类和泛型方法</h2>
+<p>泛型就是在定义此接口、类和方法的时候使用了<strong>类型形参</strong>，这个类型形参将在声明变量，创建对象，调用方法时动态的指定（类似给函数形参赋形参的过程），类型形参能够在整个接口、类体、方法体内当成类型使用。一个简单的例子如下：</p>
+<pre><code>@Test
+public void test12(){
+    class Test&lt;E&gt;{
+        public void say(E e){
+            System.out.println(&quot;类型实参的类型为：&quot;+e.getClass());
+        }
+        public ArrayList&lt;E&gt; get(){
+            ArrayList&lt;E&gt; list = new ArrayList&lt;&gt;();
+            return list;
+        }
+    }
+    //传入的泛型实参为Object，所以E为Object，在泛型类内都可以使用此泛型参数
+    Test&lt;Object&gt; testOne = new Test&lt;&gt;();
+    //E为Object，所以sya()方法的形参e能够是任何类型的值（都是Object的子类）
+    testOne.say(1);
+    //E为Object，所以啥都能添加，编译能通过
+    testOne.get().add(&quot;Hiahia~&quot;);
+}
+</code></pre>
+<h2 id="泛型类派生子类">泛型类派生子类</h2>
+<ol>
+<li>可以派生泛型接口和泛型类，也可以实现泛型接口，但是不能出现这样的情况：<code>class A extends B&lt;E&gt;</code> ，其实也很好理解，此时E根本不能确定是什么类型，当然是错误的；但是可以出现这种情况：<code>class A&lt;E&gt; extends B&lt;E&gt;</code> ，此时当定义A类对象时，将根据传入的类型实参确定父类B的类型实参，所以两者的E都能够确定，所以编译能够通过。</li>
+<li>如果派生子类时， <strong>不指定父类（或接口）的类型实参，那么父类的类型实参将被当成Object来处理。</strong></li>
+<li>List<String>不是List<Object>的子类，两者是同一种类型。但是String[]类型的数组是Object[]类型数组的子类。</li>
+<li>instanceof运算符后不能使用泛型类。</li>
+</ol>
+<h2 id="类型通配符">类型通配符</h2>
+<h3 id="初始类型通配符">初始类型通配符</h3>
+<p>类型通配符是一个问号： <code>?</code> ，它可以匹配任何类型，此所谓类型统配。一个使用类型通配符的泛型例子如下：</p>
+<pre><code>@Test
+public void test13(){
+    //类型通配符何以接受任何类型，List&lt;?&gt;是任何泛型List的父类。
+    List&lt;?&gt; a;
+    ArrayList&lt;String&gt; list = new ArrayList&lt;&gt;();
+    list.add(&quot;曾经沧海难为水，&quot;);
+    list.add(&quot;除却巫山不是云。&quot;);
+    //因为List&lt;?&gt;是任何泛型List的父类。所以此语句正确。
+    a=list;
+    //此时a的所有元素是未知类型（但可以肯定是Object类型）,需要强转
+    String one=(String)a.get(0);
+    String two=(String)a.get(1);
+    //由于List&lt;?&gt;使用了通配符，不能确定其类型形参，所以不能向此List添加元素
+    //下面的语句是错误的，不能添加
+    //a.add(new Object());
+}
+</code></pre>
+<h3 id="类型通配符的上限">类型通配符的上限</h3>
+<p>继续上节的例子，如果不想让List<?>是所有泛型List的父类，而只想让它是某写泛型List的父类，那么就可以使用通配符的上限。一个例子如下：</p>
+<pre><code>@Test
+public void test13(){
+    //此时使用的受限的类型通配符，此时?只能匹配Object类型的子类型
+    List&lt;? extends Object&gt; a;
+    ArrayList&lt;String&gt; list = new ArrayList&lt;&gt;();
+    list.add(&quot;曾经沧海难为水，&quot;);
+    list.add(&quot;除却巫山不是云。&quot;);
+    //String是Object的子类型，所以此语句正确
+    a=list;
+    //此时a的所有元素都是未知的（但是可以肯定是上限：Object类型），需要强转
+    String one=(String)a.get(0);
+    String two=(String)a.get(1);
+    //同样此时只能知道类型形参是Object的子类，不能确定具体，所以不能往里面添加元素
+    //下面的语句是错误的，不能添加
+    //a.add(new String(&quot;沧海&quot;));
+}
+</code></pre>
+<p>此外，也可以在定义类和接口时使用类型形参上限，表示传给该类/接口的类型实参必须时该上限的子类（或者就是该上限类型），比通配符的上限多了一个地方： <strong>可以为类型形参设定多个上限，最多一个父类上限，多个接口上限。表明该类型形参必须是其父类的子类（本身类也行），并且实现多个上限接口</strong> 。例如这种写法： <code>public class A&lt;T extends B &amp; java.io.Serializable&gt;</code> ，表示T必须是B类型或者B的子类类型，并且实现了Serializable接口。 <strong>此外，类上限必须是第一位，接口上限在后面。</strong></p>
+<h3 id="类型通配符的下限">类型通配符的下限</h3>
+<p>存在类型通配符的上限，也存在类型通配符的下限。 <strong>表示匹配下限本身类型或者下限的父类类型。</strong> 只需将上限的关键字extends换成super即可，此外， <strong>没有类型形参的上限。</strong></p>
+<h2 id="泛型方法">泛型方法</h2>
+<p>泛型方法就是定义一个方法时，可以定义一个或者多个类型形参。泛型方法的语法格式如下：</p>
+<pre><code>修饰符 &lt;T,S&gt; 方法返回值 方法名(形参列表){
+    //方法体
+}
+</code></pre>
+<p>可以看到，类型形参的位置是紧接着方法返回值的前面。 <strong>与类或者接口的类型形参不同的是，方法类型形参不用显示的传入类型实参，而是系统根据形参的类型推到出类型形参的具体类型。</strong> 一个泛型方法的例子如下：</p>
+<pre><code>public static void main(String[] a){
+    ArrayList&lt;String&gt; list = new ArrayList&lt;&gt;();
+    list.add(&quot;我是0&quot;);
+    list.add(&quot;我是1&quot;);
+    ArrayList&lt;Object&gt; des = new ArrayList&lt;&gt;();
+    //泛型推导R为String，所以无需强转
+    String last=A.add(des,list);
+    //打印：我是1
+    System.out.println(last);
+    //打印：[我是0, 我是1]
+    System.out.println(des);
+}
+</code></pre>
+<p><em><strong>Notice:</strong></em> 如果定义泛型方法时，可以使用多个类型形参，但是它们有依赖关系，则可以同时使用使用类型通配符来代表他们的依赖关系，从而减少类型形参的个数。例如上面的例子中，类型形参其实泛型方法可以这样写： <code>public static &lt;R,T extends R&gt; R add(Collection&lt;R&gt; des,Collection&lt;T&gt; src)</code> ，但是这样无端多了一个类型形参，并且效果和使用类型通配符是一样的。</p>
+<h2 id="擦除和转换">擦除和转换</h2>
+<ol>
+<li>如果没有为泛型类指定类型实参，那么类型实参将会是声明类时指定的第一个上限类型（没有使用上限则为Object）。</li>
+<li>当把一个具有泛型信息的对象赋值给一个没有泛型信息的变量时，将会丢失泛型信息。 <strong>此所谓泛型擦除。</strong></li>
+<li>当把一个被泛型擦除后的对象再次赋值给一个具有泛型信息的变量时（此变量的泛型信息必须正确），该对象又会获取被擦除的泛型信息。</li>
+</ol>
+<p>一个综合例子如下：</p>
+<pre><code>@Test
+public void test15(){
+    ArrayList&lt;String&gt; list = new ArrayList&lt;&gt;();
+    list.add(&quot;测试&quot;);
+    //泛型擦除
+    List a=list;
+    //泛型擦除后丢失了泛型信息，所以需要强转
+    String v=(String)a.get(0);
+    //将被擦除泛型信息的List再次转换为泛型List
+    List&lt;String&gt; newList=list;
+    //再次获取泛型信息，所以无需强转
+    String v1=newList.get(0);
+}
+</code></pre>
+<h2 id="泛型和数组">泛型和数组</h2>
+<ol>
+<li>创建泛型数组时，只能声明带泛型的数组，不能创建泛型数组。即只能： <code>ArrayList&lt;String&gt; a=new ArrayList[5];</code></li>
+<li>可以创建没有上限的类型通配符泛型数组，例如： <code>List&lt;?&gt;[] a=new ArrayList&lt;?&gt;[3];</code></li>
+</ol>
+<p>一个综合的例子如下：</p>
+<pre><code>@Test
+public void test16(){
+    //语法：List&lt;String&gt;[] a=new ArrayList&lt;String&gt;[5]; 是错误的
+    List&lt;String&gt;[] a=new ArrayList[5];
+    a[0]=new ArrayList&lt;&gt;();
+    a[0].add(&quot;giao！！&quot;);
+
+    List&lt;?&gt;[] b=new ArrayList&lt;?&gt;[5];
+    List&lt;String&gt;[] c=(List&lt;String&gt;[])b;
+    ArrayList&lt;String&gt; list = new ArrayList&lt;&gt;();
+    list.add(&quot;测试2&quot;);
+    c[0]=list;
+    //无法确定类型形参，但是知道至少是Object
+    Object v=b[0].get(0);
+}
+</code></pre>
+
+    </div>
+
+    <div class="post-copyright">
+  <p class="copyright-item">
+    <span class="item-title">文章作者</span>
+    <span class="item-content">Pinger</span>
+  </p>
+  <p class="copyright-item">
+    <span class="item-title">上次更新</span>
+    <span class="item-content">
+        2019-11-01
+        
+    </span>
+  </p>
+  
+  
+</div>
+<footer class="post-footer">
+      
+      <nav class="post-nav">
+        <a class="prev" href="/post/spring/spring%E5%85%A5%E9%97%A8/">
+            <i class="iconfont icon-left"></i>
+            <span class="prev-text nav-default">Spring入门</span>
+            <span class="prev-text nav-mobile">上一篇</span>
+          </a>
+        <a class="next" href="/post/mybatis/mybatis%E4%BC%A0%E5%8F%82/">
+            <span class="next-text nav-default">Mybatis传参</span>
+            <span class="next-text nav-mobile">下一篇</span>
+            <i class="iconfont icon-right"></i>
+          </a>
+      </nav>
+    </footer>
+  </article>
+        </div>
+        <div id="disqus_thread"></div>
+    <script type="text/javascript">
+    (function() {
+      
+      
+      if (window.location.hostname === 'localhost') return;
+
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      var disqus_shortname = 'p1n93r';
+      dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+    </script>
+    <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+
+  
+
+  
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="social-links">
+      <a href="mailto:pin83r@gmail.com" class="iconfont icon-email" title="email"></a>
+      <a href="https://github.com/p1n93r" class="iconfont icon-github" title="github"></a>
+  <a href="https://p1n93r.github.io/index.xml" type="application/rss+xml" class="iconfont icon-rss" title="rss"></a>
+</div>
+
+<div class="copyright">
+  <span class="power-by">
+    由 <a class="hexo-link" href="https://gohugo.io">Hugo</a> 强力驱动
+  </span>
+  <span class="division">|</span>
+  <span class="theme-info">
+    主题 - 
+    <a class="theme-link" href="https://github.com/olOwOlo/hugo-theme-even">Even</a>
+  </span>
+
+  <div class="busuanzi-footer">
+    <span id="busuanzi_container_site_pv"> 本站总访问量 <span id="busuanzi_value_site_pv"><img src="/img/spinner.svg" alt="spinner.svg"/></span> 次 </span>
+      <span class="division">|</span>
+    <span id="busuanzi_container_site_uv"> 本站总访客数 <span id="busuanzi_value_site_uv"><img src="/img/spinner.svg" alt="spinner.svg"/></span> 人 </span>
+  </div>
+
+  <span class="copyright-year">
+    &copy; 
+    2019 - 
+    2022<span class="heart"><i class="iconfont icon-heart"></i></span><span>P1n93r</span>
+  </span>
+</div>
+
+    </footer>
+
+    <div class="back-to-top" id="back-to-top">
+      <i class="iconfont icon-up"></i>
+    </div>
+  </div>
+  
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/slideout@1.0.1/dist/slideout.min.js" integrity="sha256-t+zJ/g8/KXIJMjSVQdnibt4dlaDxc9zXr/9oNPeWqdg=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.js" integrity="sha256-XVLffZaxoWfGUEbdzuLi7pwaUJv1cecsQJQqGLe7axY=" crossorigin="anonymous"></script>
+
+
+
+<script type="text/javascript" src="/js/main.min.64437849d125a2d603b3e71d6de5225d641a32d17168a58106e0b61852079683.js"></script>
+
+
+
+
+
+
+
+
+</body>
+</html>

@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>异常、IO和NIO(Java) - P1n93r - 博学而精一</title>
+  <meta name="renderer" content="webkit" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+<meta name="author" content="P1n93r" /><meta name="description" content="Java异常面试题 Java中异常分为哪两种？ 编译时异常和运行时异常。 异常的处理机制有哪几种？ 异常捕捉：try&amp;hellip;catch&amp;he" /><meta name="keywords" content="Security, Java, Web, Android" />
+
+
+
+
+
+
+<meta name="generator" content="Hugo 0.96.0 with theme even" />
+
+
+<link rel="canonical" href="https://p1n93r.github.io/post/interview/%E5%BC%82%E5%B8%B8/" />
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/manifest.json">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+<link href="/sass/main.min.f92fd13721ddf72129410fd8250e73152cc6f2438082b6c0208dc24ee7c13fc4.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.css" integrity="sha256-7TyXnr2YU040zfSP+rEcz29ggW4j56/ujTPwjMzyqFY=" crossorigin="anonymous">
+
+
+<meta property="og:title" content="异常、IO和NIO(Java)" />
+<meta property="og:description" content="Java异常面试题 Java中异常分为哪两种？ 编译时异常和运行时异常。 异常的处理机制有哪几种？ 异常捕捉：try&hellip;catch&he" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://p1n93r.github.io/post/interview/%E5%BC%82%E5%B8%B8/" /><meta property="article:section" content="post" />
+<meta property="article:published_time" content="2020-06-11T16:04:36+08:00" />
+<meta property="article:modified_time" content="2020-06-11T16:04:36+08:00" />
+
+<meta itemprop="name" content="异常、IO和NIO(Java)">
+<meta itemprop="description" content="Java异常面试题 Java中异常分为哪两种？ 编译时异常和运行时异常。 异常的处理机制有哪几种？ 异常捕捉：try&hellip;catch&he"><meta itemprop="datePublished" content="2020-06-11T16:04:36+08:00" />
+<meta itemprop="dateModified" content="2020-06-11T16:04:36+08:00" />
+<meta itemprop="wordCount" content="1155">
+<meta itemprop="keywords" content="" /><meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="异常、IO和NIO(Java)"/>
+<meta name="twitter:description" content="Java异常面试题 Java中异常分为哪两种？ 编译时异常和运行时异常。 异常的处理机制有哪几种？ 异常捕捉：try&hellip;catch&he"/>
+
+<!--[if lte IE 9]>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
+<![endif]-->
+
+<!--[if lt IE 9]>
+  <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+<![endif]-->
+
+</head>
+<body>
+  <div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/" class="logo">P1n93r</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    <a href="/">
+        <li class="mobile-menu-item">Home</li>
+      </a><a href="/post/">
+        <li class="mobile-menu-item">Archives</li>
+      </a><a href="/tags/">
+        <li class="mobile-menu-item">Tags</li>
+      </a><a href="/categories/">
+        <li class="mobile-menu-item">Categories</li>
+      </a><a href="/about/">
+        <li class="mobile-menu-item">About</li>
+      </a>
+  </ul>
+
+  
+
+
+</nav>
+
+  <div class="container" id="mobile-panel">
+    <header id="header" class="header">
+        <div class="logo-wrapper">
+  <a href="/" class="logo">P1n93r</a>
+</div>
+
+
+
+
+
+<nav class="site-navbar">
+  <ul id="menu" class="menu">
+    <li class="menu-item">
+        <a class="menu-item-link" href="/">Home</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/">Archives</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/tags/">Tags</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/categories/">Categories</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/about/">About</a>
+      </li>
+  </ul>
+</nav>
+
+    </header>
+
+    <main id="main" class="main">
+      <div class="content-wrapper">
+        <div id="content" class="content">
+          <article class="post">
+    
+    <header class="post-header">
+      <h1 class="post-title">异常、IO和NIO(Java)</h1>
+
+      <div class="post-meta">
+        <span class="post-time"> 2020-06-11 </span>
+        <div class="post-category">
+            <a href="/categories/interview/"> interview </a>
+            </div>
+          <span class="more-meta"> 约 1155 字 </span>
+          <span class="more-meta"> 预计阅读 3 分钟 </span>
+        <span id="busuanzi_container_page_pv" class="more-meta"> <span id="busuanzi_value_page_pv"><img src="/img/spinner.svg" alt="spinner.svg"/></span> 次阅读 </span>
+      </div>
+    </header>
+
+    <div class="post-toc" id="post-toc">
+  <h2 class="post-toc-title">文章目录</h2>
+  <div class="post-toc-content always-active">
+    <nav id="TableOfContents">
+  <ul>
+    <li>
+      <ul>
+        <li><a href="#java异常面试题">Java异常面试题</a>
+          <ul>
+            <li><a href="#java中异常分为哪两种">Java中异常分为哪两种？</a></li>
+            <li><a href="#异常的处理机制有哪几种">异常的处理机制有哪几种？</a></li>
+            <li><a href="#如何自定义一个异常">如何自定义一个异常？</a></li>
+            <li><a href="#trycatchfinallytry里面有returnfinally还执行吗">try&hellip;catch&hellip;finally,try里面有return,finally还执行吗？</a></li>
+            <li><a href="#说说exception与error包结构">说说Exception与Error包结构？</a></li>
+            <li><a href="#throw和throws的区别">throw和throws的区别？</a></li>
+            <li><a href="#error和exception的区别">Error和Exception的区别？</a></li>
+          </ul>
+        </li>
+        <li><a href="#java中的io和nio面试题">Java中的IO和NIO面试题</a>
+          <ul>
+            <li><a href="#说说java中的io流">说说Java中的IO流？</a></li>
+            <li><a href="#java-io和nio的区别">Java IO和NIO的区别？</a></li>
+            <li><a href="#字节流和字符流的区别">字节流和字符流的区别？</a></li>
+          </ul>
+        </li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+  </div>
+</div>
+    <div class="post-content">
+      <h2 id="java异常面试题">Java异常面试题</h2>
+<h3 id="java中异常分为哪两种">Java中异常分为哪两种？</h3>
+<p>编译时异常和运行时异常。</p>
+<h3 id="异常的处理机制有哪几种">异常的处理机制有哪几种？</h3>
+<ol>
+<li>异常捕捉：try&hellip;catch&hellip;finally。</li>
+<li>异常抛出：throws。</li>
+</ol>
+<h3 id="如何自定义一个异常">如何自定义一个异常？</h3>
+<p>继承一个异常类，通常是Exception或者RuntimeException。</p>
+<h3 id="trycatchfinallytry里面有returnfinally还执行吗">try&hellip;catch&hellip;finally,try里面有return,finally还执行吗？</h3>
+<p>执行，并且finally的执行早于try里的return。</p>
+<h3 id="说说exception与error包结构">说说Exception与Error包结构？</h3>
+<p>Java可抛出的结构分为三种类型：被检查的异常（CheckedException）、运行时异常（RuntimeException）和错误（Error）。</p>
+<h3 id="throw和throws的区别">throw和throws的区别？</h3>
+<ol>
+<li>位置不同：throws用在函数上，后面跟的是异常类，可以跟多个；而throw用在函数内，后面跟的是异常对象。</li>
+<li>功能不同：throws用来声明异常，让调用者知道该功能可能出现的问题，可以给出预先的处理方式。而throw抛出具体的问题对象，执行到throw，功能就已经结束了，跳转到调用者，并将具体的问题对象抛给调用者；throws表示出现异常的一种可能性，并不一定会发生这些异常。而throw则是抛出了异常，执行了throw则一定抛出了某种异常对象；两者都是消极处理异常的方式，只是抛出后者可能抛出异常，但是不会由函数去处理异常，真正的处理异常由函数的上层调用处理。</li>
+</ol>
+<h3 id="error和exception的区别">Error和Exception的区别？</h3>
+<ol>
+<li>Error和Exception都是java错误处理机制的一部分，都继承了Throwable类。</li>
+<li>Exception表示的异常，异常可以通过程序来捕捉，或者优化程序来避免。</li>
+<li>Error表示的是 <strong>系统错误</strong> ，不能通过程序来进行错误处理。</li>
+</ol>
+<h2 id="java中的io和nio面试题">Java中的IO和NIO面试题</h2>
+<h3 id="说说java中的io流">说说Java中的IO流？</h3>
+<ul>
+<li>按照流的流向来划分，可以分为输入流和输出流。</li>
+<li>按照操作单元划分，可以分为字节流和字符流。</li>
+<li>按照流的角色划分，可以分为节点流和处理流。</li>
+</ul>
+<p>Java的IO流都是从如下四个抽象基类派生出来的：</p>
+<ol>
+<li>InputStream/Reader：所有的输入流的基类，前者是字节输入流，后者是字符输入流。</li>
+<li>OutputStream/Writer：所有输出流的基类，前者是字节输出流，后者是字符输出流。</li>
+</ol>
+<h3 id="java-io和nio的区别">Java IO和NIO的区别？</h3>
+<p>NIO即New IO，这个库是在JDK1.4中才引入的。NIO和IO有相同的作用和目的，但实现方式不同，NIO主要用到的是块，所以NIO的效率比IO高很多。在Java API中提供了两套NIO，一套是针对标准输入输出NIO，另一套是网络编程NIO。</p>
+<h3 id="字节流和字符流的区别">字节流和字符流的区别？</h3>
+<p>以字节为单位的输入输出数据，字节流按照8位传输；以字符为单位输入输出，字符流按照16位传输。</p>
+
+    </div>
+
+    <div class="post-copyright">
+  <p class="copyright-item">
+    <span class="item-title">文章作者</span>
+    <span class="item-content">P1n93r</span>
+  </p>
+  <p class="copyright-item">
+    <span class="item-title">上次更新</span>
+    <span class="item-content">
+        2020-06-11
+        
+    </span>
+  </p>
+  
+  
+</div>
+<footer class="post-footer">
+      
+      <nav class="post-nav">
+        <a class="prev" href="/post/interview/spring/">
+            <i class="iconfont icon-left"></i>
+            <span class="prev-text nav-default">Spring</span>
+            <span class="prev-text nav-mobile">上一篇</span>
+          </a>
+        <a class="next" href="/post/interview/%E6%B3%A8%E8%A7%A3%E9%9B%86%E5%90%88%E5%92%8C%E6%B3%9B%E5%9E%8Bjava/">
+            <span class="next-text nav-default">注解、集合和泛型(Java)</span>
+            <span class="next-text nav-mobile">下一篇</span>
+            <i class="iconfont icon-right"></i>
+          </a>
+      </nav>
+    </footer>
+  </article>
+        </div>
+        <div id="disqus_thread"></div>
+    <script type="text/javascript">
+    (function() {
+      
+      
+      if (window.location.hostname === 'localhost') return;
+
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      var disqus_shortname = 'p1n93r';
+      dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+    </script>
+    <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+
+  
+
+  
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="social-links">
+      <a href="mailto:pin83r@gmail.com" class="iconfont icon-email" title="email"></a>
+      <a href="https://github.com/p1n93r" class="iconfont icon-github" title="github"></a>
+  <a href="https://p1n93r.github.io/index.xml" type="application/rss+xml" class="iconfont icon-rss" title="rss"></a>
+</div>
+
+<div class="copyright">
+  <span class="power-by">
+    由 <a class="hexo-link" href="https://gohugo.io">Hugo</a> 强力驱动
+  </span>
+  <span class="division">|</span>
+  <span class="theme-info">
+    主题 - 
+    <a class="theme-link" href="https://github.com/olOwOlo/hugo-theme-even">Even</a>
+  </span>
+
+  <div class="busuanzi-footer">
+    <span id="busuanzi_container_site_pv"> 本站总访问量 <span id="busuanzi_value_site_pv"><img src="/img/spinner.svg" alt="spinner.svg"/></span> 次 </span>
+      <span class="division">|</span>
+    <span id="busuanzi_container_site_uv"> 本站总访客数 <span id="busuanzi_value_site_uv"><img src="/img/spinner.svg" alt="spinner.svg"/></span> 人 </span>
+  </div>
+
+  <span class="copyright-year">
+    &copy; 
+    2019 - 
+    2022<span class="heart"><i class="iconfont icon-heart"></i></span><span>P1n93r</span>
+  </span>
+</div>
+
+    </footer>
+
+    <div class="back-to-top" id="back-to-top">
+      <i class="iconfont icon-up"></i>
+    </div>
+  </div>
+  
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/slideout@1.0.1/dist/slideout.min.js" integrity="sha256-t+zJ/g8/KXIJMjSVQdnibt4dlaDxc9zXr/9oNPeWqdg=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.js" integrity="sha256-XVLffZaxoWfGUEbdzuLi7pwaUJv1cecsQJQqGLe7axY=" crossorigin="anonymous"></script>
+
+
+
+<script type="text/javascript" src="/js/main.min.64437849d125a2d603b3e71d6de5225d641a32d17168a58106e0b61852079683.js"></script>
+
+
+
+
+
+
+
+
+</body>
+</html>

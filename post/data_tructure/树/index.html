@@ -1,0 +1,847 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>树 - P1n93r - 博学而精一</title>
+  <meta name="renderer" content="webkit" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+<meta name="author" content="P1n93r" /><meta name="description" content="什么是树 树是一种类似于链表的数据结构，不过链表的节点是以线性方式简单的指向其后继节点，而树的一个节点可以指向许多个节点。树是一种典型的 非线性" /><meta name="keywords" content="Security, Java, Web, Android" />
+
+
+
+
+
+
+<meta name="generator" content="Hugo 0.96.0 with theme even" />
+
+
+<link rel="canonical" href="https://p1n93r.github.io/post/data_tructure/%E6%A0%91/" />
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/manifest.json">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+<link href="/sass/main.min.f92fd13721ddf72129410fd8250e73152cc6f2438082b6c0208dc24ee7c13fc4.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.css" integrity="sha256-7TyXnr2YU040zfSP+rEcz29ggW4j56/ujTPwjMzyqFY=" crossorigin="anonymous">
+
+
+<meta property="og:title" content="树" />
+<meta property="og:description" content="什么是树 树是一种类似于链表的数据结构，不过链表的节点是以线性方式简单的指向其后继节点，而树的一个节点可以指向许多个节点。树是一种典型的 非线性" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://p1n93r.github.io/post/data_tructure/%E6%A0%91/" /><meta property="article:section" content="post" />
+<meta property="article:published_time" content="2020-03-21T10:57:36+08:00" />
+<meta property="article:modified_time" content="2020-03-21T10:57:36+08:00" />
+
+<meta itemprop="name" content="树">
+<meta itemprop="description" content="什么是树 树是一种类似于链表的数据结构，不过链表的节点是以线性方式简单的指向其后继节点，而树的一个节点可以指向许多个节点。树是一种典型的 非线性"><meta itemprop="datePublished" content="2020-03-21T10:57:36+08:00" />
+<meta itemprop="dateModified" content="2020-03-21T10:57:36+08:00" />
+<meta itemprop="wordCount" content="5127">
+<meta itemprop="keywords" content="数据结构与算法," /><meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="树"/>
+<meta name="twitter:description" content="什么是树 树是一种类似于链表的数据结构，不过链表的节点是以线性方式简单的指向其后继节点，而树的一个节点可以指向许多个节点。树是一种典型的 非线性"/>
+
+<!--[if lte IE 9]>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
+<![endif]-->
+
+<!--[if lt IE 9]>
+  <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+<![endif]-->
+
+</head>
+<body>
+  <div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/" class="logo">P1n93r</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    <a href="/">
+        <li class="mobile-menu-item">Home</li>
+      </a><a href="/post/">
+        <li class="mobile-menu-item">Archives</li>
+      </a><a href="/tags/">
+        <li class="mobile-menu-item">Tags</li>
+      </a><a href="/categories/">
+        <li class="mobile-menu-item">Categories</li>
+      </a><a href="/about/">
+        <li class="mobile-menu-item">About</li>
+      </a>
+  </ul>
+
+  
+
+
+</nav>
+
+  <div class="container" id="mobile-panel">
+    <header id="header" class="header">
+        <div class="logo-wrapper">
+  <a href="/" class="logo">P1n93r</a>
+</div>
+
+
+
+
+
+<nav class="site-navbar">
+  <ul id="menu" class="menu">
+    <li class="menu-item">
+        <a class="menu-item-link" href="/">Home</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/">Archives</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/tags/">Tags</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/categories/">Categories</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/about/">About</a>
+      </li>
+  </ul>
+</nav>
+
+    </header>
+
+    <main id="main" class="main">
+      <div class="content-wrapper">
+        <div id="content" class="content">
+          <article class="post">
+    
+    <header class="post-header">
+      <h1 class="post-title">树</h1>
+
+      <div class="post-meta">
+        <span class="post-time"> 2020-03-21 </span>
+        <div class="post-category">
+            <a href="/categories/data_structure/"> data_structure </a>
+            </div>
+          <span class="more-meta"> 约 5127 字 </span>
+          <span class="more-meta"> 预计阅读 11 分钟 </span>
+        <span id="busuanzi_container_page_pv" class="more-meta"> <span id="busuanzi_value_page_pv"><img src="/img/spinner.svg" alt="spinner.svg"/></span> 次阅读 </span>
+      </div>
+    </header>
+
+    <div class="post-toc" id="post-toc">
+  <h2 class="post-toc-title">文章目录</h2>
+  <div class="post-toc-content always-active">
+    <nav id="TableOfContents">
+  <ul>
+    <li>
+      <ul>
+        <li><a href="#什么是树">什么是树</a></li>
+        <li><a href="#术语">术语</a></li>
+        <li><a href="#二叉树">二叉树</a>
+          <ul>
+            <li><a href="#二叉树的类型">二叉树的类型</a></li>
+            <li><a href="#二叉树的性质">二叉树的性质</a></li>
+            <li><a href="#二叉树的结构">二叉树的结构</a></li>
+            <li><a href="#二叉树的操作">二叉树的操作</a></li>
+            <li><a href="#二叉树的应用">二叉树的应用</a></li>
+          </ul>
+        </li>
+        <li><a href="#二叉树的遍历">二叉树的遍历</a>
+          <ul>
+            <li><a href="#遍历的分类">遍历的分类</a></li>
+            <li><a href="#前序遍历">前序遍历</a></li>
+            <li><a href="#中序遍历">中序遍历</a></li>
+            <li><a href="#后序遍历">后序遍历</a></li>
+            <li><a href="#层次遍历">层次遍历</a></li>
+          </ul>
+        </li>
+        <li><a href="#通用树n叉树">通用树(N叉树)</a>
+          <ul>
+            <li><a href="#n叉树的表示">N叉树的表示</a></li>
+            <li><a href="#n叉树的孩子兄弟表示法理解">N叉树的“孩子/兄弟”表示法理解</a></li>
+          </ul>
+        </li>
+        <li><a href="#线索二叉树">线索二叉树</a>
+          <ul>
+            <li><a href="#线索二叉树的分类">线索二叉树的分类</a></li>
+            <li><a href="#线索二叉树的分类-1">线索二叉树的分类</a></li>
+            <li><a href="#线索二叉树结构">线索二叉树结构</a></li>
+            <li><a href="#线索二叉树的一个技巧">线索二叉树的一个技巧</a></li>
+          </ul>
+        </li>
+        <li><a href="#表达式树">表达式树</a>
+          <ul>
+            <li><a href="#基于后缀表达式构建表达式树">基于后缀表达式构建表达式树</a></li>
+          </ul>
+        </li>
+        <li><a href="#二叉搜索树">二叉搜索树</a>
+          <ul>
+            <li><a href="#为什么使用二叉搜索树bst">为什么使用二叉搜索树(BST)</a></li>
+            <li><a href="#bst的性质">BST的性质</a></li>
+            <li><a href="#bst的注意事项">BST的注意事项</a></li>
+            <li><a href="#在二叉搜索树中寻找元素">在二叉搜索树中寻找元素</a></li>
+            <li><a href="#在bst中寻找最小元素">在BST中寻找最小元素</a></li>
+            <li><a href="#在bst中寻找最大元素">在BST中寻找最大元素</a></li>
+            <li><a href="#寻找中序序列前驱和后继">寻找中序序列前驱和后继</a></li>
+            <li><a href="#在bst中插入元素">在BST中插入元素</a></li>
+            <li><a href="#在bst中删除元素">在BST中删除元素</a></li>
+          </ul>
+        </li>
+        <li><a href="#平衡二叉搜索树">平衡二叉搜索树</a>
+          <ul>
+            <li><a href="#完全平衡二叉树">完全平衡二叉树</a></li>
+          </ul>
+        </li>
+        <li><a href="#avl树">AVL树</a>
+          <ul>
+            <li><a href="#avl树的性质">AVL树的性质</a></li>
+            <li><a href="#旋转">旋转</a></li>
+            <li><a href="#违背avl树性质的类型">违背AVL树性质的类型</a></li>
+            <li><a href="#单旋转">单旋转</a></li>
+            <li><a href="#双旋">双旋</a></li>
+          </ul>
+        </li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+  </div>
+</div>
+    <div class="post-content">
+      <h2 id="什么是树">什么是树</h2>
+<p>树是一种类似于链表的数据结构，不过链表的节点是以线性方式简单的指向其后继节点，而树的一个节点可以指向许多个节点。树是一种典型的 <strong>非线性</strong> 结构。</p>
+<p>对于树ADT（抽象数据类型），元素的顺序不是考虑的重点。 <strong>如果需要用到元素的顺序信息，那么可以使用链表、队列、栈等线性数据结构</strong> 。</p>
+<h2 id="术语">术语</h2>
+<p><img src="/media/20200321-1.png" alt="图示"></p>
+<ul>
+<li>根节点：根节点是一个没有双亲节点的节点。 <strong>一棵树中最多有一个根节点</strong> 。（上图的A节点就是根节点）。</li>
+<li>边：边表示从双亲节点到孩子节点的链接（如上图中所有的链接）。</li>
+<li>叶子节点：没有孩子节点的节点叫做叶子节点（如E、J、K、H和I）。</li>
+<li>兄弟节点：拥有相同双亲节点的所有孩子节点叫做兄弟节点（B、C、D彼此之间是兄弟节点）。</li>
+<li>祖先节点：如果存在一条从根节点到节点q的路径，且节点p出现在这条路径上，那么就可以把节点p叫做节点q的祖先节点，节点q也叫做p的子孙节点（A、C、G是K的祖先节点）。</li>
+<li>节点的大小：节点的大小是指子孙的个数， <strong>包括其自身</strong> （节点C的大小为3）。</li>
+<li>树的层：位于相同深度的所有节点的集合叫做树的层（B、C、D具有相同的层）。 <strong>根节点位于0层</strong> 。</li>
+</ul>
+<center>![树的层][p1]</center>
+<ul>
+<li>节点的深度：从根节点到该节点的路径长度（G点的深度为2，A-C-G）。</li>
+<li>节点的高度：是指从该节点到最深节点的路径长度。 <strong>树的高度是指从根节点到树中最深节点的路径长度，只含有根节点的树的高度为0</strong> （节点B的高度为2，B-F-J）。</li>
+<li>树的高度：是树中所有节点高度的最大值，树的深度是树中所有节点深度的最大值。对于同一棵树，其深度和高度是相同的。但是对于每一个节点，其深度和高度不一定相同。</li>
+<li>斜树：如果树中除了叶子节点外， <strong>其余每个节点只有一个孩子节点</strong> ，则这种节点称为斜树。对于每个节点只有一个左孩子节点的树称为左斜树。类似的，对于每个节点只有一个右孩子节点的树叫做右斜树。</li>
+</ul>
+<center>![斜树][p2]</center>
+<h2 id="二叉树">二叉树</h2>
+<p>如果一棵树中每个节点仅有0、1或者2个孩子节点，那么这棵树就称为 <strong>二叉树</strong> 。 <strong>空数也是一颗有效的二叉树</strong> 。一颗二叉树可以看做由根节点和两颗不相交的子树（分别称为左子树和右子树）组成，如下图所示：</p>
+<center>![二叉树][p3]</center>
+<h3 id="二叉树的类型">二叉树的类型</h3>
+<ul>
+<li>严格二叉树：二叉树中的每个节点要么有 <strong>两个</strong> 孩子节点，要么 <strong>没有</strong> 孩子节点。</li>
+</ul>
+<center>![严格二叉树][p4]</center>
+<ul>
+<li>满二叉树：二叉树中的每个节点恰好有 <strong>两个</strong> 孩子节点且 <strong>所有的叶子节点都在同一层</strong> 。</li>
+</ul>
+<center>![满二叉树][p5]</center>
+<ul>
+<li>完全二叉树：在定义完全二叉树之前，假设二叉树的高度为h。对于完全二叉树，如果将所有节点从根节点开始从上至下、从左到右，依次编号（假定根节点的编号为1），那么将得到从1~n（n为节点总数）的完整序列。在遍历过程中对于空指针也应该赋予编号。如果所有的叶子节点的深度为h或者h-1，且在节点编号序列中没有漏掉任何数字，那么这样的二叉树称为完全二叉树。</li>
+</ul>
+<center>![完全二叉树][p6]</center>
+<h3 id="二叉树的性质">二叉树的性质</h3>
+<p>假设二叉树的高度的高度为h，且根节点的深度为0。那么二叉树的性质如下：</p>
+<p><img src="/media/20200321-8.png" alt="二叉树的性质"></p>
+<h3 id="二叉树的结构">二叉树的结构</h3>
+<p>结构图示如下：</p>
+<center>![二叉树图示][p8]</center>
+<p>代码例子如下：</p>
+<pre><code>public class BinaryTreeNode{
+	private int data;
+	private BinaryTreeNode left;
+	private BinaryTreeNode right;
+	//getter and setter
+}
+</code></pre>
+<p><em><strong>Notice：</strong></em> 在树中，默认的流向是从双亲节点指向孩子节点，但并不强制表示为有向边。例如，如下两种表示方式是相同的：</p>
+<center>![树的节点的两种表示方式][p9]</center>
+<h3 id="二叉树的操作">二叉树的操作</h3>
+<p>① 基本操作：</p>
+<ul>
+<li>向树中插入一个元素。</li>
+<li>从树中删除一个元素。</li>
+<li>查找一个元素。</li>
+<li>遍历树。</li>
+</ul>
+<p>② 辅助操作：</p>
+<ul>
+<li>获取树的大小。</li>
+<li>获取树的高度。</li>
+<li>获取其最大的层。</li>
+<li>对于给定的两个或多个节点，找出他们的最近公共祖先（Least Common Ancestor，LCG）。</li>
+</ul>
+<h3 id="二叉树的应用">二叉树的应用</h3>
+<ul>
+<li>编译器中表达式树。</li>
+<li>用于数据压缩算法中的和夫曼编码树。</li>
+<li>支持在集合中查找、插入和删除，其平均时间复杂度为O(logn)的二叉搜索（或称为查找）树（BST）。</li>
+<li>优先队列（PQ），它支持以对数时间（最坏情况下）对集合中的最小（或最大）数据单元进行搜索和删除。</li>
+</ul>
+<h2 id="二叉树的遍历">二叉树的遍历</h2>
+<h3 id="遍历的分类">遍历的分类</h3>
+<p><img src="/media/20200321-11.png" alt="二叉树遍历的分类"></p>
+<h3 id="前序遍历">前序遍历</h3>
+<p>前序遍历一般规定先遍历左子树，然后遍历由子树。前序遍历的操作顺序如下：</p>
+<ol>
+<li>访问根节点。</li>
+<li>按照前序遍历方式遍历左子树。</li>
+<li>按照前序遍历方式遍历右子树。</li>
+</ol>
+<p>基于递归方式的前序遍历代码示例如下：</p>
+<pre><code>void preOrder(BinaryTreeNode root){
+	if(root!=null){
+		//先处理当前节点
+		System.out.println(root.getData());
+		//再处理左子树
+		preOrder(root.getLeft());
+		//最后处理右子树
+		preOrder(root.getRight());
+	}
+}
+</code></pre>
+<p>基于迭代方式的前序遍历代码示例如下：</p>
+<pre><code>void preOrder(BinaryTreeNode root){
+	if(root==null) return null;
+	Stack&lt;BinaryTreeNode&gt; cache=new Stack&lt;&gt;();
+	while(true){
+		//先从根节点开始，将所有子树的根节点从高到低添加到栈内
+		while(root!=null){
+			//首先处理根节点（前序遍历首先处理根节点）
+			System.out.println(root.get);
+			cache.push(root);
+			root=root.getLeft();
+		}
+		//如果栈内没有节点了
+		if(cache.isEmpty()) break;
+		//出栈，找到其右子树
+		root=cache.pop().getRight();
+	}
+}
+</code></pre>
+<h3 id="中序遍历">中序遍历</h3>
+<p>中序遍历的操作顺序如下：</p>
+<ol>
+<li>按中序遍历方式遍历左子树。</li>
+<li>访问根节点。</li>
+<li>按中序遍历方式遍历右子树。</li>
+</ol>
+<p>基于递归方式的中序遍历代码示例如下：</p>
+<pre><code>void inOrder(BinaryTreeNode root){
+	if(root!=null){
+		inOrder(root.getLeft());
+		System.out.println(root.getData());
+		inOrder(root.getRight());
+	}
+}
+</code></pre>
+<p>基于迭代方式的代码示例如下：</p>
+<pre><code>void inOrder(BinaryTreeNode root){
+	if(root==null) return null;
+	Stack&lt;BinaryNode&gt; cache=new Stack&lt;&gt;();
+	while(true){
+		while(root!=null){
+			cache.push(root);
+			root=root.getLeft();
+		}
+		if(cache.isEmpty()) break;
+		root=root.pop();
+		System.out.println(root.getData());
+		root=root.getRight();
+	}
+}
+</code></pre>
+<h3 id="后序遍历">后序遍历</h3>
+<p>后序遍历的操作顺序如下：</p>
+<ol>
+<li>按后序遍历左子树。</li>
+<li>按后序遍历右子树。</li>
+<li>访问根节点。</li>
+</ol>
+<p>基于递归方式的后序遍历代码示例如下：</p>
+<pre><code>void postOrder(BinaryTreeNode root){
+	if(root!=null){
+		postOrder(root.getLeft());
+		postOrder(root.getRight());
+		System.out.println(root.getData());
+	}
+}
+</code></pre>
+<p>基于迭代方式的后序遍历代码示例如下：</p>
+<pre><code>public List&lt;Integer&gt; postorderTraversal(TreeNode root){
+    ArrayList&lt;Integer&gt; result = new ArrayList&lt;&gt;();
+    if(root==null){
+        return result;
+    }
+    Stack&lt;TreeNode&gt; cache = new Stack&lt;&gt;();
+    cache.push(root);
+    TreeNode lastPop=null;
+    while(!cache.isEmpty()){
+        while(cache.peek().left!=null){
+            cache.push(cache.peek().left);
+        }
+        while(!cache.isEmpty()){
+            if(cache.peek().right==null||cache.peek().right==lastPop){
+                lastPop  = cache.pop();
+                result.add(lastPop.val);
+            }else if (cache.peek().right!=null){
+                cache.push(cache.peek().right);
+                break;
+            }
+        }
+    }
+    return result;
+}
+</code></pre>
+<h3 id="层次遍历">层次遍历</h3>
+<p>层次遍历的操作顺序如下：</p>
+<ol>
+<li>访问根节点。</li>
+<li>在访问第n层时，将n+1层的节点按顺序保存到队列中。</li>
+<li>进入下一层并访问该层的所有节点。</li>
+<li>重复上述操作直至所有层都访问完。</li>
+</ol>
+<p>一个代码示例如下：</p>
+<pre><code>void levelOrder(BinaryTreeNode root){
+	if(root==null) return;
+	BinaryTreeNode temp;
+	Queue&lt;BinaryTreeNode&gt; cache=new LinkedList&lt;&gt;();
+	cache.offer(root);
+	while(!cache.isEmpty){
+		temp=cache.poll();
+		BinaryTreeNode left=temp.getLeft();
+		BinaryTreeNode right=temp.getRight();
+		if(left!=null){
+			cache.offer(left);
+		}
+		if(right!=null){
+			cache.offer(right);
+		}
+	}
+}
+</code></pre>
+<h2 id="通用树n叉树">通用树(N叉树)</h2>
+<p>二叉树最多有2个孩子节点，这种树很容易就用两个指针表示。但是如果一棵树的每个节点可以有任意多个子节点，而且不知道一个节点到底有多少个子节点，如下图所示便是N叉树：</p>
+<p><img src="/media/20200401-1.png" alt="n叉树"></p>
+<h3 id="n叉树的表示">N叉树的表示</h3>
+<p>可以利用“第一个孩子/下一个兄弟”表示法，具体的步骤如下：</p>
+<ol>
+<li>同一个双亲节点的孩子节点（兄弟节点）从左至右排列。</li>
+<li>双亲节点只指向第一个孩子节点，删除从双亲节点到其他孩子节点的链接。</li>
+</ol>
+<p>节点图示如下：</p>
+<p><img src="/media/20200401-2.png" alt="N叉树的表示"></p>
+<p>实际表示如下：</p>
+<p><img src="/media/20200401-3.png" alt="N叉树的实际表示"></p>
+<p>代码示例如下：</p>
+<pre><code>public class TreeNode{
+	public int data;
+	public TreeNode firstChild;
+	public TreeNode nextSibing;
+	// getter and setter...
+}
+</code></pre>
+<h3 id="n叉树的孩子兄弟表示法理解">N叉树的“孩子/兄弟”表示法理解</h3>
+<p>如果孩子节点之期存在一条链路相连，那么双亲节点就不需要额外的指针指向所有的孩子节点，因为从双亲节点的第一个孩子节点开始就可以遍历所有的元素，所以双亲节点用一个指针指向其第一个孩子节点，且同一个双亲节点的所有孩子节点之间都有链路，那么就能解决N叉树的表示问题。</p>
+<h2 id="线索二叉树">线索二叉树</h2>
+<h3 id="线索二叉树的分类">线索二叉树的分类</h3>
+<ul>
+<li>如果只在空左指针存储前驱信息，则把这样的二叉树称为 <strong>左线索二叉树</strong></li>
+<li>如果只在空右指针存储后继信息，则把这样的二叉树称为 <strong>右线索二叉树</strong></li>
+<li>如果在空左指针存储前驱信息，并且在空右指针存储后继信息，则把这样的二叉树称为 <strong>满线索二叉树或者简单的称为线索二叉树</strong></li>
+</ul>
+<h3 id="线索二叉树的分类-1">线索二叉树的分类</h3>
+<ul>
+<li>前序线索二叉树：空左指针存储前序序列的前驱信息，空右指针存储前序序列后继信息。</li>
+<li>中序线索二叉树：空左指针存储中序序列的前驱信息，空右指针存储中序序列后继信息。</li>
+<li>后序线索二叉树：空左指针存储后序序列的前驱信息，空右指针存储后序序列后继信息。</li>
+</ul>
+<h3 id="线索二叉树结构">线索二叉树结构</h3>
+<p>为了能够区分树的左右指针指向子节点还是线索，为此需要为每个节点添加两个附加字段，对于线索二叉树，节点的的形式如下图所示：</p>
+<p><img src="/media/20200403-1.png" alt="线索二叉树的结构"></p>
+<p>代码形式如下：</p>
+<pre><code>public class ThreadedBinaryTreeNode{
+	public ThreadedBinaryTreeNode left,right;
+	public bool lTag.rTag;
+	// getter and setter
+}
+</code></pre>
+<p>代码中的lTag和rTag的说明如下：</p>
+<ol>
+<li>如果lTag为false，则代表左指针指向序列的前驱节点；lTag为true，则代表左指针指向左孩子节点。</li>
+<li>如果rTag为false，则代表右指针指向序列的后继节点；rTag为true，则代表右指针指向右孩子节点。</li>
+</ol>
+<p>下面给出一个中序线索二叉树的图示：</p>
+<p><img src="/media/20200403-2.png" alt="中序线索二叉树"></p>
+<h3 id="线索二叉树的一个技巧">线索二叉树的一个技巧</h3>
+<p>在线索二叉树的表示中，一个通常的约定是使用一个特定的哑结点，对于空树也是如此。哑结点的右标签是1，且右指针指向其自身。图示如下：</p>
+<p><img src="/media/20200403-3.png" alt="线索二叉树的哑结点"></p>
+<h2 id="表达式树">表达式树</h2>
+<ol>
+<li>用来表示表达式的树叫做 <strong>表达式树</strong> 。</li>
+<li>在表达式树中，叶子节点是操作数，而非叶子节点是操作符。</li>
+<li>表达式树由二元表达式组成，对于一元操作符，一个子树将为空。</li>
+</ol>
+<p>下图为表达式(A+B*C)/D对应的一个简单表达式树的图示：</p>
+<p><img src="/media/20200403-4.png" alt="表达式树"></p>
+<h3 id="基于后缀表达式构建表达式树">基于后缀表达式构建表达式树</h3>
+<h4 id="思路">思路</h4>
+<ol>
+<li>每次读入一个符号，如果是操作数，就创建一个节点，并把指向该节点的指针入栈。</li>
+<li>如果该符号是操作符，则从栈中弹出两个指向树T1，T2的指针（其中T1先出栈）。</li>
+<li>产生一颗新树，该树的根节点为读到的操作符，T1为其左孩子，T2为其右孩子。</li>
+<li>将指向新产生的树的指针入栈。</li>
+</ol>
+<p>例如后缀表达式：ABC*+D/ ，下面对其进行表达式树构建的图解：</p>
+<ol>
+<li>
+<p>产生三个节点，并将它们入栈：<br>
+<img src="/media/20200403-5.png" alt="图解1"></p>
+</li>
+<li>
+<p>读入操作符“*”，因此栈中指向两棵树的指针出栈，并形成一颗新树，最后将指向新树的指针入栈：<br>
+<img src="/media/20200403-6.png" alt="图解2"></p>
+</li>
+<li>
+<p>读入操作符“+”，因此将指向树的两个指针出栈，形成一颗新树，并将指向新树的指针入栈：<br>
+<img src="/media/20200403-7.png" alt="图解3"></p>
+</li>
+<li>
+<p>读入操作数“D”，产生包含一个节点的树。将指向该树的指针入栈：<br>
+<img src="/media/20200403-8.png" alt="图解4"></p>
+</li>
+<li>
+<p>读入操作符“/”，将栈中指针所对应的两棵树合并，并将指向最后树的指针入栈：<br>
+<img src="/media/20200403-9.png" alt="图解5"></p>
+</li>
+</ol>
+<h4 id="代码实现">代码实现</h4>
+<pre><code>BinaryTreeNode BuildExprTree(char[] input){
+	Stack&lt;Character&gt; cache=new Stack&lt;&gt;();
+	for(int i=0;i&lt;input.length;i++){
+		if(input[i].isDigit()){
+			BinaryTreeNode newNode=new BinaryTreeNode();
+			newNode.setData(input[i]);
+			cache.push(newNode);
+		}else{
+			BinaryTreeNode t2=cache.pop();
+			BinaryTreeNode t1=cache.pop();
+			BinaryTreeNode newNode=new BinaryTeeNode();
+			newNode.setData(input[i]);
+			newNode.setLeft(t1);
+			newNode.setRight(t2);
+			cache.push(newNode);
+		}
+	}
+	return cache.pop();
+}
+</code></pre>
+<h2 id="二叉搜索树">二叉搜索树</h2>
+<h3 id="为什么使用二叉搜索树bst">为什么使用二叉搜索树(BST)</h3>
+<p>对于普通的二叉树，在最坏的情况下，搜索的时间复杂度为O(n)，但是如果使用BST，那么可以使得在最坏的情况下平均搜索的时间复杂度降低到O(logn)。</p>
+<h3 id="bst的性质">BST的性质</h3>
+<ul>
+<li>一个节点的左子树只能包含键值小于该节点键值的节点。</li>
+<li>一个节点的右子树只能包含键值大于该节点键值的节点。</li>
+<li>左子树和右子树也必须是二叉搜索树。</li>
+</ul>
+<p><em><strong>Notice：</strong></em> 树中的每个节点都要满足这个性质。</p>
+<p>例如如下图中右边的二叉树便不是二叉搜索树（2比3小）：</p>
+<p><img src="/media/20200405-1.png" alt="二叉搜索树"></p>
+<h3 id="bst的注意事项">BST的注意事项</h3>
+<ol>
+<li>由于根节点数据总是处于左子树和右子树数据之前，所以当中序遍历二叉搜索树时，将得到一个有序表。</li>
+<li>搜索一个元素时，如果根节点数据小于要搜索的元素，则跳过根节点的左子树；同样，如果根节点数据大于要查找的元素，则跳过根节点的右子树。总而言之： <strong>二叉搜索树要么在左子树中搜索，要么在右子树中搜索，不需要同时在两个数中搜索</strong> 。</li>
+</ol>
+<h3 id="在二叉搜索树中寻找元素">在二叉搜索树中寻找元素</h3>
+<p>递归版本代码示例如下：</p>
+<pre><code>BSTNode find(BSTNode root,int target){
+	if(root==null){ return null; }
+	if(target&lt;root.getData()){
+		return find(root.getLeft(),target);
+	}else if(target&gt;root.getData()){
+		return find(root.getRight(),target);
+	}
+	return root;
+}
+</code></pre>
+<p>非递归版本代码示例如下：</p>
+<pre><code>BSTNode find(BSTNode root,int target){
+	if(root==null){ return null; }
+	while(root!=null){
+		if(target==root.getData()){
+			return root;
+		}else if(target&gt;root.getData()){
+			root=root.getRight();
+		}else{
+			root=root.getLeft();
+		}
+	}
+	return null;
+}
+</code></pre>
+<h3 id="在bst中寻找最小元素">在BST中寻找最小元素</h3>
+<p>在BST中，最左边的为最小元素，它没有左子节点。根据这个特点得出如下两种代码写法：</p>
+<p>递归版本的代码示例如下：</p>
+<pre><code>BSTNode findMin(BSTNode root){
+	if(root==null){ return null; }
+	if(root.getLeft()==null){
+		return root;
+	}else{
+		return findMin(root.getLeft());
+	}
+}
+</code></pre>
+<p>非递归版本如下：</p>
+<pre><code>BSTNode findMin(BSTNode root){
+	if(root==null){ return null; }
+	while(root.getLeft()!=null){
+		root=root.getLeft();
+	}
+	return root;
+}
+</code></pre>
+<h3 id="在bst中寻找最大元素">在BST中寻找最大元素</h3>
+<p>在BST中，最大元素在树的最右端，他没有右节点。根据这个特点得出如下两种代码写法：</p>
+<p>递归版本的代码示例如下：</p>
+<pre><code>BSTNode findMax(BSTNode root){
+	if(root==null){ return null; }
+	if(root.getRight()==null){
+		return root;
+	}else{
+		return findMax(root.getRight());
+	}
+}
+</code></pre>
+<p>非递归版本代码示例如下：</p>
+<pre><code>BSTNode findMax(BSTNode root){
+	if(root==null){ return null; }
+	while(root.getRight()!=null){
+		root=root.getRight();
+	}
+	return root;
+}
+</code></pre>
+<h3 id="寻找中序序列前驱和后继">寻找中序序列前驱和后继</h3>
+<p>如果X节点有两个孩子节点，那么中序序列前驱为其左子树中值最大的元素，而其后继为其右子树中最小的元素。图示如下：</p>
+<p><img src="/media/20200405-2.png" alt="BST中序序列前驱和后继"></p>
+<h3 id="在bst中插入元素">在BST中插入元素</h3>
+<p>一个代码示例如下：</p>
+<pre><code>BSTNode insert(BSTNode root,int data){
+	if(root==null){
+		root=new BSTNode();
+		root.setData(data);
+	}else{
+		if(data&lt;root.getData()){
+			root.setLeft(insert(root.getLeft(),data));
+		}else if(data&gt;root.getData()){
+			root.setRight(insert(root.getRight(),data));
+		}
+	}
+	return root;
+}
+</code></pre>
+<h3 id="在bst中删除元素">在BST中删除元素</h3>
+<p>一个代码示例如下：</p>
+<pre><code>BSTNode delete(BSTNode root,int data){
+	BSTNode temp;
+	if(root==null){
+		return null;
+	}else if(data&lt;root.getData()){
+		root.setLeft(delete(root.getLeft(),data));
+	}else if(data&gt;root.getData()){
+		root.setRight(delete(root.getRight(),data));
+	}else{
+		//如果找到该元素了
+		//如果被删除节点存在左右子树
+		if(root.getLeft()!=null&amp;&amp;root.getRight()!=null){
+			temp=findMax(root.getLeft());
+			root.setData(temp.getData());
+			root.setLeft(delete(root.getLeft(),root.getData()));
+		}else{
+			//如果不能存在孩子节点
+			if(root.getLeft()==null&amp;&amp;root.getRight()==null){
+				root=null;
+			}else if(root.getLeft()==null){
+				//如果存在右孩子节点
+				root=root.getRight();
+			}else if(root.getRight()==null){
+				//如果存在左孩子节点
+				root=root.getLeft();
+			}
+		}
+	}
+	return root;
+}
+</code></pre>
+<h2 id="平衡二叉搜索树">平衡二叉搜索树</h2>
+<p>通常，高度平衡树用符号HB(k)表示，其中k为左子树和右子树的高度差。有时也把k叫做平衡因子。</p>
+<h3 id="完全平衡二叉树">完全平衡二叉树</h3>
+<p>在HB(k)中，如果k=0，那么就把这种二叉树叫做完全平衡二叉树。即，在HB(0)的二叉搜索树中，左子树和右子树的高度差最多为0。这就能够保证树为完全二叉树。例如下图：</p>
+<p><img src="/media/20200405-3.png" alt="完全平衡二叉树"></p>
+<h2 id="avl树">AVL树</h2>
+<p>在HB(k)中，如果k=1，那么这种的二叉搜索树叫做AVL树。即一个AVL树是带有平衡条件的二叉搜索树：左子树和右子树的高度差最多不能超过1。</p>
+<h3 id="avl树的性质">AVL树的性质</h3>
+<ul>
+<li>它是一颗二叉搜索树。</li>
+<li>对任意节点X，其左子树的高度与其右子树的高度的差最多不超过1。</li>
+</ul>
+<p>例如下图中，左边的树不是AVL树，而右边的是AVL树：</p>
+<p><img src="/media/20200405-4.png" alt="AVL树图示"></p>
+<h3 id="旋转">旋转</h3>
+<p>旋转是用来保持AVL树性质的技术。即，需要在节点X应用旋转操作。如果在AVL树中插入一个节点，那么我们需要修复这个AVL树（保证插入后整个树任然满足AVL的性质），我们只需要关注从插入点到根节点路径上的第一个不满足AVL性质的节点，并修复它。</p>
+<h3 id="违背avl树性质的类型">违背AVL树性质的类型</h3>
+<ul>
+<li>在节点X的左孩子节点的左子树中插入元素（LL型）。</li>
+<li>在节点X的左孩子节点的右子树中插入元素（LR型）。</li>
+<li>在节点X的右孩子节点的左子树中插入元素（RL型）。</li>
+<li>在节点X的右孩子节点的右子树中插入元素（RR型）。</li>
+</ul>
+<p>第1种情况和第4中情况是对称的，很容易由单旋转来解决。类似的，第2种情况和第3种，需要双旋转才能解决（需要两个单旋转）。</p>
+<h3 id="单旋转">单旋转</h3>
+<h4 id="右单旋">右单旋</h4>
+<p>右单旋用于处理LL型插入方式。一个图解如下：</p>
+<p><img src="/media/20200405-5.png" alt="右单旋图解"></p>
+<h4 id="左单旋">左单旋</h4>
+<p>左单旋用于处理RR型插入方式。一个图解如下：</p>
+<p><img src="/media/20200405-6.png" alt="左单旋图解"></p>
+<h3 id="双旋">双旋</h3>
+<h4 id="左右双旋">左右双旋</h4>
+<p>左右双旋用于处理LR插入方式。一个图解如下：</p>
+<p><img src="/media/20200405-7.png" alt="左右双旋图解"></p>
+<h4 id="右左双旋">右左双旋</h4>
+<p>右左双旋用于处理RL型插入。一个图解如下：</p>
+<p><img src="/media/20200405-8.png" alt="右左双旋图解"></p>
+
+    </div>
+
+    <div class="post-copyright">
+  <p class="copyright-item">
+    <span class="item-title">文章作者</span>
+    <span class="item-content">P1n93r</span>
+  </p>
+  <p class="copyright-item">
+    <span class="item-title">上次更新</span>
+    <span class="item-content">
+        2020-03-21
+        
+    </span>
+  </p>
+  
+  
+</div>
+<footer class="post-footer">
+      <div class="post-tags">
+          <a href="/tags/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/">数据结构与算法</a>
+          </div>
+      <nav class="post-nav">
+        <a class="prev" href="/post/springmvc/springmvc%E4%BC%98%E9%9B%85%E7%9A%84%E5%8E%BB%E9%99%A4%E5%8F%82%E6%95%B0%E5%89%8D%E5%90%8E%E7%A9%BA%E6%A0%BC/">
+            <i class="iconfont icon-left"></i>
+            <span class="prev-text nav-default">SpringMVC优雅的去除参数的前后空格</span>
+            <span class="prev-text nav-mobile">上一篇</span>
+          </a>
+        <a class="next" href="/post/other/git%E7%9A%84%E4%BD%BF%E7%94%A8/">
+            <span class="next-text nav-default">Git的使用</span>
+            <span class="next-text nav-mobile">下一篇</span>
+            <i class="iconfont icon-right"></i>
+          </a>
+      </nav>
+    </footer>
+  </article>
+        </div>
+        <div id="disqus_thread"></div>
+    <script type="text/javascript">
+    (function() {
+      
+      
+      if (window.location.hostname === 'localhost') return;
+
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      var disqus_shortname = 'p1n93r';
+      dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+    </script>
+    <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+
+  
+
+  
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="social-links">
+      <a href="mailto:pin83r@gmail.com" class="iconfont icon-email" title="email"></a>
+      <a href="https://github.com/p1n93r" class="iconfont icon-github" title="github"></a>
+  <a href="https://p1n93r.github.io/index.xml" type="application/rss+xml" class="iconfont icon-rss" title="rss"></a>
+</div>
+
+<div class="copyright">
+  <span class="power-by">
+    由 <a class="hexo-link" href="https://gohugo.io">Hugo</a> 强力驱动
+  </span>
+  <span class="division">|</span>
+  <span class="theme-info">
+    主题 - 
+    <a class="theme-link" href="https://github.com/olOwOlo/hugo-theme-even">Even</a>
+  </span>
+
+  <div class="busuanzi-footer">
+    <span id="busuanzi_container_site_pv"> 本站总访问量 <span id="busuanzi_value_site_pv"><img src="/img/spinner.svg" alt="spinner.svg"/></span> 次 </span>
+      <span class="division">|</span>
+    <span id="busuanzi_container_site_uv"> 本站总访客数 <span id="busuanzi_value_site_uv"><img src="/img/spinner.svg" alt="spinner.svg"/></span> 人 </span>
+  </div>
+
+  <span class="copyright-year">
+    &copy; 
+    2019 - 
+    2022<span class="heart"><i class="iconfont icon-heart"></i></span><span>P1n93r</span>
+  </span>
+</div>
+
+    </footer>
+
+    <div class="back-to-top" id="back-to-top">
+      <i class="iconfont icon-up"></i>
+    </div>
+  </div>
+  
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/slideout@1.0.1/dist/slideout.min.js" integrity="sha256-t+zJ/g8/KXIJMjSVQdnibt4dlaDxc9zXr/9oNPeWqdg=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.js" integrity="sha256-XVLffZaxoWfGUEbdzuLi7pwaUJv1cecsQJQqGLe7axY=" crossorigin="anonymous"></script>
+
+
+
+<script type="text/javascript" src="/js/main.min.64437849d125a2d603b3e71d6de5225d641a32d17168a58106e0b61852079683.js"></script>
+
+
+
+
+
+
+
+
+</body>
+</html>

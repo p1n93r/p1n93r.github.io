@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>interview on P1n93r - 博学而精一</title>
+    <link>https://p1n93r.github.io/categories/interview/</link>
+    <description>Recent content in interview on P1n93r - 博学而精一</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en</language>
+    <lastBuildDate>Thu, 11 Jun 2020 16:04:36 +0800</lastBuildDate><atom:link href="https://p1n93r.github.io/categories/interview/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Mysql</title>
+      <link>https://p1n93r.github.io/post/interview/mysql/</link>
+      <pubDate>Thu, 11 Jun 2020 16:04:36 +0800</pubDate>
+      
+      <guid>https://p1n93r.github.io/post/interview/mysql/</guid>
+      <description>如何设计一个关系型数据库？ 存储部分：类似文件系统将数据持久化到硬盘上。 程序实例部分，创建模块：存储管理、缓存机制、SQL解析、日志管理、权限</description>
+    </item>
+    
+    <item>
+      <title>Spring</title>
+      <link>https://p1n93r.github.io/post/interview/spring/</link>
+      <pubDate>Thu, 11 Jun 2020 16:04:36 +0800</pubDate>
+      
+      <guid>https://p1n93r.github.io/post/interview/spring/</guid>
+      <description>什么是Spring的IOC？ IOC（Inversion of Controller）即 控制反转 。反转获得依赖对象的过程，获得依赖对象的过程由自身管</description>
+    </item>
+    
+    <item>
+      <title>异常、IO和NIO(Java)</title>
+      <link>https://p1n93r.github.io/post/interview/%E5%BC%82%E5%B8%B8/</link>
+      <pubDate>Thu, 11 Jun 2020 16:04:36 +0800</pubDate>
+      
+      <guid>https://p1n93r.github.io/post/interview/%E5%BC%82%E5%B8%B8/</guid>
+      <description>Java异常面试题 Java中异常分为哪两种？ 编译时异常和运行时异常。 异常的处理机制有哪几种？ 异常捕捉：try&amp;hellip;catch&amp;he</description>
+    </item>
+    
+    <item>
+      <title>注解、集合和泛型(Java)</title>
+      <link>https://p1n93r.github.io/post/interview/%E6%B3%A8%E8%A7%A3%E9%9B%86%E5%90%88%E5%92%8C%E6%B3%9B%E5%9E%8Bjava/</link>
+      <pubDate>Wed, 10 Jun 2020 16:04:36 +0800</pubDate>
+      
+      <guid>https://p1n93r.github.io/post/interview/%E6%B3%A8%E8%A7%A3%E9%9B%86%E5%90%88%E5%92%8C%E6%B3%9B%E5%9E%8Bjava/</guid>
+      <description>Java注解面试题 注解是什么？ Annotation(注解)是Java提供的一种 对元程序中元素关联信息和元数据(metaData)的途径和方法</description>
+    </item>
+    
+  </channel>
+</rss>

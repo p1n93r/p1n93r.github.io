@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Maven on P1n93r - 博学而精一</title>
+    <link>https://p1n93r.github.io/tags/maven/</link>
+    <description>Recent content in Maven on P1n93r - 博学而精一</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en</language>
+    <lastBuildDate>Thu, 07 Oct 2021 17:05:36 +0800</lastBuildDate><atom:link href="https://p1n93r.github.io/tags/maven/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>IDEA配置PHP调试环境</title>
+      <link>https://p1n93r.github.io/post/other/idea%E9%85%8D%E7%BD%AEphp%E8%B0%83%E8%AF%95%E7%8E%AF%E5%A2%83/</link>
+      <pubDate>Thu, 07 Oct 2021 17:05:36 +0800</pubDate>
+      
+      <guid>https://p1n93r.github.io/post/other/idea%E9%85%8D%E7%BD%AEphp%E8%B0%83%E8%AF%95%E7%8E%AF%E5%A2%83/</guid>
+      <description>我使用的是IDEA来进行调试php，需要开启两个插件，一个是： PHP Built-in Web Server ，还有一个是： PHP Web Page 。 其中 PHP Built-in Web Server 用于启动一个PHP Server，而 PHP</description>
+    </item>
+    
+    <item>
+      <title>IDEA之Maven疑难杂症</title>
+      <link>https://p1n93r.github.io/post/other/idea%E4%B9%8Bmaven%E7%96%91%E9%9A%BE%E6%9D%82%E7%97%87/</link>
+      <pubDate>Mon, 09 Mar 2020 19:29:36 +0800</pubDate>
+      
+      <guid>https://p1n93r.github.io/post/other/idea%E4%B9%8Bmaven%E7%96%91%E9%9A%BE%E6%9D%82%E7%97%87/</guid>
+      <description>待解决的问题 IDEA的Maven项目从模板构建卡住的问题。 Maven下载依赖包提示SSL错误的问题。 Maven下载依赖包速度慢的问题。 优化步</description>
+    </item>
+    
+  </channel>
+</rss>

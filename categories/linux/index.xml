@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Linux on P1n93r - 博学而精一</title>
+    <link>https://p1n93r.github.io/categories/linux/</link>
+    <description>Recent content in Linux on P1n93r - 博学而精一</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en</language>
+    <lastBuildDate>Thu, 05 Dec 2019 20:27:36 +0800</lastBuildDate><atom:link href="https://p1n93r.github.io/categories/linux/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>7-使用过滤器操作文本文件</title>
+      <link>https://p1n93r.github.io/post/linux/7-%E4%BD%BF%E7%94%A8%E8%BF%87%E6%BB%A4%E5%99%A8%E6%93%8D%E4%BD%9C%E6%96%87%E6%9C%AC%E6%96%87%E4%BB%B6/</link>
+      <pubDate>Thu, 05 Dec 2019 20:27:36 +0800</pubDate>
+      
+      <guid>https://p1n93r.github.io/post/linux/7-%E4%BD%BF%E7%94%A8%E8%BF%87%E6%BB%A4%E5%99%A8%E6%93%8D%E4%BD%9C%E6%96%87%E6%9C%AC%E6%96%87%E4%BB%B6/</guid>
+      <description>计算文件中的单词数、行数和字符数 可以使用 wc 命令对文件中的单词数、行数、字符数进行统计，默认使用 wc 会三个数据都显示（顺序为：行数、单词数、字节</description>
+    </item>
+    
+    <item>
+      <title>6-查看文件</title>
+      <link>https://p1n93r.github.io/post/linux/6-%E6%9F%A5%E7%9C%8B%E6%96%87%E4%BB%B6/</link>
+      <pubDate>Tue, 26 Nov 2019 19:27:36 +0800</pubDate>
+      
+      <guid>https://p1n93r.github.io/post/linux/6-%E6%9F%A5%E7%9C%8B%E6%96%87%E4%BB%B6/</guid>
+      <description>了解文件的类型 使用命令 file 可以查看文件的类型。一个例子如下： 在标准输出设备上查看文件 使用命令 cat 可以将文本文件的内容显示在屏幕上（DOS是 type ），</description>
+    </item>
+    
+    <item>
+      <title>5-组合命令</title>
+      <link>https://p1n93r.github.io/post/linux/5-%E7%BB%84%E5%90%88%E5%91%BD%E4%BB%A4/</link>
+      <pubDate>Mon, 25 Nov 2019 20:40:36 +0800</pubDate>
+      
+      <guid>https://p1n93r.github.io/post/linux/5-%E7%BB%84%E5%90%88%E5%91%BD%E4%BB%A4/</guid>
+      <description>连续运行多个命令 可以使用符号 ; 分隔多个连续运行的命令。例如下面： Notice ：使用此种方式连续运行多个命令的时候，需要特别小心—— 即使前面的命令运行失</description>
+    </item>
+    
+    <item>
+      <title>4-学习命令</title>
+      <link>https://p1n93r.github.io/post/linux/4-%E5%AD%A6%E4%B9%A0%E5%91%BD%E4%BB%A4/</link>
+      <pubDate>Wed, 20 Nov 2019 12:09:36 +0800</pubDate>
+      
+      <guid>https://p1n93r.github.io/post/linux/4-%E5%AD%A6%E4%B9%A0%E5%91%BD%E4%BB%A4/</guid>
+      <description>使用man查找命令相关信息 想要查看某个命令的详细用法，可以使用 man 命令，格式为： man 待查询命令 ,就会打开此命令的手册页面，是基于 less 打开的，所以可</description>
+    </item>
+    
+    <item>
+      <title>3-创建和销毁</title>
+      <link>https://p1n93r.github.io/post/linux/3-%E5%88%9B%E5%BB%BA%E5%92%8C%E9%94%80%E6%AF%81/</link>
+      <pubDate>Sat, 16 Nov 2019 18:02:36 +0800</pubDate>
+      
+      <guid>https://p1n93r.github.io/post/linux/3-%E5%88%9B%E5%BB%BA%E5%92%8C%E9%94%80%E6%AF%81/</guid>
+      <description>将文件改为当前时间 touch 命令的主要作用是更新文件的 访问和修改时间 （需要拥有文件的写入权限），如果指向修改文件的访问时间，可以使用 -a 选项；如果只想</description>
+    </item>
+    
+    <item>
+      <title>2-文件导航系统</title>
+      <link>https://p1n93r.github.io/post/linux/2-%E6%96%87%E4%BB%B6%E5%AF%BC%E8%88%AA%E7%B3%BB%E7%BB%9F/</link>
+      <pubDate>Fri, 15 Nov 2019 19:05:36 +0800</pubDate>
+      
+      <guid>https://p1n93r.github.io/post/linux/2-%E6%96%87%E4%BB%B6%E5%AF%BC%E8%88%AA%E7%B3%BB%E7%BB%9F/</guid>
+      <description>列出文件和文件夹 在操作和使用目录中的文件之前，首先得直到该目录中有哪些文件，所以我们需要列出目录中得文件和子目录，此命令便是 ls 。输入 ls 会列出</description>
+    </item>
+    
+    <item>
+      <title>1-需要了解的命令行相关事项</title>
+      <link>https://p1n93r.github.io/post/linux/1-%E9%9C%80%E8%A6%81%E4%BA%86%E8%A7%A3%E7%9A%84%E5%91%BD%E4%BB%A4%E8%A1%8C%E7%9B%B8%E5%85%B3%E4%BA%8B%E9%A1%B9/</link>
+      <pubDate>Wed, 13 Nov 2019 21:36:36 +0800</pubDate>
+      
+      <guid>https://p1n93r.github.io/post/linux/1-%E9%9C%80%E8%A6%81%E4%BA%86%E8%A7%A3%E7%9A%84%E5%91%BD%E4%BB%A4%E8%A1%8C%E7%9B%B8%E5%85%B3%E4%BA%8B%E9%A1%B9/</guid>
+      <description>一切皆文件 在Linux系统中，一切皆文件 。除了我们常识中认识的文件外， 目录也是文件，不过是特殊类型的文件，包含有关其他文件的信息。磁盘驱动器</description>
+    </item>
+    
+  </channel>
+</rss>

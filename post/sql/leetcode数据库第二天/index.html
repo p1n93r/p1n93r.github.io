@@ -1,0 +1,639 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>LeetCode数据库(第二天) - P1n93r - 博学而精一</title>
+  <meta name="renderer" content="webkit" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+<meta name="author" content="P1n93r" /><meta name="description" content="[178]分数排名 题目内容如下： //编写一个 SQL 查询来实现分数排名。 // // 如果两个分数相同，则两个分数排名（Rank）相同。请注意，平分后的下一" /><meta name="keywords" content="Security, Java, Web, Android" />
+
+
+
+
+
+
+<meta name="generator" content="Hugo 0.96.0 with theme even" />
+
+
+<link rel="canonical" href="https://p1n93r.github.io/post/sql/leetcode%E6%95%B0%E6%8D%AE%E5%BA%93%E7%AC%AC%E4%BA%8C%E5%A4%A9/" />
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/manifest.json">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+<link href="/sass/main.min.f92fd13721ddf72129410fd8250e73152cc6f2438082b6c0208dc24ee7c13fc4.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.css" integrity="sha256-7TyXnr2YU040zfSP+rEcz29ggW4j56/ujTPwjMzyqFY=" crossorigin="anonymous">
+
+
+<meta property="og:title" content="LeetCode数据库(第二天)" />
+<meta property="og:description" content="[178]分数排名 题目内容如下： //编写一个 SQL 查询来实现分数排名。 // // 如果两个分数相同，则两个分数排名（Rank）相同。请注意，平分后的下一" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://p1n93r.github.io/post/sql/leetcode%E6%95%B0%E6%8D%AE%E5%BA%93%E7%AC%AC%E4%BA%8C%E5%A4%A9/" /><meta property="article:section" content="post" />
+<meta property="article:published_time" content="2020-09-16T23:06:36+08:00" />
+<meta property="article:modified_time" content="2020-09-16T23:06:36+08:00" />
+
+<meta itemprop="name" content="LeetCode数据库(第二天)">
+<meta itemprop="description" content="[178]分数排名 题目内容如下： //编写一个 SQL 查询来实现分数排名。 // // 如果两个分数相同，则两个分数排名（Rank）相同。请注意，平分后的下一"><meta itemprop="datePublished" content="2020-09-16T23:06:36+08:00" />
+<meta itemprop="dateModified" content="2020-09-16T23:06:36+08:00" />
+<meta itemprop="wordCount" content="2390">
+<meta itemprop="keywords" content="" /><meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="LeetCode数据库(第二天)"/>
+<meta name="twitter:description" content="[178]分数排名 题目内容如下： //编写一个 SQL 查询来实现分数排名。 // // 如果两个分数相同，则两个分数排名（Rank）相同。请注意，平分后的下一"/>
+
+<!--[if lte IE 9]>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
+<![endif]-->
+
+<!--[if lt IE 9]>
+  <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+<![endif]-->
+
+</head>
+<body>
+  <div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/" class="logo">P1n93r</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    <a href="/">
+        <li class="mobile-menu-item">Home</li>
+      </a><a href="/post/">
+        <li class="mobile-menu-item">Archives</li>
+      </a><a href="/tags/">
+        <li class="mobile-menu-item">Tags</li>
+      </a><a href="/categories/">
+        <li class="mobile-menu-item">Categories</li>
+      </a><a href="/about/">
+        <li class="mobile-menu-item">About</li>
+      </a>
+  </ul>
+
+  
+
+
+</nav>
+
+  <div class="container" id="mobile-panel">
+    <header id="header" class="header">
+        <div class="logo-wrapper">
+  <a href="/" class="logo">P1n93r</a>
+</div>
+
+
+
+
+
+<nav class="site-navbar">
+  <ul id="menu" class="menu">
+    <li class="menu-item">
+        <a class="menu-item-link" href="/">Home</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/">Archives</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/tags/">Tags</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/categories/">Categories</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/about/">About</a>
+      </li>
+  </ul>
+</nav>
+
+    </header>
+
+    <main id="main" class="main">
+      <div class="content-wrapper">
+        <div id="content" class="content">
+          <article class="post">
+    
+    <header class="post-header">
+      <h1 class="post-title">LeetCode数据库(第二天)</h1>
+
+      <div class="post-meta">
+        <span class="post-time"> 2020-09-16 </span>
+        <div class="post-category">
+            <a href="/categories/sql/"> sql </a>
+            </div>
+          <span class="more-meta"> 约 2390 字 </span>
+          <span class="more-meta"> 预计阅读 5 分钟 </span>
+        <span id="busuanzi_container_page_pv" class="more-meta"> <span id="busuanzi_value_page_pv"><img src="/img/spinner.svg" alt="spinner.svg"/></span> 次阅读 </span>
+      </div>
+    </header>
+
+    <div class="post-toc" id="post-toc">
+  <h2 class="post-toc-title">文章目录</h2>
+  <div class="post-toc-content always-active">
+    <nav id="TableOfContents">
+  <ul>
+    <li>
+      <ul>
+        <li><a href="#178分数排名">[178]分数排名</a>
+          <ul>
+            <li><a href="#解法">解法</a></li>
+          </ul>
+        </li>
+        <li><a href="#180连续出现的数字">[180]连续出现的数字</a>
+          <ul>
+            <li><a href="#解法-1">解法</a></li>
+          </ul>
+        </li>
+        <li><a href="#181超过经理收入的员工">[181]超过经理收入的员工</a>
+          <ul>
+            <li><a href="#解法-2">解法</a></li>
+          </ul>
+        </li>
+        <li><a href="#182查找重复的电子邮箱">[182]查找重复的电子邮箱</a>
+          <ul>
+            <li><a href="#解法-3">解法</a></li>
+          </ul>
+        </li>
+        <li><a href="#183从不订购的客户">[183]从不订购的客户</a>
+          <ul>
+            <li><a href="#解法-4">解法</a></li>
+          </ul>
+        </li>
+        <li><a href="#184部门工资最高的员工">[184]部门工资最高的员工</a>
+          <ul>
+            <li><a href="#解法-5">解法</a></li>
+          </ul>
+        </li>
+        <li><a href="#175组合两个表">[175]组合两个表</a>
+          <ul>
+            <li><a href="#解法-6">解法</a></li>
+          </ul>
+        </li>
+        <li><a href="#176第二高的薪水">[176]第二高的薪水</a>
+          <ul>
+            <li><a href="#解法-7">解法</a></li>
+          </ul>
+        </li>
+        <li><a href="#177第n高的薪水">[177]第N高的薪水</a>
+          <ul>
+            <li><a href="#解法如下">解法如下：</a></li>
+          </ul>
+        </li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+  </div>
+</div>
+    <div class="post-content">
+      <h2 id="178分数排名">[178]分数排名</h2>
+<p>题目内容如下：</p>
+<pre><code>//编写一个 SQL 查询来实现分数排名。
+//
+// 如果两个分数相同，则两个分数排名（Rank）相同。请注意，平分后的下一个名次应该是下一个连续的整数值。换句话说，名次之间不应该有“间隔”。
+//
+// +----+-------+
+//| Id | Score |
+//+----+-------+
+//| 1  | 3.50  |
+//| 2  | 3.65  |
+//| 3  | 4.00  |
+//| 4  | 3.85  |
+//| 5  | 4.00  |
+//| 6  | 3.65  |
+//+----+-------+
+//
+//
+// 例如，根据上述给定的 Scores 表，你的查询应该返回（按分数从高到低排列）：
+//
+// +-------+------+
+//| Score | Rank |
+//+-------+------+
+//| 4.00  | 1    |
+//| 4.00  | 1    |
+//| 3.85  | 2    |
+//| 3.65  | 3    |
+//| 3.65  | 3    |
+//| 3.50  | 4    |
+//+-------+------+
+//
+//
+// 重要提示：对于 MySQL 解决方案，如果要转义用作列名的保留字，可以在关键字之前和之后使用撇号。例如 `Rank`
+// 👍 600 👎 0
+</code></pre>
+<h3 id="解法">解法</h3>
+<p>一开始想，mysql会不会有什么系统函数可以得到当前行的索引，这样就可以得到排名了，好的，mysql低版本是没有这种函数的，高版本有一个dense_rank()函数可以直接得到排名。但是我本地是低版本的，于是。。。我不会做了，看人家的题解叭=-=&lsquo;&lsquo;&lsquo;思路就是： <strong>假设当前分数是X，那么查找大于X的不重复个数（平分的人是同个名次）G，那么G+1就是分数X的名次</strong> ，代码如下：</p>
+<pre><code>select Score,(
+        select count(distinct Score)+1 from Scores a where a.Score&gt;b.Score
+) as `Rank` from Scores b order by Score desc;
+</code></pre>
+<h2 id="180连续出现的数字">[180]连续出现的数字</h2>
+<p>题目内容如下：</p>
+<pre><code>//编写一个 SQL 查询，查找所有至少连续出现三次的数字。
+//
+// +----+-----+
+//| Id | Num |
+//+----+-----+
+//| 1  |  1  |
+//| 2  |  1  |
+//| 3  |  1  |
+//| 4  |  2  |
+//| 5  |  1  |
+//| 6  |  2  |
+//| 7  |  2  |
+//+----+-----+
+//
+//
+// 例如，给定上面的 Logs 表， 1 是唯一连续出现至少三次的数字。
+//
+// +-----------------+
+//| ConsecutiveNums |
+//+-----------------+
+//| 1               |
+//+-----------------+
+//
+// 👍 305 👎 0
+</code></pre>
+<h3 id="解法-1">解法</h3>
+<p>至少连续出现三次，那么这就是连续的三行，那么它们的id也是连续的且num相等，根据这个条件，构造查询如下：</p>
+<pre><code>select distinct a.Num as ConsecutiveNums from Logs a,Logs b,Logs c
+        where a.Id+1=b.Id and b.Id+1=c.Id
+            and a.Num=b.Num and b.Num=c.Num;
+</code></pre>
+<h2 id="181超过经理收入的员工">[181]超过经理收入的员工</h2>
+<p>题目内容如下：</p>
+<pre><code>//Employee 表包含所有员工，他们的经理也属于员工。每个员工都有一个 Id，此外还有一列对应员工的经理的 Id。
+//
+// +----+-------+--------+-----------+
+//| Id | Name  | Salary | ManagerId |
+//+----+-------+--------+-----------+
+//| 1  | Joe   | 70000  | 3         |
+//| 2  | Henry | 80000  | 4         |
+//| 3  | Sam   | 60000  | NULL      |
+//| 4  | Max   | 90000  | NULL      |
+//+----+-------+--------+-----------+
+//
+//
+// 给定 Employee 表，编写一个 SQL 查询，该查询可以获取收入超过他们经理的员工的姓名。在上面的表格中，Joe 是唯一一个收入超过他的经理的员工。
+//
+//
+// +----------+
+//| Employee |
+//+----------+
+//| Joe      |
+//+----------+
+//
+// 👍 308 👎 0
+</code></pre>
+<h3 id="解法-2">解法</h3>
+<p>通过Id和ManagerId连接起来两条记录，然后比较其Salary，代码如下：</p>
+<pre><code>select a.Name as Employee from Employee a,Employee b where a.ManagerId=b.Id and a.Salary&gt;b.Salary;
+</code></pre>
+<h2 id="182查找重复的电子邮箱">[182]查找重复的电子邮箱</h2>
+<p>题目内容如下：</p>
+<pre><code>//编写一个 SQL 查询，查找 Person 表中所有重复的电子邮箱。
+//
+// 示例：
+//
+// +----+---------+
+//| Id | Email   |
+//+----+---------+
+//| 1  | a@b.com |
+//| 2  | c@d.com |
+//| 3  | a@b.com |
+//+----+---------+
+//
+//
+// 根据以上输入，你的查询应返回以下结果：
+//
+// +---------+
+//| Email   |
+//+---------+
+//| a@b.com |
+//+---------+
+//
+//
+// 说明：所有电子邮箱都是小写字母。
+// 👍 229 👎 0
+</code></pre>
+<h3 id="解法-3">解法</h3>
+<p>比较简单，就是一个 <code>group by</code> ，需要注意的就是聚合函数可以放在 <code>having</code> 后面作为条件，代码如下：</p>
+<pre><code>select Email from Person group by Email having count(*)&gt;1;
+</code></pre>
+<h2 id="183从不订购的客户">[183]从不订购的客户</h2>
+<p>题目内容如下：</p>
+<pre><code>//某网站包含两个表，Customers 表和 Orders 表。编写一个 SQL 查询，找出所有从不订购任何东西的客户。
+//
+// Customers 表：
+//
+// +----+-------+
+//| Id | Name  |
+//+----+-------+
+//| 1  | Joe   |
+//| 2  | Henry |
+//| 3  | Sam   |
+//| 4  | Max   |
+//+----+-------+
+//
+//
+// Orders 表：
+//
+// +----+------------+
+//| Id | CustomerId |
+//+----+------------+
+//| 1  | 3          |
+//| 2  | 1          |
+//+----+------------+
+//
+//
+// 例如给定上述表格，你的查询应返回：
+//
+// +-----------+
+//| Customers |
+//+-----------+
+//| Henry     |
+//| Max       |
+//+-----------+
+//
+// 👍 172 👎 0
+</code></pre>
+<h3 id="解法-4">解法</h3>
+<p>比较简单，用 <code>not in</code> 就可以啦，代码如下：</p>
+<pre><code>select Name as Customers from Customers where Id not in(
+        select distinct CustomerId from Orders
+);
+</code></pre>
+<h2 id="184部门工资最高的员工">[184]部门工资最高的员工</h2>
+<p>题目内容如下：</p>
+<pre><code>//Employee 表包含所有员工信息，每个员工有其对应的 Id, salary 和 department Id。
+//
+// +----+-------+--------+--------------+
+//| Id | Name  | Salary | DepartmentId |
+//+----+-------+--------+--------------+
+//| 1  | Joe   | 70000  | 1            |
+//| 2  | Jim   | 90000  | 1            |
+//| 3  | Henry | 80000  | 2            |
+//| 4  | Sam   | 60000  | 2            |
+//| 5  | Max   | 90000  | 1            |
+//+----+-------+--------+--------------+
+//
+// Department 表包含公司所有部门的信息。
+//
+// +----+----------+
+//| Id | Name     |
+//+----+----------+
+//| 1  | IT       |
+//| 2  | Sales    |
+//+----+----------+
+//
+// 编写一个 SQL 查询，找出每个部门工资最高的员工。对于上述表，您的 SQL 查询应返回以下行（行的顺序无关紧要）。
+//
+// +------------+----------+--------+
+//| Department | Employee | Salary |
+//+------------+----------+--------+
+//| IT         | Max      | 90000  |
+//| IT         | Jim      | 90000  |
+//| Sales      | Henry    | 80000  |
+//+------------+----------+--------+
+//
+// 解释：
+//
+// Max 和 Jim 在 IT 部门的工资都是最高的，Henry 在销售部的工资最高。
+// 👍 287 👎 0
+</code></pre>
+<h3 id="解法-5">解法</h3>
+<p>一开始想到了 <code>IN</code> ，但是不知道可以 <code>IN</code> 多个字段，思路就是： <strong>先查询出部门ID以及对应部门最高工资，然后查询Employee中部门ID和工资IN查询出来的结果（IN的字段要对应）</strong> ，代码如下：</p>
+<pre><code>select D.Name as Department,E.Name as Employee,E.Salary as Salary
+        from Department D,Employee E
+        where D.Id=E.DepartmentId and (E.DepartmentId,E.Salary) in (
+        select F.DepartmentId,max(F.Salary) from Employee F group by F.DepartmentId
+    );
+</code></pre>
+<h2 id="175组合两个表">[175]组合两个表</h2>
+<p>题目内容如下：</p>
+<pre><code>//表1: Person
+//
+// +-------------+---------+
+//| 列名         | 类型     |
+//+-------------+---------+
+//| PersonId    | int     |
+//| FirstName   | varchar |
+//| LastName    | varchar |
+//+-------------+---------+
+//PersonId 是上表主键
+//
+//
+// 表2: Address
+//
+// +-------------+---------+
+//| 列名         | 类型    |
+//+-------------+---------+
+//| AddressId   | int     |
+//| PersonId    | int     |
+//| City        | varchar |
+//| State       | varchar |
+//+-------------+---------+
+//AddressId 是上表主键
+//
+//
+//
+//
+// 编写一个 SQL 查询，满足条件：无论 person 是否有地址信息，都需要基于上述两表提供 person 的以下信息：
+//
+//
+//
+// FirstName, LastName, City, State
+//
+// 👍 667 👎 0
+</code></pre>
+<h3 id="解法-6">解法</h3>
+<p>就是一个左连接，代码如下：</p>
+<pre><code>select FirstName,LastName,A.City,A.State from Person left join Address A on Person.PersonId = A.PersonId;
+</code></pre>
+<h2 id="176第二高的薪水">[176]第二高的薪水</h2>
+<p>题目内容如下：</p>
+<pre><code>//编写一个 SQL 查询，获取 Employee 表中第二高的薪水（Salary） 。
+//
+// +----+--------+
+//| Id | Salary |
+//+----+--------+
+//| 1  | 100    |
+//| 2  | 200    |
+//| 3  | 300    |
+//+----+--------+
+//
+//
+// 例如上述 Employee 表，SQL查询应该返回 200 作为第二高的薪水。如果不存在第二高的薪水，那么查询应返回 null。
+//
+// +---------------------+
+//| SecondHighestSalary |
+//+---------------------+
+//| 200                 |
+//+---------------------+
+//
+// 👍 637 👎 0
+</code></pre>
+<h3 id="解法-7">解法</h3>
+<p>返回第二高，想到用 <code>limit 1,1</code> ,但是题目多了一个需要返回null的条件，于是可以用 <code>IFNULL(条件,为null的结果)</code> 系统函数来处理。代码如下：</p>
+<pre><code>select IFNULL((select distinct Salary from Employee order by Salary desc limit 1,1),null) as SecondHighestSalary;
+</code></pre>
+<h2 id="177第n高的薪水">[177]第N高的薪水</h2>
+<p>题目内容如下：</p>
+<pre><code>//编写一个 SQL 查询，获取 Employee 表中第 n 高的薪水（Salary）。
+//
+// +----+--------+
+//| Id | Salary |
+//+----+--------+
+//| 1  | 100    |
+//| 2  | 200    |
+//| 3  | 300    |
+//+----+--------+
+//
+//
+// 例如上述 Employee 表，n = 2 时，应返回第二高的薪水 200。如果不存在第 n 高的薪水，那么查询应返回 null。
+//
+// +------------------------+
+//| getNthHighestSalary(2) |
+//+------------------------+
+//| 200                    |
+//+------------------------+
+//
+// 👍 345 👎 0
+</code></pre>
+<h3 id="解法如下">解法如下：</h3>
+<p>这个题和上一个题[176]很类似，唯一需要注意的地方就是 <code>limit offset,count</code> 中的offset是从0开始的。代码如下：</p>
+<pre><code>CREATE FUNCTION getNthHighestSalary(N INT) RETURNS INT
+BEGIN
+    SET N=N-1;
+    RETURN (
+        # Write your MySQL query statement below.
+        IFNULL((select distinct Salary from Employee order by Salary desc limit N,1),null)
+    );
+END
+</code></pre>
+
+    </div>
+
+    <div class="post-copyright">
+  <p class="copyright-item">
+    <span class="item-title">文章作者</span>
+    <span class="item-content">P1n93r</span>
+  </p>
+  <p class="copyright-item">
+    <span class="item-title">上次更新</span>
+    <span class="item-content">
+        2020-09-16
+        
+    </span>
+  </p>
+  
+  
+</div>
+<footer class="post-footer">
+      
+      <nav class="post-nav">
+        <a class="prev" href="/post/security/cewlkid/">
+            <i class="iconfont icon-left"></i>
+            <span class="prev-text nav-default">CewlKid: 1</span>
+            <span class="prev-text nav-mobile">上一篇</span>
+          </a>
+        <a class="next" href="/post/data_tructure/leetcode%E7%AE%97%E6%B3%95%E7%AC%AC%E4%B8%80%E5%A4%A9/">
+            <span class="next-text nav-default">LeetCode算法(第一天)</span>
+            <span class="next-text nav-mobile">下一篇</span>
+            <i class="iconfont icon-right"></i>
+          </a>
+      </nav>
+    </footer>
+  </article>
+        </div>
+        <div id="disqus_thread"></div>
+    <script type="text/javascript">
+    (function() {
+      
+      
+      if (window.location.hostname === 'localhost') return;
+
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      var disqus_shortname = 'p1n93r';
+      dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+    </script>
+    <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+
+  
+
+  
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="social-links">
+      <a href="mailto:pin83r@gmail.com" class="iconfont icon-email" title="email"></a>
+      <a href="https://github.com/p1n93r" class="iconfont icon-github" title="github"></a>
+  <a href="https://p1n93r.github.io/index.xml" type="application/rss+xml" class="iconfont icon-rss" title="rss"></a>
+</div>
+
+<div class="copyright">
+  <span class="power-by">
+    由 <a class="hexo-link" href="https://gohugo.io">Hugo</a> 强力驱动
+  </span>
+  <span class="division">|</span>
+  <span class="theme-info">
+    主题 - 
+    <a class="theme-link" href="https://github.com/olOwOlo/hugo-theme-even">Even</a>
+  </span>
+
+  <div class="busuanzi-footer">
+    <span id="busuanzi_container_site_pv"> 本站总访问量 <span id="busuanzi_value_site_pv"><img src="/img/spinner.svg" alt="spinner.svg"/></span> 次 </span>
+      <span class="division">|</span>
+    <span id="busuanzi_container_site_uv"> 本站总访客数 <span id="busuanzi_value_site_uv"><img src="/img/spinner.svg" alt="spinner.svg"/></span> 人 </span>
+  </div>
+
+  <span class="copyright-year">
+    &copy; 
+    2019 - 
+    2022<span class="heart"><i class="iconfont icon-heart"></i></span><span>P1n93r</span>
+  </span>
+</div>
+
+    </footer>
+
+    <div class="back-to-top" id="back-to-top">
+      <i class="iconfont icon-up"></i>
+    </div>
+  </div>
+  
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/slideout@1.0.1/dist/slideout.min.js" integrity="sha256-t+zJ/g8/KXIJMjSVQdnibt4dlaDxc9zXr/9oNPeWqdg=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.js" integrity="sha256-XVLffZaxoWfGUEbdzuLi7pwaUJv1cecsQJQqGLe7axY=" crossorigin="anonymous"></script>
+
+
+
+<script type="text/javascript" src="/js/main.min.64437849d125a2d603b3e71d6de5225d641a32d17168a58106e0b61852079683.js"></script>
+
+
+
+
+
+
+
+
+</body>
+</html>

@@ -1,0 +1,484 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>Spring访问数据库 - P1n93r - 博学而精一</title>
+  <meta name="renderer" content="webkit" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+<meta name="author" content="P1n93r" /><meta name="description" content="SpringBoot整合Mybatis和Druid 引入依赖 &amp;lt;!--mybatis--&amp;gt; &amp;lt;dependency&amp;gt; &amp;lt;groupId&amp;gt;org.mybatis.spring.boot&amp;lt;/groupId&amp;gt; &amp;lt;artifactId&amp;gt;mybatis-spring-boot-starter&amp;lt;/artifactId&amp;gt; &amp;lt;version&amp;gt;1.3.2&amp;lt;/version&amp;gt; &amp;lt;/dependency&amp;gt; &amp;lt;!--mysql--&amp;gt; &amp;lt;dependency&amp;gt; &amp;lt;groupId&amp;gt;mysql&amp;lt;/groupId&amp;gt; &amp;lt;artifactId&amp;gt;mysql-connector-java&amp;lt;/artifactId&amp;gt; &amp;lt;scope&amp;gt;runtime&amp;lt;/scope&amp;gt; &amp;lt;/dependency&amp;gt; &amp;lt;!--druid数据库连接池--&amp;gt; &amp;lt;dependency&amp;gt; &amp;lt;groupId&amp;gt;com.alibaba&amp;lt;/groupId&amp;gt; &amp;lt;artifactId&amp;gt;druid-spring-boot-starter&amp;lt;/artifactId&amp;gt; &amp;lt;version&amp;gt;1.1.22&amp;lt;/version&amp;gt; &amp;lt;/dependency&amp;gt;" /><meta name="keywords" content="Security, Java, Web, Android" />
+
+
+
+
+
+
+<meta name="generator" content="Hugo 0.96.0 with theme even" />
+
+
+<link rel="canonical" href="https://p1n93r.github.io/post/spring/spring%E8%AE%BF%E9%97%AE%E6%95%B0%E6%8D%AE%E5%BA%93/" />
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/manifest.json">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+<link href="/sass/main.min.f92fd13721ddf72129410fd8250e73152cc6f2438082b6c0208dc24ee7c13fc4.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.css" integrity="sha256-7TyXnr2YU040zfSP+rEcz29ggW4j56/ujTPwjMzyqFY=" crossorigin="anonymous">
+
+
+<meta property="og:title" content="Spring访问数据库" />
+<meta property="og:description" content="SpringBoot整合Mybatis和Druid 引入依赖 &lt;!--mybatis--&gt; &lt;dependency&gt; &lt;groupId&gt;org.mybatis.spring.boot&lt;/groupId&gt; &lt;artifactId&gt;mybatis-spring-boot-starter&lt;/artifactId&gt; &lt;version&gt;1.3.2&lt;/version&gt; &lt;/dependency&gt; &lt;!--mysql--&gt; &lt;dependency&gt; &lt;groupId&gt;mysql&lt;/groupId&gt; &lt;artifactId&gt;mysql-connector-java&lt;/artifactId&gt; &lt;scope&gt;runtime&lt;/scope&gt; &lt;/dependency&gt; &lt;!--druid数据库连接池--&gt; &lt;dependency&gt; &lt;groupId&gt;com.alibaba&lt;/groupId&gt; &lt;artifactId&gt;druid-spring-boot-starter&lt;/artifactId&gt; &lt;version&gt;1.1.22&lt;/version&gt; &lt;/dependency&gt;" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://p1n93r.github.io/post/spring/spring%E8%AE%BF%E9%97%AE%E6%95%B0%E6%8D%AE%E5%BA%93/" /><meta property="article:section" content="post" />
+<meta property="article:published_time" content="2020-09-03T08:13:36+08:00" />
+<meta property="article:modified_time" content="2020-09-03T08:13:36+08:00" />
+
+<meta itemprop="name" content="Spring访问数据库">
+<meta itemprop="description" content="SpringBoot整合Mybatis和Druid 引入依赖 &lt;!--mybatis--&gt; &lt;dependency&gt; &lt;groupId&gt;org.mybatis.spring.boot&lt;/groupId&gt; &lt;artifactId&gt;mybatis-spring-boot-starter&lt;/artifactId&gt; &lt;version&gt;1.3.2&lt;/version&gt; &lt;/dependency&gt; &lt;!--mysql--&gt; &lt;dependency&gt; &lt;groupId&gt;mysql&lt;/groupId&gt; &lt;artifactId&gt;mysql-connector-java&lt;/artifactId&gt; &lt;scope&gt;runtime&lt;/scope&gt; &lt;/dependency&gt; &lt;!--druid数据库连接池--&gt; &lt;dependency&gt; &lt;groupId&gt;com.alibaba&lt;/groupId&gt; &lt;artifactId&gt;druid-spring-boot-starter&lt;/artifactId&gt; &lt;version&gt;1.1.22&lt;/version&gt; &lt;/dependency&gt;"><meta itemprop="datePublished" content="2020-09-03T08:13:36+08:00" />
+<meta itemprop="dateModified" content="2020-09-03T08:13:36+08:00" />
+<meta itemprop="wordCount" content="1413">
+<meta itemprop="keywords" content="" /><meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="Spring访问数据库"/>
+<meta name="twitter:description" content="SpringBoot整合Mybatis和Druid 引入依赖 &lt;!--mybatis--&gt; &lt;dependency&gt; &lt;groupId&gt;org.mybatis.spring.boot&lt;/groupId&gt; &lt;artifactId&gt;mybatis-spring-boot-starter&lt;/artifactId&gt; &lt;version&gt;1.3.2&lt;/version&gt; &lt;/dependency&gt; &lt;!--mysql--&gt; &lt;dependency&gt; &lt;groupId&gt;mysql&lt;/groupId&gt; &lt;artifactId&gt;mysql-connector-java&lt;/artifactId&gt; &lt;scope&gt;runtime&lt;/scope&gt; &lt;/dependency&gt; &lt;!--druid数据库连接池--&gt; &lt;dependency&gt; &lt;groupId&gt;com.alibaba&lt;/groupId&gt; &lt;artifactId&gt;druid-spring-boot-starter&lt;/artifactId&gt; &lt;version&gt;1.1.22&lt;/version&gt; &lt;/dependency&gt;"/>
+
+<!--[if lte IE 9]>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
+<![endif]-->
+
+<!--[if lt IE 9]>
+  <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+<![endif]-->
+
+</head>
+<body>
+  <div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/" class="logo">P1n93r</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    <a href="/">
+        <li class="mobile-menu-item">Home</li>
+      </a><a href="/post/">
+        <li class="mobile-menu-item">Archives</li>
+      </a><a href="/tags/">
+        <li class="mobile-menu-item">Tags</li>
+      </a><a href="/categories/">
+        <li class="mobile-menu-item">Categories</li>
+      </a><a href="/about/">
+        <li class="mobile-menu-item">About</li>
+      </a>
+  </ul>
+
+  
+
+
+</nav>
+
+  <div class="container" id="mobile-panel">
+    <header id="header" class="header">
+        <div class="logo-wrapper">
+  <a href="/" class="logo">P1n93r</a>
+</div>
+
+
+
+
+
+<nav class="site-navbar">
+  <ul id="menu" class="menu">
+    <li class="menu-item">
+        <a class="menu-item-link" href="/">Home</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/">Archives</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/tags/">Tags</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/categories/">Categories</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/about/">About</a>
+      </li>
+  </ul>
+</nav>
+
+    </header>
+
+    <main id="main" class="main">
+      <div class="content-wrapper">
+        <div id="content" class="content">
+          <article class="post">
+    
+    <header class="post-header">
+      <h1 class="post-title">Spring访问数据库</h1>
+
+      <div class="post-meta">
+        <span class="post-time"> 2020-09-03 </span>
+        <div class="post-category">
+            <a href="/categories/spring/"> Spring </a>
+            </div>
+          <span class="more-meta"> 约 1413 字 </span>
+          <span class="more-meta"> 预计阅读 3 分钟 </span>
+        <span id="busuanzi_container_page_pv" class="more-meta"> <span id="busuanzi_value_page_pv"><img src="/img/spinner.svg" alt="spinner.svg"/></span> 次阅读 </span>
+      </div>
+    </header>
+
+    <div class="post-toc" id="post-toc">
+  <h2 class="post-toc-title">文章目录</h2>
+  <div class="post-toc-content always-active">
+    <nav id="TableOfContents">
+  <ul>
+    <li>
+      <ul>
+        <li><a href="#springboot整合mybatis和druid">SpringBoot整合Mybatis和Druid</a>
+          <ul>
+            <li><a href="#引入依赖">引入依赖</a></li>
+            <li><a href="#编写配置文件">编写配置文件</a></li>
+            <li><a href="#测试">测试</a></li>
+          </ul>
+        </li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+  </div>
+</div>
+    <div class="post-content">
+      <h2 id="springboot整合mybatis和druid">SpringBoot整合Mybatis和Druid</h2>
+<h3 id="引入依赖">引入依赖</h3>
+<pre><code>&lt;!--mybatis--&gt;
+&lt;dependency&gt;
+    &lt;groupId&gt;org.mybatis.spring.boot&lt;/groupId&gt;
+    &lt;artifactId&gt;mybatis-spring-boot-starter&lt;/artifactId&gt;
+    &lt;version&gt;1.3.2&lt;/version&gt;
+&lt;/dependency&gt;
+
+&lt;!--mysql--&gt;
+&lt;dependency&gt;
+    &lt;groupId&gt;mysql&lt;/groupId&gt;
+    &lt;artifactId&gt;mysql-connector-java&lt;/artifactId&gt;
+    &lt;scope&gt;runtime&lt;/scope&gt;
+&lt;/dependency&gt;
+
+&lt;!--druid数据库连接池--&gt;
+&lt;dependency&gt;
+    &lt;groupId&gt;com.alibaba&lt;/groupId&gt;
+    &lt;artifactId&gt;druid-spring-boot-starter&lt;/artifactId&gt;
+    &lt;version&gt;1.1.22&lt;/version&gt;
+&lt;/dependency&gt;
+</code></pre>
+<p><em><strong>Notice：</strong></em> 使用了druid数据库连接池</p>
+<h3 id="编写配置文件">编写配置文件</h3>
+<p>在application.properties文件中写入如下配置文件：</p>
+<pre><code># **************************************应用端口************************************
+server.port=9999
+
+# *********************************datasource配置***********************************
+spring.datasource.url=jdbc:mysql://localhost:3306/test?useUnicode=true&amp;characterEncoding=UTF-8&amp;allowMultiQueries=true&amp;serverTimezone=UTC&amp;useSSL=false
+spring.datasource.username=root
+spring.datasource.password=123456
+spring.datasource.driverClassName=com.mysql.cj.jdbc.Driver
+
+# **********************************mybatis配置*************************************
+mybatis.type-aliases-package=com.example.springdemo.domain
+mybatis.mapper-locations=classpath:mapper/*.xml
+mybatis.configuration.log-impl=org.apache.ibatis.logging.stdout.StdOutImpl
+
+# *****************************配置druid数据库连接池**********************************
+spring.datasource.type=com.alibaba.druid.pool.DruidDataSource
+#初始化时建立物理连接的个数。
+spring.datasource.druid.initial-size=5
+#最大连接池数量
+spring.datasource.druid.max-active=20
+#最小连接池数量
+spring.datasource.druid.min-idle=5
+#获取连接时最大等待时间，单位毫秒
+spring.datasource.druid.max-wait=3000
+#是否缓存preparedStatement，也就是PSCache,PSCache对支持游标的数据库性能提升巨大，比如说oracle,在mysql下建议关闭。
+spring.datasource.druid.pool-prepared-statements=false
+#要启用PSCache，必须配置大于0，当大于0时，poolPreparedStatements自动触发修改为true。在Druid中，不会存在Oracle下PSCache占用内存过多的问题，可以把这个数值配置大一些，比如说100
+spring.datasource.druid.max-open-prepared-statements= -1
+#配置检测可以关闭的空闲连接间隔时间
+spring.datasource.druid.time-between-eviction-runs-millis=60000
+# 配置连接在池中的最小生存时间
+spring.datasource.druid.min-evictable-idle-time-millis= 300000
+spring.datasource.druid.max-evictable-idle-time-millis= 400000
+
+# *******************************配置druid统计***************************************
+#监控统计的stat,以及防sql注入的wall
+spring.datasource.druid.filters= stat,wall
+#Spring监控AOP切入点，如x.y.z.service.*,配置多个英文逗号分隔
+spring.datasource.druid.aop-patterns=com.example.springdemo.service.*
+#是否启用StatFilter默认值true
+spring.datasource.druid.web-stat-filter.enabled= true
+#添加过滤规则
+spring.datasource.druid.web-stat-filter.url-pattern=/*
+#忽略过滤的格式
+spring.datasource.druid.web-stat-filter.exclusions=*.js,*.gif,*.jpg,*.png,*.css,*.ico,/druid/*
+#是否启用StatViewServlet默认值true
+spring.datasource.druid.stat-view-servlet.enabled= true
+#访问路径为/druid时，跳转到StatViewServlet
+spring.datasource.druid.stat-view-servlet.url-pattern=/druid/*
+# 是否能够重置数据
+spring.datasource.druid.stat-view-servlet.reset-enable=false
+# 需要账号密码才能访问控制台，默认为root
+spring.datasource.druid.stat-view-servlet.login-username=druid
+spring.datasource.druid.stat-view-servlet.login-password=druid
+#IP白名单
+spring.datasource.druid.stat-view-servlet.allow=127.0.0.1
+#IP黑名单（共同存在时，deny优先于allow）
+spring.datasource.druid.stat-view-servlet.deny=10.0.0.1
+</code></pre>
+<h3 id="测试">测试</h3>
+<p>① 创建数据库表</p>
+<pre><code>create table user
+(
+    id       int auto_increment
+        primary key,
+    username varchar(50)  not null,
+    pwd      varchar(100) not null
+);
+</code></pre>
+<p>② 创建User实体</p>
+<pre><code>@Data
+public class User implements Serializable {
+    private Integer id;
+
+    private String username;
+
+    private String pwd;
+
+    private static final long serialVersionUID = 1L;
+}
+</code></pre>
+<p>③ 创建mapper及其对应的mapper.xml</p>
+<pre><code>//mapper文件
+@Repository
+public interface UserMapper {
+    int deleteByPrimaryKey(Integer id);
+
+    int insert(User record);
+
+    int insertSelective(User record);
+
+    User selectByPrimaryKey(Integer id);
+
+    int updateByPrimaryKeySelective(User record);
+
+    int updateByPrimaryKey(User record);
+}
+
+//mapper.xml
+&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;
+&lt;!DOCTYPE mapper PUBLIC &quot;-//mybatis.org//DTD Mapper 3.0//EN&quot; &quot;http://mybatis.org/dtd/mybatis-3-mapper.dtd&quot;&gt;
+&lt;mapper namespace=&quot;com.example.springdemo.mapper.UserMapper&quot;&gt;
+  &lt;resultMap id=&quot;BaseResultMap&quot; type=&quot;com.example.springdemo.domain.User&quot;&gt;
+    &lt;id column=&quot;id&quot; jdbcType=&quot;INTEGER&quot; property=&quot;id&quot; /&gt;
+    &lt;result column=&quot;username&quot; jdbcType=&quot;VARCHAR&quot; property=&quot;username&quot; /&gt;
+    &lt;result column=&quot;pwd&quot; jdbcType=&quot;VARCHAR&quot; property=&quot;pwd&quot; /&gt;
+  &lt;/resultMap&gt;
+  &lt;sql id=&quot;Base_Column_List&quot;&gt;
+    id, username, pwd
+  &lt;/sql&gt;
+  &lt;select id=&quot;selectByPrimaryKey&quot; parameterType=&quot;java.lang.Integer&quot; resultMap=&quot;BaseResultMap&quot;&gt;
+    select 
+    &lt;include refid=&quot;Base_Column_List&quot; /&gt;
+    from user
+    where id = #{id,jdbcType=INTEGER}
+  &lt;/select&gt;
+  &lt;delete id=&quot;deleteByPrimaryKey&quot; parameterType=&quot;java.lang.Integer&quot;&gt;
+    delete from user
+    where id = #{id,jdbcType=INTEGER}
+  &lt;/delete&gt;
+  &lt;insert id=&quot;insert&quot; keyColumn=&quot;id&quot; keyProperty=&quot;id&quot; parameterType=&quot;com.example.springdemo.domain.User&quot; useGeneratedKeys=&quot;true&quot;&gt;
+    insert into user (username, pwd)
+    values (#{username,jdbcType=VARCHAR}, #{pwd,jdbcType=VARCHAR})
+  &lt;/insert&gt;
+  &lt;insert id=&quot;insertSelective&quot; keyColumn=&quot;id&quot; keyProperty=&quot;id&quot; parameterType=&quot;com.example.springdemo.domain.User&quot; useGeneratedKeys=&quot;true&quot;&gt;
+    insert into user
+    &lt;trim prefix=&quot;(&quot; suffix=&quot;)&quot; suffixOverrides=&quot;,&quot;&gt;
+      &lt;if test=&quot;username != null&quot;&gt;
+        username,
+      &lt;/if&gt;
+      &lt;if test=&quot;pwd != null&quot;&gt;
+        pwd,
+      &lt;/if&gt;
+    &lt;/trim&gt;
+    &lt;trim prefix=&quot;values (&quot; suffix=&quot;)&quot; suffixOverrides=&quot;,&quot;&gt;
+      &lt;if test=&quot;username != null&quot;&gt;
+        #{username,jdbcType=VARCHAR},
+      &lt;/if&gt;
+      &lt;if test=&quot;pwd != null&quot;&gt;
+        #{pwd,jdbcType=VARCHAR},
+      &lt;/if&gt;
+    &lt;/trim&gt;
+  &lt;/insert&gt;
+  &lt;update id=&quot;updateByPrimaryKeySelective&quot; parameterType=&quot;com.example.springdemo.domain.User&quot;&gt;
+    update user
+    &lt;set&gt;
+      &lt;if test=&quot;username != null&quot;&gt;
+        username = #{username,jdbcType=VARCHAR},
+      &lt;/if&gt;
+      &lt;if test=&quot;pwd != null&quot;&gt;
+        pwd = #{pwd,jdbcType=VARCHAR},
+      &lt;/if&gt;
+    &lt;/set&gt;
+    where id = #{id,jdbcType=INTEGER}
+  &lt;/update&gt;
+  &lt;update id=&quot;updateByPrimaryKey&quot; parameterType=&quot;com.example.springdemo.domain.User&quot;&gt;
+    update user
+    set username = #{username,jdbcType=VARCHAR},
+      pwd = #{pwd,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  &lt;/update&gt;
+&lt;/mapper&gt;
+</code></pre>
+<p>④ 编写控制器UserController</p>
+<pre><code>@RestController
+public class UserController {
+    @Resource
+    UserMapper mapper;
+
+    @RequestMapping(&quot;/api/test&quot;)
+    public User getUsers(){
+        return mapper.selectByPrimaryKey(1);
+    }
+}
+</code></pre>
+<p>⑤ 访问测试结果</p>
+<p><img src="/media/20200903-1.png" alt="页面访问结果"></p>
+<p><img src="/media/20200903-2.png" alt="sql语句"></p>
+<p><img src="/media/20200903-3.png" alt="数据库数据"></p>
+<p>⑥ 访问druid的web控制台</p>
+<p><img src="/media/20200903-4.png" alt="druid的web控制台"></p>
+<p><img src="/media/20200903-5.png" alt="druid监控台内部界面"></p>
+
+    </div>
+
+    <div class="post-copyright">
+  <p class="copyright-item">
+    <span class="item-title">文章作者</span>
+    <span class="item-content">P1n93r</span>
+  </p>
+  <p class="copyright-item">
+    <span class="item-title">上次更新</span>
+    <span class="item-content">
+        2020-09-03
+        
+    </span>
+  </p>
+  
+  
+</div>
+<footer class="post-footer">
+      
+      <nav class="post-nav">
+        <a class="prev" href="/post/mybatis/mybatis%E7%B1%BB%E5%9E%8B%E8%BD%AC%E6%8D%A2%E5%99%A8%E5%92%8C%E5%88%AB%E5%90%8D/">
+            <i class="iconfont icon-left"></i>
+            <span class="prev-text nav-default">Mybatis类型转换器和别名</span>
+            <span class="prev-text nav-mobile">上一篇</span>
+          </a>
+        <a class="next" href="/post/design_patterns/%E8%A7%82%E5%AF%9F%E8%80%85%E6%A8%A1%E5%BC%8F/">
+            <span class="next-text nav-default">观察者模式</span>
+            <span class="next-text nav-mobile">下一篇</span>
+            <i class="iconfont icon-right"></i>
+          </a>
+      </nav>
+    </footer>
+  </article>
+        </div>
+        <div id="disqus_thread"></div>
+    <script type="text/javascript">
+    (function() {
+      
+      
+      if (window.location.hostname === 'localhost') return;
+
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      var disqus_shortname = 'p1n93r';
+      dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+    </script>
+    <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+
+  
+
+  
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="social-links">
+      <a href="mailto:pin83r@gmail.com" class="iconfont icon-email" title="email"></a>
+      <a href="https://github.com/p1n93r" class="iconfont icon-github" title="github"></a>
+  <a href="https://p1n93r.github.io/index.xml" type="application/rss+xml" class="iconfont icon-rss" title="rss"></a>
+</div>
+
+<div class="copyright">
+  <span class="power-by">
+    由 <a class="hexo-link" href="https://gohugo.io">Hugo</a> 强力驱动
+  </span>
+  <span class="division">|</span>
+  <span class="theme-info">
+    主题 - 
+    <a class="theme-link" href="https://github.com/olOwOlo/hugo-theme-even">Even</a>
+  </span>
+
+  <div class="busuanzi-footer">
+    <span id="busuanzi_container_site_pv"> 本站总访问量 <span id="busuanzi_value_site_pv"><img src="/img/spinner.svg" alt="spinner.svg"/></span> 次 </span>
+      <span class="division">|</span>
+    <span id="busuanzi_container_site_uv"> 本站总访客数 <span id="busuanzi_value_site_uv"><img src="/img/spinner.svg" alt="spinner.svg"/></span> 人 </span>
+  </div>
+
+  <span class="copyright-year">
+    &copy; 
+    2019 - 
+    2022<span class="heart"><i class="iconfont icon-heart"></i></span><span>P1n93r</span>
+  </span>
+</div>
+
+    </footer>
+
+    <div class="back-to-top" id="back-to-top">
+      <i class="iconfont icon-up"></i>
+    </div>
+  </div>
+  
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/slideout@1.0.1/dist/slideout.min.js" integrity="sha256-t+zJ/g8/KXIJMjSVQdnibt4dlaDxc9zXr/9oNPeWqdg=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.js" integrity="sha256-XVLffZaxoWfGUEbdzuLi7pwaUJv1cecsQJQqGLe7axY=" crossorigin="anonymous"></script>
+
+
+
+<script type="text/javascript" src="/js/main.min.64437849d125a2d603b3e71d6de5225d641a32d17168a58106e0b61852079683.js"></script>
+
+
+
+
+
+
+
+
+</body>
+</html>

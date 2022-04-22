@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Java on P1n93r - 博学而精一</title>
+    <link>https://p1n93r.github.io/categories/java/</link>
+    <description>Recent content in Java on P1n93r - 博学而精一</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en</language>
+    <lastBuildDate>Sat, 29 May 2021 10:21:36 +0800</lastBuildDate><atom:link href="https://p1n93r.github.io/categories/java/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Tomcat架构原理</title>
+      <link>https://p1n93r.github.io/post/java/tomcat%E6%9E%B6%E6%9E%84%E5%8E%9F%E7%90%86/</link>
+      <pubDate>Sat, 29 May 2021 10:21:36 +0800</pubDate>
+      
+      <guid>https://p1n93r.github.io/post/java/tomcat%E6%9E%B6%E6%9E%84%E5%8E%9F%E7%90%86/</guid>
+      <description>Tomcat整体架构 Tomcat的启动流程如下： startup.sh -&amp;gt; catalina.sh start -&amp;gt; java -jar org.apache.catalina.startup.Bootstrap.main() Tomcat需要实现的2个核心功能： 处理socket连接，负责网络字节流与R</description>
+    </item>
+    
+    <item>
+      <title>Java注解</title>
+      <link>https://p1n93r.github.io/post/java/java%E6%B3%A8%E8%A7%A3/</link>
+      <pubDate>Fri, 01 Jan 2021 21:28:36 +0800</pubDate>
+      
+      <guid>https://p1n93r.github.io/post/java/java%E6%B3%A8%E8%A7%A3/</guid>
+      <description>元注解 元注解的作用就是 注解其他注解 ，Java5.0定义了以下4个标准元注解，它们被用来对其他注解类型作说明： @Target @Retention @Documented @Inherited @Target @Target说明了注</description>
+    </item>
+    
+    <item>
+      <title>Lambda表达式</title>
+      <link>https://p1n93r.github.io/post/java/lambda/</link>
+      <pubDate>Sat, 05 Sep 2020 10:34:36 +0800</pubDate>
+      
+      <guid>https://p1n93r.github.io/post/java/lambda/</guid>
+      <description>Lambda介绍 Lambda可以简单的理解为可以传递的匿名函数的一种方式，它没有名称，但是有参数列表、函数主体、返回类型以及可以抛出的异常列</description>
+    </item>
+    
+    <item>
+      <title>Java容器</title>
+      <link>https://p1n93r.github.io/post/java/java%E5%AE%B9%E5%99%A8/</link>
+      <pubDate>Tue, 12 May 2020 10:21:36 +0800</pubDate>
+      
+      <guid>https://p1n93r.github.io/post/java/java%E5%AE%B9%E5%99%A8/</guid>
+      <description>概览 Java容器主要包括Collection和Map两种，Collection存储对象集合，而Map存储键值对（两个对象）的映射表。 Collection Set Tr</description>
+    </item>
+    
+    <item>
+      <title>IO</title>
+      <link>https://p1n93r.github.io/post/java/io/</link>
+      <pubDate>Wed, 13 Nov 2019 19:22:36 +0800</pubDate>
+      
+      <guid>https://p1n93r.github.io/post/java/io/</guid>
+      <description>概述 java的IO通过java.io包下的类和接口来支持，在java.io包下主要包括输入、输出两种IO流，每种输出输出流又可以分为 字节流和</description>
+    </item>
+    
+    <item>
+      <title>泛型</title>
+      <link>https://p1n93r.github.io/post/java/%E6%B3%9B%E5%9E%8B/</link>
+      <pubDate>Fri, 01 Nov 2019 19:33:36 +0800</pubDate>
+      
+      <guid>https://p1n93r.github.io/post/java/%E6%B3%9B%E5%9E%8B/</guid>
+      <description>前言 Java中的泛型支持是从JDK1.5开始的，目的是 让集合能够记住其元素的数据类型 。在没有泛型之前，将元素放在集合中，此元素会被当成Obj</description>
+    </item>
+    
+    <item>
+      <title>集合</title>
+      <link>https://p1n93r.github.io/post/java/%E9%9B%86%E5%90%88/</link>
+      <pubDate>Fri, 18 Oct 2019 19:50:36 +0800</pubDate>
+      
+      <guid>https://p1n93r.github.io/post/java/%E9%9B%86%E5%90%88/</guid>
+      <description>概述 集合类也被称为 容器 ，所有的集合都位于java.util包下。 集合类家族主要由Collection和Map接口派生出。 集合相比数组的优势是</description>
+    </item>
+    
+    <item>
+      <title>面向对象(二)</title>
+      <link>https://p1n93r.github.io/post/java/%E9%9D%A2%E5%90%91%E5%AF%B9%E8%B1%A1%E4%BA%8C/</link>
+      <pubDate>Tue, 01 Oct 2019 21:31:36 +0800</pubDate>
+      
+      <guid>https://p1n93r.github.io/post/java/%E9%9D%A2%E5%90%91%E5%AF%B9%E8%B1%A1%E4%BA%8C/</guid>
+      <description>包装类 基本数据类型不具备“对象”的特性，它没有属性，没有方法。为了解决这个问题。Java提供了包装类为8种基本数据类型的分别定义了相应的引用</description>
+    </item>
+    
+    <item>
+      <title>面向对象(一)</title>
+      <link>https://p1n93r.github.io/post/java/%E9%9D%A2%E5%90%91%E5%AF%B9%E8%B1%A1%E4%B8%80/</link>
+      <pubDate>Wed, 25 Sep 2019 10:31:36 +0800</pubDate>
+      
+      <guid>https://p1n93r.github.io/post/java/%E9%9D%A2%E5%90%91%E5%AF%B9%E8%B1%A1%E4%B8%80/</guid>
+      <description>概述 面向对象三大特征： 封装，继承，多态 类可以被认为是一种自定义的数据类型，可以使用类来定义变量，所有使用类定义的变量都是 引用变量 ，他们将会引</description>
+    </item>
+    
+    <item>
+      <title>流程控制与数组</title>
+      <link>https://p1n93r.github.io/post/java/%E6%B5%81%E7%A8%8B%E6%8E%A7%E5%88%B6%E4%B8%8E%E6%95%B0%E7%BB%84/</link>
+      <pubDate>Sun, 15 Sep 2019 23:31:36 +0800</pubDate>
+      
+      <guid>https://p1n93r.github.io/post/java/%E6%B5%81%E7%A8%8B%E6%8E%A7%E5%88%B6%E4%B8%8E%E6%95%B0%E7%BB%84/</guid>
+      <description>分支结构 if条件语句 if,else if,else后的代码块只有一条语句时（可以是空语句），可以省略花括号。 使用if,else时一定要先考虑小的范围。 sw</description>
+    </item>
+    
+    <item>
+      <title>数据类型和运算符</title>
+      <link>https://p1n93r.github.io/post/java/%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B%E5%92%8C%E8%BF%90%E7%AE%97%E7%AC%A6/</link>
+      <pubDate>Wed, 04 Sep 2019 22:48:36 +0800</pubDate>
+      
+      <guid>https://p1n93r.github.io/post/java/%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B%E5%92%8C%E8%BF%90%E7%AE%97%E7%AC%A6/</guid>
+      <description>注释 单行注释：使用//即可 多行注释：使用/*注释内容*/即可 文档注释：以/**开始，以*/结束 标识符和关键字 允许一行书写多个语句，每个语句之</description>
+    </item>
+    
+  </channel>
+</rss>

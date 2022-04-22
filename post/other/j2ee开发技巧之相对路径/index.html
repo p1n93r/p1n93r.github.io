@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>J2EE开发技巧之相对路径 - P1n93r - 博学而精一</title>
+  <meta name="renderer" content="webkit" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+<meta name="author" content="P1n93r" /><meta name="description" content="前言 在进行WEB开发时，如果一个项目比较大，分了很多的模块，那么必定项目的url也很多，如果url没有统一的规范，极易容易造成混乱，本文就是" /><meta name="keywords" content="Security, Java, Web, Android" />
+
+
+
+
+
+
+<meta name="generator" content="Hugo 0.96.0 with theme even" />
+
+
+<link rel="canonical" href="https://p1n93r.github.io/post/other/j2ee%E5%BC%80%E5%8F%91%E6%8A%80%E5%B7%A7%E4%B9%8B%E7%9B%B8%E5%AF%B9%E8%B7%AF%E5%BE%84/" />
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/manifest.json">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+<link href="/sass/main.min.f92fd13721ddf72129410fd8250e73152cc6f2438082b6c0208dc24ee7c13fc4.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.css" integrity="sha256-7TyXnr2YU040zfSP+rEcz29ggW4j56/ujTPwjMzyqFY=" crossorigin="anonymous">
+
+
+<meta property="og:title" content="J2EE开发技巧之相对路径" />
+<meta property="og:description" content="前言 在进行WEB开发时，如果一个项目比较大，分了很多的模块，那么必定项目的url也很多，如果url没有统一的规范，极易容易造成混乱，本文就是" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://p1n93r.github.io/post/other/j2ee%E5%BC%80%E5%8F%91%E6%8A%80%E5%B7%A7%E4%B9%8B%E7%9B%B8%E5%AF%B9%E8%B7%AF%E5%BE%84/" /><meta property="article:section" content="post" />
+<meta property="article:published_time" content="2019-12-03T11:27:36+08:00" />
+<meta property="article:modified_time" content="2019-12-03T11:27:36+08:00" />
+
+<meta itemprop="name" content="J2EE开发技巧之相对路径">
+<meta itemprop="description" content="前言 在进行WEB开发时，如果一个项目比较大，分了很多的模块，那么必定项目的url也很多，如果url没有统一的规范，极易容易造成混乱，本文就是"><meta itemprop="datePublished" content="2019-12-03T11:27:36+08:00" />
+<meta itemprop="dateModified" content="2019-12-03T11:27:36+08:00" />
+<meta itemprop="wordCount" content="1109">
+<meta itemprop="keywords" content="J2EE开发技巧," /><meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="J2EE开发技巧之相对路径"/>
+<meta name="twitter:description" content="前言 在进行WEB开发时，如果一个项目比较大，分了很多的模块，那么必定项目的url也很多，如果url没有统一的规范，极易容易造成混乱，本文就是"/>
+
+<!--[if lte IE 9]>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
+<![endif]-->
+
+<!--[if lt IE 9]>
+  <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+<![endif]-->
+
+</head>
+<body>
+  <div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/" class="logo">P1n93r</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    <a href="/">
+        <li class="mobile-menu-item">Home</li>
+      </a><a href="/post/">
+        <li class="mobile-menu-item">Archives</li>
+      </a><a href="/tags/">
+        <li class="mobile-menu-item">Tags</li>
+      </a><a href="/categories/">
+        <li class="mobile-menu-item">Categories</li>
+      </a><a href="/about/">
+        <li class="mobile-menu-item">About</li>
+      </a>
+  </ul>
+
+  
+
+
+</nav>
+
+  <div class="container" id="mobile-panel">
+    <header id="header" class="header">
+        <div class="logo-wrapper">
+  <a href="/" class="logo">P1n93r</a>
+</div>
+
+
+
+
+
+<nav class="site-navbar">
+  <ul id="menu" class="menu">
+    <li class="menu-item">
+        <a class="menu-item-link" href="/">Home</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/">Archives</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/tags/">Tags</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/categories/">Categories</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/about/">About</a>
+      </li>
+  </ul>
+</nav>
+
+    </header>
+
+    <main id="main" class="main">
+      <div class="content-wrapper">
+        <div id="content" class="content">
+          <article class="post">
+    
+    <header class="post-header">
+      <h1 class="post-title">J2EE开发技巧之相对路径</h1>
+
+      <div class="post-meta">
+        <span class="post-time"> 2019-12-03 </span>
+        <div class="post-category">
+            <a href="/categories/other/"> Other </a>
+            </div>
+          <span class="more-meta"> 约 1109 字 </span>
+          <span class="more-meta"> 预计阅读 3 分钟 </span>
+        <span id="busuanzi_container_page_pv" class="more-meta"> <span id="busuanzi_value_page_pv"><img src="/img/spinner.svg" alt="spinner.svg"/></span> 次阅读 </span>
+      </div>
+    </header>
+
+    <div class="post-toc" id="post-toc">
+  <h2 class="post-toc-title">文章目录</h2>
+  <div class="post-toc-content always-active">
+    <nav id="TableOfContents">
+  <ul>
+    <li>
+      <ul>
+        <li><a href="#前言">前言</a></li>
+        <li><a href="#开发思路">开发思路</a>
+          <ul>
+            <li><a href="#创建自定义标签类">创建自定义标签类</a></li>
+            <li><a href="#创建tld文件">创建tld文件</a></li>
+            <li><a href="#手动配置tld的位置">手动配置tld的位置</a></li>
+            <li><a href="#在jsp中调用自定义标签">在jsp中调用自定义标签</a></li>
+            <li><a href="#测试">测试</a></li>
+          </ul>
+        </li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+  </div>
+</div>
+    <div class="post-content">
+      <h2 id="前言">前言</h2>
+<p>在进行WEB开发时，如果一个项目比较大，分了很多的模块，那么必定项目的url也很多，如果url没有统一的规范，极易容易造成混乱，本文就是为了解决这个问题。主要思路要做到所有的视图页面内的连接都是相对于类似这种链接： <code>https://host:88/projectName/</code> ，其中的host就是域名，projectName就是你的项目名。如果我们能够做到所有的视图内的链接都是基于这个路径，一是有了一个统一的规范不容易出错，二是能够保证视图内的链接的点击不会出现死链接。</p>
+<h2 id="开发思路">开发思路</h2>
+<ol>
+<li>写一个自定义标签类，作用就是在html的 <code>&lt;head/&gt;</code> 标签内输出网站的basePath（例如 <code>&lt;base href='http://localhost:8080/TheSecondLab_war_exploded/'/&gt;</code> ）。</li>
+<li>在jsp页面中调用这个自定义标签（需要一个HttpServletRequst对象作为参数传进去），就可以做到输出basePath了，这样页面内的所有链接都是相对于这个basePath。</li>
+</ol>
+<h3 id="创建自定义标签类">创建自定义标签类</h3>
+<p>我写的一个自定义标签类代码如下：</p>
+<pre><code>public class BaseUrlTag extends SimpleTagSupport {
+    //为了得到basePath，需要一个HttpServletRequest对象
+    HttpServletRequest request;
+    //打印网站的basePath
+    @Override
+    public void doTag() throws JspException, IOException{
+        String path = request.getContextPath();
+        String basePath = &quot;&lt;base href='&quot;+request.getScheme()+&quot;://&quot;+request.getServerName()+&quot;:&quot;+request.getServerPort()+path+&quot;/'/&gt;&quot;;
+        getJspContext().getOut().write(basePath);
+    }
+    public void setRequest(HttpServletRequest request) {
+        this.request = request;
+    }
+}
+</code></pre>
+<h3 id="创建tld文件">创建tld文件</h3>
+<p>在项目的WEB-INF下创建与上面自定义标签类相关的tld文件，我写得tld文件如下：</p>
+<pre><code>&lt;!DOCTYPE taglib
+        PUBLIC &quot;-//Sun Microsystems, Inc.//DTD JSP Tag Library 1.2//EN&quot;
+        &quot;http://java.sun.com/dtd/web-jsptaglibrary_1_2.dtd&quot;&gt;
+&lt;!-- 标签库描述符 --&gt;
+&lt;taglib xmlns=&quot;http://java.sun.com/JSP/TagLibraryDescriptor&quot;&gt;
+    &lt;tlib-version&gt;1.0&lt;/tlib-version&gt;
+    &lt;jsp-version&gt;1.2&lt;/jsp-version&gt;
+    &lt;short-name&gt;bp&lt;/short-name&gt;
+    &lt;uri&gt;/setBasePath&lt;/uri&gt;
+    &lt;tag&gt;
+        &lt;!-- 标签名 --&gt;
+        &lt;name&gt;basePath&lt;/name&gt;
+        &lt;!-- 标签助手类(自定义的标签类) 放入类的全限定名 --&gt;
+        &lt;tag-class&gt;com.mybatis.web.tag.BaseUrlTag&lt;/tag-class&gt;
+        &lt;!-- 标签的内容类型：empty表示空标签(使用空标签会报错)，jsp表示可以为任何合法的JSP元素 --&gt;
+        &lt;!--SimpleTagSupport不支持设置为JSP--&gt;
+        &lt;body-content&gt;empty&lt;/body-content&gt;
+        &lt;attribute&gt;
+            &lt;!-- 属性名 --&gt;
+            &lt;name&gt;request&lt;/name&gt;
+            &lt;!-- 是否为必填项 --&gt;
+            &lt;required&gt;true&lt;/required&gt;
+            &lt;!--是否可以填jsp表达式  el表达式 --&gt;
+            &lt;rtexprvalue&gt;true&lt;/rtexprvalue&gt;
+            &lt;type&gt;javax.servlet.http.HttpServletRequest&lt;/type&gt;
+        &lt;/attribute&gt;
+    &lt;/tag&gt;
+&lt;/taglib&gt;
+</code></pre>
+<h3 id="手动配置tld的位置">手动配置tld的位置</h3>
+<p>在项目的web.xml中配置上一步创建的tld的位置，防止系统提示找不到tld，配置的主要代码如下（上一步我创建的tld文件名为BasePathTag.tld）：</p>
+<pre><code>&lt;!--手动配置tld的位置（用于basePath的tld），不然提示找不到--&gt;
+&lt;jsp-config&gt;
+    &lt;taglib&gt;
+        &lt;taglib-uri&gt;/setBasePath&lt;/taglib-uri&gt;
+        &lt;taglib-location&gt;/WEB-INF/tags/BasePathTag.tld&lt;/taglib-location&gt;
+    &lt;/taglib&gt;
+&lt;/jsp-config&gt;
+</code></pre>
+<h3 id="在jsp中调用自定义标签">在jsp中调用自定义标签</h3>
+<ol>
+<li>首先jsp引入刚才自定义的标签，引入方式为： <code>&lt;%@taglib prefix=&quot;bp&quot; uri=&quot;/setBasePath&quot; %&gt;</code> 。</li>
+<li>其次在jsp页面的 <code>&lt;head/&gt;</code> （这是html的标记）标签内通过 <code>    &lt;bp:basePath request=&quot;&lt;%=request%&gt;&quot;/&gt;</code> 调用刚才引入的自定义标签。</li>
+<li>明白本jsp页面内的所有超链接都是基于basePath来设计，比如 <code>&lt;a href=&quot;test.do&quot;&gt;</code> （test.do前没有 <code>/</code> ，因为我设计输出的basePath以 <code>/</code> 结尾）的物理路径为 <code>basePath/test.do</code> 。</li>
+<li>重启项目，访问jsp，查看渲染后的html代码，观察是否输出了basePath。</li>
+</ol>
+<h3 id="测试">测试</h3>
+<p>访问调用了自定义标签的jsp页面，通过浏览器，按ctr+u可以查看渲染后的html源码，观察结果如下（输出了basePath）：</p>
+<p><img src="/media/20191204-1.png" alt="测试结果"></p>
+
+    </div>
+
+    <div class="post-copyright">
+  <p class="copyright-item">
+    <span class="item-title">文章作者</span>
+    <span class="item-content">P1n93r</span>
+  </p>
+  <p class="copyright-item">
+    <span class="item-title">上次更新</span>
+    <span class="item-content">
+        2019-12-03
+        
+    </span>
+  </p>
+  
+  
+</div>
+<footer class="post-footer">
+      <div class="post-tags">
+          <a href="/tags/j2ee%E5%BC%80%E5%8F%91%E6%8A%80%E5%B7%A7/">J2EE开发技巧</a>
+          </div>
+      <nav class="post-nav">
+        <a class="prev" href="/post/android/android%E8%87%AA%E5%AE%9A%E4%B9%89layout%E5%AE%9E%E7%8E%B0%E4%BE%A7%E6%BB%91/">
+            <i class="iconfont icon-left"></i>
+            <span class="prev-text nav-default">Android自定义layout实现侧滑</span>
+            <span class="prev-text nav-mobile">上一篇</span>
+          </a>
+        <a class="next" href="/post/linux/6-%E6%9F%A5%E7%9C%8B%E6%96%87%E4%BB%B6/">
+            <span class="next-text nav-default">6-查看文件</span>
+            <span class="next-text nav-mobile">下一篇</span>
+            <i class="iconfont icon-right"></i>
+          </a>
+      </nav>
+    </footer>
+  </article>
+        </div>
+        <div id="disqus_thread"></div>
+    <script type="text/javascript">
+    (function() {
+      
+      
+      if (window.location.hostname === 'localhost') return;
+
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      var disqus_shortname = 'p1n93r';
+      dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+    </script>
+    <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+
+  
+
+  
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="social-links">
+      <a href="mailto:pin83r@gmail.com" class="iconfont icon-email" title="email"></a>
+      <a href="https://github.com/p1n93r" class="iconfont icon-github" title="github"></a>
+  <a href="https://p1n93r.github.io/index.xml" type="application/rss+xml" class="iconfont icon-rss" title="rss"></a>
+</div>
+
+<div class="copyright">
+  <span class="power-by">
+    由 <a class="hexo-link" href="https://gohugo.io">Hugo</a> 强力驱动
+  </span>
+  <span class="division">|</span>
+  <span class="theme-info">
+    主题 - 
+    <a class="theme-link" href="https://github.com/olOwOlo/hugo-theme-even">Even</a>
+  </span>
+
+  <div class="busuanzi-footer">
+    <span id="busuanzi_container_site_pv"> 本站总访问量 <span id="busuanzi_value_site_pv"><img src="/img/spinner.svg" alt="spinner.svg"/></span> 次 </span>
+      <span class="division">|</span>
+    <span id="busuanzi_container_site_uv"> 本站总访客数 <span id="busuanzi_value_site_uv"><img src="/img/spinner.svg" alt="spinner.svg"/></span> 人 </span>
+  </div>
+
+  <span class="copyright-year">
+    &copy; 
+    2019 - 
+    2022<span class="heart"><i class="iconfont icon-heart"></i></span><span>P1n93r</span>
+  </span>
+</div>
+
+    </footer>
+
+    <div class="back-to-top" id="back-to-top">
+      <i class="iconfont icon-up"></i>
+    </div>
+  </div>
+  
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/slideout@1.0.1/dist/slideout.min.js" integrity="sha256-t+zJ/g8/KXIJMjSVQdnibt4dlaDxc9zXr/9oNPeWqdg=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.js" integrity="sha256-XVLffZaxoWfGUEbdzuLi7pwaUJv1cecsQJQqGLe7axY=" crossorigin="anonymous"></script>
+
+
+
+<script type="text/javascript" src="/js/main.min.64437849d125a2d603b3e71d6de5225d641a32d17168a58106e0b61852079683.js"></script>
+
+
+
+
+
+
+
+
+</body>
+</html>

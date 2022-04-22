@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Spring体系结构 on P1n93r - 博学而精一</title>
+    <link>https://p1n93r.github.io/tags/spring%E4%BD%93%E7%B3%BB%E7%BB%93%E6%9E%84/</link>
+    <description>Recent content in Spring体系结构 on P1n93r - 博学而精一</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en</language>
+    <lastBuildDate>Tue, 05 Nov 2019 08:28:36 +0800</lastBuildDate><atom:link href="https://p1n93r.github.io/tags/spring%E4%BD%93%E7%B3%BB%E7%BB%93%E6%9E%84/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Spring入门</title>
+      <link>https://p1n93r.github.io/post/spring/spring%E5%85%A5%E9%97%A8/</link>
+      <pubDate>Tue, 05 Nov 2019 08:28:36 +0800</pubDate>
+      
+      <guid>https://p1n93r.github.io/post/spring/spring%E5%85%A5%E9%97%A8/</guid>
+      <description>Spring简介 Spring是一个轻量级的Java开发框架， 目的是为了解决企业级应用开发的业务逻辑层和其他各层的耦合问题。 Spring体系结</description>
+    </item>
+    
+  </channel>
+</rss>

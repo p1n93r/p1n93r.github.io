@@ -1,0 +1,448 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>Mybatis懒加载 - P1n93r - 博学而精一</title>
+  <meta name="renderer" content="webkit" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+<meta name="author" content="P1n93r" /><meta name="description" content="前言 Mybatis的懒加载就是所谓的延迟加载，很多博客上也称之为按需加载，但是我觉得只有当配置了Mybatis的非侵略性懒加载才能称之为按需" /><meta name="keywords" content="Security, Java, Web, Android" />
+
+
+
+
+
+
+<meta name="generator" content="Hugo 0.96.0 with theme even" />
+
+
+<link rel="canonical" href="https://p1n93r.github.io/post/mybatis/mybatis%E6%87%92%E5%8A%A0%E8%BD%BD/" />
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/manifest.json">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+<link href="/sass/main.min.f92fd13721ddf72129410fd8250e73152cc6f2438082b6c0208dc24ee7c13fc4.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.css" integrity="sha256-7TyXnr2YU040zfSP+rEcz29ggW4j56/ujTPwjMzyqFY=" crossorigin="anonymous">
+
+
+<meta property="og:title" content="Mybatis懒加载" />
+<meta property="og:description" content="前言 Mybatis的懒加载就是所谓的延迟加载，很多博客上也称之为按需加载，但是我觉得只有当配置了Mybatis的非侵略性懒加载才能称之为按需" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://p1n93r.github.io/post/mybatis/mybatis%E6%87%92%E5%8A%A0%E8%BD%BD/" /><meta property="article:section" content="post" />
+<meta property="article:published_time" content="2019-10-26T13:09:36+08:00" />
+<meta property="article:modified_time" content="2019-10-26T13:09:36+08:00" />
+
+<meta itemprop="name" content="Mybatis懒加载">
+<meta itemprop="description" content="前言 Mybatis的懒加载就是所谓的延迟加载，很多博客上也称之为按需加载，但是我觉得只有当配置了Mybatis的非侵略性懒加载才能称之为按需"><meta itemprop="datePublished" content="2019-10-26T13:09:36+08:00" />
+<meta itemprop="dateModified" content="2019-10-26T13:09:36+08:00" />
+<meta itemprop="wordCount" content="2090">
+<meta itemprop="keywords" content="" /><meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="Mybatis懒加载"/>
+<meta name="twitter:description" content="前言 Mybatis的懒加载就是所谓的延迟加载，很多博客上也称之为按需加载，但是我觉得只有当配置了Mybatis的非侵略性懒加载才能称之为按需"/>
+
+<!--[if lte IE 9]>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
+<![endif]-->
+
+<!--[if lt IE 9]>
+  <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+<![endif]-->
+
+</head>
+<body>
+  <div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/" class="logo">P1n93r</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    <a href="/">
+        <li class="mobile-menu-item">Home</li>
+      </a><a href="/post/">
+        <li class="mobile-menu-item">Archives</li>
+      </a><a href="/tags/">
+        <li class="mobile-menu-item">Tags</li>
+      </a><a href="/categories/">
+        <li class="mobile-menu-item">Categories</li>
+      </a><a href="/about/">
+        <li class="mobile-menu-item">About</li>
+      </a>
+  </ul>
+
+  
+
+
+</nav>
+
+  <div class="container" id="mobile-panel">
+    <header id="header" class="header">
+        <div class="logo-wrapper">
+  <a href="/" class="logo">P1n93r</a>
+</div>
+
+
+
+
+
+<nav class="site-navbar">
+  <ul id="menu" class="menu">
+    <li class="menu-item">
+        <a class="menu-item-link" href="/">Home</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/">Archives</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/tags/">Tags</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/categories/">Categories</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/about/">About</a>
+      </li>
+  </ul>
+</nav>
+
+    </header>
+
+    <main id="main" class="main">
+      <div class="content-wrapper">
+        <div id="content" class="content">
+          <article class="post">
+    
+    <header class="post-header">
+      <h1 class="post-title">Mybatis懒加载</h1>
+
+      <div class="post-meta">
+        <span class="post-time"> 2019-10-26 </span>
+        <div class="post-category">
+            <a href="/categories/mybatis/"> Mybatis </a>
+            </div>
+          <span class="more-meta"> 约 2090 字 </span>
+          <span class="more-meta"> 预计阅读 5 分钟 </span>
+        <span id="busuanzi_container_page_pv" class="more-meta"> <span id="busuanzi_value_page_pv"><img src="/img/spinner.svg" alt="spinner.svg"/></span> 次阅读 </span>
+      </div>
+    </header>
+
+    <div class="post-toc" id="post-toc">
+  <h2 class="post-toc-title">文章目录</h2>
+  <div class="post-toc-content always-active">
+    <nav id="TableOfContents">
+  <ul>
+    <li>
+      <ul>
+        <li><a href="#前言">前言</a></li>
+        <li><a href="#开启懒加载">开启懒加载</a></li>
+        <li><a href="#模拟需求">模拟需求</a></li>
+        <li><a href="#编写映射文件和mapper接口">编写映射文件和Mapper接口</a></li>
+        <li><a href="#测试及分析">测试及分析</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+  </div>
+</div>
+    <div class="post-content">
+      <h2 id="前言">前言</h2>
+<p>Mybatis的懒加载就是所谓的延迟加载，很多博客上也称之为按需加载，但是我觉得只有当配置了Mybatis的非侵略性懒加载才能称之为按需加载（下面会提到）。Mybatis的级联查询有两种方式：</p>
+<ol>
+<li>执行一条多表级联的sql语句（sql语句上的级联）。主从查询必定会同步执行。</li>
+<li>写两条单表查询的sql语句，两者之间存在逻辑上的级联（sql语法上并没有关联起来）。当开启mybatis的懒加载时，只有当需要访问从查询的数据时才会执行从查询（此时开启的是非侵略性懒加载。如果是侵略性懒加载，不管你访问的是不是从查询的数据，都会执行从查询）。</li>
+</ol>
+<p>本博文后面的讨论都是基于mybatis-3.2.7，所以开启懒加载需要两个依赖包：<strong>asm-3.3.1.jar和cglib-2.2.2.jar</strong> ，具体的适配版本需要自己测试。</p>
+<h2 id="开启懒加载">开启懒加载</h2>
+<p>开启mybatis的懒加载主要是再mybatis的全局配置文件中的<code>settings</code>元素中设置设置两个元素（mybatis的全局配置文件中的元素是有顺序的，settings元素只能在properties元素之后，在typeAliases元素之前），如下所示：</p>
+<pre><code>&lt;settings&gt;
+    &lt;!--设置mybatis使用log4j日志--&gt;
+    &lt;setting name=&quot;logImpl&quot; value=&quot;LOG4J&quot;/&gt;
+    &lt;!--开启mybatis的懒加载（延迟加载）--&gt;
+    &lt;setting name=&quot;lazyLoadingEnabled&quot; value=&quot;true&quot;/&gt;
+    &lt;!--非侵略型懒加载--&gt;
+    &lt;setting name=&quot;aggressiveLazyLoading&quot; value=&quot;false&quot;/&gt;
+&lt;/settings&gt;
+</code></pre>
+<p><em><strong>说明：</strong></em> mybatis-3.2.7默认不开启懒加载，默认开启非侵略性懒加载（侵略性和非侵略性后文会分析）。</p>
+<h2 id="模拟需求">模拟需求</h2>
+<p>一个学生（Student）有一个成绩单（StudentScore），Student类组合了StudentScore类；数据库中存在两张表：student和student_score，student和student_score是一对一的级联关系。</p>
+<p>Student类代码如下：</p>
+<pre><code>package com.mybatis.pojo;
+public class Student {
+    protected int id,studentNumber,studentClass;
+    protected String studentName;
+    protected StudentScore studentScore;      //学生的成绩
+
+    //getter and setter
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public int getStudentNumber() {
+        return studentNumber;
+    }
+
+    public void setStudentNumber(int studentNumber) {
+        this.studentNumber = studentNumber;
+    }
+
+    public int getStudentClass() {
+        return studentClass;
+    }
+
+    public void setStudentClass(int studentClass) {
+        this.studentClass = studentClass;
+    }
+
+    public String getStudentName() {
+        return studentName;
+    }
+
+    public void setStudentName(String studentName) {
+        this.studentName = studentName;
+    }
+
+    public StudentScore getStudentScore() {
+        return studentScore;
+    }
+
+    public void setStudentScore(StudentScore studentScore) {
+        this.studentScore = studentScore;
+    }
+
+
+    @Override
+    public String toString() {
+        return &quot;Student{&quot; +
+                &quot;id=&quot; + id +
+                &quot;, studentNumber=&quot; + studentNumber +
+                &quot;, studentClass=&quot; + studentClass +
+                &quot;, studentName='&quot; + studentName + '\'' +
+                &quot;, studentScore=&quot; + studentScore +
+                '}';
+    }
+}
+</code></pre>
+<p>StudentScore的代码如下：</p>
+<pre><code>package com.mybatis.pojo;
+public class StudentScore {
+    protected int id;
+    protected float j2ee,android,sql;
+
+    //getter and setter
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public float getJ2ee() {
+        return j2ee;
+    }
+
+    public void setJ2ee(float j2ee) {
+        this.j2ee = j2ee;
+    }
+
+    public float getAndroid() {
+        return android;
+    }
+
+    public void setAndroid(float android) {
+        this.android = android;
+    }
+
+    public float getSql() {
+        return sql;
+    }
+
+    public void setSql(float sql) {
+        this.sql = sql;
+    }
+
+    @Override
+    public String toString() {
+        return &quot;StudentScore{&quot; +
+                &quot;id=&quot; + id +
+                &quot;, j2ee=&quot; + j2ee +
+                &quot;, android=&quot; + android +
+                &quot;, sql=&quot; + sql +
+                '}';
+    }
+}
+</code></pre>
+<h2 id="编写映射文件和mapper接口">编写映射文件和Mapper接口</h2>
+<p>Mapper接口中主要声明了抽象方法：<code>public List&lt;Student&gt; lazySelect() throws Exception;</code> ,映射文件中于此对应的主要代码如下：</p>
+<pre><code>&lt;!--延迟加载的查询的映射配置--&gt;
+&lt;resultMap id=&quot;lazyLoadingRes&quot; type=&quot;Student&quot;&gt;
+    &lt;id column=&quot;id&quot; property=&quot;id&quot;/&gt;
+    &lt;result column=&quot;student_number&quot; property=&quot;studentNumber&quot;/&gt;
+    &lt;result column=&quot;student_name&quot; property=&quot;studentName&quot;/&gt;
+    &lt;result column=&quot;student_class&quot; property=&quot;studentClass&quot;/&gt;
+    &lt;result column=&quot;total_score&quot; property=&quot;totalScore&quot;/&gt;
+    &lt;association property=&quot;studentScore&quot; javaType=&quot;StudentScore&quot; column=&quot;id&quot; select=&quot;selectScoreById&quot; /&gt;
+&lt;/resultMap&gt;
+
+&lt;!--查询student_score表--&gt;
+&lt;select id=&quot;selectScoreById&quot; resultType=&quot;StudentScore&quot; parameterType=&quot;Integer&quot;&gt;
+    select * from student_score where id=#{param0}
+&lt;/select&gt;
+
+&lt;!--查询所有student信息--&gt;
+&lt;select id=&quot;lazySelect&quot; resultMap=&quot;lazyLoadingRes&quot;&gt;
+    select * from student
+&lt;/select&gt;
+</code></pre>
+<p>可以看到，我没有使用sql语法上的级联查询，而是利用mybatis的association的select属性实现两个存在逻辑上的级联的单表sql查询语句的级联查询。</p>
+<h2 id="测试及分析">测试及分析</h2>
+<p>写了一个测试方法，代码如下（其中的studentDao就是已经在@Before里实例化了的Mapper对象）：</p>
+<pre><code>@Test
+public void test1() throws Exception {
+   System.out.println(&quot;-----------懒加载开始------------&quot;);
+   List&lt;Student&gt; students = studentDao.lazySelect();
+   System.out.println(&quot;-----------懒加载结束------------&quot;);
+   //System.out.println(students.get(1));
+}
+</code></pre>
+<p>此时运行结果如下图：</p>
+<p><img src="/media/20191026-1.png" alt="结果1"></p>
+<p>可以看到，开启懒加载后（非侵略性），<strong>在无需访问从查询的数据时，只执行了主查询</strong> ，那么当我们需要访问从查询的数据时候呢？将上面的测试方法的<code>System.out.println(students.get(1));</code>的注释去掉，便是需要打印Student对象的所有属性，而Student对象有一个StudentScore对象属性，此处便是需要访问从查询的数据了，再看结果：</p>
+<p><img src="/media/20191026-2.png" alt="结果2"></p>
+<p>可以看到，当我们需要访问从查询的数据时，会在需要访问的时候再执行从查询。那我们仅仅是需要访问主查询的数据呢？将 <code>System.out.println(students.get(1));</code> 改为 <code>System.out.println(students.get(1).getStudentName());</code> （此时只访问Student对象的name属性，此属性通过主查询得到），此时再看结果：</p>
+<p><img src="/media/20191026-3.png" alt="结果3"></p>
+<p>可以看到，当我们开启的是非侵略性懒加载时，只有当我们需要访问从查询的数据时，才会执行从查询，我们访问的name属性不是从查询的数据，所以也只执行了主查询，没有执行从查询，但是如果将懒加载改为侵略性的呢？将mybatis的全局配置文件中的<code>&lt;setting name=&quot;aggressiveLazyLoading&quot; value=&quot;false&quot;/&gt;</code>中的true改为false，再在上一步的基础上查看结果：</p>
+<p><img src="/media/20191026-4.png" alt="结果4"></p>
+<p>我们看到，当开启的是侵略性懒加载时，虽然访问的是非从查询数据（访问的是主查询的数据），但是还是执行了从查询，这便是侵略性懒加载和非侵略性懒加载的区别了：<strong>侵略性懒加载只要访问对象的属性，不管是不是从查询的数据，都会执行从查询。</strong></p>
+
+    </div>
+
+    <div class="post-copyright">
+  <p class="copyright-item">
+    <span class="item-title">文章作者</span>
+    <span class="item-content">P1n93r</span>
+  </p>
+  <p class="copyright-item">
+    <span class="item-title">上次更新</span>
+    <span class="item-content">
+        2019-10-26
+        
+    </span>
+  </p>
+  
+  
+</div>
+<footer class="post-footer">
+      
+      <nav class="post-nav">
+        <a class="prev" href="/post/mybatis/mybatis%E7%BC%93%E5%AD%98/">
+            <i class="iconfont icon-left"></i>
+            <span class="prev-text nav-default">Mybatis缓存</span>
+            <span class="prev-text nav-mobile">上一篇</span>
+          </a>
+        <a class="next" href="/post/java/%E9%9B%86%E5%90%88/">
+            <span class="next-text nav-default">集合</span>
+            <span class="next-text nav-mobile">下一篇</span>
+            <i class="iconfont icon-right"></i>
+          </a>
+      </nav>
+    </footer>
+  </article>
+        </div>
+        <div id="disqus_thread"></div>
+    <script type="text/javascript">
+    (function() {
+      
+      
+      if (window.location.hostname === 'localhost') return;
+
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      var disqus_shortname = 'p1n93r';
+      dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+    </script>
+    <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+
+  
+
+  
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="social-links">
+      <a href="mailto:pin83r@gmail.com" class="iconfont icon-email" title="email"></a>
+      <a href="https://github.com/p1n93r" class="iconfont icon-github" title="github"></a>
+  <a href="https://p1n93r.github.io/index.xml" type="application/rss+xml" class="iconfont icon-rss" title="rss"></a>
+</div>
+
+<div class="copyright">
+  <span class="power-by">
+    由 <a class="hexo-link" href="https://gohugo.io">Hugo</a> 强力驱动
+  </span>
+  <span class="division">|</span>
+  <span class="theme-info">
+    主题 - 
+    <a class="theme-link" href="https://github.com/olOwOlo/hugo-theme-even">Even</a>
+  </span>
+
+  <div class="busuanzi-footer">
+    <span id="busuanzi_container_site_pv"> 本站总访问量 <span id="busuanzi_value_site_pv"><img src="/img/spinner.svg" alt="spinner.svg"/></span> 次 </span>
+      <span class="division">|</span>
+    <span id="busuanzi_container_site_uv"> 本站总访客数 <span id="busuanzi_value_site_uv"><img src="/img/spinner.svg" alt="spinner.svg"/></span> 人 </span>
+  </div>
+
+  <span class="copyright-year">
+    &copy; 
+    2019 - 
+    2022<span class="heart"><i class="iconfont icon-heart"></i></span><span>P1n93r</span>
+  </span>
+</div>
+
+    </footer>
+
+    <div class="back-to-top" id="back-to-top">
+      <i class="iconfont icon-up"></i>
+    </div>
+  </div>
+  
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/slideout@1.0.1/dist/slideout.min.js" integrity="sha256-t+zJ/g8/KXIJMjSVQdnibt4dlaDxc9zXr/9oNPeWqdg=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.js" integrity="sha256-XVLffZaxoWfGUEbdzuLi7pwaUJv1cecsQJQqGLe7axY=" crossorigin="anonymous"></script>
+
+
+
+<script type="text/javascript" src="/js/main.min.64437849d125a2d603b3e71d6de5225d641a32d17168a58106e0b61852079683.js"></script>
+
+
+
+
+
+
+
+
+</body>
+</html>

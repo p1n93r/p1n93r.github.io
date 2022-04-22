@@ -1,0 +1,384 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>Mybatis动态SQL - P1n93r - 博学而精一</title>
+  <meta name="renderer" content="webkit" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+<meta name="author" content="P1n93r" /><meta name="description" content="前言 Mybatis可以提供动态组装SQL语句的功能，称为动态SQL。 一个综合例子 这个例子缺少&amp;lt;set&amp;gt;元素，&amp;lt;foreac" /><meta name="keywords" content="Security, Java, Web, Android" />
+
+
+
+
+
+
+<meta name="generator" content="Hugo 0.96.0 with theme even" />
+
+
+<link rel="canonical" href="https://p1n93r.github.io/post/mybatis/mybatis%E5%8A%A8%E6%80%81sql/" />
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/manifest.json">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+<link href="/sass/main.min.f92fd13721ddf72129410fd8250e73152cc6f2438082b6c0208dc24ee7c13fc4.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.css" integrity="sha256-7TyXnr2YU040zfSP+rEcz29ggW4j56/ujTPwjMzyqFY=" crossorigin="anonymous">
+
+
+<meta property="og:title" content="Mybatis动态SQL" />
+<meta property="og:description" content="前言 Mybatis可以提供动态组装SQL语句的功能，称为动态SQL。 一个综合例子 这个例子缺少&lt;set&gt;元素，&lt;foreac" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://p1n93r.github.io/post/mybatis/mybatis%E5%8A%A8%E6%80%81sql/" /><meta property="article:section" content="post" />
+<meta property="article:published_time" content="2019-09-24T08:22:36+08:00" />
+<meta property="article:modified_time" content="2019-09-24T08:22:36+08:00" />
+
+<meta itemprop="name" content="Mybatis动态SQL">
+<meta itemprop="description" content="前言 Mybatis可以提供动态组装SQL语句的功能，称为动态SQL。 一个综合例子 这个例子缺少&lt;set&gt;元素，&lt;foreac"><meta itemprop="datePublished" content="2019-09-24T08:22:36+08:00" />
+<meta itemprop="dateModified" content="2019-09-24T08:22:36+08:00" />
+<meta itemprop="wordCount" content="1110">
+<meta itemprop="keywords" content="" /><meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="Mybatis动态SQL"/>
+<meta name="twitter:description" content="前言 Mybatis可以提供动态组装SQL语句的功能，称为动态SQL。 一个综合例子 这个例子缺少&lt;set&gt;元素，&lt;foreac"/>
+
+<!--[if lte IE 9]>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
+<![endif]-->
+
+<!--[if lt IE 9]>
+  <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+<![endif]-->
+
+</head>
+<body>
+  <div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/" class="logo">P1n93r</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    <a href="/">
+        <li class="mobile-menu-item">Home</li>
+      </a><a href="/post/">
+        <li class="mobile-menu-item">Archives</li>
+      </a><a href="/tags/">
+        <li class="mobile-menu-item">Tags</li>
+      </a><a href="/categories/">
+        <li class="mobile-menu-item">Categories</li>
+      </a><a href="/about/">
+        <li class="mobile-menu-item">About</li>
+      </a>
+  </ul>
+
+  
+
+
+</nav>
+
+  <div class="container" id="mobile-panel">
+    <header id="header" class="header">
+        <div class="logo-wrapper">
+  <a href="/" class="logo">P1n93r</a>
+</div>
+
+
+
+
+
+<nav class="site-navbar">
+  <ul id="menu" class="menu">
+    <li class="menu-item">
+        <a class="menu-item-link" href="/">Home</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/">Archives</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/tags/">Tags</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/categories/">Categories</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/about/">About</a>
+      </li>
+  </ul>
+</nav>
+
+    </header>
+
+    <main id="main" class="main">
+      <div class="content-wrapper">
+        <div id="content" class="content">
+          <article class="post">
+    
+    <header class="post-header">
+      <h1 class="post-title">Mybatis动态SQL</h1>
+
+      <div class="post-meta">
+        <span class="post-time"> 2019-09-24 </span>
+        <div class="post-category">
+            <a href="/categories/mybatis/"> Mybatis </a>
+            </div>
+          <span class="more-meta"> 约 1110 字 </span>
+          <span class="more-meta"> 预计阅读 3 分钟 </span>
+        <span id="busuanzi_container_page_pv" class="more-meta"> <span id="busuanzi_value_page_pv"><img src="/img/spinner.svg" alt="spinner.svg"/></span> 次阅读 </span>
+      </div>
+    </header>
+
+    <div class="post-toc" id="post-toc">
+  <h2 class="post-toc-title">文章目录</h2>
+  <div class="post-toc-content always-active">
+    <nav id="TableOfContents">
+  <ul>
+    <li>
+      <ul>
+        <li><a href="#前言">前言</a></li>
+        <li><a href="#一个综合例子">一个综合例子</a></li>
+        <li><a href="#if元素">&lt;if&gt;元素</a></li>
+        <li><a href="#choosewhenotherkwise元素">&lt;choose&gt;,&lt;when&gt;,&lt;otherkwise&gt;元素</a></li>
+        <li><a href="#where元素">&lt;where&gt;元素</a></li>
+        <li><a href="#bind元素">&lt;bind&gt;元素</a></li>
+        <li><a href="#set元素">&lt;set&gt;元素</a></li>
+        <li><a href="#foreach元素">&lt;foreach&gt;元素</a></li>
+        <li><a href="#trim元素">&lt;trim&gt;元素</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+  </div>
+</div>
+    <div class="post-content">
+      <h2 id="前言">前言</h2>
+<p>Mybatis可以提供动态组装SQL语句的功能，称为动态SQL。</p>
+<h2 id="一个综合例子">一个综合例子</h2>
+<p>这个例子缺少&lt;set&gt;元素，&lt;foreach&gt;元素</p>
+<pre><code>&lt;select id=&quot;selectAll&quot; resultMap=&quot;selectAllResMap&quot; parameterType=&quot;CustomQuerryStudentParam&quot;&gt;
+    select a.*,b.j2ee,b.android,b.sql,(b.j2ee+b.android+b.sql) as total_score
+        from student a,student_score b
+    &lt;where&gt;
+        a.id=b.id
+        &lt;!--根据学号查询--&gt;
+        &lt;if test=&quot;studentNumber!=null and studentNumber!=0&quot;&gt;
+            and a.student_number=#{studentNumber}
+        &lt;/if&gt;
+        &lt;!--根据姓名模糊查询--&gt;
+        &lt;if test=&quot;studentName!=null and studentName!=''&quot;&gt;
+            &lt;bind name=&quot;fuzzyName&quot; value=&quot;'%'+studentName+'%'&quot;/&gt;
+            and a.student_name like #{fuzzyName}
+        &lt;/if&gt;
+        &lt;!--根据班级查询--&gt;
+        &lt;if test=&quot;studentClass!=null and studentClass!=0&quot;&gt;
+            and a.student_class=#{studentClass}
+        &lt;/if&gt;
+        &lt;!--排序--&gt;
+        order by
+        &lt;choose&gt;
+            &lt;!--这里不能直接用${}将前台的数据存到这，会造成order by型sql注入--&gt;
+            &lt;!--于是我对前台的数据进行数据对比，反正就是不能直接将前台的数据放这--&gt;
+            &lt;when test=&quot;sort!=null and sort=='studentNumber'&quot;&gt;a.student_number&lt;/when&gt;
+            &lt;when test=&quot;sort!=null and sort=='studentClass'&quot;&gt;a.student_class&lt;/when&gt;
+            &lt;when test=&quot;sort!=null and sort=='sql'&quot;&gt;b.`sql`&lt;/when&gt;
+            &lt;when test=&quot;sort!=null and sort=='android'&quot;&gt;b.android&lt;/when&gt;
+            &lt;when test=&quot;sort!=null and sort=='j2ee'&quot;&gt;b.j2ee&lt;/when&gt;
+            &lt;otherwise&gt;total_score&lt;/otherwise&gt;
+        &lt;/choose&gt;
+        &lt;!--排序的方式（asc还是desc）--&gt;
+        &lt;choose&gt;
+            &lt;when test=&quot;isAsc!=null and isAsc==false&quot;&gt;desc&lt;/when&gt;
+            &lt;otherwise&gt;asc&lt;/otherwise&gt;
+        &lt;/choose&gt;
+        &lt;!--分页--&gt;
+        &lt;if test=&quot;offset!=null&quot;&gt;
+            &lt;if test=&quot;pageSize!=null and pageSize!=0&quot;&gt;
+                limit #{offset},#{pageSize}
+            &lt;/if&gt;
+        &lt;/if&gt;
+    &lt;/where&gt;
+&lt;/select&gt;
+</code></pre>
+<h2 id="if元素">&lt;if&gt;元素</h2>
+<p>if元素可以使得有条件的包含where字句的一部分，类似高级语言中的if语句，需注意的地方是： <strong>if元素的test属性为判断条件，里面不能写&amp;&amp;和||，而是and和or，而且取值直接写标识符即可，无需用#和$符号</strong></p>
+<h2 id="choosewhenotherkwise元素">&lt;choose&gt;,&lt;when&gt;,&lt;otherkwise&gt;元素</h2>
+<p>类似高级语言的swich语句，当要多个条件选择一个时使用，同时还可以给个默认的条件——用&lt;otherwise&gt;元素即可</p>
+<h2 id="where元素">&lt;where&gt;元素</h2>
+<p>where元素的好处如下：</p>
+<ol>
+<li>会自动在写where元素的地方输出一个where语句</li>
+<li>如果where里的所有条件都不满足，则mybatis会输出所有记录</li>
+<li>会自动去掉第一个输出条件的开头的and或者or</li>
+<li>无需考虑空格问题，比如两个查询条件之间的空格，mybatis会自动处理</li>
+</ol>
+<h2 id="bind元素">&lt;bind&gt;元素</h2>
+<p>主要用在模糊查询的拼接%符号的，模糊查询时，不要使用${}和%拼接，会造成sql注入。</p>
+<h2 id="set元素">&lt;set&gt;元素</h2>
+<p>主要用在动态更新列，需要注意的是： <strong>set元素内的多个if元素里的内容，需要以逗号结尾</strong> ，因为set元素不会自动去掉第一个输出条件的开头的逗号，所以我们把逗号写在后面，&lt;set&gt;元素会自动去除其内的最后一个逗号。一个例子如下：</p>
+<pre><code>&lt;update id=&quot;updateOne&quot; parameterType=&quot;Student&quot;&gt;
+    update student a,student_score b
+    &lt;set&gt;
+        &lt;if test=&quot;studentNumber!=0&quot;&gt;
+            a.student_number=#{studentNumber},
+        &lt;/if&gt;
+        &lt;if test=&quot;studentClass!=0&quot;&gt;
+            a.student_class=#{studentClass},
+        &lt;/if&gt;
+        &lt;if test=&quot;studentName!=null and studentName!=''&quot;&gt;
+            a.student_name=#{studentName},
+        &lt;/if&gt;
+        &lt;if test=&quot;studentScore.j2ee!=0&quot;&gt;
+            b.j2ee=#{studentScore.j2ee},
+        &lt;/if&gt;
+        &lt;if test=&quot;studentScore.android!=0&quot;&gt;
+            b.android=#{studentScore.android},
+        &lt;/if&gt;
+        &lt;if test=&quot;studentScore.sql!=0&quot;&gt;
+            b.`sql`=#{studentScore.sql}
+        &lt;/if&gt;
+    &lt;/set&gt;
+    &lt;where&gt;
+        a.id=b.id
+        &lt;if test=&quot;id!=0&quot;&gt;
+            and a.id=#{id}
+        &lt;/if&gt;
+    &lt;/where&gt;
+&lt;/update&gt;
+</code></pre>
+<h2 id="foreach元素">&lt;foreach&gt;元素</h2>
+<p>类似JSTL的&lt;c:foreach&gt;标签，一个例子如下：</p>
+<pre><code>&lt;!--批量删除--&gt;
+&lt;delete id=&quot;deleteByRange&quot; parameterType=&quot;List&quot;&gt;
+    delete from student where id in
+    &lt;foreach collection=&quot;list&quot; open=&quot;(&quot; close=&quot;)&quot; separator=&quot;,&quot; item=&quot;v&quot;&gt;
+        #{v}
+    &lt;/foreach&gt;
+&lt;/delete&gt;
+</code></pre>
+<h2 id="trim元素">&lt;trim&gt;元素</h2>
+<p>比较少用，主要作用是加前后缀，以及覆盖前后缀。</p>
+
+    </div>
+
+    <div class="post-copyright">
+  <p class="copyright-item">
+    <span class="item-title">文章作者</span>
+    <span class="item-content">P1n93r</span>
+  </p>
+  <p class="copyright-item">
+    <span class="item-title">上次更新</span>
+    <span class="item-content">
+        2019-09-24
+        
+    </span>
+  </p>
+  
+  
+</div>
+<footer class="post-footer">
+      
+      <nav class="post-nav">
+        <a class="prev" href="/post/java/%E9%9D%A2%E5%90%91%E5%AF%B9%E8%B1%A1%E4%B8%80/">
+            <i class="iconfont icon-left"></i>
+            <span class="prev-text nav-default">面向对象(一)</span>
+            <span class="prev-text nav-mobile">上一篇</span>
+          </a>
+        <a class="next" href="/post/mybatis/mybatis%E7%BA%A7%E8%81%94%E6%9F%A5%E8%AF%A2/">
+            <span class="next-text nav-default">Mybatis级联查询</span>
+            <span class="next-text nav-mobile">下一篇</span>
+            <i class="iconfont icon-right"></i>
+          </a>
+      </nav>
+    </footer>
+  </article>
+        </div>
+        <div id="disqus_thread"></div>
+    <script type="text/javascript">
+    (function() {
+      
+      
+      if (window.location.hostname === 'localhost') return;
+
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      var disqus_shortname = 'p1n93r';
+      dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+    </script>
+    <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+
+  
+
+  
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="social-links">
+      <a href="mailto:pin83r@gmail.com" class="iconfont icon-email" title="email"></a>
+      <a href="https://github.com/p1n93r" class="iconfont icon-github" title="github"></a>
+  <a href="https://p1n93r.github.io/index.xml" type="application/rss+xml" class="iconfont icon-rss" title="rss"></a>
+</div>
+
+<div class="copyright">
+  <span class="power-by">
+    由 <a class="hexo-link" href="https://gohugo.io">Hugo</a> 强力驱动
+  </span>
+  <span class="division">|</span>
+  <span class="theme-info">
+    主题 - 
+    <a class="theme-link" href="https://github.com/olOwOlo/hugo-theme-even">Even</a>
+  </span>
+
+  <div class="busuanzi-footer">
+    <span id="busuanzi_container_site_pv"> 本站总访问量 <span id="busuanzi_value_site_pv"><img src="/img/spinner.svg" alt="spinner.svg"/></span> 次 </span>
+      <span class="division">|</span>
+    <span id="busuanzi_container_site_uv"> 本站总访客数 <span id="busuanzi_value_site_uv"><img src="/img/spinner.svg" alt="spinner.svg"/></span> 人 </span>
+  </div>
+
+  <span class="copyright-year">
+    &copy; 
+    2019 - 
+    2022<span class="heart"><i class="iconfont icon-heart"></i></span><span>P1n93r</span>
+  </span>
+</div>
+
+    </footer>
+
+    <div class="back-to-top" id="back-to-top">
+      <i class="iconfont icon-up"></i>
+    </div>
+  </div>
+  
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/slideout@1.0.1/dist/slideout.min.js" integrity="sha256-t+zJ/g8/KXIJMjSVQdnibt4dlaDxc9zXr/9oNPeWqdg=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.js" integrity="sha256-XVLffZaxoWfGUEbdzuLi7pwaUJv1cecsQJQqGLe7axY=" crossorigin="anonymous"></script>
+
+
+
+<script type="text/javascript" src="/js/main.min.64437849d125a2d603b3e71d6de5225d641a32d17168a58106e0b61852079683.js"></script>
+
+
+
+
+
+
+
+
+</body>
+</html>

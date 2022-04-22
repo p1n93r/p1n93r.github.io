@@ -1,0 +1,534 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>Spring IoC - P1n93r - 博学而精一</title>
+  <meta name="renderer" content="webkit" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+<meta name="author" content="P1n93r" /><meta name="description" content="Spring IoC基本概念 控制反转（IoC，Inversion of Control） 是Spring框架的基础，也是Spring的核心理念，用于消减计算机程" /><meta name="keywords" content="Security, Java, Web, Android" />
+
+
+
+
+
+
+<meta name="generator" content="Hugo 0.96.0 with theme even" />
+
+
+<link rel="canonical" href="https://p1n93r.github.io/post/spring/spring-ioc/" />
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/manifest.json">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+<link href="/sass/main.min.f92fd13721ddf72129410fd8250e73152cc6f2438082b6c0208dc24ee7c13fc4.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.css" integrity="sha256-7TyXnr2YU040zfSP+rEcz29ggW4j56/ujTPwjMzyqFY=" crossorigin="anonymous">
+
+
+<meta property="og:title" content="Spring IoC" />
+<meta property="og:description" content="Spring IoC基本概念 控制反转（IoC，Inversion of Control） 是Spring框架的基础，也是Spring的核心理念，用于消减计算机程" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://p1n93r.github.io/post/spring/spring-ioc/" /><meta property="article:section" content="post" />
+<meta property="article:published_time" content="2019-11-12T09:00:36+08:00" />
+<meta property="article:modified_time" content="2019-11-12T09:00:36+08:00" />
+
+<meta itemprop="name" content="Spring IoC">
+<meta itemprop="description" content="Spring IoC基本概念 控制反转（IoC，Inversion of Control） 是Spring框架的基础，也是Spring的核心理念，用于消减计算机程"><meta itemprop="datePublished" content="2019-11-12T09:00:36+08:00" />
+<meta itemprop="dateModified" content="2019-11-12T09:00:36+08:00" />
+<meta itemprop="wordCount" content="2235">
+<meta itemprop="keywords" content="" /><meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="Spring IoC"/>
+<meta name="twitter:description" content="Spring IoC基本概念 控制反转（IoC，Inversion of Control） 是Spring框架的基础，也是Spring的核心理念，用于消减计算机程"/>
+
+<!--[if lte IE 9]>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
+<![endif]-->
+
+<!--[if lt IE 9]>
+  <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+<![endif]-->
+
+</head>
+<body>
+  <div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/" class="logo">P1n93r</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    <a href="/">
+        <li class="mobile-menu-item">Home</li>
+      </a><a href="/post/">
+        <li class="mobile-menu-item">Archives</li>
+      </a><a href="/tags/">
+        <li class="mobile-menu-item">Tags</li>
+      </a><a href="/categories/">
+        <li class="mobile-menu-item">Categories</li>
+      </a><a href="/about/">
+        <li class="mobile-menu-item">About</li>
+      </a>
+  </ul>
+
+  
+
+
+</nav>
+
+  <div class="container" id="mobile-panel">
+    <header id="header" class="header">
+        <div class="logo-wrapper">
+  <a href="/" class="logo">P1n93r</a>
+</div>
+
+
+
+
+
+<nav class="site-navbar">
+  <ul id="menu" class="menu">
+    <li class="menu-item">
+        <a class="menu-item-link" href="/">Home</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/">Archives</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/tags/">Tags</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/categories/">Categories</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/about/">About</a>
+      </li>
+  </ul>
+</nav>
+
+    </header>
+
+    <main id="main" class="main">
+      <div class="content-wrapper">
+        <div id="content" class="content">
+          <article class="post">
+    
+    <header class="post-header">
+      <h1 class="post-title">Spring IoC</h1>
+
+      <div class="post-meta">
+        <span class="post-time"> 2019-11-12 </span>
+        <div class="post-category">
+            <a href="/categories/spring/"> Spring </a>
+            </div>
+          <span class="more-meta"> 约 2235 字 </span>
+          <span class="more-meta"> 预计阅读 5 分钟 </span>
+        <span id="busuanzi_container_page_pv" class="more-meta"> <span id="busuanzi_value_page_pv"><img src="/img/spinner.svg" alt="spinner.svg"/></span> 次阅读 </span>
+      </div>
+    </header>
+
+    <div class="post-toc" id="post-toc">
+  <h2 class="post-toc-title">文章目录</h2>
+  <div class="post-toc-content always-active">
+    <nav id="TableOfContents">
+  <ul>
+    <li>
+      <ul>
+        <li><a href="#spring-ioc基本概念">Spring IoC基本概念</a></li>
+        <li><a href="#spring-ioc容器">Spring IoC容器</a>
+          <ul>
+            <li><a href="#beanfactory">BeanFactory</a></li>
+            <li><a href="#applicationcontext">ApplicationContext</a></li>
+          </ul>
+        </li>
+        <li><a href="#依赖注入的类型">依赖注入的类型</a>
+          <ul>
+            <li><a href="#模拟需求">模拟需求</a></li>
+            <li><a href="#构造方法注入">构造方法注入</a></li>
+            <li><a href="#属性的setter方法注入">属性的setter方法注入</a></li>
+          </ul>
+        </li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+  </div>
+</div>
+    <div class="post-content">
+      <h2 id="spring-ioc基本概念">Spring IoC基本概念</h2>
+<p><strong>控制反转（IoC，Inversion of Control）</strong> 是Spring框架的基础，也是Spring的核心理念，用于消减计算机程序的耦合的问题。 <strong>依赖注入（DI，Dependency Injection）是IoC的另外一种说法</strong> ，只是从不同角度描述相同的概念。</p>
+<p>当一个Java对象调用另一个对象时，传统编程模式下，我们通常使用new的方式创建一个对象，这种方式会增加调用者和被调用者之间的耦合性，不利于后期的维护和升级。Spring框架的出现就是为了解决这个耦合的问题。其中重要的两个概念如下：</p>
+<ul>
+<li>控制反转：调用者不再通过new的方式创建被调用者对象，而是由Spring容器来负责创建，创建对象的控制权由调用者转移到了Spring容器，控制权发生了反转，此所谓 <strong>控制反转</strong> 。</li>
+<li>依赖注入：调用者组合被调用者时，Spring容器负责将被依赖的对象赋值给该组合成员变量，相当于为调用者注入了它所依赖的实例，此所谓 <strong>依赖注入</strong> 。</li>
+</ul>
+<p>综上所述， <strong>在Spring中实现控制反转的是IoC容器，其实现方法是依赖注入。</strong></p>
+<h2 id="spring-ioc容器">Spring IoC容器</h2>
+<p>实现控制反转的是Spring IoC容器。 <strong>Spring IoC容器的设计主要是基于BeanFactory，ApplicationContext两个接口。</strong></p>
+<h3 id="beanfactory">BeanFactory</h3>
+<p>BeanFactory是一个管理Bean的工厂，主要负责初始化各种Bean。此接口主有多个实现类，比较常用的是XmlBeanFactory，该类会根据XML配置文件中的定义来装配Bean（需要提供XML文件的绝对路径）。此种方法已过时，不推荐使用了。一个例子如下：</p>
+<pre><code>XmlBeanFactory xmlBeanFactory = new XmlBeanFactory(new FileSystemResource(&quot;E:\\ideaProject\\SpringTest\\res\\spring\\applicationContext.xml&quot;));
+Student student =(Student) xmlBeanFactory.getBean(&quot;student&quot;);
+</code></pre>
+<h3 id="applicationcontext">ApplicationContext</h3>
+<p>ApplicationContext接口是BeanFactory的子接口，也称为 <strong>应用上下文</strong> ，ApplicationContext接口除了包含BeanFactory接口的所有功能意外，还添加了对国际化、资源访问、事件传播等内容的支持。创建ApplicationContext接口实例通常有三种方法：</p>
+<ol>
+<li>通过ClassPathXmlApplicationContext创建。</li>
+<li>通过FileSystemXmlApplicationContext创建。</li>
+<li>通过Web服务器实例化ApplicationContext创建。</li>
+</ol>
+<p>方式1的实例代码如下：</p>
+<pre><code>//利用ApplicationContext实现控制反转
+ClassPathXmlApplicationContext applicationContext = new ClassPathXmlApplicationContext(&quot;spring/applicationContext.xml&quot;);
+Student student0=(Student)applicationContext.getBean(&quot;student&quot;);
+student0.setName(&quot;GIAO！&quot;);
+System.out.println(student0);
+</code></pre>
+<p>方式2的实例代码如下（需要XMl配置文件的绝对路径）：</p>
+<pre><code>FileSystemXmlApplicationContext applicationContext = new FileSystemXmlApplicationContext(&quot;E:\\ideaProject\\SpringTest\\res\\spring\\applicationContext.xml&quot;);
+Student student=(Student)applicationContext.getBean(&quot;student&quot;);
+student.setNumber(4041);
+System.out.println(student);
+</code></pre>
+<p>方式3，需要在j2ee项目的web.xml中进行配置，以后等到mvc再举例。</p>
+<h2 id="依赖注入的类型">依赖注入的类型</h2>
+<p>Spring的依赖注入通常有两种实现方式，如下：</p>
+<ol>
+<li>构造方法注入。</li>
+<li>属性的setter方法注入。</li>
+</ol>
+<h3 id="模拟需求">模拟需求</h3>
+<p>下面将模拟Student实体依赖Score实体（学生组合一个成绩属性）的需求来进行构造方法注入和属性的setter方法注入的实验（在Student实体中注入Score实体）。</p>
+<p>Student实体类的代码如下：</p>
+<pre><code>public class Student {
+    private Integer id,number;
+    private String name,sex;
+    private Score score;
+    
+    public Student() {
+    }
+
+    public Student(Score score) {
+        this.score = score;
+		System.out.println(&quot;利用构造方法注入Score实体....&quot;);
+    }
+
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
+    public Integer getNumber() {
+        return number;
+    }
+
+    public void setNumber(Integer number) {
+        this.number = number;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getSex() {
+        return sex;
+    }
+
+    public void setSex(String sex) {
+        this.sex = sex;
+    }
+
+    public Score getScore() {
+        return score;
+    }
+
+    public void setScore(Score score) {
+        this.score = score;
+		System.out.println(&quot;使用属性的setter方法完成注入....&quot;);
+    }
+
+    @Override
+    public String toString() {
+        return &quot;Student{&quot; +
+                &quot;id=&quot; + id +
+                &quot;, number=&quot; + number +
+                &quot;, name='&quot; + name + '\'' +
+                &quot;, sex='&quot; + sex + '\'' +
+                &quot;, score=&quot; + score +
+                '}';
+    }
+}
+</code></pre>
+<p>Score实体类的代码如下：</p>
+<pre><code>public class Score {
+    private Integer id;
+    private Float mybatis,mysql,spring;
+
+    public Score(Integer id, Float mybatis, Float mysql, Float spring) {
+        this.id = id;
+        this.mybatis = mybatis;
+        this.mysql = mysql;
+        this.spring = spring;
+    }
+
+    public Score() {
+    }
+
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
+    public Float getMybatis() {
+        return mybatis;
+    }
+
+    public void setMybatis(Float mybatis) {
+        this.mybatis = mybatis;
+    }
+
+    public Float getMysql() {
+        return mysql;
+    }
+
+    public void setMysql(Float mysql) {
+        this.mysql = mysql;
+    }
+
+    public Float getSpring() {
+        return spring;
+    }
+
+    public void setSpring(Float spring) {
+        this.spring = spring;
+    }
+
+    @Override
+    public String toString() {
+        return &quot;Score{&quot; +
+                &quot;id=&quot; + id +
+                &quot;, mybatis=&quot; + mybatis +
+                &quot;, mysql=&quot; + mysql +
+                &quot;, spring=&quot; + spring +
+                '}';
+    }
+}
+</code></pre>
+<h3 id="构造方法注入">构造方法注入</h3>
+<p>Spring容器可以采用Java的反射，通过构造器方法完成依赖注入。编写Spring容器的配置文件如下：</p>
+<pre><code>&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;
+&lt;beans xmlns=&quot;http://www.springframework.org/schema/beans&quot;
+       xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot;
+       xsi:schemaLocation=&quot;http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd&quot;&gt;
+    &lt;!--将Score交给Spring管理--&gt;
+    &lt;bean id=&quot;score&quot; class=&quot;pojo.Score&quot;/&gt;
+
+    &lt;!--将Student交给Spring管理--&gt;
+    &lt;bean id=&quot;student&quot; class=&quot;pojo.Student&quot;&gt;
+        &lt;constructor-arg name=&quot;score&quot; ref=&quot;score&quot;/&gt;
+    &lt;/bean&gt;
+&lt;/beans&gt;
+</code></pre>
+<p>在main方法中获取id为student的bean，测试代码如下：</p>
+<pre><code>public static void main(String[] args) {
+    ApplicationContext applicationContext =new ClassPathXmlApplicationContext(&quot;spring/applicationContext.xml&quot;);
+    Student student=(Student)applicationContext.getBean(&quot;student&quot;);
+    student.getScore().setSpring(100F);
+    System.out.println(student);
+}
+</code></pre>
+<p>执行结果如下：</p>
+<p><img src="/media/20191112-1.png" alt="构造器注入"></p>
+<p>可以看到，我们在Spring配置文件中，将Student交给Spring管理时，指定了利用 <code>&lt;constructor-arg&gt;</code> 元素来执行构造方法注入了一个Score对象。 <code>&lt;constructor-arg&gt;</code> 元素的几个属性说明如下：</p>
+<table>
+<thead>
+<tr>
+<th>属性</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>name</td>
+<td>构造方法中的某个形参名</td>
+</tr>
+<tr>
+<td>index</td>
+<td>构造方法中的某个形参的索引</td>
+</tr>
+<tr>
+<td>type</td>
+<td>构造方法中的某个形参的类型</td>
+</tr>
+<tr>
+<td>ref</td>
+<td>给构造方法某个形参指定某个实例的引用</td>
+</tr>
+<tr>
+<td>value</td>
+<td>给构造方法的某个形参指定一个常量</td>
+</tr>
+</tbody>
+</table>
+<h3 id="属性的setter方法注入">属性的setter方法注入</h3>
+<p>JavaBean的定义规范就得有属性得setter方法，而我们常常操作的就是JavaBean,所以此种利用属性的setter方法完成依赖注入的方式最为流行。更改Spring的配置文件如下：</p>
+<pre><code>&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;
+&lt;beans xmlns=&quot;http://www.springframework.org/schema/beans&quot;
+       xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot;
+       xsi:schemaLocation=&quot;http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd&quot;&gt;
+    &lt;!--将Score交给Spring管理--&gt;
+    &lt;bean id=&quot;score&quot; class=&quot;pojo.Score&quot;/&gt;
+
+    &lt;!--将Student交给Spring管理--&gt;
+    &lt;bean id=&quot;student&quot; class=&quot;pojo.Student&quot;&gt;
+        &lt;property name=&quot;score&quot; ref=&quot;score&quot;/&gt;
+    &lt;/bean&gt;
+&lt;/beans&gt;
+</code></pre>
+<p>测试代码如下：</p>
+<pre><code>public static void main(String[] args) {
+    ApplicationContext applicationContext =new ClassPathXmlApplicationContext(&quot;spring/applicationContext.xml&quot;);
+    Student student=(Student)applicationContext.getBean(&quot;student&quot;);
+    student.getScore().setSpring(100F);
+    System.out.println(student);
+}
+</code></pre>
+<p>测试结果如下：</p>
+<p><img src="/media/20191113-1.png" alt="setter注入"></p>
+<p>可以看到，现在调用的就是Student的属性score的setter方法来完成注入的。</p>
+
+    </div>
+
+    <div class="post-copyright">
+  <p class="copyright-item">
+    <span class="item-title">文章作者</span>
+    <span class="item-content">P1n93r</span>
+  </p>
+  <p class="copyright-item">
+    <span class="item-title">上次更新</span>
+    <span class="item-content">
+        2019-11-12
+        
+    </span>
+  </p>
+  
+  
+</div>
+<footer class="post-footer">
+      
+      <nav class="post-nav">
+        <a class="prev" href="/post/java/io/">
+            <i class="iconfont icon-left"></i>
+            <span class="prev-text nav-default">IO</span>
+            <span class="prev-text nav-mobile">上一篇</span>
+          </a>
+        <a class="next" href="/post/spring/spring%E5%85%A5%E9%97%A8/">
+            <span class="next-text nav-default">Spring入门</span>
+            <span class="next-text nav-mobile">下一篇</span>
+            <i class="iconfont icon-right"></i>
+          </a>
+      </nav>
+    </footer>
+  </article>
+        </div>
+        <div id="disqus_thread"></div>
+    <script type="text/javascript">
+    (function() {
+      
+      
+      if (window.location.hostname === 'localhost') return;
+
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      var disqus_shortname = 'p1n93r';
+      dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+    </script>
+    <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+
+  
+
+  
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="social-links">
+      <a href="mailto:pin83r@gmail.com" class="iconfont icon-email" title="email"></a>
+      <a href="https://github.com/p1n93r" class="iconfont icon-github" title="github"></a>
+  <a href="https://p1n93r.github.io/index.xml" type="application/rss+xml" class="iconfont icon-rss" title="rss"></a>
+</div>
+
+<div class="copyright">
+  <span class="power-by">
+    由 <a class="hexo-link" href="https://gohugo.io">Hugo</a> 强力驱动
+  </span>
+  <span class="division">|</span>
+  <span class="theme-info">
+    主题 - 
+    <a class="theme-link" href="https://github.com/olOwOlo/hugo-theme-even">Even</a>
+  </span>
+
+  <div class="busuanzi-footer">
+    <span id="busuanzi_container_site_pv"> 本站总访问量 <span id="busuanzi_value_site_pv"><img src="/img/spinner.svg" alt="spinner.svg"/></span> 次 </span>
+      <span class="division">|</span>
+    <span id="busuanzi_container_site_uv"> 本站总访客数 <span id="busuanzi_value_site_uv"><img src="/img/spinner.svg" alt="spinner.svg"/></span> 人 </span>
+  </div>
+
+  <span class="copyright-year">
+    &copy; 
+    2019 - 
+    2022<span class="heart"><i class="iconfont icon-heart"></i></span><span>P1n93r</span>
+  </span>
+</div>
+
+    </footer>
+
+    <div class="back-to-top" id="back-to-top">
+      <i class="iconfont icon-up"></i>
+    </div>
+  </div>
+  
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/slideout@1.0.1/dist/slideout.min.js" integrity="sha256-t+zJ/g8/KXIJMjSVQdnibt4dlaDxc9zXr/9oNPeWqdg=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.js" integrity="sha256-XVLffZaxoWfGUEbdzuLi7pwaUJv1cecsQJQqGLe7axY=" crossorigin="anonymous"></script>
+
+
+
+<script type="text/javascript" src="/js/main.min.64437849d125a2d603b3e71d6de5225d641a32d17168a58106e0b61852079683.js"></script>
+
+
+
+
+
+
+
+
+</body>
+</html>

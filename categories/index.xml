@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Categories on P1n93r - 博学而精一</title>
+    <link>https://p1n93r.github.io/categories/</link>
+    <description>Recent content in Categories on P1n93r - 博学而精一</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en</language>
+    <lastBuildDate>Mon, 18 Oct 2021 22:28:36 +0800</lastBuildDate><atom:link href="https://p1n93r.github.io/categories/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>code_audit</title>
+      <link>https://p1n93r.github.io/categories/code_audit/</link>
+      <pubDate>Mon, 18 Oct 2021 22:28:36 +0800</pubDate>
+      
+      <guid>https://p1n93r.github.io/categories/code_audit/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Other</title>
+      <link>https://p1n93r.github.io/categories/other/</link>
+      <pubDate>Thu, 07 Oct 2021 17:05:36 +0800</pubDate>
+      
+      <guid>https://p1n93r.github.io/categories/other/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>security</title>
+      <link>https://p1n93r.github.io/categories/security/</link>
+      <pubDate>Mon, 19 Jul 2021 17:07:36 +0800</pubDate>
+      
+      <guid>https://p1n93r.github.io/categories/security/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Java</title>
+      <link>https://p1n93r.github.io/categories/java/</link>
+      <pubDate>Sat, 29 May 2021 10:21:36 +0800</pubDate>
+      
+      <guid>https://p1n93r.github.io/categories/java/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>sql</title>
+      <link>https://p1n93r.github.io/categories/sql/</link>
+      <pubDate>Wed, 16 Sep 2020 23:06:36 +0800</pubDate>
+      
+      <guid>https://p1n93r.github.io/categories/sql/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>data_structure</title>
+      <link>https://p1n93r.github.io/categories/data_structure/</link>
+      <pubDate>Tue, 15 Sep 2020 18:57:36 +0800</pubDate>
+      
+      <guid>https://p1n93r.github.io/categories/data_structure/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Spring</title>
+      <link>https://p1n93r.github.io/categories/spring/</link>
+      <pubDate>Tue, 08 Sep 2020 17:50:36 +0800</pubDate>
+      
+      <guid>https://p1n93r.github.io/categories/spring/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Mybatis</title>
+      <link>https://p1n93r.github.io/categories/mybatis/</link>
+      <pubDate>Fri, 04 Sep 2020 10:04:36 +0800</pubDate>
+      
+      <guid>https://p1n93r.github.io/categories/mybatis/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>design_patterns</title>
+      <link>https://p1n93r.github.io/categories/design_patterns/</link>
+      <pubDate>Wed, 02 Sep 2020 21:37:36 +0800</pubDate>
+      
+      <guid>https://p1n93r.github.io/categories/design_patterns/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Vue</title>
+      <link>https://p1n93r.github.io/categories/vue/</link>
+      <pubDate>Mon, 27 Jul 2020 19:51:36 +0800</pubDate>
+      
+      <guid>https://p1n93r.github.io/categories/vue/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Mysql</title>
+      <link>https://p1n93r.github.io/categories/mysql/</link>
+      <pubDate>Thu, 25 Jun 2020 16:04:36 +0800</pubDate>
+      
+      <guid>https://p1n93r.github.io/categories/mysql/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>interview</title>
+      <link>https://p1n93r.github.io/categories/interview/</link>
+      <pubDate>Thu, 11 Jun 2020 16:04:36 +0800</pubDate>
+      
+      <guid>https://p1n93r.github.io/categories/interview/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>SpringMVC</title>
+      <link>https://p1n93r.github.io/categories/springmvc/</link>
+      <pubDate>Wed, 15 Apr 2020 00:38:36 +0800</pubDate>
+      
+      <guid>https://p1n93r.github.io/categories/springmvc/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Linux</title>
+      <link>https://p1n93r.github.io/categories/linux/</link>
+      <pubDate>Thu, 05 Dec 2019 20:27:36 +0800</pubDate>
+      
+      <guid>https://p1n93r.github.io/categories/linux/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Android</title>
+      <link>https://p1n93r.github.io/categories/android/</link>
+      <pubDate>Wed, 04 Dec 2019 17:48:36 +0800</pubDate>
+      
+      <guid>https://p1n93r.github.io/categories/android/</guid>
+      <description></description>
+    </item>
+    
+  </channel>
+</rss>

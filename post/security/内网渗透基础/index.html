@@ -1,0 +1,389 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>第一章：内网渗透基础 - P1n93r - 博学而精一</title>
+  <meta name="renderer" content="webkit" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+<meta name="author" content="P1n93r" /><meta name="description" content="工作组 将不同的计算机按功能或部门分别列入不同的 工作组 ，以方便管理。 默认所有计算机都处在名为 WORKGROUP 的工作组中。 工作组资源管理模式适合于网络中计算机" /><meta name="keywords" content="Security, Java, Web, Android" />
+
+
+
+
+
+
+<meta name="generator" content="Hugo 0.96.0 with theme even" />
+
+
+<link rel="canonical" href="https://p1n93r.github.io/post/security/%E5%86%85%E7%BD%91%E6%B8%97%E9%80%8F%E5%9F%BA%E7%A1%80/" />
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/manifest.json">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+<link href="/sass/main.min.f92fd13721ddf72129410fd8250e73152cc6f2438082b6c0208dc24ee7c13fc4.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.css" integrity="sha256-7TyXnr2YU040zfSP+rEcz29ggW4j56/ujTPwjMzyqFY=" crossorigin="anonymous">
+
+
+<meta property="og:title" content="第一章：内网渗透基础" />
+<meta property="og:description" content="工作组 将不同的计算机按功能或部门分别列入不同的 工作组 ，以方便管理。 默认所有计算机都处在名为 WORKGROUP 的工作组中。 工作组资源管理模式适合于网络中计算机" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://p1n93r.github.io/post/security/%E5%86%85%E7%BD%91%E6%B8%97%E9%80%8F%E5%9F%BA%E7%A1%80/" /><meta property="article:section" content="post" />
+<meta property="article:published_time" content="2021-01-19T22:07:36+08:00" />
+<meta property="article:modified_time" content="2021-01-19T22:07:36+08:00" />
+
+<meta itemprop="name" content="第一章：内网渗透基础">
+<meta itemprop="description" content="工作组 将不同的计算机按功能或部门分别列入不同的 工作组 ，以方便管理。 默认所有计算机都处在名为 WORKGROUP 的工作组中。 工作组资源管理模式适合于网络中计算机"><meta itemprop="datePublished" content="2021-01-19T22:07:36+08:00" />
+<meta itemprop="dateModified" content="2021-01-19T22:07:36+08:00" />
+<meta itemprop="wordCount" content="2827">
+<meta itemprop="keywords" content="" /><meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="第一章：内网渗透基础"/>
+<meta name="twitter:description" content="工作组 将不同的计算机按功能或部门分别列入不同的 工作组 ，以方便管理。 默认所有计算机都处在名为 WORKGROUP 的工作组中。 工作组资源管理模式适合于网络中计算机"/>
+
+<!--[if lte IE 9]>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
+<![endif]-->
+
+<!--[if lt IE 9]>
+  <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+<![endif]-->
+
+</head>
+<body>
+  <div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/" class="logo">P1n93r</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    <a href="/">
+        <li class="mobile-menu-item">Home</li>
+      </a><a href="/post/">
+        <li class="mobile-menu-item">Archives</li>
+      </a><a href="/tags/">
+        <li class="mobile-menu-item">Tags</li>
+      </a><a href="/categories/">
+        <li class="mobile-menu-item">Categories</li>
+      </a><a href="/about/">
+        <li class="mobile-menu-item">About</li>
+      </a>
+  </ul>
+
+  
+
+
+</nav>
+
+  <div class="container" id="mobile-panel">
+    <header id="header" class="header">
+        <div class="logo-wrapper">
+  <a href="/" class="logo">P1n93r</a>
+</div>
+
+
+
+
+
+<nav class="site-navbar">
+  <ul id="menu" class="menu">
+    <li class="menu-item">
+        <a class="menu-item-link" href="/">Home</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/">Archives</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/tags/">Tags</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/categories/">Categories</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/about/">About</a>
+      </li>
+  </ul>
+</nav>
+
+    </header>
+
+    <main id="main" class="main">
+      <div class="content-wrapper">
+        <div id="content" class="content">
+          <article class="post">
+    
+    <header class="post-header">
+      <h1 class="post-title">第一章：内网渗透基础</h1>
+
+      <div class="post-meta">
+        <span class="post-time"> 2021-01-19 </span>
+        <div class="post-category">
+            <a href="/categories/security/"> security </a>
+            </div>
+          <span class="more-meta"> 约 2827 字 </span>
+          <span class="more-meta"> 预计阅读 6 分钟 </span>
+        <span id="busuanzi_container_page_pv" class="more-meta"> <span id="busuanzi_value_page_pv"><img src="/img/spinner.svg" alt="spinner.svg"/></span> 次阅读 </span>
+      </div>
+    </header>
+
+    <div class="post-toc" id="post-toc">
+  <h2 class="post-toc-title">文章目录</h2>
+  <div class="post-toc-content always-active">
+    <nav id="TableOfContents">
+  <ul>
+    <li>
+      <ul>
+        <li><a href="#工作组">工作组</a></li>
+        <li><a href="#域">域</a>
+          <ul>
+            <li><a href="#单域">单域</a></li>
+            <li><a href="#父域和子域">父域和子域</a></li>
+            <li><a href="#域数">域数</a></li>
+            <li><a href="#域林">域林</a></li>
+          </ul>
+        </li>
+        <li><a href="#活动目录">活动目录</a></li>
+        <li><a href="#域内权限">域内权限</a>
+          <ul>
+            <li><a href="#域本地组">域本地组</a></li>
+            <li><a href="#全局组">全局组</a></li>
+            <li><a href="#通用组">通用组</a></li>
+            <li><a href="#a-g-dl-p策略">A-G-DL-P策略</a></li>
+            <li><a href="#内置组">内置组</a></li>
+            <li><a href="#重要的域本地组">重要的域本地组</a></li>
+            <li><a href="#重要的全局组和通用组">重要的全局组和通用组</a></li>
+          </ul>
+        </li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+  </div>
+</div>
+    <div class="post-content">
+      <h2 id="工作组">工作组</h2>
+<ul>
+<li>将不同的计算机按功能或部门分别列入不同的 <strong>工作组</strong> ，以方便管理。</li>
+<li>默认所有计算机都处在名为 <code>WORKGROUP</code> 的工作组中。</li>
+<li>工作组资源管理模式适合于网络中计算机不多、对管理要求不严格的情况</li>
+<li>工作组中的所有计算机都是对等的，没有服务器和客户机之分。</li>
+<li>不管是不是在同一工作组中，都可以通过主机用户名和密码查看对方的共享文件夹，默认共享的是User目录。</li>
+</ul>
+<p>更改工作组的方式如下所示：</p>
+<p><img src="/media/2021-01-19-1.png" alt="更改工作组"></p>
+<p>如果输入的工作组当前网络中不存在，就相当于创建了一个新的工作组，当然此时只有自己一个用户在此工作组内。</p>
+<h2 id="域">域</h2>
+<ul>
+<li><strong>域(Domain)</strong> 是由工作组升级而来的高级架构，域是一个有安全边界的计算机集合（安全边界指的是两个域中，一个域中的用户无法访问另一个域的资源）。</li>
+<li>如果想访问域内的资源，必须拥有一个合法的身份登录到该域中，且对资源的访问取决于登录账户在该域中的身份。</li>
+<li><strong>域控DC(Domain Control)</strong> 是域中的一台类似管理服务器的计算机，负责所有连入的计算机和用户的验证工作。</li>
+<li>域内计算机如果想互相访问，都必须经过域控的审核。</li>
+<li>域内的所有身份权限验证都在域控中进行，也就是说域内所有用来验证身份的账号信息和密码散列值都保存在域控中。</li>
+</ul>
+<h3 id="单域">单域</h3>
+<p>一般具有固定地理位置的小公司，建立一个域就可以满足需求。但是需要至少两台DC，其中一台作为备用DC。活动目录的数据库是存储DC上的，如果DC瘫痪了，域内其他用户就不能登录该域，但是如果有备用DC，就能保证正常使用。</p>
+<h3 id="父域和子域">父域和子域</h3>
+<p>出于管理和安全需求等，需要在网络中划分多个域。第一个域就是父域，各分部的域称为该域的子域。</p>
+<h3 id="域数">域数</h3>
+<ul>
+<li><strong>域数(Tree)</strong> 是多个域建立信任关系组成的集合。</li>
+<li>一个域管理员只能管理本域，不能访问或者管理其他域。</li>
+<li>两个域需要互相访问，就需要建立 <strong>信任关系(Trust Relation)</strong> 。</li>
+<li><strong>父域和子域之间自动建立起了双向信任关系，且信任关系可传递</strong> 。</li>
+</ul>
+<p>如下图中，域asia.abc.com和域europe.ab.com之间是没有信任关系的，不能进行数据共享等操作，需要手动为它们建立信任关系才能：</p>
+<p><img src="/media/2021-01-19-2.png" alt="域数"></p>
+<h3 id="域林">域林</h3>
+<ul>
+<li><strong>域林(Forest)</strong> 是指多个域数通过建立信任关系组成的集合。</li>
+<li>林中的每个域数都有唯一的名称空间，之间不连续。</li>
+<li><strong>同林中，林根域和其他树根域自动建立双向信任关系，且信任关系可传递</strong> 。</li>
+</ul>
+<h2 id="活动目录">活动目录</h2>
+<ul>
+<li><strong>活动目录(AD)</strong> 是指域环境中提供目录服务的组件。</li>
+<li><strong>安装有AD的服务器就是DC服务器</strong> 。</li>
+</ul>
+<h2 id="域内权限">域内权限</h2>
+<h3 id="域本地组">域本地组</h3>
+<ul>
+<li>多域用户访问单域资源(访问同一个域)。</li>
+<li>可以从任何域添加用户账号、通用组和全局组，但只能在其所在域内指派权限。</li>
+<li>域本地组不能嵌套与其他组中，主要用于授予位于本域资源的访问权限。</li>
+</ul>
+<h3 id="全局组">全局组</h3>
+<ul>
+<li>单域用户访问多域资源(必须是一个域里面的用户)。</li>
+<li>只能在创建该全局组的域中添加用户和全局组。可以在域林的任何域内指派权限。</li>
+<li>全局组可以嵌套在其他组中。可以将某个全局组添加到同一个域的另一个全局组中，或者添加到其他域的通用组和域本地组中(不能添加到不同域的全局组中，全局组只能在创建它的域中添加用户和组)。</li>
+</ul>
+<h3 id="通用组">通用组</h3>
+<ul>
+<li>多域用户访问多域资源。</li>
+<li>通用组的成员不是保存在各自的域控中，而是保存在全局编录中的，任何变化都会导致全林复制。</li>
+</ul>
+<p>简单概括就是：</p>
+<ul>
+<li>域本地组：来于全林，作用于本域。</li>
+<li>全局组：来于本域，作用域全林。</li>
+<li>通用组：来于全林，作用于全林。</li>
+</ul>
+<h3 id="a-g-dl-p策略">A-G-DL-P策略</h3>
+<p>A-G-DL-P策略是指将用户账号添加到全局组中，将全局组添加到域本地组中，然后为域本地组分配资源权限。</p>
+<ul>
+<li>A：用户账号（Account）</li>
+<li>G：全局组（Global Group）</li>
+<li>U：通用组（Universal Group）</li>
+<li>DL：域本地组（Domain Local Group）</li>
+<li>P：资源权限（Permission）</li>
+</ul>
+<p>使用A-G-DL-P策略，当需要给一个用户添加某个权限时，只需要把这个用户添加到某个域本地组就行了。</p>
+<h3 id="内置组">内置组</h3>
+<p>在安装域控时，系统回自动生成一些组，成为内置组。内置组定义了常用的权限。AD控制窗口中的Builtin和Users组织单元中的组就是内置组。</p>
+<ul>
+<li>内置的域本地组（DL）在Builtin组织单元中。</li>
+<li>内置的全局组（G）在Users组织单元中。</li>
+</ul>
+<h3 id="重要的域本地组">重要的域本地组</h3>
+<ul>
+<li>管理员组（Administrators）：该组成员可以不受限制地存取计算机/域内资源。是最具有权力的一个组，也是在AD和DC中默认具有管理员权限的组。该组成员可以更改Enterprise Admins、Schema Admins和Domain Admins组的成员关系，是域森林中最强大的服务管理组。</li>
+<li>远程登录组（Remote Desktop Users）：该组成员具有远程登录权限。</li>
+<li>打印机操作员组（Print Operators）：该组的成员可以管理网络打印机，包括建立、管理和删除网络打印机，并可以在本地登录和关闭域控。</li>
+<li>账号操作员组（Account Operators）：该组的成员可以创建和管理该域中的用户和组，并为其设置权限，也可以在本地登录域控。但是不能更改属于Administrators或Domain Admins组的账号，也不能更改这些组。在默认情况下，该组中没有成员。</li>
+<li>服务器操作员组（Server Operators）：改组的成员可以管理域服务器，其权限包括建立、管理、删除任意服务器的共享目录、管理网络打印机、备份任何服务器文件、格式化服务器硬盘、锁定服务器、便跟服务器的系统时间、关闭域控。在默认情况下，该组中没有成员。</li>
+<li>备份操作员组（Backup Operators）：该组的成员可以在域控中执行备份和还原操作，并可以在本地登录和关闭域控。在默认情况下，该组中没有成员。</li>
+</ul>
+<h3 id="重要的全局组和通用组">重要的全局组和通用组</h3>
+<ul>
+<li>域管理员组（Domain Admins）：该组的成员在所有加入域的服务器、域控和活动目录中均默认拥有完整的管理员权限。因为该组会被添加到自己所在域的Administrators组中，因此可以继承Administrators组的所有权限。同时该组默认会被添加到每台域成员计算机的本地Administrators组中，这样，Domain Admins组就获得了域中所有计算机的所有权。如果希望某用户成为域系统管理员，建议将该用户添加到Domain Admins组中，而不是直接见该用户添加到Administrators组中。</li>
+<li>企业系统管理员组（Enterprise Admins）：该组是域森林根域中的一个组。该组在域森林中的每个域内都是Administrators组的成员，因此对所有域控都有完全访问权。</li>
+<li>域用户组（Domain Users）：该组是所有域的成员，在默认情况下，任何由我们创建的用户账号都属于Domain Users组，而任何我们建立的计算机账号都属于Domain Computers组。因此如果想让所有的账号都获得某种资源存取权限，可以将该权限指定给域用户组，或者让域用户组属于具有该权限的组。域用户组默认是内置域Users组的成员。</li>
+<li>架构管理员组（Schema Admins）：该组是域森林根域中的一个组，可以修改活动目录和域森林的模式。改组是为AD和DC提供完整权限的域用户组，因此该组成员的资格是非常重要的。</li>
+</ul>
+
+    </div>
+
+    <div class="post-copyright">
+  <p class="copyright-item">
+    <span class="item-title">文章作者</span>
+    <span class="item-content">P1n93r</span>
+  </p>
+  <p class="copyright-item">
+    <span class="item-title">上次更新</span>
+    <span class="item-content">
+        2021-01-19
+        
+    </span>
+  </p>
+  
+  
+</div>
+<footer class="post-footer">
+      
+      <nav class="post-nav">
+        <a class="prev" href="/post/security/%E5%86%85%E7%BD%91%E4%BF%A1%E6%81%AF%E6%94%B6%E9%9B%86/">
+            <i class="iconfont icon-left"></i>
+            <span class="prev-text nav-default">第二章：内网信息收集</span>
+            <span class="prev-text nav-mobile">上一篇</span>
+          </a>
+        <a class="next" href="/post/security/xxe%E5%88%A9%E7%94%A8/">
+            <span class="next-text nav-default">XXE利用</span>
+            <span class="next-text nav-mobile">下一篇</span>
+            <i class="iconfont icon-right"></i>
+          </a>
+      </nav>
+    </footer>
+  </article>
+        </div>
+        <div id="disqus_thread"></div>
+    <script type="text/javascript">
+    (function() {
+      
+      
+      if (window.location.hostname === 'localhost') return;
+
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      var disqus_shortname = 'p1n93r';
+      dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+    </script>
+    <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+
+  
+
+  
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="social-links">
+      <a href="mailto:pin83r@gmail.com" class="iconfont icon-email" title="email"></a>
+      <a href="https://github.com/p1n93r" class="iconfont icon-github" title="github"></a>
+  <a href="https://p1n93r.github.io/index.xml" type="application/rss+xml" class="iconfont icon-rss" title="rss"></a>
+</div>
+
+<div class="copyright">
+  <span class="power-by">
+    由 <a class="hexo-link" href="https://gohugo.io">Hugo</a> 强力驱动
+  </span>
+  <span class="division">|</span>
+  <span class="theme-info">
+    主题 - 
+    <a class="theme-link" href="https://github.com/olOwOlo/hugo-theme-even">Even</a>
+  </span>
+
+  <div class="busuanzi-footer">
+    <span id="busuanzi_container_site_pv"> 本站总访问量 <span id="busuanzi_value_site_pv"><img src="/img/spinner.svg" alt="spinner.svg"/></span> 次 </span>
+      <span class="division">|</span>
+    <span id="busuanzi_container_site_uv"> 本站总访客数 <span id="busuanzi_value_site_uv"><img src="/img/spinner.svg" alt="spinner.svg"/></span> 人 </span>
+  </div>
+
+  <span class="copyright-year">
+    &copy; 
+    2019 - 
+    2022<span class="heart"><i class="iconfont icon-heart"></i></span><span>P1n93r</span>
+  </span>
+</div>
+
+    </footer>
+
+    <div class="back-to-top" id="back-to-top">
+      <i class="iconfont icon-up"></i>
+    </div>
+  </div>
+  
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/slideout@1.0.1/dist/slideout.min.js" integrity="sha256-t+zJ/g8/KXIJMjSVQdnibt4dlaDxc9zXr/9oNPeWqdg=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.js" integrity="sha256-XVLffZaxoWfGUEbdzuLi7pwaUJv1cecsQJQqGLe7axY=" crossorigin="anonymous"></script>
+
+
+
+<script type="text/javascript" src="/js/main.min.64437849d125a2d603b3e71d6de5225d641a32d17168a58106e0b61852079683.js"></script>
+
+
+
+
+
+
+
+
+</body>
+</html>
