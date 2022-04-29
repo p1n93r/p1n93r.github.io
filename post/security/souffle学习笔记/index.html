@@ -11,7 +11,7 @@
 </span></span><span class=line><span class=cl>Audit(person) :- Age(person,age),age = 18.
 </span></span></code></pre></td></tr></table></div></div><h1 id=安装souffle>安装Souffle</h1><p>我是mac系统，直接brew安装：</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
 </span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-fallback data-lang=fallback><span class=line><span class=cl>brew install --HEAD souffle-lang/souffle/souffle
-</span></span></code></pre></td></tr></table></div></div><p><img src=/../../static/media/Untitled.png alt=Untitled></p><h1 id=souffle的一个简单例子>Souffle的一个简单例子</h1><p>例如如下 <code>example.dl</code> 文件内容：</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span></span></code></pre></td></tr></table></div></div><p><img src=/media/Untitled.png alt=Untitled></p><h1 id=souffle的一个简单例子>Souffle的一个简单例子</h1><p>例如如下 <code>example.dl</code> 文件内容：</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
 </span><span class=lnt> 2
 </span><span class=lnt> 3
 </span><span class=lnt> 4
@@ -215,7 +215,7 @@
 </span></span><span class=line><span class=cl>c	b
 </span></span><span class=line><span class=cl>c	c
 </span></span><span class=line><span class=cl>c	d
-</span></span></code></pre></td></tr></table></div></div><h2 id=同代分析示例same-generation-example>同代分析示例（Same generation example）</h2><p>给定一棵树（具有特定根节点的非循环有向图），目标是找出哪些节点位于同一级别（同代）。</p><p>![Untitled](/../../static/media/Untitled 1.png)</p><p>可以很直观的看到，节点 <code>b</code> 和 <code>c</code> 是同代， <code>e</code> 和 <code>g</code> 也是如此；使用datalog解决这个问题，可以编写如下dl（解释在注释中了）：</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span></span></code></pre></td></tr></table></div></div><h2 id=同代分析示例same-generation-example>同代分析示例（Same generation example）</h2><p>给定一棵树（具有特定根节点的非循环有向图），目标是找出哪些节点位于同一级别（同代）。</p><p>![Untitled](/media/Untitled 1.png)</p><p>可以很直观的看到，节点 <code>b</code> 和 <code>c</code> 是同代， <code>e</code> 和 <code>g</code> 也是如此；使用datalog解决这个问题，可以编写如下dl（解释在注释中了）：</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
 </span><span class=lnt> 2
 </span><span class=lnt> 3
 </span><span class=lnt> 4
@@ -315,7 +315,7 @@
 </span></span><span class=line><span class=cl>g	f
 </span></span><span class=line><span class=cl>g	g
 </span></span><span class=line><span class=cl>a	a
-</span></span></code></pre></td></tr></table></div></div><h2 id=数据流分析示例>数据流分析示例</h2><p>数据流分析 (DFA，Data Flow Analysis) 旨在确定程序的静态属性。 DFA 是一个统一的理论，为程序的全局分析提供信息。 DFA 基于控制流图 (CFG，Control Flow Graph)，其中程序的分析源自节点和图的属性。</p><p>数据流分析中最简单的就是定值可达分析（Reaching Definition Analysis），对于数据流分析的理论知识，可以通过南大《静态软件分析》课程进行学习，这里是课程PPT：<a href=https://pascal-group.bitbucket.io/teaching.html>https://pascal-group.bitbucket.io/teaching.html</a></p><p>我这里简单说明下定值可达分析的基本概念：</p><ul><li>如果v在p点有定值d，存在一条从p到q的路径，在这个路径上没有其他的定值点，则称v的定值d到达（reaching）p；</li><li>如果从p到q的路径上有其他对于v的定值，我们就说v的定值d被kill掉了；</li></ul><p>![Untitled](/../../static/media/Untitled 2.png)</p><p>例如如下的CFG（控制流图）：</p><p>![Untitled](/../../static/media/Untitled 3.png)</p><p>此时我们可以编写如下dl进行定值可达分析：</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span></span></code></pre></td></tr></table></div></div><h2 id=数据流分析示例>数据流分析示例</h2><p>数据流分析 (DFA，Data Flow Analysis) 旨在确定程序的静态属性。 DFA 是一个统一的理论，为程序的全局分析提供信息。 DFA 基于控制流图 (CFG，Control Flow Graph)，其中程序的分析源自节点和图的属性。</p><p>数据流分析中最简单的就是定值可达分析（Reaching Definition Analysis），对于数据流分析的理论知识，可以通过南大《静态软件分析》课程进行学习，这里是课程PPT：<a href=https://pascal-group.bitbucket.io/teaching.html>https://pascal-group.bitbucket.io/teaching.html</a></p><p>我这里简单说明下定值可达分析的基本概念：</p><ul><li>如果v在p点有定值d，存在一条从p到q的路径，在这个路径上没有其他的定值点，则称v的定值d到达（reaching）p；</li><li>如果从p到q的路径上有其他对于v的定值，我们就说v的定值d被kill掉了；</li></ul><p>![Untitled](/media/Untitled 2.png)</p><p>例如如下的CFG（控制流图）：</p><p>![Untitled](/media/Untitled 3.png)</p><p>此时我们可以编写如下dl进行定值可达分析：</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
 </span><span class=lnt> 2
 </span><span class=lnt> 3
 </span><span class=lnt> 4
@@ -403,7 +403,7 @@
 </span><span class=lnt>2
 </span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-fallback data-lang=fallback><span class=line><span class=cl>// 定义了一个关系edge，代表一系列特定元组 (a, b) 存在edge这个关系，a和b的类型都是symbol，这是一种类似strings的类型
 </span></span><span class=line><span class=cl>.decl edge(a:symbol, b:symbol)
-</span></span></code></pre></td></tr></table></div></div><h2 id=io指令>I/O指令</h2><p>编写dl文件的时候，我们可以使用IO指令进行fact的加载和输出，前面的案例中也用到了，这些指令分别为：</p><ul><li><code>.input &lt;relation-name></code> 指令：从 <code>&lt;relation-name>.facts</code> 中加载facts，默认使用tab进行数据分隔；</li><li><code>.out &lt;relation-name></code> 指令：默认情况下，将分析得出的facts写出到 <code>&lt;relation-name>.csv</code> 文件中；</li><li><code>.printsize &lt;relation-name></code> 指令：在控制台中打印给定关系的facts数量；</li></ul><h2 id=语法糖>语法糖</h2><p>为了减少代码编写工作量，可以使用在规则中编写多个head，如下所示，左边是使用了语法糖的情况，右边是没有使用语法糖的情况：</p><p>![Untitled](/../../static/media/Untitled 4.png)</p><p>类似的，也可以在规则体中使用析取（disjunction），如下所示，左边是使用了语法糖的情况，右边是没有使用语法糖的情况（规则推导中的封号代表逻辑或）：</p><p>![Untitled](/../../static/media/Untitled 5.png)</p><h1 id=属性的类型type-system-for-attributes>属性的类型（Type system for attributes）</h1><p>souffle的类型是静态的，必须在编译之前确定关系（relation）的属性，并在编译时进行类型检查；</p><h2 id=原始类型>原始类型</h2><p>souffle存在两种原始类型：</p><ul><li>symbol：它包含所有的字符串，它的内部实现是一个ordinal number；</li><li>number：和 int 类似；</li></ul><h1 id=算术表达式>算术表达式</h1><p>souffle支持算术函子（arithmetic functors），扩展了传统的datalog语义；函子中使用的变量必须要能终止，也就是意味着函子中使用的变量不能是无限的，一个例子如下，使用了算术运算符 <code>&lt;</code> ：</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span></span></code></pre></td></tr></table></div></div><h2 id=io指令>I/O指令</h2><p>编写dl文件的时候，我们可以使用IO指令进行fact的加载和输出，前面的案例中也用到了，这些指令分别为：</p><ul><li><code>.input &lt;relation-name></code> 指令：从 <code>&lt;relation-name>.facts</code> 中加载facts，默认使用tab进行数据分隔；</li><li><code>.out &lt;relation-name></code> 指令：默认情况下，将分析得出的facts写出到 <code>&lt;relation-name>.csv</code> 文件中；</li><li><code>.printsize &lt;relation-name></code> 指令：在控制台中打印给定关系的facts数量；</li></ul><h2 id=语法糖>语法糖</h2><p>为了减少代码编写工作量，可以使用在规则中编写多个head，如下所示，左边是使用了语法糖的情况，右边是没有使用语法糖的情况：</p><p>![Untitled](/media/Untitled 4.png)</p><p>类似的，也可以在规则体中使用析取（disjunction），如下所示，左边是使用了语法糖的情况，右边是没有使用语法糖的情况（规则推导中的封号代表逻辑或）：</p><p>![Untitled](/media/Untitled 5.png)</p><h1 id=属性的类型type-system-for-attributes>属性的类型（Type system for attributes）</h1><p>souffle的类型是静态的，必须在编译之前确定关系（relation）的属性，并在编译时进行类型检查；</p><h2 id=原始类型>原始类型</h2><p>souffle存在两种原始类型：</p><ul><li>symbol：它包含所有的字符串，它的内部实现是一个ordinal number；</li><li>number：和 int 类似；</li></ul><h1 id=算术表达式>算术表达式</h1><p>souffle支持算术函子（arithmetic functors），扩展了传统的datalog语义；函子中使用的变量必须要能终止，也就是意味着函子中使用的变量不能是无限的，一个例子如下，使用了算术运算符 <code>&lt;</code> ：</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
 </span><span class=lnt>2
 </span><span class=lnt>3
 </span><span class=lnt>4
@@ -527,7 +527,7 @@
 </span></span><span class=line><span class=cl>A([1,2]).
 </span></span><span class=line><span class=cl>A([3,4]).
 </span></span><span class=line><span class=cl>A([4,5]).
-</span></span></code></pre></td></tr></table></div></div><p>对于这个这个例子，记录的内部结构如下：</p><p>![Untitled](/../../static/media/Untitled 6.png)</p><h2 id=递归记录recursive-records>递归记录（Recursive records）</h2><p>Soufflé 中允许递归定义的记录。递归因 <code>nil</code> 记录的存在而终止。例如如下例子(souffle官方的又写错了)：</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span></span></code></pre></td></tr></table></div></div><p>对于这个这个例子，记录的内部结构如下：</p><p>![Untitled](/media/Untitled 6.png)</p><h2 id=递归记录recursive-records>递归记录（Recursive records）</h2><p>Soufflé 中允许递归定义的记录。递归因 <code>nil</code> 记录的存在而终止。例如如下例子(souffle官方的又写错了)：</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
 </span><span class=lnt> 2
 </span><span class=lnt> 3
 </span><span class=lnt> 4
@@ -557,7 +557,7 @@
 </span></span><span class=line><span class=cl>10
 </span></span><span class=line><span class=cl>20
 </span></span><span class=line><span class=cl>30
-</span></span></code></pre></td></tr></table></div></div><p>此时这个内部结构如下所示：</p><p>![Untitled](/../../static/media/Untitled 7.png)</p></div><footer class=post-footer><nav class=post-nav><a class=next href=/post/other/%E9%87%8D%E6%96%B0%E5%90%AF%E7%A8%8B/><span class="next-text nav-default">重新启程</span>
+</span></span></code></pre></td></tr></table></div></div><p>此时这个内部结构如下所示：</p><p>![Untitled](/media/Untitled 7.png)</p></div><footer class=post-footer><nav class=post-nav><a class=next href=/post/other/%E9%87%8D%E6%96%B0%E5%90%AF%E7%A8%8B/><span class="next-text nav-default">重新启程</span>
 <span class="next-text nav-mobile">下一篇</span>
 <i class="iconfont icon-right"></i></a></nav></footer></article></div></div></main><footer id=footer class=footer><div class=social-links><a href=mailto:pin83r@gmail.com class="iconfont icon-email" title=email></a>
 <a href=https://github.com/p1n93r class="iconfont icon-github" title=github></a>
