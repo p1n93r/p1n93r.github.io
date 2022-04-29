@@ -1,0 +1,574 @@
+<!doctype html><html lang=zh-cn><head><meta charset=utf-8><meta http-equiv=x-ua-compatible content="IE=edge,chrome=1"><title>Souffle学习笔记 - P1n93r - 博学而精一</title><meta name=renderer content="webkit"><meta name=viewport content="width=device-width,initial-scale=1,maximum-scale=1"><meta http-equiv=cache-control content="no-transform"><meta http-equiv=cache-control content="no-siteapp"><meta name=theme-color content="#f8f5ec"><meta name=msapplication-navbutton-color content="#f8f5ec"><meta name=apple-mobile-web-app-capable content="yes"><meta name=apple-mobile-web-app-status-bar-style content="#f8f5ec"><meta name=author content="P1n93r"><meta name=description content="背景 最近在研究自动化代码审计相关的东西，搜集资料时看到了南京大学的《静态软件分析》课程，理论加落地实践都有，甚至那个李老师自己还做了落地项目"><meta name=keywords content="Security,Java,Web,Android"><meta name=generator content="Hugo 0.98.0 with theme even"><link rel=canonical href=https://p1n93r.github.io/post/security/souffle%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/><link rel=apple-touch-icon sizes=180x180 href=/apple-touch-icon.png><link rel=icon type=image/png sizes=32x32 href=/favicon-32x32.png><link rel=icon type=image/png sizes=16x16 href=/favicon-16x16.png><link rel=manifest href=/manifest.json><link rel=mask-icon href=/safari-pinned-tab.svg color=#5bbad5><script async src=//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js></script>
+<link href=/sass/main.min.f92fd13721ddf72129410fd8250e73152cc6f2438082b6c0208dc24ee7c13fc4.css rel=stylesheet><link rel=stylesheet href=https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.css integrity="sha256-7TyXnr2YU040zfSP+rEcz29ggW4j56/ujTPwjMzyqFY=" crossorigin=anonymous><meta property="og:title" content="Souffle学习笔记"><meta property="og:description" content="背景 最近在研究自动化代码审计相关的东西，搜集资料时看到了南京大学的《静态软件分析》课程，理论加落地实践都有，甚至那个李老师自己还做了落地项目"><meta property="og:type" content="article"><meta property="og:url" content="https://p1n93r.github.io/post/security/souffle%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/"><meta property="article:section" content="post"><meta property="article:published_time" content="2022-04-29T19:10:48+08:00"><meta property="article:modified_time" content="2022-04-29T19:10:48+08:00"><meta itemprop=name content="Souffle学习笔记"><meta itemprop=description content="背景 最近在研究自动化代码审计相关的东西，搜集资料时看到了南京大学的《静态软件分析》课程，理论加落地实践都有，甚至那个李老师自己还做了落地项目"><meta itemprop=datePublished content="2022-04-29T19:10:48+08:00"><meta itemprop=dateModified content="2022-04-29T19:10:48+08:00"><meta itemprop=wordCount content="5448"><meta itemprop=keywords content><meta name=twitter:card content="summary"><meta name=twitter:title content="Souffle学习笔记"><meta name=twitter:description content="背景 最近在研究自动化代码审计相关的东西，搜集资料时看到了南京大学的《静态软件分析》课程，理论加落地实践都有，甚至那个李老师自己还做了落地项目"><!--[if lte IE 9]><script src=https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js></script><![endif]--><!--[if lt IE 9]><script src=https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js></script>
+<script src=https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js></script><![endif]--></head><body><div id=mobile-navbar class=mobile-navbar><div class=mobile-header-logo><a href=/ class=logo>P1n93r</a></div><div class=mobile-navbar-icon><span></span>
+<span></span>
+<span></span></div></div><nav id=mobile-menu class="mobile-menu slideout-menu"><ul class=mobile-menu-list><a href=/><li class=mobile-menu-item>Home</li></a><a href=/post/><li class=mobile-menu-item>Archives</li></a><a href=/tags/><li class=mobile-menu-item>Tags</li></a><a href=/categories/><li class=mobile-menu-item>Categories</li></a><a href=/about/><li class=mobile-menu-item>About</li></a></ul></nav><div class=container id=mobile-panel><header id=header class=header><div class=logo-wrapper><a href=/ class=logo>P1n93r</a></div><nav class=site-navbar><ul id=menu class=menu><li class=menu-item><a class=menu-item-link href=/>Home</a></li><li class=menu-item><a class=menu-item-link href=/post/>Archives</a></li><li class=menu-item><a class=menu-item-link href=/tags/>Tags</a></li><li class=menu-item><a class=menu-item-link href=/categories/>Categories</a></li><li class=menu-item><a class=menu-item-link href=/about/>About</a></li></ul></nav></header><main id=main class=main><div class=content-wrapper><div id=content class=content><article class=post><header class=post-header><h1 class=post-title>Souffle学习笔记</h1><div class=post-meta><span class=post-time>2022-04-29</span>
+<span class=more-meta>约 5448 字</span>
+<span class=more-meta>预计阅读 11 分钟</span>
+<span id=busuanzi_container_page_pv class=more-meta><span id=busuanzi_value_page_pv><img src=/img/spinner.svg alt=spinner.svg></span> 次阅读</span></div></header><div class=post-toc id=post-toc><h2 class=post-toc-title>文章目录</h2><div class="post-toc-content always-active"><nav id=TableOfContents><ul><li><a href=#背景>背景</a></li><li><a href=#参考链接>参考链接</a></li><li><a href=#datalog语法>Datalog语法</a><ul><li><a href=#谓词predicaterelation>谓词（Predicate/Relation）</a></li><li><a href=#原子atom>原子（Atom）</a></li><li><a href=#规则rule>规则（Rule）</a></li><li><a href=#逻辑logic>逻辑（Logic）</a></li></ul></li><li><a href=#安装souffle>安装Souffle</a></li><li><a href=#souffle的一个简单例子>Souffle的一个简单例子</a></li><li><a href=#first-example>First Example</a><ul><li><a href=#传递闭包分析示例transitive-clousure>传递闭包分析示例（Transitive clousure）</a></li><li><a href=#同代分析示例same-generation-example>同代分析示例（Same generation example）</a></li><li><a href=#数据流分析示例>数据流分析示例</a></li><li><a href=#一些备注>一些备注</a></li></ul></li><li><a href=#关系relations>关系（Relations）</a><ul><li><a href=#关系声明>关系声明</a></li><li><a href=#io指令>I/O指令</a></li><li><a href=#语法糖>语法糖</a></li></ul></li><li><a href=#属性的类型type-system-for-attributes>属性的类型（Type system for attributes）</a><ul><li><a href=#原始类型>原始类型</a></li></ul></li><li><a href=#算术表达式>算术表达式</a><ul><li><a href=#数字编码number-encoding>数字编码（Number encoding）</a></li><li><a href=#autonic函子>autonic()函子</a></li></ul></li><li><a href=#aggregation聚合>Aggregation（聚合）</a><ul><li><a href=#计数counting>计数（Counting）</a></li><li><a href=#求最大最小和>求最大/最小/和</a></li></ul></li><li><a href=#记录records>记录（Records）</a><ul><li><a href=#记录的内部结构overview-of-record-internals>记录的内部结构（<strong>Overview of record internals</strong>）</a></li><li><a href=#递归记录recursive-records>递归记录（Recursive records）</a></li></ul></li></ul></nav></div></div><div class=post-content><h1 id=背景>背景</h1><p>最近在研究自动化代码审计相关的东西，搜集资料时看到了南京大学的《静态软件分析》课程，理论加落地实践都有，甚至那个李老师自己还做了落地项目tai-e，现阶段还没跟完老师的课程，先暂时记录下souffle相关的笔记，后续会慢慢记录理论方面的笔记；</p><p>之前尝试过基于JVM栈结构的静态代码分析（GadgetInspector），虽然可以分析闭源软件是一个优势，但是它还是存在很多边界，而且不是很好解决；跟了李老师的课后，知道了一种更加适合静态代码分析的IR（Intermediate Representation）：3AC（3 Address Code，三地址码），原来有更好的方式早就在学术界应用已久，同时也看到了一个开源项目BytecodeDL，正是应用了这些东西进行挖洞实践！现在就是想赶快跟完老师的课程，然后看下BytecodeDL是如何落地的，然后开启疯狂的自动化漏洞挖掘之路~~~嘿嘿嘿</p><h1 id=参考链接>参考链接</h1><ul><li><a href=https://souffle-lang.github.io/tutorial>https://souffle-lang.github.io/tutorial</a></li><li><a href=https://www.jianshu.com/p/d7598d17ff2b>https://www.jianshu.com/p/d7598d17ff2b</a></li><li><a href=https://jckling.github.io/2021/11/22/Other/Datalog%20%E5%BC%95%E6%93%8E%20Souffl%C3%A9%20%E6%8C%87%E5%8D%97/>https://jckling.github.io/2021/11/22/Other/Datalog 引擎 Soufflé 指南/</a></li></ul><h1 id=datalog语法>Datalog语法</h1><p>Datalog主要用于描述关系，是一种<strong>声明式逻辑编程语言</strong>，目前最常见的一种实现Souffle：<a href=https://souffle-lang.github.io/install>https://souffle-lang.github.io/</a></p><h2 id=谓词predicaterelation>谓词（Predicate/Relation）</h2><ul><li>本质上，谓词是一个数据表;</li><li>一个Fact代表一个特定的元组（也就是数据表的某一行）属于某一个Relation（也就是某一个表），即它代表一个谓词对于特定的值组合为真；</li></ul><p>例如如下表中，Age就是一个谓词，从而得出 <code>Age(”C0m3ct”,3)</code> 是真，而 <code>Age(”P1n93r”,6)</code> 为假；</p><table><thead><tr><th>谓词：Age</th><th></th></tr></thead><tbody><tr><td>person</td><td>age</td></tr><tr><td>C0m3ct</td><td>3</td></tr><tr><td>P1n93r</td><td>18</td></tr></tbody></table><h2 id=原子atom>原子（Atom）</h2><ul><li>主要分为两种原子：关系型原子（Relational atom）和算术型原子（arithmetic atom）；</li><li>例如 <code>Age(”C0m3ct”,3)</code> 就是一个关系型原子，而 <code>age>18</code> 则是一个算术型原子；</li></ul><h2 id=规则rule>规则（Rule）</h2><ul><li>Rule是逻辑表达式推理的一种方式；</li><li>Rule还用于指定如何推断事实；</li><li>Rule的格式为： <code>H``:- B1,B2,…,Bn.</code> ，注意最后有一个点；这个Rule表明，如果H为真，则 <code>B1,B2,…,Bn</code> 也必须为真；</li></ul><p>例如通过前面的 <code>Age(person,age)</code> 可以推导出 <code>Audit(person)``:- Age(person,age),age >= 18.</code></p><h2 id=逻辑logic>逻辑（Logic）</h2><ul><li>逗号表示逻辑与；</li><li>封号表示逻辑或；</li></ul><p>最后，Header相同的多条Rule，也能表示逻辑或，例如：</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-fallback data-lang=fallback><span class=line><span class=cl>Audit(person) :- Age(person,age),age &gt; 18.
+</span></span><span class=line><span class=cl>Audit(person) :- Age(person,age),age = 18.
+</span></span></code></pre></td></tr></table></div></div><h1 id=安装souffle>安装Souffle</h1><p>我是mac系统，直接brew安装：</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-fallback data-lang=fallback><span class=line><span class=cl>brew install --HEAD souffle-lang/souffle/souffle
+</span></span></code></pre></td></tr></table></div></div><p><img src=/../../static/media/Untitled.png alt=Untitled></p><h1 id=souffle的一个简单例子>Souffle的一个简单例子</h1><p>例如如下 <code>example.dl</code> 文件内容：</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-fallback data-lang=fallback><span class=line><span class=cl>// 声明一个Predicate edge
+</span></span><span class=line><span class=cl>.decl edge(x:number, y:number)
+</span></span><span class=line><span class=cl>// 表明需要从磁盘中读取一个edge.facts文件，这里是从文件中读取facts，也可以直接在本dl中定义facts
+</span></span><span class=line><span class=cl>.input edge
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>// 声明一个Predicate path
+</span></span><span class=line><span class=cl>.decl path(x:number, y:number)
+</span></span><span class=line><span class=cl>// 表明运行结束会生成一个path.facts文件
+</span></span><span class=line><span class=cl>.output path
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>// rule推导
+</span></span><span class=line><span class=cl>path(x, y) :- edge(x, y).
+</span></span><span class=line><span class=cl>path(x, y) :- path(x, z), edge(z, y).
+</span></span></code></pre></td></tr></table></div></div><p>然后创建一个 <code>edge.facts</code> 文件，内容如下，这个就表明了edge这个Relation：</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-fallback data-lang=fallback><span class=line><span class=cl>1    2
+</span></span><span class=line><span class=cl>2    3
+</span></span></code></pre></td></tr></table></div></div><p>然后直接运行如下命令，得到推导出来的path结果，其中， <code>-F</code> 指定了facts所在的目录，而 <code>-D</code> 制定了输出目录， <code>example.dl</code> 为datalog文件：</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span><span class=lnt>17
+</span><span class=lnt>18
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-fallback data-lang=fallback><span class=line><span class=cl>P1n93r@bogon example % ll
+</span></span><span class=line><span class=cl>total 16
+</span></span><span class=line><span class=cl>drwxr-xr-x  4 P1n93r  staff   128B  4 28 19:20 .
+</span></span><span class=line><span class=cl>drwxr-xr-x  3 P1n93r  staff    96B  4 28 19:15 ..
+</span></span><span class=line><span class=cl>-rw-r--r--  1 P1n93r  staff     8B  4 28 19:20 edge.facts
+</span></span><span class=line><span class=cl>-rw-r--r--  1 P1n93r  staff   336B  4 28 19:19 example.dl
+</span></span><span class=line><span class=cl>P1n93r@bogon example % **souffle -F. -D. example.dl**
+</span></span><span class=line><span class=cl>P1n93r@bogon example % ll
+</span></span><span class=line><span class=cl>total 24
+</span></span><span class=line><span class=cl>drwxr-xr-x  5 P1n93r  staff   160B  4 28 19:20 .
+</span></span><span class=line><span class=cl>drwxr-xr-x  3 P1n93r  staff    96B  4 28 19:15 ..
+</span></span><span class=line><span class=cl>-rw-r--r--  1 P1n93r  staff     8B  4 28 19:20 edge.facts
+</span></span><span class=line><span class=cl>-rw-r--r--  1 P1n93r  staff   336B  4 28 19:19 example.dl
+</span></span><span class=line><span class=cl>-rw-r--r--  1 P1n93r  staff    12B  4 28 19:20 **path.csv**
+</span></span><span class=line><span class=cl>P1n93r@bogon example % cat path.csv 
+</span></span><span class=line><span class=cl>1	2
+</span></span><span class=line><span class=cl>1	3
+</span></span><span class=line><span class=cl>2	3
+</span></span></code></pre></td></tr></table></div></div><p>此外，还可以使用 <code>-r</code> 选项生成debug报告：</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-fallback data-lang=fallback><span class=line><span class=cl>P1n93r@bogon example % **souffle -F. -D. -rexample.html example.dl**
+</span></span><span class=line><span class=cl>P1n93r@bogon example % ll example.html 
+</span></span><span class=line><span class=cl>-rw-r--r--@ 1 P1n93r  staff    76K  4 28 19:29 example.html
+</span></span></code></pre></td></tr></table></div></div><p>也可以使用 <code>-p</code> 选项生成分析日志，然后使用 <code>souffleprof</code> 进行查看：</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span><span class=lnt>17
+</span><span class=lnt>18
+</span><span class=lnt>19
+</span><span class=lnt>20
+</span><span class=lnt>21
+</span><span class=lnt>22
+</span><span class=lnt>23
+</span><span class=lnt>24
+</span><span class=lnt>25
+</span><span class=lnt>26
+</span><span class=lnt>27
+</span><span class=lnt>28
+</span><span class=lnt>29
+</span><span class=lnt>30
+</span><span class=lnt>31
+</span><span class=lnt>32
+</span><span class=lnt>33
+</span><span class=lnt>34
+</span><span class=lnt>35
+</span><span class=lnt>36
+</span><span class=lnt>37
+</span><span class=lnt>38
+</span><span class=lnt>39
+</span><span class=lnt>40
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-fallback data-lang=fallback><span class=line><span class=cl>P1n93r@bogon example % souffle -F. -D. -pexample.log example.dl
+</span></span><span class=line><span class=cl>P1n93r@bogon example % souffleprof example.log                 
+</span></span><span class=line><span class=cl>SouffleProf
+</span></span><span class=line><span class=cl>    runtime  loadtime  savetime relations     rules    tuples generated
+</span></span><span class=line><span class=cl>      .000s     .000s     .000s         2         4             5
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>Slowest relations to fully evaluate
+</span></span><span class=line><span class=cl> ----- Relation Table -----
+</span></span><span class=line><span class=cl>   TOT_T  NREC_T   REC_T  COPY_T  LOAD_T  SAVE_T  TUPLES   READS   TUP/s    ID NAME
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>   .000s   .000s   .000s   .000s   .000s   .000s       3       1   20.0K    R2 path
+</span></span><span class=line><span class=cl>   .000s   .000s   .000s   .000s   .000s   .000s       2       0       2    R1 edge
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>Slowest rules to fully evaluate
+</span></span><span class=line><span class=cl>  ----- Rule Table -----
+</span></span><span class=line><span class=cl>   TOT_T  NREC_T   REC_T  TUPLES   TUP/s      ID RELATION
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>   .000s   .000s   .000s       1 55.5556    C2.1 path
+</span></span><span class=line><span class=cl>   .000s   .000s   .000s       2 166.667    N2.1 path
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>  cpu total
+</span></span><span class=line><span class=cl>      .009s
+</span></span><span class=line><span class=cl>   211%         
+</span></span><span class=line><span class=cl>   190%       * 
+</span></span><span class=line><span class=cl>   169%       * 
+</span></span><span class=line><span class=cl>   148%       * 
+</span></span><span class=line><span class=cl>   126%       * 
+</span></span><span class=line><span class=cl>   105%       * 
+</span></span><span class=line><span class=cl>    84%  *******
+</span></span><span class=line><span class=cl>    63%  *******
+</span></span><span class=line><span class=cl>    42%  *******
+</span></span><span class=line><span class=cl>    21%  *******
+</span></span><span class=line><span class=cl>        --------
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>&gt; rel 
+</span></span><span class=line><span class=cl> ----- Relation Table -----
+</span></span><span class=line><span class=cl>   TOT_T  NREC_T   REC_T  COPY_T  LOAD_T  SAVE_T  TUPLES   READS   TUP/s    ID NAME
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>   .000s   .000s   .000s   .000s   .000s   .000s       3       1   20.0K    R2 path
+</span></span><span class=line><span class=cl>   .000s   .000s   .000s   .000s   .000s   .000s       2       0       2    R1 edge
+</span></span></code></pre></td></tr></table></div></div><h1 id=first-example>First Example</h1><h2 id=传递闭包分析示例transitive-clousure>传递闭包分析示例（Transitive clousure）</h2><p>集合 <code>X</code> 上的关系 <code>R</code> 是可传递的，如果对于 <code>X</code> 中的所有 <code>x</code>、<code>y</code>、<code>z</code>，只要 <code>x R y</code> 和 <code>y R z</code> 则 <code>x R z</code>。在下面的示例中，我们考虑一个有向图，其中 <code>edge</code> 定义关系，如果满足下面的两个 <code>rule</code> 之一，则元组位于传递闭包（可达关系，reachable relation）中。</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span><span class=lnt>4
+</span><span class=lnt>5
+</span><span class=lnt>6
+</span><span class=lnt>7
+</span><span class=lnt>8
+</span><span class=lnt>9
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-zed data-lang=zed><span class=line><span class=cl><span class=p>.</span><span class=n>decl</span><span class=w> </span><span class=n>edge</span><span class=p>(</span><span class=n>n</span><span class=o>:</span><span class=w> </span><span class=n>symbol</span><span class=p>,</span><span class=w> </span><span class=n>m</span><span class=o>:</span><span class=w> </span><span class=n>symbol</span><span class=p>)</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w></span><span class=n>edge</span><span class=p>(</span><span class=err>&#34;</span><span class=n>a</span><span class=err>&#34;</span><span class=p>,</span><span class=w> </span><span class=err>&#34;</span><span class=n>b</span><span class=err>&#34;</span><span class=p>).</span><span class=w> </span><span class=cm>/* facts of edge */</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w></span><span class=n>edge</span><span class=p>(</span><span class=err>&#34;</span><span class=n>b</span><span class=err>&#34;</span><span class=p>,</span><span class=w> </span><span class=err>&#34;</span><span class=n>c</span><span class=err>&#34;</span><span class=p>).</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w></span><span class=n>edge</span><span class=p>(</span><span class=err>&#34;</span><span class=n>c</span><span class=err>&#34;</span><span class=p>,</span><span class=w> </span><span class=err>&#34;</span><span class=n>b</span><span class=err>&#34;</span><span class=p>).</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w></span><span class=n>edge</span><span class=p>(</span><span class=err>&#34;</span><span class=n>c</span><span class=err>&#34;</span><span class=p>,</span><span class=w> </span><span class=err>&#34;</span><span class=n>d</span><span class=err>&#34;</span><span class=p>).</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w></span><span class=p>.</span><span class=n>decl</span><span class=w> </span><span class=n>reachable</span><span class=w> </span><span class=p>(</span><span class=n>n</span><span class=o>:</span><span class=w> </span><span class=n>symbol</span><span class=p>,</span><span class=w> </span><span class=n>m</span><span class=o>:</span><span class=w> </span><span class=n>symbol</span><span class=p>)</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w></span><span class=p>.</span><span class=n>output</span><span class=w> </span><span class=n>reachable</span><span class=w> </span><span class=c1>// output relation reachable
+</span></span></span><span class=line><span class=cl><span class=c1></span><span class=n>reachable</span><span class=p>(</span><span class=n>x</span><span class=p>,</span><span class=w> </span><span class=n>y</span><span class=p>)</span><span class=o>:-</span><span class=w> </span><span class=n>edge</span><span class=p>(</span><span class=n>x</span><span class=p>,</span><span class=w> </span><span class=n>y</span><span class=p>).</span><span class=w> </span><span class=c1>// base rule
+</span></span></span><span class=line><span class=cl><span class=c1></span><span class=n>reachable</span><span class=p>(</span><span class=n>x</span><span class=p>,</span><span class=w> </span><span class=n>z</span><span class=p>)</span><span class=o>:-</span><span class=w> </span><span class=n>edge</span><span class=p>(</span><span class=n>x</span><span class=p>,</span><span class=w> </span><span class=n>y</span><span class=p>),</span><span class=w> </span><span class=n>reachable</span><span class=p>(</span><span class=n>y</span><span class=p>,</span><span class=w> </span><span class=n>z</span><span class=p>).</span><span class=w> </span><span class=c1>// inductive rule
+</span></span></span></code></pre></td></tr></table></div></div><p>运行结果如下：</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span><span class=lnt>17
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-fallback data-lang=fallback><span class=line><span class=cl>P1n93r@bogon example % souffle -F . -D . test.dl 
+</span></span><span class=line><span class=cl>P1n93r@bogon example % ll
+</span></span><span class=line><span class=cl>total 16
+</span></span><span class=line><span class=cl>drwxr-xr-x  4 P1n93r  staff   128B  4 29 10:36 .
+</span></span><span class=line><span class=cl>drwxr-xr-x  4 P1n93r  staff   128B  4 28 19:33 ..
+</span></span><span class=line><span class=cl>-rw-r--r--  1 P1n93r  staff    36B  4 29 10:36 reachable.csv
+</span></span><span class=line><span class=cl>-rw-r--r--  1 P1n93r  staff   312B  4 29 10:35 test.dl
+</span></span><span class=line><span class=cl>P1n93r@bogon example % cat reachable.csv 
+</span></span><span class=line><span class=cl>a	b
+</span></span><span class=line><span class=cl>a	c
+</span></span><span class=line><span class=cl>a	d
+</span></span><span class=line><span class=cl>b	b
+</span></span><span class=line><span class=cl>b	c
+</span></span><span class=line><span class=cl>b	d
+</span></span><span class=line><span class=cl>c	b
+</span></span><span class=line><span class=cl>c	c
+</span></span><span class=line><span class=cl>c	d
+</span></span></code></pre></td></tr></table></div></div><h2 id=同代分析示例same-generation-example>同代分析示例（Same generation example）</h2><p>给定一棵树（具有特定根节点的非循环有向图），目标是找出哪些节点位于同一级别（同代）。</p><p>![Untitled](/../../static/media/Untitled 1.png)</p><p>可以很直观的看到，节点 <code>b</code> 和 <code>c</code> 是同代， <code>e</code> 和 <code>g</code> 也是如此；使用datalog解决这个问题，可以编写如下dl（解释在注释中了）：</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span><span class=lnt>17
+</span><span class=lnt>18
+</span><span class=lnt>19
+</span><span class=lnt>20
+</span><span class=lnt>21
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-fallback data-lang=fallback><span class=line><span class=cl>// 定义一个谓词，用于描述 子-父 关系
+</span></span><span class=line><span class=cl>.decl Parent(n: symbol, m: symbol)
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>// Parent谓词的一系列事实（Facts）
+</span></span><span class=line><span class=cl>Parent(&#34;d&#34;, &#34;b&#34;). Parent(&#34;e&#34;, &#34;b&#34;). Parent(&#34;f&#34;,&#34;c&#34;).
+</span></span><span class=line><span class=cl>Parent(&#34;g&#34;, &#34;c&#34;). Parent(&#34;b&#34;, &#34;a&#34;). Parent(&#34;c&#34;,&#34;a&#34;).
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>// 定义一个谓词，用于描述单个节点
+</span></span><span class=line><span class=cl>.decl Node(n: symbol)
+</span></span><span class=line><span class=cl>Node(x) :- Parent(x, _).
+</span></span><span class=line><span class=cl>Node(x) :- Parent(_, x).
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>// 定义一个谓词，用于描述同代关系
+</span></span><span class=line><span class=cl>.decl SameGeneration (n: symbol, m: symbol)
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>// 定义两条rule
+</span></span><span class=line><span class=cl>// 对于某个节点，自己和自己是同代
+</span></span><span class=line><span class=cl>SameGeneration(x, x):- Node(x).
+</span></span><span class=line><span class=cl>// 如果两个子节点的父节点是同代，那么这两个子节点是同代
+</span></span><span class=line><span class=cl>SameGeneration(x, y):- Parent(x,p), SameGeneration(p,q), Parent(y,q).
+</span></span><span class=line><span class=cl>.output SameGeneration
+</span></span></code></pre></td></tr></table></div></div><p>运行结果如下：</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span><span class=lnt>17
+</span><span class=lnt>18
+</span><span class=lnt>19
+</span><span class=lnt>20
+</span><span class=lnt>21
+</span><span class=lnt>22
+</span><span class=lnt>23
+</span><span class=lnt>24
+</span><span class=lnt>25
+</span><span class=lnt>26
+</span><span class=lnt>27
+</span><span class=lnt>28
+</span><span class=lnt>29
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-fallback data-lang=fallback><span class=line><span class=cl>P1n93r@bogon example % souffle -F . -D . test.dl
+</span></span><span class=line><span class=cl>P1n93r@bogon example % ll
+</span></span><span class=line><span class=cl>total 16
+</span></span><span class=line><span class=cl>drwxr-xr-x  4 P1n93r  staff   128B  4 29 11:00 .
+</span></span><span class=line><span class=cl>drwxr-xr-x  4 P1n93r  staff   128B  4 28 19:33 ..
+</span></span><span class=line><span class=cl>-rw-r--r--  1 P1n93r  staff    84B  4 29 11:00 SameGeneration.csv
+</span></span><span class=line><span class=cl>-rw-r--r--  1 P1n93r  staff   732B  4 29 11:00 test.dl
+</span></span><span class=line><span class=cl>P1n93r@bogon example % cat SameGeneration.csv 
+</span></span><span class=line><span class=cl>d	d
+</span></span><span class=line><span class=cl>d	e
+</span></span><span class=line><span class=cl>d	f
+</span></span><span class=line><span class=cl>d	g
+</span></span><span class=line><span class=cl>b	b
+</span></span><span class=line><span class=cl>b	c
+</span></span><span class=line><span class=cl>e	d
+</span></span><span class=line><span class=cl>e	e
+</span></span><span class=line><span class=cl>e	f
+</span></span><span class=line><span class=cl>e	g
+</span></span><span class=line><span class=cl>f	d
+</span></span><span class=line><span class=cl>f	e
+</span></span><span class=line><span class=cl>f	f
+</span></span><span class=line><span class=cl>f	g
+</span></span><span class=line><span class=cl>c	b
+</span></span><span class=line><span class=cl>c	c
+</span></span><span class=line><span class=cl>g	d
+</span></span><span class=line><span class=cl>g	e
+</span></span><span class=line><span class=cl>g	f
+</span></span><span class=line><span class=cl>g	g
+</span></span><span class=line><span class=cl>a	a
+</span></span></code></pre></td></tr></table></div></div><h2 id=数据流分析示例>数据流分析示例</h2><p>数据流分析 (DFA，Data Flow Analysis) 旨在确定程序的静态属性。 DFA 是一个统一的理论，为程序的全局分析提供信息。 DFA 基于控制流图 (CFG，Control Flow Graph)，其中程序的分析源自节点和图的属性。</p><p>数据流分析中最简单的就是定值可达分析（Reaching Definition Analysis），对于数据流分析的理论知识，可以通过南大《静态软件分析》课程进行学习，这里是课程PPT：<a href=https://pascal-group.bitbucket.io/teaching.html>https://pascal-group.bitbucket.io/teaching.html</a></p><p>我这里简单说明下定值可达分析的基本概念：</p><ul><li>如果v在p点有定值d，存在一条从p到q的路径，在这个路径上没有其他的定值点，则称v的定值d到达（reaching）p；</li><li>如果从p到q的路径上有其他对于v的定值，我们就说v的定值d被kill掉了；</li></ul><p>![Untitled](/../../static/media/Untitled 2.png)</p><p>例如如下的CFG（控制流图）：</p><p>![Untitled](/../../static/media/Untitled 3.png)</p><p>此时我们可以编写如下dl进行定值可达分析：</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span><span class=lnt>17
+</span><span class=lnt>18
+</span><span class=lnt>19
+</span><span class=lnt>20
+</span><span class=lnt>21
+</span><span class=lnt>22
+</span><span class=lnt>23
+</span><span class=lnt>24
+</span><span class=lnt>25
+</span><span class=lnt>26
+</span><span class=lnt>27
+</span><span class=lnt>28
+</span><span class=lnt>29
+</span><span class=lnt>30
+</span><span class=lnt>31
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-fallback data-lang=fallback><span class=line><span class=cl>// define control flow graph
+</span></span><span class=line><span class=cl>// via the Edge relation
+</span></span><span class=line><span class=cl>.decl Edge(n: symbol, m: symbol)
+</span></span><span class=line><span class=cl>Edge(&#34;start&#34;, &#34;b1&#34;).
+</span></span><span class=line><span class=cl>Edge(&#34;b1&#34;, &#34;b2&#34;).
+</span></span><span class=line><span class=cl>Edge(&#34;b1&#34;, &#34;b3&#34;).
+</span></span><span class=line><span class=cl>Edge(&#34;b2&#34;, &#34;b4&#34;).
+</span></span><span class=line><span class=cl>Edge(&#34;b3&#34;, &#34;b4&#34;).
+</span></span><span class=line><span class=cl>Edge(&#34;b4&#34;, &#34;b1&#34;).
+</span></span><span class=line><span class=cl>Edge(&#34;b4&#34;, &#34;end&#34;).
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>// Generating Definitions
+</span></span><span class=line><span class=cl>.decl GenDef(n: symbol, d:symbol)
+</span></span><span class=line><span class=cl>GenDef(&#34;b2&#34;, &#34;d1&#34;).
+</span></span><span class=line><span class=cl>GenDef(&#34;b4&#34;, &#34;d2&#34;).
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>// Killing Definitions
+</span></span><span class=line><span class=cl>.decl KillDef(n: symbol, d:symbol)
+</span></span><span class=line><span class=cl>KillDef(&#34;b4&#34;, &#34;d1&#34;).
+</span></span><span class=line><span class=cl>KillDef(&#34;b2&#34;, &#34;d2&#34;).
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>// Reachable
+</span></span><span class=line><span class=cl>.decl Reachable(n: symbol, d:symbol)
+</span></span><span class=line><span class=cl>// gen点意味着当前定值一定可达gen点
+</span></span><span class=line><span class=cl>Reachable(u,d) :- GenDef(u,d).
+</span></span><span class=line><span class=cl>// 这个地方souffle官方写的是：Reachable(v,d) :- Edge(u,v), Reachable(u,d), !KillDef(u,d).
+</span></span><span class=line><span class=cl>// 我认为souffle官方应该是写错了，从逻辑上来讲，定值可达u点，并且在v点不被kill掉，才能说定值可到v
+</span></span><span class=line><span class=cl>// 如果是souffle官方的写法，那么逻辑就是：定值可达u点，且在u点定值不被kill掉，就说明u点可达v点，感觉是不符合定值可达分析的定义的
+</span></span><span class=line><span class=cl>Reachable(v,d) :- Edge(u,v), Reachable(u,d), !KillDef(v,d).
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>.output Reachable
+</span></span></code></pre></td></tr></table></div></div><p>输出结果如下（如果用souffle官方给的dl，得出的结果中，还存在定值d1可达B4，显然是错误的）：</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span><span class=lnt>4
+</span><span class=lnt>5
+</span><span class=lnt>6
+</span><span class=lnt>7
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-fallback data-lang=fallback><span class=line><span class=cl>P1n93r@bogon example % souffle -F . -D . test.dl
+</span></span><span class=line><span class=cl>P1n93r@bogon example % cat Reachable.csv 
+</span></span><span class=line><span class=cl>b1	d2
+</span></span><span class=line><span class=cl>b2	d1
+</span></span><span class=line><span class=cl>b3	d2
+</span></span><span class=line><span class=cl>b4	d2
+</span></span><span class=line><span class=cl>end	d2
+</span></span></code></pre></td></tr></table></div></div><h2 id=一些备注>一些备注</h2><p>souffle支持两种注释：</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-fallback data-lang=fallback><span class=line><span class=cl>// 这里是注释
+</span></span><span class=line><span class=cl>/* 这里也是注释 */
+</span></span></code></pre></td></tr></table></div></div><p>souffle支持C预处理器（比如定义宏），例如：</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-fallback data-lang=fallback><span class=line><span class=cl>#include &#34;myprog.dl&#34;
+</span></span><span class=line><span class=cl>#define MYPLUS(a,b) (a+b)
+</span></span></code></pre></td></tr></table></div></div><h1 id=关系relations>关系（Relations）</h1><h2 id=关系声明>关系声明</h2><p>关系的声明有点类似前面说到的datalog的谓词，用于定义一系列特定的元组存在的某种关系，例如如下的关系定义/声明：</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-fallback data-lang=fallback><span class=line><span class=cl>// 定义了一个关系edge，代表一系列特定元组 (a, b) 存在edge这个关系，a和b的类型都是symbol，这是一种类似strings的类型
+</span></span><span class=line><span class=cl>.decl edge(a:symbol, b:symbol)
+</span></span></code></pre></td></tr></table></div></div><h2 id=io指令>I/O指令</h2><p>编写dl文件的时候，我们可以使用IO指令进行fact的加载和输出，前面的案例中也用到了，这些指令分别为：</p><ul><li><code>.input &lt;relation-name></code> 指令：从 <code>&lt;relation-name>.facts</code> 中加载facts，默认使用tab进行数据分隔；</li><li><code>.out &lt;relation-name></code> 指令：默认情况下，将分析得出的facts写出到 <code>&lt;relation-name>.csv</code> 文件中；</li><li><code>.printsize &lt;relation-name></code> 指令：在控制台中打印给定关系的facts数量；</li></ul><h2 id=语法糖>语法糖</h2><p>为了减少代码编写工作量，可以使用在规则中编写多个head，如下所示，左边是使用了语法糖的情况，右边是没有使用语法糖的情况：</p><p>![Untitled](/../../static/media/Untitled 4.png)</p><p>类似的，也可以在规则体中使用析取（disjunction），如下所示，左边是使用了语法糖的情况，右边是没有使用语法糖的情况（规则推导中的封号代表逻辑或）：</p><p>![Untitled](/../../static/media/Untitled 5.png)</p><h1 id=属性的类型type-system-for-attributes>属性的类型（Type system for attributes）</h1><p>souffle的类型是静态的，必须在编译之前确定关系（relation）的属性，并在编译时进行类型检查；</p><h2 id=原始类型>原始类型</h2><p>souffle存在两种原始类型：</p><ul><li>symbol：它包含所有的字符串，它的内部实现是一个ordinal number；</li><li>number：和 int 类似；</li></ul><h1 id=算术表达式>算术表达式</h1><p>souffle支持算术函子（arithmetic functors），扩展了传统的datalog语义；函子中使用的变量必须要能终止，也就是意味着函子中使用的变量不能是无限的，一个例子如下，使用了算术运算符 <code>&lt;</code> ：</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span><span class=lnt>4
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-fallback data-lang=fallback><span class=line><span class=cl>.decl A(n: number)
+</span></span><span class=line><span class=cl>.output A
+</span></span><span class=line><span class=cl>A(1).
+</span></span><span class=line><span class=cl>A(x+1) :- A(x), x &lt; 9.
+</span></span></code></pre></td></tr></table></div></div><p>souffle支持的算术函子如下：</p><ul><li>加法：<code>x+y</code> ；</li><li>减法：<code>x-y</code> ；</li><li>除法：<code>x/y</code> ；</li><li>乘法：<code>x*y</code> ；</li><li>模数：<code>a%b</code> ；</li><li>幂运算：<code>a^b</code> ；</li><li>计数器：<code>autonic()</code> ；</li><li>位操作：<code>x band y</code> 、 <code>x bor y</code> 、 <code>x bxor y</code> 和 <code>bnot x</code> ；</li><li>逻辑操作：<code>x land y</code> 、 <code>x lor y</code> 和 <code>lnot x</code> ；</li></ul><p>souffle支持如下算术约束：</p><ul><li>小于：<code>a &lt; b</code> ；</li><li>小于或等于：<code>a &lt;= b</code> ；</li><li>等于：<code>a = b</code> ；</li><li>不等于：<code>a != b</code> ；</li><li>大于或等于：<code>a >= b</code> ；</li><li>大于：<code>a > b</code> ；</li></ul><p>写规则的时候，可以在源码中使用十进制、二进制和十六进制：</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span><span class=lnt>4
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-fallback data-lang=fallback><span class=line><span class=cl>.decl A(x:number)
+</span></span><span class=line><span class=cl>A(4711).
+</span></span><span class=line><span class=cl>A(0b101).
+</span></span><span class=line><span class=cl>A(0xaffe).
+</span></span></code></pre></td></tr></table></div></div><p><strong>Notice: 在facts文件中，只支持十进制；</strong></p><h2 id=数字编码number-encoding>数字编码（Number encoding）</h2><p>类似C一样，数字可以用于逻辑运算：</p><ul><li>0代表false；</li><li>非0代表true；</li></ul><p>因此，数字可用于这些逻辑运算：<code>x land y</code>、<code>x lor y</code> 和 <code>lnot x</code> 示例如下：</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-fallback data-lang=fallback><span class=line><span class=cl>.decl A(x:number)
+</span></span><span class=line><span class=cl>.output A
+</span></span><span class=line><span class=cl>A(0 lor 1).
+</span></span></code></pre></td></tr></table></div></div><h2 id=autonic函子>autonic()函子</h2><p>函子 autoinc() 每次计算时都会生成一个新数字。但是，在递归关系中是不允许使用的。它可用于为符号创建唯一编号（充当标识符），例如以下示例：</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span><span class=lnt>4
+</span><span class=lnt>5
+</span><span class=lnt>6
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-fallback data-lang=fallback><span class=line><span class=cl>.decl A(x: symbol)
+</span></span><span class=line><span class=cl>A(&#34;a&#34;). A(&#34;b&#34;). A(&#34;c&#34;). A(&#34;d&#34;).
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>.decl B(x: symbol, y: number)
+</span></span><span class=line><span class=cl>.output B
+</span></span><span class=line><span class=cl>B(x, autoinc()) :- A(x).
+</span></span></code></pre></td></tr></table></div></div><p>输出如下：</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span><span class=lnt>4
+</span><span class=lnt>5
+</span><span class=lnt>6
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-fallback data-lang=fallback><span class=line><span class=cl>P1n93r@bogon example % souffle -F . -D . test.dl
+</span></span><span class=line><span class=cl>P1n93r@bogon example % cat B.csv 
+</span></span><span class=line><span class=cl>a	0
+</span></span><span class=line><span class=cl>b	1
+</span></span><span class=line><span class=cl>c	2
+</span></span><span class=line><span class=cl>d	3
+</span></span></code></pre></td></tr></table></div></div><h1 id=aggregation聚合>Aggregation（聚合）</h1><p>Soufflé 中的聚合（aggregation）是指使用特定的函子来汇总有关查询的信息。聚合只能应用于 Soufflé 中的稳定关系。聚合的类型包括计数、查找一组数字的最小值/最大值以及求和。通常在 Soufflé 中，信息不能从子目标（聚合函子的参数）流向外部范围。例如，如果希望找到关系 Cost(x) 的最小值，无法找到使 Cost(x) 最小化的特定 x 值。因为实际上，这样的 x 值可能不是唯一的。</p><h2 id=计数counting>计数（Counting）</h2><p>技术函子（counting functor）可以用于计算目标facts的大小，语法为： <code>count:{&lt;sub-goal>}</code> ，如下就是一个计算绿色车辆个数的例子：</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span><span class=lnt>4
+</span><span class=lnt>5
+</span><span class=lnt>6
+</span><span class=lnt>7
+</span><span class=lnt>8
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-fallback data-lang=fallback><span class=line><span class=cl>.decl Car(name: symbol, colour:symbol)
+</span></span><span class=line><span class=cl>Car(&#34;Audi&#34;, &#34;blue&#34;).
+</span></span><span class=line><span class=cl>Car(&#34;VW&#34;, &#34;red&#34;).
+</span></span><span class=line><span class=cl>Car(&#34;BMW&#34;, &#34;blue&#34;).
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>.decl BlueCarCount(x: number)
+</span></span><span class=line><span class=cl>BlueCarCount(c) :- c = count:{Car(_,&#34;blue&#34;)}.
+</span></span><span class=line><span class=cl>.output BlueCarCount
+</span></span></code></pre></td></tr></table></div></div><p>输出如下：</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span><span class=lnt>4
+</span><span class=lnt>5
+</span><span class=lnt>6
+</span><span class=lnt>7
+</span><span class=lnt>8
+</span><span class=lnt>9
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-fallback data-lang=fallback><span class=line><span class=cl>P1n93r@bogon example % souffle -F . -D . test.dl
+</span></span><span class=line><span class=cl>P1n93r@bogon example % ll
+</span></span><span class=line><span class=cl>total 16
+</span></span><span class=line><span class=cl>drwxr-xr-x  4 P1n93r  staff   128B  4 29 17:21 .
+</span></span><span class=line><span class=cl>drwxr-xr-x  4 P1n93r  staff   128B  4 28 19:33 ..
+</span></span><span class=line><span class=cl>-rw-r--r--  1 P1n93r  staff     2B  4 29 17:21 BlueCarCount.csv
+</span></span><span class=line><span class=cl>-rw-r--r--  1 P1n93r  staff   196B  4 29 17:21 test.dl
+</span></span><span class=line><span class=cl>P1n93r@bogon example % cat BlueCarCount.csv 
+</span></span><span class=line><span class=cl>2
+</span></span></code></pre></td></tr></table></div></div><h2 id=求最大最小和>求最大/最小/和</h2><p>求最大值的算术语法为：<code>max &lt;var>:{&lt;sub-goal(&lt;var>)>}</code> ，例子如下：</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span><span class=lnt>4
+</span><span class=lnt>5
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-fallback data-lang=fallback><span class=line><span class=cl>.decl A(n:number)
+</span></span><span class=line><span class=cl>A(1). A(10). A(100).
+</span></span><span class=line><span class=cl>.decl MaxA(x: number)
+</span></span><span class=line><span class=cl>MaxA(y) :- y = max x:{A(x)}.
+</span></span><span class=line><span class=cl>.output MaxA
+</span></span></code></pre></td></tr></table></div></div><p>求最小值和总和语法也是类似：</p><ul><li>求最小值：<code>min &lt;var>:{&lt;sub-goal(&lt;var>)>}</code> ；</li><li>求和： <code>sum &lt;var>:{&lt;sub-goal(&lt;var>)>}</code> ；</li></ul><h1 id=记录records>记录（Records）</h1><p>关系（Relation）是 Datalog 中的二维结构。对于大型代码库和/或复杂问题，可以方便地考虑具有更复杂结构（递归/层次结构等）的关系。由于调用记录（Record）时需要额外的表查找，所以记录提供了这样的抽象，并且以性能为代价打破了 Datalog 的扁平世界。它们的语义与 Pascal/C 中的语义相当。将来，记录的联合将被允许模拟多态性。记录类型定义的语法如下：</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-fallback data-lang=fallback><span class=line><span class=cl>.type &lt;name&gt; = [ &lt;name_1&gt;: &lt;type_1&gt;, ..., &lt;name_k&gt;: &lt;type_k&gt; ]
+</span></span></code></pre></td></tr></table></div></div><p>一个例子如下：</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-fallback data-lang=fallback><span class=line><span class=cl>// Pair of numbers
+</span></span><span class=line><span class=cl>.type Pair = [a:number, b:number]
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>.decl A(p: Pair)  // declare a set of pairs
+</span></span><span class=line><span class=cl>A([1,2]).
+</span></span><span class=line><span class=cl>A([3,4]).
+</span></span><span class=line><span class=cl>A([4,5]).
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>.decl Flatten(a:number, b:number)
+</span></span><span class=line><span class=cl>.output Flatten
+</span></span><span class=line><span class=cl>Flatten(a,b) :- A([a,b]).
+</span></span></code></pre></td></tr></table></div></div><h2 id=记录的内部结构overview-of-record-internals>记录的内部结构（<strong>Overview of record internals</strong>）</h2><p>每个记录类型都有一个隐藏的类型关系。在这个隐藏的关系中，记录的元素被转换为数字。在计算期间，如果记录不存在，则会即时创建。一个例子如下：</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span><span class=lnt>4
+</span><span class=lnt>5
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-fallback data-lang=fallback><span class=line><span class=cl>.type Pair = [a: number, b: number]
+</span></span><span class=line><span class=cl>.decl A(p: Pair)
+</span></span><span class=line><span class=cl>A([1,2]).
+</span></span><span class=line><span class=cl>A([3,4]).
+</span></span><span class=line><span class=cl>A([4,5]).
+</span></span></code></pre></td></tr></table></div></div><p>对于这个这个例子，记录的内部结构如下：</p><p>![Untitled](/../../static/media/Untitled 6.png)</p><h2 id=递归记录recursive-records>递归记录（Recursive records）</h2><p>Soufflé 中允许递归定义的记录。递归因 <code>nil</code> 记录的存在而终止。例如如下例子(souffle官方的又写错了)：</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-fallback data-lang=fallback><span class=line><span class=cl>.type IntList = [next: IntList, x: number]
+</span></span><span class=line><span class=cl>.decl L(l: IntList)
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>L([nil,10]).
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>// [r1,x+10] 代表需要推导的下一个IntList，其中r1代表上一个IntList，r2也是代表需要推导出的下一个IntList（独立于[r1,x+10]），这个需要推导出来的r2需要满足[r1, x],也就是next为r1（上一个IntList）
+</span></span><span class=line><span class=cl>L([r1,x+10]) :- L(r2), r2=[r1,x], x &lt; 30.
+</span></span><span class=line><span class=cl>.decl Flatten(x: number)
+</span></span><span class=line><span class=cl>Flatten(x) :- L([_,x]).
+</span></span><span class=line><span class=cl>.output Flatten
+</span></span></code></pre></td></tr></table></div></div><p>运行结果如下：</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span><span class=lnt>4
+</span><span class=lnt>5
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-fallback data-lang=fallback><span class=line><span class=cl>P1n93r@bogon example % souffle -F . -D . test.dl
+</span></span><span class=line><span class=cl>P1n93r@bogon example % cat Flatten.csv          
+</span></span><span class=line><span class=cl>10
+</span></span><span class=line><span class=cl>20
+</span></span><span class=line><span class=cl>30
+</span></span></code></pre></td></tr></table></div></div><p>此时这个内部结构如下所示：</p><p>![Untitled](/../../static/media/Untitled 7.png)</p></div><footer class=post-footer><nav class=post-nav><a class=next href=/post/other/%E9%87%8D%E6%96%B0%E5%90%AF%E7%A8%8B/><span class="next-text nav-default">重新启程</span>
+<span class="next-text nav-mobile">下一篇</span>
+<i class="iconfont icon-right"></i></a></nav></footer></article></div></div></main><footer id=footer class=footer><div class=social-links><a href=mailto:pin83r@gmail.com class="iconfont icon-email" title=email></a>
+<a href=https://github.com/p1n93r class="iconfont icon-github" title=github></a>
+<a href=https://p1n93r.github.io/index.xml type=application/rss+xml class="iconfont icon-rss" title=rss></a></div><div class=copyright><span class=power-by>由 <a class=hexo-link href=https://gohugo.io>Hugo</a> 强力驱动</span>
+<span class=division>|</span>
+<span class=theme-info>主题 -
+<a class=theme-link href=https://github.com/olOwOlo/hugo-theme-even>Even</a></span><div class=busuanzi-footer><span id=busuanzi_container_site_pv>本站总访问量 <span id=busuanzi_value_site_pv><img src=/img/spinner.svg alt=spinner.svg></span> 次</span>
+<span class=division>|</span>
+<span id=busuanzi_container_site_uv>本站总访客数 <span id=busuanzi_value_site_uv><img src=/img/spinner.svg alt=spinner.svg></span> 人</span></div><span class=copyright-year>&copy;
+2019 -
+2022<span class=heart><i class="iconfont icon-heart"></i></span><span>P1n93r</span></span></div></footer><div class=back-to-top id=back-to-top><i class="iconfont icon-up"></i></div></div><script src=https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin=anonymous></script>
+<script src=https://cdn.jsdelivr.net/npm/slideout@1.0.1/dist/slideout.min.js integrity="sha256-t+zJ/g8/KXIJMjSVQdnibt4dlaDxc9zXr/9oNPeWqdg=" crossorigin=anonymous></script>
+<script src=https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.js integrity="sha256-XVLffZaxoWfGUEbdzuLi7pwaUJv1cecsQJQqGLe7axY=" crossorigin=anonymous></script>
+<script type=text/javascript src=/js/main.min.64437849d125a2d603b3e71d6de5225d641a32d17168a58106e0b61852079683.js></script></body></html>
